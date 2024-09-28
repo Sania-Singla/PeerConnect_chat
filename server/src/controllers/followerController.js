@@ -3,7 +3,7 @@ import { BAD_REQUEST, SERVER_ERROR, OK } from "../constants/errorCodes.js";
 import getServiceObject from "../db/serviceObjects.js";
 import { userObject } from "./userController.js";
 
-export const followerObject = getServiceObject("followers"); 
+export const followerObject = getServiceObject("followers");
 
 const getFollowers = async (req, res) => {
     try {

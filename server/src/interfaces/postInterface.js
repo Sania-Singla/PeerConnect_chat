@@ -7,7 +7,7 @@ export class Iposts {
         throw new Error("Method getPosts is not overwritten.");
     }
 
-    async getPost(postId) {
+    async getPost(postId, userId) {
         throw new Error("Method getPost is not overwritten.");
     }
 
@@ -17,6 +17,22 @@ export class Iposts {
 
     async deletePost(postId) {
         throw new Error("Method deletePost is not overwritten.");
+    }
+        
+    async updatePostViews(postId, userIdentifier) {
+        throw new Error("Method updatePostViews is not overwritten.");
+    }
+
+    async updateWatchHistory(postId, userId) {
+        throw new Error("Method updateWatchHistory is not overwritten.");
+    }
+
+    async getWatchHistory(userId, orderBy, limit) {
+        throw new Error("Method getWatchHistory is not overwritten.");
+    }
+
+    async clearWatchHistory(userId) {
+        throw new Error("Method clearWatchHistory is not overwritten.");
     }
 
     async updatePostDetails(postId, title, content, updatedAt) {

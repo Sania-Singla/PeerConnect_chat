@@ -36,24 +36,63 @@ const getPosts = async (req, res) => {
     }
 };
 
-// pending
 const getPost = async (req, res) => {
     try {
-        const { user_id } = req.user;
         const { postId } = req.params;
-
-        if (!user_id) {
-            return { message: "MISSING_USERID" };
-        }
         if (!postId) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
         }
 
-        const post = await postObject.getPost(postId);
+        let userIdentifier = req.ip;
+        if (req.user) {
+            const { user_id } = req.user;
+            if (!user_id) {
+                return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+            }
+            await postObject.updateWatchHistory(postId, user_id);
+            userIdentifier = user_id;
+        }
+
+        await postObject.updatePostViews(postId, userIdentifier);
+
+        const post = await postObject.getPost(postId, req.user?.user_id);
         return res.status(OK).json(post);
     } catch (err) {
         res.status(SERVER_ERROR).json({
             message: "something wrong happened while getting the post",
+            error: err.message,
+        });
+    }
+};
+
+const getWatchHistory = async (req, res) => {
+    try {
+        const { orderBy = "desc", limit = 10 } = req.query;
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
+        const response = await postObject.getWatchHistory(user_id, orderBy, Number(limit));
+        return res.status(OK).json(response);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while getting the watch history",
+            error: err.message,
+        });
+    }
+};
+
+const clearWatchHistory = async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
+        const response = await postObject.clearWatchHistory(user_id);
+        return res.status(OK).json(response);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while clearing the watch history",
             error: err.message,
         });
     }
@@ -252,4 +291,37 @@ const togglePostVisibility = async (req, res) => {
     }
 };
 
-export { getRandomPosts, getPosts, getPost, addPost, updatePostDetails, updatePostImage, deletePost, togglePostVisibility };
+const toggleSavePost = async (req, res) => {
+    try {
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something happened wrong while toggling post saving",
+            error: err.message,
+        });
+    }
+};
+
+const getSavedPosts = async (req, res) => {
+    try {
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something happened wrong while getting saved posts",
+            error: err.message,
+        });
+    }
+};
+
+export {
+    getRandomPosts,
+    getPosts,
+    getPost,
+    clearWatchHistory,
+    getWatchHistory,
+    addPost,
+    updatePostDetails,
+    updatePostImage,
+    deletePost,
+    togglePostVisibility,
+    toggleSavePost,
+    getSavedPosts,
+};
