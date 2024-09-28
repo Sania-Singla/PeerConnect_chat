@@ -1,4 +1,3 @@
-
 CREATE TABLE post_likes (
     post_id varchar(40),
 	user_id varchar(40),

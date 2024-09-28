@@ -16,8 +16,11 @@ export class SQLfollowers extends Ifollowers {
                 FROM followers f, users u 
                 WHERE f.follower_id = u.user_id AND f.following_id = ?
                 `;
-
             const [response] = await connection.query(q, [channelId]);
+
+            if (!response) {
+                return { message: "FOLLOWERS_NOT_FOUND" };
+            }
 
             return response;
         } catch (err) {
@@ -39,7 +42,7 @@ export class SQLfollowers extends Ifollowers {
                     FROM followers f, users u 
                     WHERE f.following_id = u.user_id AND f.follower_id = ?
                 `;
-
+           
             const [response] = await connection.query(q, [channelId]);
             return response;
         } catch (err) {
@@ -70,7 +73,7 @@ export class SQLfollowers extends Ifollowers {
             //     throw new Error({ message: "FOLLOWING_RECORD_CREATION_DB_ISSUE" });
             // }
 
-            // using PL/SQL Procedures 
+            // using PL/SQL Procedures
             const q = "CALL toggleFollow(?, ?)";
             const [[[response]]] = await connection.query(q, [channelId, userId]);
             return response;

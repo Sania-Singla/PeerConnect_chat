@@ -27,11 +27,14 @@ export class Iposts {
         throw new Error("Method updatePostImage is not overwritten.");
     }
 
-    async togglePostVisibility(PostId, visibility) {
+    async togglePostVisibility(postId, visibility) {
         throw new Error("Method togglePostVisibility is not overwritten.");
     }
 
-    async toggleSavePost(PostId, userId) {
+    async toggleSavePost(postId, userId) {
         throw new Error("Method toggleSavePost is not overwritten.");
+    }
+    async getSavedPosts(postId){
+        throw new Error("Method getSavePost is not overwritten.");
     }
 }

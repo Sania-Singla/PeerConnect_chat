@@ -89,10 +89,10 @@ export class SQLposts extends Iposts {
                     u.user_lastName AS post_ownerLastName, 
                     p.post_id, 
                     p.post_visibility, 
-                    p.post_updatedAt, 
+                    p.post_updatedAt,
                     p.post_title, 
                     p.post_content, 
-                    p.post_image 
+                    p.post_image,
                 FROM posts p
                 INNER JOIN users u                                -- same as default join with a condn.
                 ON p.post_ownerId = u.user_id
