@@ -214,8 +214,12 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async toggleSavePost(PostId, userId) {
+    async toggleSavePost(postId, userId) {
         try {
+            const q= "CALL toggleSavedPosts(?, ?)";
+            const response = await connection.query(q, [postId, userId]);
+            console.log(response);
+            return [[[response]]];
         } catch (err) {
             throw new Error(err);
         }
@@ -223,6 +227,13 @@ export class SQLposts extends Iposts {
 
     async getSavedPosts(userId) {
         try {
+            const q =
+                "SELECT * FROM post_owner_view po, saved_posts sp WHERE po.owner_id= sp.user_id AND po.owner_id= ?";
+            const [savedPosts] = await connection.query(q, [userId]);
+            if (!savedPosts) {
+                return { message: "SAVED_POSTS_NOT_FOUND" };
+            }
+            return savedPosts;
         } catch (err) {
             throw new Error(err);
         }

@@ -293,6 +293,25 @@ const togglePostVisibility = async (req, res) => {
 
 const toggleSavePost = async (req, res) => {
     try {
+        const {user_id} = req.user;
+        const {postId} = req.body;
+
+        if(!user_id){
+            return res.status(BAD_REQUEST).json({ message : "MISSING_USERID"})
+        }
+
+        if(!postId){
+            return res.status(BAD_REQUEST).json({ message : "MISSING_POSTID"})
+        }
+        
+        const post = postObject.getPost(postId);
+        if (!post){
+            return res.status(BAD_REQUEST).json({ message : "POST_NOT_FOUND"})
+        }
+
+        const response = await postObject.toggleSavePost(postId, user_id);
+        return res.status(BAD_REQUEST).json(response);
+        
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something happened wrong while toggling post saving",
@@ -303,6 +322,12 @@ const toggleSavePost = async (req, res) => {
 
 const getSavedPosts = async (req, res) => {
     try {
+        const {user_id}= req.user;
+        if(!user_id){
+            return res.status(BAD_REQUEST).json("MISSING_USERID");
+        }
+        const [savedPosts]= await postObject.getSavedPosts(user_id);
+        return res.status(OK).json(savedPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something happened wrong while getting saved posts",
