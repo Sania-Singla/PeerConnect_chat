@@ -1,5 +1,6 @@
 import { SQLusers } from "../models/userModel.js";
 import { SQLposts } from "../models/postModel.js";
+import { SQLfollowers } from "../models/followerModel.js";
 
 export default function getServiceObject(serviceType) {
     if (process.env.DATABASE_TYPE == "SQL") {
@@ -9,13 +10,13 @@ export default function getServiceObject(serviceType) {
             case "posts":
                 return new SQLposts();
             case "notes":
-                return SQLnotes();
+                return new SQLnotes();
             case "likes":
-                return SQLlikes();
+                return new SQLlikes();
             case "comments":
-                return SQLcomments();
+                return new SQLcomments();
             case "followers":
-                return SQLfollowers();
+                return new SQLfollowers();
             default:
                 throw new Error("Unsupported service type");
         }

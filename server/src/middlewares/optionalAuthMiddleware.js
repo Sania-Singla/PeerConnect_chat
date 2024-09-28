@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { BAD_REQUEST, FORBIDDEN,COOKIE_OPTIONS } from "../constants/errorCodes.js";
+import { BAD_REQUEST, FORBIDDEN, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import getServiceObject from "../db/serviceObjects.js";
 
 const userObject = getServiceObject("users");
@@ -14,12 +14,11 @@ const optionalVerifyJwt = async (req, res, next) => {
                 return res.status(FORBIDDEN).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "INVALID_ACCESS_TOKEN" });
             }
 
-            const user = await userObject.getUser(decodedToken.user_id);
-            if (!user) {
+            const currentUser = await userObject.getUser(decodedToken.user_id);
+            if (!currentUser) {
                 return res.status(BAD_REQUEST).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "ACCESS_TOKEN_USER_NOT_FOUND" });
             }
 
-            const { user_password, refresh_token, ...currentUser } = user;
             req.user = currentUser;
         } catch (err) {
             return res.status(500).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "EXPIRED_ACCESS_TOKEN", err: err.emssage });

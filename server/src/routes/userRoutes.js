@@ -1,8 +1,6 @@
 import express from "express";
 export const userRouter = express.Router();
-import { upload } from "../middlewares/multerMiddleware.js";
-import { verifyJwt } from "../middlewares/authMiddleware.js";
-import { optionalVerifyJwt } from "../middlewares/optionalAuthMiddleware.js";
+import { upload, verifyJwt, optionalVerifyJwt } from "../middlewares/index.js";
 
 import {
     registerUser,
@@ -32,7 +30,7 @@ userRouter.route("/register").post(
     registerUser
 );
 
-userRouter.route("/profile/:userName").get(optionalVerifyJwt, getChannelProfile);
+userRouter.route("/profile/:input").get(optionalVerifyJwt, getChannelProfile);    // because getUser is adaptable for username, email & uuid 
 
 userRouter.route("/login").post(loginUser);
 
@@ -42,11 +40,11 @@ userRouter.route("/logout").get(logoutUser);
 
 userRouter.route("/delete-account").delete(deleteAccount);
 
-userRouter.route("/current-user").get(verifyJwt, getCurrentUser);
+userRouter.route("/current-user").get(getCurrentUser);
 
 userRouter.route("/update-account").patch(updateAccountDetails);
 
-userRouter.route("/update-channel").patch(updateChannelDetails);
+userRouter.route("/update-profile").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
 

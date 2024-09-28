@@ -24,7 +24,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         return response;
     } catch (err) {
         fs.unlinkSync(localFilePath);
-        throw new Error({ message: "SERVER_ERROR_UPLOADING_CLOUDINARY_UTIL", err: err.message });
+        throw new Error({ message: `SERVER_ERROR_UPLOADING_CLOUDINARY_UTIL, err: ${err.message}` });
     }
 };
 
@@ -44,7 +44,7 @@ const deleteFromCloudinary = async (URL) => {
 
         return response; // {result:"ok"}
     } catch (err) {
-        throw new Error({ message: "SERVER_ERROR_DELETION_CLOUDINARY_UTIL", err: err.message });
+        throw new Error({ message: `SERVER_ERROR_DELETION_CLOUDINARY_UTIL, err: ${err.message}` });
     }
 };
 

@@ -1,14 +1,21 @@
 import express from "express";
 export const postRouter = express.Router();
-import { upload } from "../middlewares/multerMiddleware.js";
-import { verifyJwt } from "../middlewares/authMiddleware.js";
-import { optionalVerifyJwt } from "../middlewares/optionalAuthMiddleware.js";
+import { upload, verifyJwt, optionalVerifyJwt } from "../middlewares/index.js";
 
-import { getPost, getPosts, getRandomPosts, deletePost, updatePostDetails,updatePostImage, togglePostVisibility, addPost } from "../controllers/postController.js";
+import {
+    getPost,
+    getPosts,
+    getRandomPosts,
+    addPost,
+    deletePost,
+    updatePostDetails,
+    updatePostImage,
+    togglePostVisibility,
+} from "../controllers/postController.js";
 
-postRouter.route("/random").get(getRandomPosts);
+postRouter.route("/all").get(getRandomPosts);
 
-postRouter.route("/:userId").get(getPosts);
+postRouter.route("/user/:userId").get(getPosts);
 
 postRouter.route("/:postId").get(optionalVerifyJwt, getPost);
 
@@ -16,8 +23,10 @@ postRouter.use(verifyJwt);
 
 postRouter.route("/add").post(upload.single("postImage"), addPost);
 
-postRouter.route("/:postId").delete(deletePost).patch(updatePostDetails);
+postRouter.route("/delete/:postId").delete(deletePost);
 
-postRouter.route("/updateImage/:postId").patch(upload.single("postImage"), updatePostImage);
+postRouter.route("/update-details/:postId").patch(updatePostDetails);
 
-postRouter.route("/toggle/:postId", togglePostVisibility);
+postRouter.route("/update-image/:postId").patch(upload.single("postImage"), updatePostImage);
+
+postRouter.route("/toggle-visibility/:postId").patch(togglePostVisibility);

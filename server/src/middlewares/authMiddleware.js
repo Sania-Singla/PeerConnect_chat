@@ -18,12 +18,11 @@ const verifyJwt = async (req, res, next) => {
             return res.status(FORBIDDEN).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "INVALID_ACCESS_TOKEN" });
         }
 
-        const user = await userObject.getUser(decodedToken.user_id);
-        if (!user) {
+        const currentUser = await userObject.getUser(decodedToken.user_id);
+        if (!currentUser) {
             return res.status(BAD_REQUEST).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "ACCESS_TOKEN_USER_NOT_FOUND" });
         }
 
-        const { user_password, refresh_token, ...currentUser } = user;
         req.user = currentUser;
     } catch (err) {
         return res.status(500).clearCookie("accessToken", COOKIE_OPTIONS).json({ message: "EXPIRED_ACCESS_TOKEN", err: err.emssage });

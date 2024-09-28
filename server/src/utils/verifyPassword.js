@@ -8,6 +8,6 @@ export const verifyPassword = async (password, hashedPassword) => {
         }
         return;
     } catch (err) {
-        throw new Error({ message: "something went wrong while validating the password.", error: err.message });
+        throw new Error({ message: `something went wrong while validating the password, err: ${err.message}` });
     }
 };
