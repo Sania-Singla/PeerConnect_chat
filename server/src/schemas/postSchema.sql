@@ -11,6 +11,8 @@ CREATE TABLE posts (
 ALTER TABLE posts
 ADD COLUMN post_isVisible boolean DEFAULT true NOT NULL;
 
+-- alter table posts RENAME post_isVisible to post_visibility; 
+
 CREATE TABLE saved_posts(
     post_id varchar(40),
 	user_id varchar(40),

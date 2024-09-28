@@ -20,10 +20,11 @@ const getRandomPosts = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const { user_id } = req.user; //if login show diff and if logout show diff, so verify jwt first
+        const {isLiked}= req.params;
         if(!user_id){
             return { message : "USERID_MISSING"}
         }
-        const posts = await postObject.getChannelPosts(user_id);
+        const posts = await postObject.getChannelPosts(user_id, isLiked);
         return res.status(OK).json(posts);
     } catch (err) {
         // res.status(SERVER_ERROR).json( {message : `something went wrong while getting posts of user with user_id = ${user_id}`})
@@ -39,8 +40,8 @@ const getPost = async (req, res) => {
         if(!user_id){
             return { message : "USERID_MISSING"}
         }
-        const { post_id } = req.params;
-        const post = await postObject.getPost(post_id);
+        const { postId , isLiked} = req.params;
+        const post = await postObject.getPost(postId, isLiked);
         return res.status(OK).json(post);
     } catch (err) {
         res.status(SERVER_ERROR).json({

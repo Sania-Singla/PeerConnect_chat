@@ -19,11 +19,10 @@ export class SQLposts extends Iposts {
 
     async getPosts(userId) {
         try {
-            let q;
-            if (validator.isUUID(userId)) {
-                q =
-                    "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id AND p.post_owner_id= ?";
-            }
+            const q1 = "(SELECT COUNT(*) FROM post_likes p WHERE p.is_liked = ?) AS totalLikes";
+            const q2 = "(SELECT COUNT(*) FROM post_likes p WHERE p.is_liked = ?) AS totalDisLikes";
+            const q =
+                `SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image, ${q1}, ${q2} FROM posts p, users u WHERE p.post_owner_id = u.user_id AND p.post_owner_id= ?`;
 
             const [posts] = await connection.query(q, [userId]);
             if (!posts) {
@@ -35,11 +34,14 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async getPost(postId) {
+    async getPost(postId, isLiked) {
         try {
-            const q =
-                "SELECT  user_avatar, user_name , user_firstName, user_lastName, post_title, post_content, post_image FROM posts, users  WHERE  p.post_id = u.user_id AND post_id= ?";
-            const [[post]] = await connection.query(q, [postId]);
+            const q1 = "(SELECT COUNT(*) FROM post_likes p WHERE p.is_liked = ?) AS totalLikes";
+            const q2 = "(SELECT COUNT(*) FROM post_likes p WHERE p.is_liked = ?) AS totalDisLikes";
+
+            const q3 = "(SELECT COUNT(*) FROM comments c WHERE c.post_id = ?) AS totalComments";
+            const q = `SELECT  user_avatar, user_name , user_firstName, user_lastName, post_title, post_content, post_image ${q1} , ${q2}, ${q3} FROM posts, users  WHERE  p.post_id = u.user_id AND post_id= ?`;
+            const [[post]] = await connection.query(q, isLiked, postId, postId);
             if (!post) {
                 return { message: "POST_NOT_FOUND" };
             }

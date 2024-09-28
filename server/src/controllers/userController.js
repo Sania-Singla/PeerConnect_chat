@@ -1,5 +1,5 @@
 import getServiceObject from "../db/serviceObjects.js";
-import { OK, SERVER_ERROR, BAD_REQUEST,COOKIE_OPTIONS } from "../constants/errorCodes.js";
+import { OK, SERVER_ERROR, BAD_REQUEST, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import { v4 as uuid, validate as isValiduuid } from "uuid";
 import fs from "fs";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -75,7 +75,7 @@ const registerUser = async (req, res) => {
         if (!req.files?.avatar) {
             if (req.files?.coverImage) {
                 const coverImageLocalPath = req.files.coverImage[0].path;
-                if (!coverImageLocalPath) {
+                if (!coverImageLocalPath) {///wt need
                     throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
                 }
                 fs.unlinkSync(coverImageLocalPath);
@@ -89,7 +89,7 @@ const registerUser = async (req, res) => {
         }
         const avatar = await uploadOnCloudinary(avatarLocalPath);
         if (!avatar) {
-            return res.status(500).json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
+            return res.status().json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
         }
 
         let coverImage;
@@ -168,9 +168,9 @@ const deleteAccount = async (req, res) => {
 
         const { password } = req.body;
         const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
         const response = await verifyPassword(password, user.user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
@@ -229,7 +229,7 @@ const getCurrentUser = async (req, res) => {
 
 const getChannelProfile = async (req, res) => {
     try {
-        const { userName } = req.params;
+        const { userName } = req.params;//isliye le rahe hai na kunki userName can change too after 
 
         const user = req.user; // current user
 
@@ -238,7 +238,7 @@ const getChannelProfile = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
 
-        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);   
+        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);
         return res.status(OK).json(channelProfile);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -258,9 +258,9 @@ const updateAccountDetails = async (req, res) => {
         const { firstName, lastName, email, password } = req.body;
 
         const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
 
         const response = await verifyPassword(password, user.user_password);
         if (response?.message) {
