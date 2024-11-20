@@ -38,19 +38,19 @@ const registerUser = async (req, res) => {
 
         // ⭐ format validity checks for email , username, firstname, if have lastname (frontend)
 
-        const existingUser = await userObject.getUser(userName);
+        // const existingUser = await userObject.getUser(userName);
 
-        if (!existingUser?.message) {
-            if (req.files?.avatar) {
-                fs.unlinkSync(req.files.avatar[0].path);
-            }
-            if (req.files?.coverImage) {
-                fs.unlinkSync(req.files.coverImage[0].path);
-            }
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'USER_ALREADY_EXISTS' });
-        }
+        // if (!existingUser?.message) {
+        //     if (req.files?.avatar) {
+        //         fs.unlinkSync(req.files.avatar[0].path);
+        //     }
+        //     if (req.files?.coverImage) {
+        //         fs.unlinkSync(req.files.coverImage[0].path);
+        //     }
+        //     return res
+        //         .status(BAD_REQUEST)
+        //         .json({ message: 'USER_ALREADY_EXISTS' });
+        // }
 
         if (!req.files?.avatar) {
             if (req.files?.coverImage) {

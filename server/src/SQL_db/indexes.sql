@@ -6,7 +6,10 @@ CREATE UNIQUE INDEX idx_user_email ON users(user_email);
 CREATE INDEX idx_post_ownerId ON posts(post_ownerId);
 CREATE INDEX idx_post_category ON posts(post_category);
 CREATE INDEX idx_post_title ON posts(post_title);
-CREATE INDEX idx_post_visibility ON posts(post_visibility);
+
+
+
+--CREATE INDEX idx_post_visibility ON posts(post_visibility); --dropped
 
 -- post_likes table
 CREATE INDEX idx_post_likes_post_id_is_liked ON post_likes(post_id, is_liked);

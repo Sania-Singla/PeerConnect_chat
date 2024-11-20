@@ -1,5 +1,6 @@
 import mysql from 'mysql2';
 import mongoose from 'mongoose';
+import oracledb from 'oracledb';
 
 class DBConnection {
     constructor() {
@@ -20,6 +21,10 @@ class DBConnection {
                 switch (process.env.DATABASE_TYPE) {
                     case 'SQL': {
                         await this.connectMYSQL();
+                        break;
+                    }
+                    case 'Oracle': {
+                        await this.connectOracle();
                         break;
                     }
                     case 'MongoDB': {
@@ -59,6 +64,20 @@ class DBConnection {
             conn.release();
         } catch (err) {
             return console.log("mysql didn't connected !!", err);
+        }
+    }
+
+    async connectOracle() {
+        try {
+            this.connection = await oracledb.getConnection({
+                user: process.env.ORACLE_USERNAME,
+                password: process.env.ORACLE_PASSWORD,
+                connectString: process.env.ORACLE_CONNECT_STRING,
+            });
+            // oracledb doesn't expose the host
+            console.log(`Connected to oracle successfully`);
+        } catch (err) {
+            return console.log("oracle didn't connected !!", err);
         }
     }
 

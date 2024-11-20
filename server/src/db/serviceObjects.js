@@ -16,6 +16,15 @@ import {
     // MongoDBcategories,
 } from '../models/MongoDB/index.js';
 
+import {
+    Oracleusers,
+    Oracleposts,
+    Oraclelikes,
+    Oraclefollowers,
+    Oraclecomments,
+    // Oraclecategories,
+} from '../models/Oracle/index.js';
+
 export default function getServiceObject(serviceType) {
     try {
         switch (process.env.DATABASE_TYPE) {
@@ -51,7 +60,26 @@ export default function getServiceObject(serviceType) {
                     case 'followers':
                         return new MongoDBfollowers();
                     case 'categories':
-                        return new MongoDBcategories();
+                    // return new MongoDBcategories();
+                    default: {
+                        throw new Error('Unsupported service type');
+                    }
+                }
+            }
+            case 'Oracle': {
+                switch (serviceType) {
+                    case 'users':
+                        return new Oracleusers();
+                    case 'posts':
+                        return new Oracleposts();
+                    case 'likes':
+                        return new Oraclelikes();
+                    case 'comments':
+                        return new Oraclecomments();
+                    case 'followers':
+                        return new Oraclefollowers();
+                    case 'categories':
+                    // return new Oraclecategories();
                     default: {
                         throw new Error('Unsupported service type');
                     }

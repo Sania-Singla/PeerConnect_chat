@@ -32,28 +32,15 @@ userRouter.route('/register').post(
     registerUser
 );
 
-userRouter.route('/channel/:input').get(optionalVerifyJwt, getChannelProfile); // because getUser is adaptable for username, email & uuid
-
+userRouter.route('/channel/:input').get(optionalVerifyJwt, getChannelProfile);                             // because getUser is adaptable for username, email & uuid
 userRouter.route('/login').post(loginUser);
-
 userRouter.use(verifyJwt);
-
 userRouter.route('/logout').patch(logoutUser);
-
 userRouter.route('/delete').delete(deleteAccount);
-
 userRouter.route('/current').get(getCurrentUser);
-
 userRouter.route('/update-account').patch(updateAccountDetails);
-
 userRouter.route('/update-channel').patch(updateChannelDetails);
-
 userRouter.route('/update-password').patch(updatePassword);
-
 userRouter.route('/history').get(getWatchHistory).delete(clearWatchHistory);
-
 userRouter.route('/update-avatar').patch(upload.single('avatar'), updateAvatar);
-
-userRouter
-    .route('/update-coverImage')
-    .patch(upload.single('coverImage'), updateCoverImage);
+userRouter.route('/update-coverImage').patch(upload.single('coverImage'), updateCoverImage);

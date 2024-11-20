@@ -77,7 +77,7 @@ export default function PostCardView({
                         className="flex items-start justify-start gap-3"
                     >
                         {/* avatar */}
-                        <div className='drop-shadow-md'>
+                        <div className="drop-shadow-md">
                             <div className="size-[50px]">
                                 <img
                                     alt="post owner avatar"
