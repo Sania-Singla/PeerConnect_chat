@@ -115,22 +115,31 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { loginInput, password } = req.body;
+
         if (!loginInput || !password) {
             return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
         }
+
         const user = await userObject.getUser(loginInput);
-        if (user?.message) return res.status(BAD_REQUEST).json(user);
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user); // user = {message:"USER_NOT_FOUND"}
+        }
+
         const response = await verifyPassword(password, user.user_password);
-        if (response?.message) return res.status(BAD_REQUEST).json(response);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
 
         const accessToken = await generateAccessToken(user.user_id);
         const refreshToken = await generateRefreshToken(user.user_id);
+
         const { user_password, refresh_token, ...loggedUser } = user;
 
-        return res.status(OK)
+        return res
+            .status(OK)
             .cookie('notes_accessToken', accessToken, {
                 ...COOKIE_OPTIONS,
-                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), 
+                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), // cause .env saves everything in strings (so store the final value in .env as 60000 not as 60*1000)
             })
             .cookie('notes_refreshToken', refreshToken, {
                 ...COOKIE_OPTIONS,
@@ -150,16 +159,37 @@ const deleteAccount = async (req, res) => {
         const user = req.user;
         const { password } = req.body;
 
-        if (!user) return res.status(BAD_REQUEST).json({ message: 'CURRENT_USER_MISSING' });
+        if (!user) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'CURRENT_USER_MISSING' });
+        }
+
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user.user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
+
         const response = await verifyPassword(password, user.user_password);
-        if (response?.message) return res.status(BAD_REQUEST).json(response);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+
+        // delete its avatar & coverimage from cloudinary
         const response1 = await deleteFromCloudinary(user.user_coverImage);
-        if (response1.result !== 'ok') throw new Error('COVERIMAGE_DELETION_CLOUDINARY_ISSUE');
+        if (response1.result !== 'ok') {
+            throw new Error('COVERIMAGE_DELETION_CLOUDINARY_ISSUE');
+        }
+
         const response2 = await deleteFromCloudinary(user.user_avatar);
-        if (response2.result !== 'ok') throw new Error('AVATAR_DELETION_CLOUDINARY_ISSUE');
+        if (response2.result !== 'ok') {
+            throw new Error('AVATAR_DELETION_CLOUDINARY_ISSUE');
+        }
 
         await userObject.deleteUser(user.user_id);
-        return res.status(OK)
+        return res
+            .status(OK)
             .clearCookie('notes_accessToken', COOKIE_OPTIONS)
             .clearCookie('notes_refreshToken', COOKIE_OPTIONS)
             .json(user);
@@ -174,10 +204,19 @@ const deleteAccount = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         const { user_id } = req.user;
-        if (!user_id) return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
+        }
+
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
 
         const loggedOutUser = await userObject.logoutUser(user_id);
-        return res.status(OK)
+        return res
+            .status(OK)
             .clearCookie('notes_accessToken', COOKIE_OPTIONS)
             .clearCookie('notes_refreshToken', COOKIE_OPTIONS)
             .json(loggedOutUser);
