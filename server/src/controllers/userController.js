@@ -115,7 +115,9 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { loginInput, password } = req.body;
-        if (!loginInput || !password) return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        if (!loginInput || !password) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        }
         const user = await userObject.getUser(loginInput);
         if (user?.message) return res.status(BAD_REQUEST).json(user);
         const response = await verifyPassword(password, user.user_password);
