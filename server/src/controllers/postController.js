@@ -39,12 +39,7 @@ const getRandomPosts = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const { channelId } = req.params;
-        const {
-            orderBy = 'desc',
-            limit = 10,
-            page = 1,
-            category = '',
-        } = req.query;
+        const {orderBy = 'desc', limit = 10, page = 1, category = ''} = req.query;
         if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({
                 message: 'CHANNELID_MISSING_OR_INVALID',
@@ -70,18 +65,14 @@ const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
         if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
+            return res.status(BAD_REQUEST).json({ message: 'POSTID_MISSING_OR_INVALID' });
         }
 
         let userIdentifier = req.ip;
         if (req.user) {
             const { user_id } = req.user;
             if (!user_id) {
-                return res
-                    .status(BAD_REQUEST)
-                    .json({ message: 'MISSING_USERID' });
+                return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
             }
             await userObject.updateWatchHistory(postId, user_id);
             userIdentifier = user_id;
@@ -106,34 +97,16 @@ const addPost = async (req, res) => {
         const { title, content, category } = req.body;
         const postId = uuid();
 
-        if (!postId) {
-            throw new Error('POSTID_CREATION_UUID_ISSUE');
-        }
-
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
-        }
-
-        if (!title || !content || !category) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
-        }
-
-        if (!req.file) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'MISSING_POSTIMAGE' });
-        }
+        if (!postId) throw new Error('POSTID_CREATION_UUID_ISSUE');
+        if (!user_id) return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
+        if (!title || !content || !category) return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        if (!req.file) return res.status(BAD_REQUEST).json({ message: 'MISSING_POSTIMAGE' });
 
         const postImageLocalPath = req.file.path;
-        if (!postImageLocalPath) {
-            throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
-        }
+        if (!postImageLocalPath) throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
 
         postImage = await uploadOnCloudinary(postImageLocalPath);
-        if (!postImage) {
-            throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
-        }
-
+        if (!postImage) throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
         const postImageURL = postImage.url;
 
         const post = await postObject.createPost(
@@ -147,9 +120,7 @@ const addPost = async (req, res) => {
 
         return res.status(OK).json(post);
     } catch (err) {
-        if (postImage) {
-            await deleteFromCloudinary(postImage.url);
-        }
+        if (postImage) await deleteFromCloudinary(postImage.url);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while adding a post',
             error: err.message,

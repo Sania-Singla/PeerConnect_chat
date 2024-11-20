@@ -13,17 +13,6 @@ create table posts (
     CONSTRAINT posts_post_ownerId_fk FOREIGN KEY(post_ownerId) 
         REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-create table post_likes (
-    post_id varchar(40),
-    user_id varchar(40),
-    is_liked boolean DEFAULT TRUE,
-    CONSTRAINT post_likes_pk PRIMARY KEY(user_id, post_id),
-    CONSTRAINT post_likes_user_id_fk FOREIGN KEY(user_id) 
-        REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT post_likes_post_id_fk FOREIGN KEY(post_id) 
-        REFERENCES posts(post_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 
 create table post_views (
     post_id varchar(40),
