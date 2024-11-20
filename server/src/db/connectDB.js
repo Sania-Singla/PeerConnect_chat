@@ -16,8 +16,7 @@ class DBConnection {
     }
 
     connect = async () => {
-        try {
-            if (!this.connection) {
+        try {if (!this.connection) {
                 switch (process.env.DATABASE_TYPE) {
                     case 'SQL': {
                         await this.connectMYSQL();
@@ -31,18 +30,10 @@ class DBConnection {
                         await this.connectMongoDB();
                         break;
                     }
-                    default: {
-                        throw new Error('Unsupported Database Type');
-                    }
+                    default: {throw new Error('Unsupported Database Type');}
                 }
-            }
-            return this.connection;
-        } catch (err) {
-            return console.log(
-                "Didn't connected to the database.",
-                err.message
-            );
-        }
+            }return this.connection;
+        } catch (err) {return console.log("Didn't connected to the database.", err.message);}
     };
 
     async connectMYSQL() {
