@@ -2,16 +2,7 @@ import { Iusers } from '../../interfaces/userInterface.js';
 import { connection } from '../../server.js';
 import validator from 'validator';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
-import { v4 as uuid } from 'uuid';
-import fs from 'fs';
-import bcrypt from 'bcrypt';
-import oracledb from 'oracledb';
-import jwt from 'jsonwebtoken';
-import multer from 'multer';
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-import validator from 'validator';
+
 export class SQLusers extends Iusers {
     async getUser(searchInput) {
         try {
