@@ -12,32 +12,24 @@ export class Oracleusers extends Iusers {
                 searchInput: { val: searchInput, type: connection.STRING },
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
-
             if (!result.outBinds.result) {
                 throw new Error('User not found');
             }
-
             return JSON.parse(result.outBinds.result);
-        } catch (err) {
-            throw err;
-        }
+        } catch (err) {throw err;}
     }
 
     async createUser(
-        userId,
-        userName,
-        firstName,
-        lastName,
-        avatar,
-        coverImage,
-        email,
-        password
+        userId, userName, firstName,
+        lastName, avatar, coverImage,
+        email, password
     ) {
         try {
             const q = `BEGIN
-                            :result := USERS_PACKAGE.createUser(:userId, :userName, :firstName, :lastName, :email, :avatar, :coverImage, :password);
-                        END;`;
-
+                        :result := USERS_PACKAGE.createUser(:userId, :userName, 
+                            :firstName, :lastName, :email, 
+                            :avatar, :coverImage, :password);
+                    END;`;
             const result = await connection.execute(q, {
                 userId: { val: userId, type: connection.STRING },
                 userName: { val: userName, type: connection.STRING },
@@ -49,11 +41,8 @@ export class Oracleusers extends Iusers {
                 password: { val: password, type: connection.STRING },
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
-
             return result.outBinds.result;
-        } catch (err) {
-            throw err;
-        }
+        } catch (err) {throw err;}
     }
 
     async getChannelProfile(channelId, currentUserId) {

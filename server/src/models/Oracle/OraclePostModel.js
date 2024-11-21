@@ -3,7 +3,6 @@ import { connection } from '../../server.js';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 
 export class Oracleposts extends Iposts {
-    
     async getRandomPosts(limit, orderBy, page, category) {
         try {
             if (orderBy !== 'ASC' && orderBy !== 'DESC') {
@@ -36,17 +35,14 @@ export class Oracleposts extends Iposts {
         }
     }
 
-  
     async getPosts(channelId, limit, orderBy, page, category) {
         try {
             if (orderBy !== 'ASC' && orderBy !== 'DESC') {
                 throw new Error('Invalid order direction. Use ASC or DESC.');
             }
-
             const q = `BEGIN
-                            :result := POSTS_PACKAGE.getPosts(:channelId, :limit, :orderBy, :page, :category);
-                        END;`;
-
+                        :result := POSTS_PACKAGE.getPosts(:channelId, :limit, :orderBy, :page, :category);
+                    END;`;
             const result = await connection.execute(q, {
                 channelId: { val: channelId, type: connection.STRING },
                 limit: { val: limit, type: connection.NUMBER },
@@ -55,44 +51,31 @@ export class Oracleposts extends Iposts {
                 category: { val: category, type: connection.STRING },
                 result: { dir: connection.BIND_OUT, type: connection.CURSOR },
             });
-
             const cursor = result.outBinds.result;
             const posts = await cursor.getRows();
             cursor.close();
-
-            if (posts.length === 0) {
-                throw new Error('No posts found');
-            }
-
-            return posts; // Return the fetched posts data
-        } catch (err) {
-            throw err;
-        }
+            if (posts.length === 0) throw new Error('No posts found')
+            return posts; 
+        } catch (err) {throw err;}
     }
 
     async getPost(postId, userId) {
         try {
             const q = `BEGIN
-                            :result := POSTS_PACKAGE.getPost(:postId, :userId);
-                        END;`;
-
+                        :result := POSTS_PACKAGE.getPost(:postId, :userId);
+                    END;`;
             const result = await connection.execute(q, {
                 postId: { val: postId, type: connection.STRING },
                 userId: { val: userId, type: connection.STRING },
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
-
-            if (!result.outBinds.result) {
-                throw new Error('Post not found');
-            }
-
-            return JSON.parse(result.outBinds.result); // Parse the result to return the post data
+            if (!result.outBinds.result) throw new Error('Post not found')
+            return JSON.parse(result.outBinds.result); 
         } catch (err) {
             throw err;
         }
     }
 
-   
     async createPost(postId, ownerId, title, content, category, image) {
         try {
             const q = `BEGIN
@@ -115,7 +98,6 @@ export class Oracleposts extends Iposts {
         }
     }
 
-   
     async updatePostDetails(postId, title, content, category) {
         try {
             const q = `BEGIN
@@ -136,7 +118,6 @@ export class Oracleposts extends Iposts {
         }
     }
 
-   
     async deletePost(postId) {
         try {
             const q = `BEGIN
@@ -154,7 +135,6 @@ export class Oracleposts extends Iposts {
         }
     }
 
-  
     async updatePostImage(postId, image) {
         try {
             const q = `BEGIN
@@ -191,7 +171,6 @@ export class Oracleposts extends Iposts {
         }
     }
 
-   
     async getSavedPosts(userId, limit, orderBy, page) {
         try {
             if (orderBy !== 'ASC' && orderBy !== 'DESC') {
@@ -224,7 +203,6 @@ export class Oracleposts extends Iposts {
         }
     }
 
-   
     async removeSavedPost(userId, postId) {
         try {
             const q = `BEGIN

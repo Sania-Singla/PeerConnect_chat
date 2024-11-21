@@ -28,7 +28,7 @@ export class Oraclelikes extends Ilikes {
             }
 
             // Assuming the returned data has pagination information
-            return posts; 
+            return posts;
         } catch (err) {
             throw err;
         }
@@ -40,18 +40,14 @@ export class Oraclelikes extends Ilikes {
                 BEGIN
                     :result := LIKES_PACKAGE.togglePostLike(:postId, :userId, :likedStatus);
                 END;`;
-
             const result = await connection.execute(q, {
                 postId: { val: postId, type: connection.NUMBER },
                 userId: { val: userId, type: connection.NUMBER },
                 likedStatus: { val: likedStatus, type: connection.NUMBER },
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
-
             return result.outBinds.result;
-        } catch (err) {
-            throw err;
-        }
+        } catch (err) {throw err;}
     }
 
     async toggleCommentLike(commentId, userId, likedStatus) {
