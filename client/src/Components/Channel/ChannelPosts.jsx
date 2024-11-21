@@ -54,7 +54,7 @@ export default function ChannelPosts() {
         <div className="w-full">
             <div className="w-full">
                 {user?.user_name === channel.user_name && (
-                    <div className="w-full flex items-center justify-center mb-4">
+                    <div className="w-full flex items-center justify-center my-8">
                         <Button
                             btnText={
                                 <div className="flex items-center justify-center gap-2">
@@ -65,6 +65,7 @@ export default function ChannelPosts() {
                                 </div>
                             }
                             onClick={() => navigate('/add')}
+                            className="rounded-md text-white py-2 text-lg px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 )}
@@ -84,9 +85,13 @@ export default function ChannelPosts() {
                     </div>
                 )
             ) : postElements.length > 0 ? (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6">
-                    {postElements}
-                </div>
+                postElements.length > 1 ? (
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6">
+                        {postElements}
+                    </div>
+                ) : (
+                    <div className="w-[450px]">{postElements}</div>
+                )
             ) : (
                 <div>No posts found !!</div>
             )}

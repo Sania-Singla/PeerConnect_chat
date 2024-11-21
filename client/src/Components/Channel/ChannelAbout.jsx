@@ -25,20 +25,20 @@ export default function ChannelAbout() {
     }
 
     return (
-        <div>
+        <div className="pl-10">
             <div className="mb-6">
-                <div className="text-2xl">
+                <div className="text-4xl font-medium">
                     {user_firstName} {user_lastName}
                 </div>
-                <div className="text-xl">@{user_name}</div>
-                <div>{user_bio}</div>
+                <div className="text-[1.4rem] text-[#333333]">@{user_name}</div>
+                <div className="mt-2 text-[#3f3f3f]">{user_bio}</div>
             </div>
 
-            <div className="text-2xl mb-4">Channel details</div>
+            <div className="text-3xl mb-4 font-medium">Channel details</div>
 
             <div className="flex flex-col gap-2 items-start justify-start mt-2 text-lg">
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">
+                    <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.email}
                     </div>
 
@@ -48,7 +48,7 @@ export default function ChannelAbout() {
                         </div>
 
                         <div
-                            className="size-[15px] hover:fill-[#ffffff] cursor-pointer fill-[#b5b4b4]"
+                            className="size-[15px] cursor-pointer fill-[black] hover:fill-[#4977ec]"
                             onClick={copyEmail}
                         >
                             {icons.clipboard}
@@ -57,7 +57,7 @@ export default function ChannelAbout() {
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[23px] fill-[#b5b4b4]">
+                    <div className="size-[23px] fill-[black] hover:fill-[#4977ec]">
                         {icons.globe}
                     </div>
                     <NavLink
@@ -69,28 +69,28 @@ export default function ChannelAbout() {
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">
+                    <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.people}
                     </div>
                     <div>{totalFollowers} followers</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">
+                    <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.posts}
                     </div>
                     <div>{totalPosts} posts</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">
+                    <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.eye}
                     </div>
                     <div>{totalChannelViews} views</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">
+                    <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.date}
                     </div>
                     <div>Joined on {formatDateExact(user_createdAt)}</div>

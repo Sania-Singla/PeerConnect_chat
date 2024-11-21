@@ -16,7 +16,8 @@ class DBConnection {
     }
 
     connect = async () => {
-        try {if (!this.connection) {
+        try {
+            if (!this.connection) {
                 switch (process.env.DATABASE_TYPE) {
                     case 'SQL': {
                         await this.connectMYSQL();
@@ -30,10 +31,18 @@ class DBConnection {
                         await this.connectMongoDB();
                         break;
                     }
-                    default: {throw new Error('Unsupported Database Type');}
+                    default: {
+                        throw new Error('Unsupported Database Type');
+                    }
                 }
-            }return this.connection;
-        } catch (err) {return console.log("Didn't connected to the database.", err.message);}
+            }
+            return this.connection;
+        } catch (err) {
+            return console.log(
+                "Didn't connected to the database.",
+                err.message
+            );
+        }
     };
 
     async connectMYSQL() {
@@ -50,7 +59,7 @@ class DBConnection {
             // Testing the connection
             const conn = await this.connection.getConnection();
             console.log(
-                `Connected to mysql successfully, host: ${conn.config.host}`
+                `Connected to MySQL successfully, host: ${conn.config.host}`
             );
             conn.release();
         } catch (err) {
@@ -66,7 +75,7 @@ class DBConnection {
                 connectString: process.env.ORACLE_CONNECT_STRING,
             });
             // oracledb doesn't expose the host
-            console.log(`Connected to oracle successfully`);
+            console.log(`Connected to Oracle successfully`);
         } catch (err) {
             return console.log("oracle didn't connected !!", err);
         }

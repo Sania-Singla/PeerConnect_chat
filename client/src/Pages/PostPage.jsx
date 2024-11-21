@@ -150,7 +150,7 @@ export default function PostPage() {
     ) : (
         <div className="relative w-full h-full flex flex-col items-start justify-start gap-y-6 overflow-y-scroll">
             <div className="w-full">
-                <div className="w-full flex items-start justify-start flex-col xl:flex-row">
+                <div className="w-full flex items-start justify-start flex-col xl:flex-row gap-6">
                     {/* post */}
                     <div className="w-full xl:w-[75%] h-full">
                         {/* post image */}
@@ -254,9 +254,9 @@ export default function PostPage() {
                     </div>
 
                     {/* owner info */}
-                    <div className="w-full xl:w-[25%] flex flex-col xl:pl-8 xl:pr-1 xl:mt-0 mt-4">
+                    <div className="drop-shadow-md bg-[#f9f9f9] p-4 rounded-xl w-full xl:w-[25%] flex flex-col xl:pl-8 xl:pr-1 xl:mt-0 mt-4">
                         {/* BIGGER SCREEN */}
-                        <div className="hidden xl:flex items-center justify-between w-full">
+                        <div className="hidden xl:flex items-center justify-between pr-4 w-full">
                             {/* post category */}
                             <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px]">
                                 <div className="size-[10px] fill-[#2556d1]">

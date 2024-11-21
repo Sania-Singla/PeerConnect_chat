@@ -5,57 +5,30 @@ import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 export class Oraclelikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            verifyOrderBy(orderBy);
+            verifyOrderBy(orderBy); // Ensure valid order direction
             const q = `
-                    SELECT
-                    	c.user_id,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName lastName,
-                        c.user_avatar AS avatar,
-                        p.post_id, 
-                        p.category_name,
-                        p.post_updatedAt,
-                        p.post_createdAt, 
-                        p.post_title, 
-                        p.post_content, 
-                        p.totalViews,
-                        p.post_image
-                    FROM post_view p
-                    JOIN channel_view c
-                    ON p.post_ownerId = c.user_id 
-                    JOIN post_likes l
-                    ON p.post_id = l.post_id 
-                    WHERE l.user_id = ? AND l.is_liked = 1
-                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
-                    LIMIT ? OFFSET ?
-                `;
+                BEGIN
+                    :result := LIKES_PACKAGE.getLikedPosts(:userId, :orderBy, :limit, :page);
+                END;`;
 
-            const countQ =
-                'SELECT COUNT(*) AS totalPosts FROM post_likes WHERE user_id = ? AND is_liked = 1';
+            const result = await connection.execute(q, {
+                userId: { val: userId, type: connection.STRING },
+                orderBy: { val: orderBy, type: connection.STRING },
+                limit: { val: limit, type: connection.NUMBER },
+                page: { val: page, type: connection.NUMBER },
+                result: { dir: connection.BIND_OUT, type: connection.CURSOR },
+            });
 
-            const offset = (page - 1) * limit;
+            const cursor = result.outBinds.result;
+            let posts = await cursor.getRows();
+            cursor.close();
 
-            const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
-            const [posts] = await connection.query(q, [userId, limit, offset]);
-
-            if (!posts?.length) {
+            if (!posts.length) {
                 return { message: 'NO_LIKED_POSTS' };
             }
 
-            const totalPages = Math.ceil(totalPosts / limit);
-            const hasNextPage = page < totalPages;
-            const hasPrevPage = page > 1;
-
-            return {
-                postsInfo: {
-                    totalPosts,
-                    totalPages,
-                    hasNextPage,
-                    hasPrevPage,
-                },
-                posts,
-            };
+            // Assuming the returned data has pagination information
+            return posts; 
         } catch (err) {
             throw err;
         }
@@ -63,13 +36,19 @@ export class Oraclelikes extends Ilikes {
 
     async togglePostLike(postId, userId, likedStatus) {
         try {
-            const q = 'CALL togglePostLike(?, ?, ?)';
-            const [[[response]]] = await connection.query(q, [
-                userId,
-                postId,
-                likedStatus,
-            ]);
-            return response;
+            const q = `
+                BEGIN
+                    :result := LIKES_PACKAGE.togglePostLike(:postId, :userId, :likedStatus);
+                END;`;
+
+            const result = await connection.execute(q, {
+                postId: { val: postId, type: connection.NUMBER },
+                userId: { val: userId, type: connection.NUMBER },
+                likedStatus: { val: likedStatus, type: connection.NUMBER },
+                result: { dir: connection.BIND_OUT, type: connection.STRING },
+            });
+
+            return result.outBinds.result;
         } catch (err) {
             throw err;
         }
@@ -77,13 +56,19 @@ export class Oraclelikes extends Ilikes {
 
     async toggleCommentLike(commentId, userId, likedStatus) {
         try {
-            const q = 'CALL toggleCommentLike(?, ?, ?)';
-            const [[[response]]] = await connection.query(q, [
-                userId,
-                commentId,
-                likedStatus,
-            ]);
-            return response;
+            const q = `
+                BEGIN
+                    :result := LIKES_PACKAGE.toggleCommentLike(:commentId, :userId, :likedStatus);
+                END;`;
+
+            const result = await connection.execute(q, {
+                commentId: { val: commentId, type: connection.NUMBER },
+                userId: { val: userId, type: connection.NUMBER },
+                likedStatus: { val: likedStatus, type: connection.NUMBER },
+                result: { dir: connection.BIND_OUT, type: connection.STRING },
+            });
+
+            return result.outBinds.result;
         } catch (err) {
             throw err;
         }

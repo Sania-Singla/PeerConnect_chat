@@ -63,7 +63,7 @@ export default function ChannelPage() {
             to={tab.path}
             end
             className={({ isActive }) =>
-                `${isActive ? 'border-[#4977ec]' : 'border-white'} border-b-[0.01rem] w-full`
+                `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-black bg-[#f9f9f9] text-black'} drop-shadow-md hover:backdrop-brightness-90 rounded-t-md p-[3px] border-b-[0.1rem] w-full text-center text-lg font-medium`
             }
         >
             <div className="w-full text-center">{tab.name}</div>
@@ -75,7 +75,7 @@ export default function ChannelPage() {
     ) : channel ? (
         <div className="w-full h-full">
             {/* owner coverImage */}
-            <div className="w-full h-[200px] overflow-hidden">
+            <div className="w-full h-[180px] overflow-hidden rounded-xl drop-shadow-md">
                 <img
                     src={channel.user_coverImage}
                     alt="channel coverImage"
@@ -83,39 +83,39 @@ export default function ChannelPage() {
                 />
             </div>
 
-            {/* owner channel info */}
-            <div className="flex items-center justify-between w-full pr-2 relative -top-3">
+            {/* owner info */}
+            <div className="flex items-center justify-between w-full pr-8 relative ">
                 <div className="flex items-center justify-start gap-4">
                     {/* owner avatar */}
-                    <div className="relative -top-2">
-                        <div className="size-[120px] rounded-full overflow-hidden border-[0.3rem] border-black">
-                            <img
-                                src={channel.user_avatar}
-                                alt="channel owner avatar"
-                                className="object-cover size-full"
-                            />
-                        </div>
-                    </div>
-
-                    {/* owner info */}
-                    <div>
-                        <div className="text-xl font-medium">
-                            {channel.user_firstName} {channel.user_lastName}
+                    <div className="relative -top-8 flex gap-2 items-center justify-start">
+                        <div className="relative">
+                            <div className="rounded-full  overflow-hidden size-[140px] border-[0.5rem] border-white ">
+                                <img
+                                    alt="user avatar"
+                                    src={user.user_avatar}
+                                    className="size-full object-cover drop-shadow-md"
+                                />
+                            </div>
                         </div>
 
-                        <div className="text-[#dadada] text-[17px]">
-                            @{channel.user_name}
-                        </div>
-
-                        <div className="flex gap-1 items-center justify-start text-[#a5a5a5] text-[15px]">
-                            {channel.totalFollowers} followers &bull;{' '}
-                            {channel.totalFollowings}
-                            followings
+                        {/* channel info*/}
+                        <div className="flex flex-col items-start justify-center gap-1 mt-4">
+                            <div className="text-3xl font-medium">
+                                {user.user_firstName} {user.user_lastName}
+                            </div>
+                            <div className="text-xl text-[#151515]">
+                                @{user.user_name}
+                            </div>
+                            <div className="flex gap-1 items-center justify-start text-[#3f3f3f] text-md">
+                                {channel.totalFollowers} followers &bull;{' '}
+                                {channel.totalFollowings}
+                                followings
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* follow btn */}
+                {/* follow/edit btn */}
                 {user?.user_name === channel.user_name ? (
                     <div className="">
                         <Button
@@ -123,6 +123,7 @@ export default function ChannelPage() {
                             onClick={() => {
                                 navigate('/settings');
                             }}
+                            className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 ) : (
@@ -130,6 +131,7 @@ export default function ChannelPage() {
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
+                            className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 )}

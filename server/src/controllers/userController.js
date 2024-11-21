@@ -207,6 +207,13 @@ const logoutUser = async (req, res) => {
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
         }
+
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
+
         const loggedOutUser = await userObject.logoutUser(user_id);
         return res
             .status(OK)

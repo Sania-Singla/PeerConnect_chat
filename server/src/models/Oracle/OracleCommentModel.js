@@ -8,21 +8,25 @@ export class Oraclecomments extends Icomments {
             verifyOrderBy(orderBy);
 
             const q = `  
-                    SELECT 
-                        v.*,
-                        IFNULL(l.is_liked, -1) AS isLiked    -- -1 for no interaction
-                    FROM comment_view v
-                    LEFT JOIN comment_likes l 
-                    ON v.comment_id = l.comment_id AND l.user_id = ?
-                    WHERE v.post_id = ? 
-                    ORDER BY v.comment_createdAt ${orderBy.toUpperCase()};
-                `;
+                BEGIN
+                    :result := COMMENT_PACKAGE.getComments(:postId, :currentUserId, :orderBy);
+                END;`;
 
-            const [comments] = await connection.query(q, [
-                currentUserId,
-                postId,
-            ]);
-            if (!comments?.length) {
+            const result = await connection.execute(q, {
+                postId: { val: postId, type: connection.NUMBER },
+                currentUserId: { val: currentUserId, type: connection.NUMBER },
+                orderBy: {
+                    val: orderBy.toUpperCase(),
+                    type: connection.STRING,
+                },
+                result: { dir: connection.BIND_OUT, type: connection.CURSOR }, // Return cursor
+            });
+
+            const cursor = result.outBinds.result;
+            const comments = await cursor.getRows();
+            cursor.close();
+
+            if (comments.length === 0) {
                 return { message: 'NO_COMMENTS_FOUND' };
             }
 
@@ -32,22 +36,23 @@ export class Oraclecomments extends Icomments {
         }
     }
 
-    // only for checking if that comment exists or not
     async getComment(commentId, currentUserId) {
         try {
             const q = `  
-                    SELECT 
-                        v.*,
-                        IFNULL(l.is_liked, -1) AS isLiked
-                    FROM comment_view v
-                    LEFT JOIN comment_likes l 
-                    ON v.comment_id = l.comment_id AND l.user_id = ? 
-                    WHERE v.comment_id = ?  
-                `;
-            const [[comment]] = await connection.query(q, [
-                currentUserId,
-                commentId,
-            ]);
+                BEGIN
+                    :result := COMMENT_PACKAGE.getComment(:commentId, :currentUserId);
+                END;`;
+
+            const result = await connection.execute(q, {
+                commentId: { val: commentId, type: connection.NUMBER },
+                currentUserId: { val: currentUserId, type: connection.NUMBER },
+                result: { dir: connection.BIND_OUT, type: connection.CURSOR }, // Return cursor
+            });
+
+            const cursor = result.outBinds.result;
+            const [[comment]] = await cursor.getRows();
+            cursor.close();
+
             if (!comment) {
                 return { message: 'COMMENT_NOT_FOUND' };
             }
@@ -60,20 +65,23 @@ export class Oraclecomments extends Icomments {
 
     async createComment(commentId, userId, postId, commentContent) {
         try {
-            const q =
-                'INSERT INTO comments(comment_id, user_id, post_id, comment_content) VALUES (?, ?, ?, ?)';
-            await connection.query(q, [
-                commentId,
-                userId,
-                postId,
-                commentContent,
-            ]);
+            const q = `
+                BEGIN
+                    :result := COMMENT_PACKAGE.createComment(:commentId, :userId, :postId, :commentContent);
+                END;`;
 
-            const comment = await this.getComment(commentId);
-            if (comment?.message) {
-                throw new Error('COMMENT_INSERTION_DB_ISSUE');
-            }
-            return comment;
+            const result = await connection.execute(q, {
+                commentId: { val: commentId, type: connection.NUMBER },
+                userId: { val: userId, type: connection.NUMBER },
+                postId: { val: postId, type: connection.NUMBER },
+                commentContent: {
+                    val: commentContent,
+                    type: connection.STRING,
+                },
+                result: { dir: connection.BIND_OUT, type: connection.STRING }, // Return status message
+            });
+
+            return result.outBinds.result;
         } catch (err) {
             throw err;
         }
@@ -81,12 +89,17 @@ export class Oraclecomments extends Icomments {
 
     async deleteComment(commentId) {
         try {
-            const q = 'DELETE FROM comments WHERE comment_id = ?';
-            const [response] = await connection.query(q, [commentId]);
-            if (response.affectedRows === 0) {
-                throw new Error('COMMENT_DELETION_DB_ISSUE');
-            }
-            return { message: 'COMMENT_DELETED_SUCCESSFULLY' };
+            const q = `
+                BEGIN
+                    :result := COMMENT_PACKAGE.deleteComment(:commentId);
+                END;`;
+
+            const result = await connection.execute(q, {
+                commentId: { val: commentId, type: connection.NUMBER },
+                result: { dir: connection.BIND_OUT, type: connection.STRING }, // Return status message
+            });
+
+            return result.outBinds.result;
         } catch (err) {
             throw err;
         }
@@ -94,14 +107,21 @@ export class Oraclecomments extends Icomments {
 
     async editComment(commentId, commentContent) {
         try {
-            const q =
-                'UPDATE comments SET comment_content= ? WHERE comment_id = ?';
-            await connection.query(q, [commentContent, commentId]);
-            const comment = await this.getComment(commentId);
-            if (comment?.message) {
-                throw new Error('COMMENT_UPDATION_DB_ISSUE');
-            }
-            return comment;
+            const q = `
+                BEGIN
+                    :result := COMMENT_PACKAGE.editComment(:commentId, :commentContent);
+                END;`;
+
+            const result = await connection.execute(q, {
+                commentId: { val: commentId, type: connection.NUMBER },
+                commentContent: {
+                    val: commentContent,
+                    type: connection.STRING,
+                },
+                result: { dir: connection.BIND_OUT, type: connection.STRING }, // Return status message
+            });
+
+            return result.outBinds.result;
         } catch (err) {
             throw err;
         }

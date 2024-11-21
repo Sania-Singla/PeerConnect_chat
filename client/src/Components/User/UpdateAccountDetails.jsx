@@ -110,55 +110,69 @@ export default function UpdateAccountDetails() {
     ];
 
     const inputElements = inputFields.map((field) => (
-        <div key={field.name}>
-            <div className="flex gap-x-1">
+        <div key={field.name} className="w-full">
+            <div className="bg-[#f9f9f9] z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
                 <label htmlFor={field.name}>
-                    {field.required && <span className="text-red-500">* </span>}
-                    {field.label} :
+                    {field.label}
+                    {field.required && <span className="text-red-500">*</span>}
                 </label>
-                {error[field.name] && (
-                    <div className="pt-[0.09rem] text-red-500 text-sm">
-                        {error[field.name]}
-                    </div>
-                )}
             </div>
-            <input
-                type={field.type}
-                name={field.name}
-                id={field.name}
-                placeholder={field.placeholder}
-                value={inputs[field.name]}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                required={field.required}
-                className="bg-transparent border-[0.01rem]"
-            />
+            <div>
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    placeholder={field.placeholder}
+                    value={inputs[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required={field.required}
+                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                />
+            </div>
+            {error[field.name] && (
+                <div className="pt-[0.09rem] text-red-500 text-sm">
+                    {error[field.name]}
+                </div>
+            )}
         </div>
     ));
 
     return (
-        <div className="bg-slate-600">
-            <form onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-4">{inputElements}</div>
-                <div className="flex gap-2">
-                    <Button
-                        btnText={loading ? 'Updating...' : 'Update'}
-                        disabled={disabled}
-                        type="submit"
-                        onMouseOver={onMouseOver}
-                    />
-                    <Button
-                        onMouseOver={onMouseOver}
-                        btnText="Cancel"
-                        type="button"
-                        onClick={() => {
-                            setInputs(initialInputs);
-                            setError(nullErrors);
-                        }}
-                        disabled={loading}
-                    />
+        <div className="w-full px-4 py-2">
+            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] px-12 py-6 sm:gap-14">
+                <div className="w-full py-6 px-4">
+                    <h3>Update Personal Information</h3>
+                    <p className="">
+                        Update your personal details here. Please note that
+                        changes cannot be undone.
+                    </p>
                 </div>
-            </form>
+
+                <form onSubmit={handleSubmit} className="w-full max-w-[600px]">
+                    <div className="flex flex-col gap-4">{inputElements}</div>
+                    <div className="flex gap-6 mt-6">
+                        <Button
+                            btnText={loading ? 'Updating...' : 'Update'}
+                            disabled={disabled}
+                            type="submit"
+                            onMouseOver={onMouseOver}
+                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                        />
+                        <Button
+                            onMouseOver={onMouseOver}
+                            btnText="Cancel"
+                            type="button"
+                            onClick={() => {
+                                setInputs(initialInputs);
+                                setError(nullErrors);
+                            }}
+                            disabled={loading}
+                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

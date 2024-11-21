@@ -41,7 +41,7 @@ export default function Header() {
                     onClick={() => {
                         setShowSideBar((prev) => !prev);
                     }}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
                 />
 
                 {/* logo */}

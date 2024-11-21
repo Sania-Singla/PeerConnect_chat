@@ -64,12 +64,14 @@ export default function Recemendations({ category, currentPostId }) {
                         <span className="text-xl ml-3">Please wait . . .</span>
                     </div>
                 )
+            ) : postElements.length > 0 ? (
+                <div className="w-full overflow-x-auto grid grid-flow-col auto-cols-[minmax(350px,350px)] gap-6">
+                    {postElements}
+                </div>
             ) : (
-                postElements.length > 0 && (
-                    <div className="w-full overflow-x-auto grid grid-flow-col auto-cols-[minmax(350px,350px)] gap-6">
-                        {postElements}
-                    </div>
-                )
+                <div className="text-lg text-[#363636]">
+                    No Similar Posts Found !!
+                </div>
             )}
         </div>
     );

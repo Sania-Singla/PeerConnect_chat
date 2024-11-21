@@ -17,6 +17,7 @@ import SavedPostsPage from './SavedPostsPage';
 import AboutUsPage from './AboutUsPage';
 import ContactUsPage from './ContactUsPage';
 import FAQpage from './FAQpage';
+import FollowersPage from './FollowersPage';
 
 export {
     AboutUsPage,
@@ -38,4 +39,5 @@ export {
     SavedPostsPage,
     ContactUsPage,
     FAQpage,
+    FollowersPage,
 };

@@ -135,7 +135,11 @@ export default function UpdatePostPage() {
     ];
 
     const categoryElements = categories?.map((category) => (
-        <div key={category} className="flex items-center justify-start gap-2">
+        <label
+            htmlFor={category}
+            key={category}
+            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px] min-w-[100px]"
+        >
             <input
                 type="radio"
                 name="category"
@@ -144,31 +148,31 @@ export default function UpdatePostPage() {
                 checked={inputs.category === category}
                 onChange={handleChange}
             />
-            <label htmlFor={category}>{category}</label>
-        </div>
+            {category}
+        </label>
     ));
 
     return loading ? (
         <div>loading...</div>
     ) : user.user_name === post.userName ? (
-        <div className="w-full h-full overflow-scroll p-4">
+        <div className="w-full h-full overflow-scroll px-10">
+            <h2 className="text-[#252525] w-full text-center mb-8 underline underline-offset-2">
+                Update a Post
+            </h2>
             <form
                 onSubmit={handleSubmit}
-                className="w-full h-full flex items-start justify-start gap-8"
+                className="w-full h-full flex flex-col md:flex-row items-start justify-start gap-10"
             >
-                <div className="w-[70%] h-full">
-                    <div className="w-full flex items-center justify-between">
-                        <div>
+                <div className="w-full md:w-[70%] h-full">
+                    <div className="w-full flex items-center justify-between gap-10">
+                        <div className="w-full">
                             <div className="flex items-center justify-start gap-2">
-                                <label htmlFor="title">
-                                    <span className="text-red-500">* </span>
-                                    Title :
-                                </label>
-                                {error.title && (
-                                    <div className="pt-[0.09rem] text-red-500 text-sm">
-                                        {error.title}
-                                    </div>
-                                )}
+                                <div className="bg-white z-[1] ml-3 px-2 w-fit text-[1.1rem] relative top-3 font-medium">
+                                    <label htmlFor="title">
+                                        <span className="text-red-500">* </span>
+                                        Title :
+                                    </label>
+                                </div>
                             </div>
                             <div>
                                 <input
@@ -179,22 +183,24 @@ export default function UpdatePostPage() {
                                     onChange={handleChange}
                                     value={inputs.title}
                                     onBlur={handleBlur}
-                                    className="bg-transparent border-[0.01rem] text-white p-1 rounded-md"
+                                    className="shadow-md shadow-[#f7f7f7] py-[18px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
                                 />
                             </div>
+                            {error.title && (
+                                <div className="pt-[0.09rem] text-red-500 text-sm">
+                                    {error.title}
+                                </div>
+                            )}
                         </div>
 
-                        <div>
+                        <div className="w-full">
                             <div className="flex items-center justify-start gap-2">
-                                <label htmlFor="postImage">
-                                    <span className="text-red-500">* </span>
-                                    Thumbnail :
-                                </label>
-                                {error.postImage && (
-                                    <div className="pt-[0.09rem] text-red-500 text-sm">
-                                        {error.postImage}
-                                    </div>
-                                )}
+                                <div className="bg-white z-[1] ml-3 px-2 w-fit text-[1.1rem] relative top-3 font-medium">
+                                    <label htmlFor="postImage">
+                                        <span className="text-red-500">* </span>
+                                        Thumbnail :
+                                    </label>
+                                </div>
                             </div>
                             <div>
                                 <input
@@ -202,14 +208,19 @@ export default function UpdatePostPage() {
                                     onChange={handleFileChange}
                                     name="postImage"
                                     id="postImage"
-                                    className="bg-transparent border-[0.01rem] text-white p-1 rounded-md"
+                                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] border border-gray-500 w-full"
                                 />
                             </div>
+                            {error.postImage && (
+                                <div className="pt-[0.09rem] text-red-500 text-sm">
+                                    {error.postImage}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="w-full mt-10">
-                        <div>
+                        <div className="text-lg font-medium">
                             <span className="text-red-500">* </span>Content :
                         </div>
                         <RTE
@@ -224,22 +235,41 @@ export default function UpdatePostPage() {
                     </div>
                 </div>
 
-                <div className="h-full w-[30%]">
-                    <div className="w-full flex items-center justify-center">
-                        <div className="w-[70%] h-[180px] rounded-lg overflow-hidden">
-                            <img
-                                src={thumbnailPreview}
-                                alt="thumbnail preview"
-                                className="object-cover h-full w-full border-[0.01rem] rounded-lg"
-                            />
+                <div className="h-full w-full md:w-[30%] flex flex-col items-center">
+                    <div className="drop-shadow-md w-full flex items-center justify-center">
+                        <div className="max-w-[400px] h-[220px] md:max-w-[300px] w-full md:h-[180px] rounded-lg overflow-hidden">
+                            {thumbnailPreview ? (
+                                <img
+                                    src={thumbnailPreview}
+                                    alt="thumbnail preview"
+                                    className="object-cover h-full w-full border-[0.01rem] border-[#838383] rounded-lg"
+                                />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center gap-2 h-full w-full border-[0.01rem] border-[#838383] rounded-xl">
+                                    <div
+                                        className="bg-[#f9f9f9] p-2
+                                    rounded-full drop-shadow-md w-fit"
+                                    >
+                                        <div className="size-[20px]">
+                                            {icons.image}
+                                        </div>
+                                    </div>
+                                    <div className="text-lg">
+                                        Thumbnail Preview
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    <div className="w-full mt-8">
-                        <div>
-                            <span className="text-red-500">* </span>Category :
+                    <div className="drop-shadow-md bg-[#f9f9f9] p-6 max-w-[300px] md:max-w-[280px] w-full gap-6 mt-8 flex flex-col items-center">
+                        <div className="text-xl font-medium">
+                            <span className="text-red-500">* </span>Select a
+                            Category :
                         </div>
-                        <div className="mt-2">{categoryElements}</div>
+                        <div className="flex flex-col items-center justify-start gap-3">
+                            {categoryElements}
+                        </div>
                     </div>
 
                     <div className="w-full text-center mt-10">
@@ -248,6 +278,7 @@ export default function UpdatePostPage() {
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
+                            className="text-white rounded-md py-2 text-lg w-full max-w-[300px] md:max-w-[280px] bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 </div>
