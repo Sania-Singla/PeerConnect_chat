@@ -47,7 +47,9 @@ export class Oraclelikes extends Ilikes {
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
             return result.outBinds.result;
-        } catch (err) {throw err;}
+        } catch (err) {
+            throw err;
+        }
     }
 
     async toggleCommentLike(commentId, userId, likedStatus) {

@@ -16,13 +16,20 @@ export class Oracleusers extends Iusers {
                 throw new Error('User not found');
             }
             return JSON.parse(result.outBinds.result);
-        } catch (err) {throw err;}
+        } catch (err) {
+            throw err;
+        }
     }
 
     async createUser(
-        userId, userName, firstName,
-        lastName, avatar, coverImage,
-        email, password
+        userId,
+        userName,
+        firstName,
+        lastName,
+        avatar,
+        coverImage,
+        email,
+        password
     ) {
         try {
             const q = `BEGIN
@@ -42,7 +49,9 @@ export class Oracleusers extends Iusers {
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
             return result.outBinds.result;
-        } catch (err) {throw err;}
+        } catch (err) {
+            throw err;
+        }
     }
 
     async getChannelProfile(channelId, currentUserId) {

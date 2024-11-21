@@ -54,9 +54,11 @@ export class Oracleposts extends Iposts {
             const cursor = result.outBinds.result;
             const posts = await cursor.getRows();
             cursor.close();
-            if (posts.length === 0) throw new Error('No posts found')
-            return posts; 
-        } catch (err) {throw err;}
+            if (posts.length === 0) throw new Error('No posts found');
+            return posts;
+        } catch (err) {
+            throw err;
+        }
     }
 
     async getPost(postId, userId) {
@@ -69,8 +71,8 @@ export class Oracleposts extends Iposts {
                 userId: { val: userId, type: connection.STRING },
                 result: { dir: connection.BIND_OUT, type: connection.STRING },
             });
-            if (!result.outBinds.result) throw new Error('Post not found')
-            return JSON.parse(result.outBinds.result); 
+            if (!result.outBinds.result) throw new Error('Post not found');
+            return JSON.parse(result.outBinds.result);
         } catch (err) {
             throw err;
         }
