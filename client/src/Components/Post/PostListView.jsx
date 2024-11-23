@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { formatCount, formatDateRelative } from '../../Utils';
 import { Button, PostCardView } from '..';
 import { icons } from '../../Assets/icons';
+import parse from 'html-react-parser';
 
 export default function PostListView({ post, reference, children }) {
     const {
@@ -72,7 +73,7 @@ export default function PostListView({ post, reference, children }) {
                     </div>
 
                     <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-2 mt-4">
-                        {post_content}
+                        {parse(post_content)}
                     </div>
 
                     {/* user info */}

@@ -51,7 +51,7 @@ blockquote {
 }
 
 code {
-    @apply block w-[60%] bg-[#161616] p-1 text-[#d6d6d6] font-thin text-[16px];
+    @apply block w-[100%]  bg-[#343434] p-2 backdrop-brightness-75 text-[#aac1fd] font-normal text-[16px];
 }
 
 /* table {
@@ -63,7 +63,7 @@ th {
 }
 
 td {
-    @apply border px-4 py-2;
+    @apply border px-4 py-2 text-center;
 } 
 
 hr {

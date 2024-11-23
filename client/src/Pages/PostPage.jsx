@@ -149,7 +149,7 @@ export default function PostPage() {
         <div>Post Not Found !!</div>
     ) : (
         <div className="relative w-full h-full flex flex-col items-start justify-start gap-y-6 overflow-y-scroll">
-            <div className="w-full">
+            <div className="w-full px-6">
                 <div className="w-full flex items-start justify-start flex-col xl:flex-row gap-6">
                     {/* post */}
                     <div className="w-full xl:w-[75%] h-full">
@@ -359,7 +359,7 @@ export default function PostPage() {
                 <hr className="mt-6" />
 
                 {/* content */}
-                <div className="text-black w-full text-md mt-6">
+                <div className="text-black w-full text-md mt-6 bg-[#f9f9f9] shadow-md shadow-gray-300 rounded-xl overflow-hidden p-8">
                     {parse(post.post_content)}
                 </div>
             </div>

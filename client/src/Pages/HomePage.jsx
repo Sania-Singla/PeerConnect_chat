@@ -5,11 +5,13 @@ import { postService } from '../Services';
 import { paginate } from '../Utils';
 import { icons } from '../Assets/icons';
 import { LIMIT } from '../Constants/constants';
+import { useSearchContext } from '../Context';
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
+    const { search } = useSearchContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -33,13 +35,19 @@ export default function HomePage() {
         })();
     }, [page]);
 
-    const postElements = posts?.map((post, index) => (
-        <PostListView
-            key={post.post_id}
-            post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
-        />
-    ));
+    const postElements = posts
+        ?.filter((post) => {
+            const title = post.post_title.toLowerCase();
+            if (search && title.includes(search.toLowerCase())) return post;
+            if (!search) return post;
+        })
+        .map((post, index) => (
+            <PostListView
+                key={post.post_id}
+                post={post}
+                reference={index + 1 === posts.length ? paginateRef : null}
+            />
+        ));
 
     return (
         <div>

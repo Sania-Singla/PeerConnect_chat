@@ -1,15 +1,21 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Button, Logout } from '..';
-import { useUserContext, useSideBarContext } from '../../Context';
+import {
+    useUserContext,
+    useSideBarContext,
+    useSearchContext,
+} from '../../Context';
 import { LOGO } from '../../Constants/constants';
 import { useState } from 'react';
 import { icons } from '../../Assets/icons';
+import { motion } from 'framer-motion';
 
 export default function Header() {
     const { user } = useUserContext();
     const { setShowSideBar } = useSideBarContext();
     const navigate = useNavigate();
-    const [search, setSearch] = useState('');
+    const { search, setSearch } = useSearchContext();
+    const [showSearchBar, setShowSearchBar] = useState(false);
     const links = [
         { path: '/', name: 'Home' },
         { path: '/about-us', name: 'About Us' },
@@ -61,41 +67,74 @@ export default function Header() {
             </div>
 
             {/* links */}
-            <div className="hidden md:flex items-center justify-evenly w-[40%] px-8">
-                {linkElements}
+            <div className="md:flex items-center justify-evenly w-[40%] px-8">
+                <motion.div
+                    initial={{ x: 0 }}
+                    // animate={{ x: showSearchBar ? '-100%' : '0%' }}
+                    transition={{ duration: 0.3 }}
+                    className="flex w-full"
+                >
+                    {linkElements}
+                </motion.div>
             </div>
-
             {/* search bar */}
-            <div className="hidden relative group drop-shadow-md w-[35%]">
-                <input
-                    type="text"
-                    placeholder="Search here"
-                    value={search}
-                    onChange={(e) => {}}
-                    className="w-full bg-white border-[#d5d5d5] border-[0.01rem] indent-8 rounded-full p-2 text-black text-[16px] font-normal placeholder:text-[#525252] outline-none focus:border-[0.1rem] focus:border-[#4977ec]"
-                />
-                <div className="size-[20px] fill-[#434343] group-focus-within:fill-[#4977ec] absolute top-3 left-3">
-                    {icons.search}
-                </div>
+            {showSearchBar && (
+                <motion.div
+                    initial={{ x: '100%' }}
+                    animate={{ x: 0 }}
+                    exit={{ x: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="relative group drop-shadow-md w-[35%]"
+                >
+                    <input
+                        type="text"
+                        placeholder="Search here"
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                        }}
+                        className="w-full bg-white border-[#d5d5d5] border-[0.01rem] indent-8 rounded-full p-2 text-black text-[16px] font-normal placeholder:text-[#525252] outline-none focus:border-[0.1rem] focus:border-[#4977ec]"
+                    />
+                    <div className="size-[20px] fill-[#434343] group-focus-within:fill-[#4977ec] absolute top-3 left-3">
+                        {icons.search}
+                    </div>
 
-                {/* <Button
-                    btnText={<div className="text-white">Search</div>}
-                    onClick={() => {}}
-                    className="absolute right-1 top-[50%] translate-y-[-50%] bg-[#4977ec] px-4 py-[5px] group rounded-full drop-shadow-md hover:bg-[#3b66d2] w-fit"
-                /> */}
-            </div>
+                    <div className="flex items-center justify-center gap-2 absolute right-1 top-[50%] translate-y-[-50%]">
+                        {/* <Button
+                            btnText={<div className="text-white">Search</div>}
+                            onClick={() => {}}
+                            className=" bg-[#4977ec] px-4 py-[5px] group rounded-full drop-shadow-md hover:bg-[#3b66d2] w-fit"
+                        /> */}
+                        <Button
+                            btnText={
+                                <div className="size-[20px] group-hover:stroke-[#4977ec] stroke-[#434343]">
+                                    {icons.cross}
+                                </div>
+                            }
+                            onClick={() => {
+                                setShowSearchBar(false);
+                            }}
+                            className="bg-[#ffffff] p-[6px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        />
+                    </div>
+                </motion.div>
+            )}
 
             <div className="flex items-center justify-center gap-4">
                 {/* search btn */}
-                <Button
-                    btnText={
-                        <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
-                            {icons.search}
-                        </div>
-                    }
-                    onClick={() => {}}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
-                />
+                {!showSearchBar && (
+                    <Button
+                        btnText={
+                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                                {icons.search}
+                            </div>
+                        }
+                        onClick={() => {
+                            setShowSearchBar((prev) => !prev);
+                        }}
+                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                    />
+                )}
 
                 {/* add post btn */}
                 <NavLink

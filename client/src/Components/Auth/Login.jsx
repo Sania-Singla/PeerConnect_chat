@@ -41,7 +41,9 @@ export default function Login() {
                 setUser(res);
                 setPopupText('Login Successfully 😉');
                 setShowPopup(true);
-                if (!showLoginPopup) {
+                if (showLoginPopup) {
+                    setShowLoginPopup(false);
+                } else {
                     navigate('/');
                 }
             } else {
@@ -53,9 +55,6 @@ export default function Login() {
         } finally {
             setDisabled(false);
             setLoading(false);
-            if (showLoginPopup) {
-                setShowLoginPopup(false);
-            }
         }
     }
 
