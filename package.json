@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "client": "cd client && npm run format && npm run dev",
-    "server": "cd server && npm run format && nodemon src/server.js",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
     "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "keywords": [],
