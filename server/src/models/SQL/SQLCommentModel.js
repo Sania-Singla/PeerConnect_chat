@@ -1,4 +1,4 @@
-import { Icomments } from '../../interfaces/commentInterface.js';
+import { Icomments } from '../../interfaces/comment.Interface.js';
 import { connection } from '../../server.js';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 
@@ -23,7 +23,7 @@ export class SQLcomments extends Icomments {
                 postId,
             ]);
             if (!comments?.length) {
-                return { message: 'NO_COMMENTS_FOUND' };
+                return { message: 'no comments found' };
             }
 
             return comments;
@@ -49,7 +49,7 @@ export class SQLcomments extends Icomments {
                 commentId,
             ]);
             if (!comment) {
-                return { message: 'COMMENT_NOT_FOUND' };
+                return { message: 'comment not found' };
             }
 
             return comment;
@@ -71,7 +71,7 @@ export class SQLcomments extends Icomments {
 
             const comment = await this.getComment(commentId);
             if (comment?.message) {
-                throw new Error('COMMENT_INSERTION_DB_ISSUE');
+                throw new Error('comment creation db issue');
             }
             return comment;
         } catch (err) {
@@ -84,9 +84,9 @@ export class SQLcomments extends Icomments {
             const q = 'DELETE FROM comments WHERE comment_id = ?';
             const [response] = await connection.query(q, [commentId]);
             if (response.affectedRows === 0) {
-                throw new Error('COMMENT_DELETION_DB_ISSUE');
+                throw new Error('comment deletion db issue');
             }
-            return { message: 'COMMENT_DELETED_SUCCESSFULLY' };
+            return { message: 'comment deleted' };
         } catch (err) {
             throw err;
         }
@@ -95,11 +95,11 @@ export class SQLcomments extends Icomments {
     async editComment(commentId, commentContent) {
         try {
             const q =
-                'UPDATE comments SET comment_content= ? WHERE comment_id = ?';
+                'UPDATE comments SET comment_content = ? WHERE comment_id = ?';
             await connection.query(q, [commentContent, commentId]);
             const comment = await this.getComment(commentId);
             if (comment?.message) {
-                throw new Error('COMMENT_UPDATION_DB_ISSUE');
+                throw new Error('comment updation db issue');
             }
             return comment;
         } catch (err) {

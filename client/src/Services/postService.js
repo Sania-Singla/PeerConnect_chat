@@ -70,7 +70,7 @@ class PostService {
 
     async updatePostDetails(inputs, postId) {
         try {
-            const res = await fetch(`/api/v1/posts/update-details/${postId}`, {
+            const res = await fetch(`/api/v1/posts/details/${postId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -95,7 +95,7 @@ class PostService {
             const formData = new FormData();
             formData.append('postImage', postImage);
 
-            const res = await fetch(`/api/v1/posts/update-image/${postId}`, {
+            const res = await fetch(`/api/v1/posts/image/${postId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -163,7 +163,7 @@ class PostService {
     async togglePostVisibility(postId) {
         try {
             const res = await fetch(
-                `/api/v1/posts/toggle-visibility/${postId}`,
+                `/api/v1/posts/visibility/${postId}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',

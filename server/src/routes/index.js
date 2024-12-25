@@ -1,9 +1,9 @@
-import { userRouter } from './userRoutes.js';
-import { postRouter } from './postRoutes.js';
-import { followerRouter } from './followerRoutes.js';
-import { commentRouter } from './commentRoutes.js';
-import { likeRouter } from './likeRoutes.js';
-import { migrationRouter } from './migrationRoutes.js';
+import { userRouter } from './user.Router.js';
+import { postRouter } from './post.Router.js';
+import { followerRouter } from './follower.Router.js';
+import { commentRouter } from './comment.Router.js';
+import { likeRouter } from './like.Router.js';
+import { categoryRouter } from './category.Router.js';
 
 export {
     userRouter,
@@ -11,5 +11,5 @@ export {
     followerRouter,
     commentRouter,
     likeRouter,
-    migrationRouter,
+    categoryRouter,
 };

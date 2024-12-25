@@ -1,8 +1,8 @@
 import validator from 'validator';
 import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
 import getServiceObject from '../db/serviceObjects.js';
-import { postObject } from './postController.js';
-import { commentObject } from './commentController.js';
+import { postObject } from './post.Controller.js';
+import { commentObject } from './comment.Controller.js';
 
 export const likeObject = getServiceObject('likes');
 
@@ -10,9 +10,6 @@ const getLikedPosts = async (req, res) => {
     try {
         const { user_id } = req.user;
         const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
-        }
 
         const likedPosts = await likeObject.getLikedPosts(
             user_id,
@@ -34,15 +31,13 @@ const togglePostLike = async (req, res) => {
         const { user_id } = req.user;
         const { postId } = req.params;
         let { likedStatus } = req.query;
+        
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
         if (!postId || !validator.isUUID(postId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'MISSING_OR_INVALID_POSTID' });
-        }
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
+                .json({ message: 'missing or invalid postId' });
         }
 
         const post = await postObject.getPost(postId, user_id);
@@ -72,12 +67,9 @@ const toggleCommentLike = async (req, res) => {
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
         if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'MISSING_OR_INVALID_COMMENTID',
-            });
-        }
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'missing or invalid commentId' });
         }
 
         const comment = await commentObject.getComment(commentId);

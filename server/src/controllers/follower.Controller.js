@@ -1,7 +1,7 @@
 import validator from 'validator';
 import { BAD_REQUEST, SERVER_ERROR, OK } from '../constants/errorCodes.js';
 import getServiceObject from '../db/serviceObjects.js';
-import { userObject } from './userController.js';
+import { userObject } from './user.Controller.js';
 
 export const followerObject = getServiceObject('followers');
 
@@ -10,7 +10,7 @@ const getFollowers = async (req, res) => {
         const { channelId } = req.params;
         if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({
-                message: 'CHANNELID_MISSING_OR_INVALID',
+                message: 'missing or invalid channelId',
             });
         }
 
@@ -18,7 +18,7 @@ const getFollowers = async (req, res) => {
         if (channel?.message) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'CHANNEL_NOT_FOUND' });
+                .json({ message: 'channel not found' });
         }
 
         const response = await followerObject.getFollowers(channelId);
@@ -36,7 +36,7 @@ const getFollowings = async (req, res) => {
         const { channelId } = req.params;
         if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({
-                message: 'CHANNELID_MISSING_OR_INVALID',
+                message: 'missing or invalid channelId',
             });
         }
 
@@ -44,7 +44,7 @@ const getFollowings = async (req, res) => {
         if (channel?.message) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'CHANNEL_NOT_FOUND' });
+                .json({ message: 'channel not found' });
         }
 
         const response = await followerObject.getFollowings(channelId);
@@ -64,24 +64,19 @@ const toggleFollow = async (req, res) => {
 
         if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({
-                message: 'CHANNELID_MISSING_OR_INVALID',
+                message: 'missing or invalid channelId',
             });
-        }
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'USERID_MISSING' });
         }
 
         if (user_id === channelId) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'CANNOT_FOLLOW_OWN_CHANNEL' });
+            return res.status(BAD_REQUEST).json({ message: 'own channel' });
         }
 
         const channel = await userObject.getUser(channelId);
         if (channel?.message) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'CHANNEL_NOT_FOUND' });
+                .json({ message: 'channel not found' });
         }
 
         const response = await followerObject.toggleFollow(user_id, channelId);

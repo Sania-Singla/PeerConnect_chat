@@ -5,7 +5,7 @@ import {
     getLikedPosts,
     toggleCommentLike,
     togglePostLike,
-} from '../controllers/likeController.js';
+} from '../controllers/like.Controller.js';
 
 likeRouter.use(verifyJwt);
 

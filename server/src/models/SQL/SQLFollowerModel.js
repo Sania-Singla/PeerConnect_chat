@@ -1,4 +1,4 @@
-import { Ifollowers } from '../../interfaces/followerInterface.js';
+import { Ifollowers } from '../../interfaces/follower.Interface.js';
 import { connection } from '../../server.js';
 
 export class SQLfollowers extends Ifollowers {

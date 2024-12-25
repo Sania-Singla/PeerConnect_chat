@@ -16,7 +16,7 @@ import {
     getCurrentUser,
     getWatchHistory,
     clearWatchHistory,
-} from '../controllers/userController.js';
+} from '../controllers/user.Controller.js';
 
 userRouter.route('/register').post(
     upload.fields([
@@ -44,16 +44,16 @@ userRouter.route('/delete').delete(deleteAccount);
 
 userRouter.route('/current').get(getCurrentUser);
 
-userRouter.route('/update-account').patch(updateAccountDetails);
+userRouter.route('/account').patch(updateAccountDetails);
 
-userRouter.route('/update-channel').patch(updateChannelDetails);
+userRouter.route('/channel').patch(updateChannelDetails);
 
-userRouter.route('/update-password').patch(updatePassword);
+userRouter.route('/password').patch(updatePassword);
 
-userRouter.route('/history').get(getWatchHistory).delete(clearWatchHistory);
-
-userRouter.route('/update-avatar').patch(upload.single('avatar'), updateAvatar);
+userRouter.route('/avatar').patch(upload.single('avatar'), updateAvatar);
 
 userRouter
-    .route('/update-coverImage')
+    .route('/coverImage')
     .patch(upload.single('coverImage'), updateCoverImage);
+
+userRouter.route('/history').get(getWatchHistory).delete(clearWatchHistory);

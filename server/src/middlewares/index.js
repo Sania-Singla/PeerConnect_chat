@@ -1,4 +1,5 @@
-import { upload } from './multerMiddleware.js';
-import { verifyJwt, optionalVerifyJwt } from './authMiddleware.js';
+import { upload } from './multer.Middleware.js';
+import { verifyJwt, optionalVerifyJwt } from './auth.Middleware.js';
+import { isOwner } from './isOwner.Middleware.js';
 
-export { upload, verifyJwt, optionalVerifyJwt };
+export { upload, verifyJwt, optionalVerifyJwt, isOwner };

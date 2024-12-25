@@ -1,4 +1,4 @@
-import { Iposts } from '../../interfaces/postInterface.js';
+import { Iposts } from '../../interfaces/post.Interface.js';
 import { connection } from '../../server.js';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 
@@ -197,7 +197,7 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async createPost(postId, ownerId, title, content, category, image) {
+    async createPost({ postId, ownerId, title, content, category, image }) {
         try {
             let categoryId;
             if (category) {
@@ -279,7 +279,7 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async updatePostDetails(postId, title, content, category, updatedAt) {
+    async updatePostDetails({ postId, title, content, category, updatedAt }) {
         try {
             const q1 =
                 'SELECT category_id AS categoryId FROM categories WHERE category_name = ?';

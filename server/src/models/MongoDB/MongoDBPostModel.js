@@ -1,4 +1,4 @@
-import { Iposts } from '../../interfaces/postInterface.js';
+import { Iposts } from '../../interfaces/post.Interface.js';
 
 export class MongoDBposts extends Iposts {
     // pending search query

@@ -13,19 +13,19 @@ const uploadOnCloudinary = async (localFilePath) => {
             throw new Error('CLOUDIANRY_FILE_PATH_MISSING');
         }
 
-        const response = await cloudinary.uploader.upload(localFilePath, {
+        const res = await cloudinary.uploader.upload(localFilePath, {
             resource_type: 'auto',
         });
 
-        console.log('file uploaded successfully!!', response.url);
+        console.log('file uploaded successfully.', res.url);
 
         fs.unlinkSync(localFilePath);
 
-        return response;
+        return res;
     } catch (err) {
         fs.unlinkSync(localFilePath);
         throw new Error(
-            `SERVER_ERROR_UPLOADING_CLOUDINARY_UTIL, err: ${err.message}`
+            `error while uploading file on cloudinary, err: ${err.message}`
         );
     }
 };
@@ -33,21 +33,21 @@ const uploadOnCloudinary = async (localFilePath) => {
 const deleteFromCloudinary = async (URL) => {
     try {
         if (!URL) {
-            throw new Error('CLOUDINARY_URL_MISSING');
+            throw new Error('url missing');
         }
 
         const publicId = URL.split('/').pop().split('.')[0];
         const resourceType = URL.split('/')[4];
 
-        const response = await cloudinary.uploader.destroy(publicId, {
+        const res = await cloudinary.uploader.destroy(publicId, {
             resource_type: resourceType,
             invalidate: true,
         });
 
-        return response; // {result:"ok"}
+        return res; // {result:"ok"}
     } catch (err) {
         throw new Error(
-            `SERVER_ERROR_DELETION_CLOUDINARY_UTIL, err: ${err.message}`
+            `error while deleting file from cloudinary, err: ${err.message}`
         );
     }
 };

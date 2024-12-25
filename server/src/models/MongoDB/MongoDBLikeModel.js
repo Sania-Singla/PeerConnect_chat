@@ -1,4 +1,4 @@
-import { Ilikes } from '../../interfaces/likeInterface.js';
+import { Ilikes } from '../../interfaces/like.Interface.js';
 
 export class MongoDBlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {

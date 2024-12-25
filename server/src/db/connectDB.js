@@ -1,6 +1,5 @@
 import mysql from 'mysql2';
 import mongoose from 'mongoose';
-import oracledb from 'oracledb';
 
 class DBConnection {
     constructor() {
@@ -19,12 +18,8 @@ class DBConnection {
         try {
             if (!this.connection) {
                 switch (process.env.DATABASE_TYPE) {
-                    case 'SQL': {
+                    case 'MySQL': {
                         await this.connectMYSQL();
-                        break;
-                    }
-                    case 'Oracle': {
-                        await this.connectOracle();
                         break;
                     }
                     case 'MongoDB': {
@@ -32,16 +27,13 @@ class DBConnection {
                         break;
                     }
                     default: {
-                        throw new Error('Unsupported Database Type');
+                        throw new Error('Unsupported DB type');
                     }
                 }
             }
             return this.connection;
         } catch (err) {
-            return console.log(
-                "Didn't connected to the database.",
-                err.message
-            );
+            return console.log("DB didn't connected, error:", err.message);
         }
     };
 
@@ -58,26 +50,10 @@ class DBConnection {
 
             // Testing the connection
             const conn = await this.connection.getConnection();
-            console.log(
-                `Connected to SQL DB successfully, host: ${conn.config.host}`
-            );
+            console.log(`MySQL connected, host: ${conn.config.host}`);
             conn.release();
         } catch (err) {
-            return console.log("mysql didn't connected !!", err);
-        }
-    }
-
-    async connectOracle() {
-        try {
-            this.connection = await oracledb.getConnection({
-                user: process.env.ORACLE_USERNAME,
-                password: process.env.ORACLE_PASSWORD,
-                connectString: process.env.ORACLE_CONNECT_STRING,
-            });
-            // oracledb doesn't expose the host
-            console.log(`Connected to SQL DB successfully`);
-        } catch (err) {
-            return console.log("oracle didn't connected !!", err);
+            return console.log("MySQL didn't connected, error:", err.message);
         }
     }
 
@@ -87,10 +63,10 @@ class DBConnection {
                 `${process.env.MONGO_DB_URL}${process.env.MONGO_DB_NAME}`
             );
             console.log(
-                `Connected to mongodb successfully, host: ${this.connection.connection.host}`
+                `MongoDB connected, host: ${this.connection.connection.host}`
             );
         } catch (err) {
-            return console.log("mongodb didn't connected !!", err);
+            return console.log("MongoDB didn't connected, error:", err.message);
         }
     }
 
@@ -101,13 +77,13 @@ class DBConnection {
                     `${process.env.MONGO_DB_URL}${process.env.MONGO_DB_NAME}`
                 );
                 console.log(
-                    `Connected to mongodb for migration successfully, host: ${this.migrationConnection.connection.host}`
+                    `MongoDB connected for migration, host: ${this.migrationConnection.connection.host}`
                 );
             }
             return this.migrationConnection;
         } catch (err) {
             return console.log(
-                'Error in connection MongoDB for migration.',
+                'Error in connecting MongoDB for migration.',
                 err.message
             );
         }
@@ -118,12 +94,12 @@ class DBConnection {
             if (this.migrationConnection) {
                 await mongoose.disconnect();
                 this.migrationConnection = null;
-                console.log("closed mongo's migration connection successfully");
+                console.log('MongoDB migration connection closed');
             }
             return;
         } catch (err) {
             return console.log(
-                "Error in closing Mongo's migration connection.",
+                'Error in closing MongoDB migration connection.',
                 err.message
             );
         }

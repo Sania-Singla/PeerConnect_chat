@@ -21,7 +21,7 @@ class UserService {
 
     async updateAccountDetails(inputs) {
         try {
-            const res = await fetch('/api/v1/users/update-account', {
+            const res = await fetch('/api/v1/users/account', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -45,7 +45,7 @@ class UserService {
 
     async updateChannelDetails(inputs) {
         try {
-            const res = await fetch('/api/v1/users/update-channel', {
+            const res = await fetch('/api/v1/users/channel', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,7 +72,7 @@ class UserService {
             const formData = new FormData();
             formData.append('avatar', avatar);
 
-            const res = await fetch('/api/v1/users/update-avatar', {
+            const res = await fetch('/api/v1/users/avatar', {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -96,7 +96,7 @@ class UserService {
             const formData = new FormData();
             formData.append('coverImage', coverImage);
 
-            const res = await fetch('/api/v1/users/update-coverImage', {
+            const res = await fetch('/api/v1/users/coverImage', {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -117,7 +117,7 @@ class UserService {
 
     async updatePassword(newPassword, oldPassword) {
         try {
-            const res = await fetch('/api/v1/users/update-password', {
+            const res = await fetch('/api/v1/users/password', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

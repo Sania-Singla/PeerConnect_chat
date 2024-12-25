@@ -1,4 +1,4 @@
-import { Ilikes } from '../../interfaces/likeInterface.js';
+import { Ilikes } from '../../interfaces/like.Interface.js';
 import { connection } from '../../server.js';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 

@@ -58,22 +58,14 @@ const addComment = async (req, res) => {
         const { commentContent } = req.body;
         const commentId = uuid();
 
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'USERID_MISSING' });
-        }
-
         if (!postId || !validator.isUUID(postId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
-        }
-
-        if (!commentId) {
-            throw new Error('COMMENTID_CREATION_UUID_ISSUE');
+                .json({ message: 'missing or invalid postId' });
         }
 
         if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: 'CONTENT_MISSING' });
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
         const comment = await commentObject.createComment(
@@ -97,8 +89,16 @@ const deleteComment = async (req, res) => {
 
         if (!commentId || !validator.isUUID(commentId)) {
             return res.status(BAD_REQUEST).json({
-                message: 'COMMENTID_MISSING_OR_INVALID',
+                message: 'missing or invalid commentId',
             });
+        }
+
+        const comment = await commentObject.getComment(
+            commentId,
+            req.user?.user_id
+        );
+        if (!comment) {
+            return res.status(NOT_FOUND).json({ message: 'comment not found' });
         }
 
         const result = await commentObject.deleteComment(commentId);
@@ -117,12 +117,20 @@ const updateComment = async (req, res) => {
         const { commentId } = req.params;
 
         if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: 'CONTENT_MISSING' });
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
         if (!commentId || !validator.isUUID(commentId)) {
             return res.status(BAD_REQUEST).json({
-                message: 'COMMENTID_MISSING_OR_INVALID',
+                message: 'missing or invalid commentId',
             });
+        }
+
+        const comment = await commentObject.getComment(
+            commentId,
+            req.user?.user_id
+        );
+        if (!comment) {
+            return res.status(NOT_FOUND).json({ message: 'comment not found' });
         }
 
         const updatedComment = await commentObject.editComment(

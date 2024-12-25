@@ -1,4 +1,4 @@
-import { Iusers } from '../../interfaces/userInterface.js';
+import { Iusers } from '../../interfaces/user.Interface.js';
 import validator from 'validator';
 
 export class MongoDBusers extends Iusers {

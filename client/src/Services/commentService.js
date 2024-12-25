@@ -23,7 +23,7 @@ class CommentService {
 
     async getComment(commentId) {
         try {
-            const res = await fetch(`/api/v1/comments/${commentId}`, {
+            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
                 method: 'GET',
             });
 
@@ -64,7 +64,7 @@ class CommentService {
 
     async updateComment(commentId, content) {
         try {
-            const res = await fetch(`/api/v1/comments/${commentId}`, {
+            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -86,7 +86,7 @@ class CommentService {
 
     async deleteComment(commentId) {
         try {
-            const res = await fetch(`/api/v1/comments/${commentId}`, {
+            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });

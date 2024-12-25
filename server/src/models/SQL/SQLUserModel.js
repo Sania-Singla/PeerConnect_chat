@@ -1,4 +1,4 @@
-import { Iusers } from '../../interfaces/userInterface.js';
+import { Iusers } from '../../interfaces/user.Interface.js';
 import { connection } from '../../server.js';
 import validator from 'validator';
 import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
@@ -23,16 +23,16 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async createUser(
+    async createUser({
         userId,
         userName,
         firstName,
         lastName,
-        avatar,
-        coverImage,
+        avatarURL,
+        coverImageURL,
         email,
-        password
-    ) {
+        password,
+    }) {
         try {
             const q =
                 'INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -42,8 +42,8 @@ export class SQLusers extends Iusers {
                 userName,
                 firstName,
                 lastName,
-                avatar,
-                coverImage,
+                avatarURL,
+                coverImageURL,
                 email,
                 password,
             ]);
@@ -130,7 +130,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateAccountDetails(userId, firstName, lastName, email) {
+    async updateAccountDetails({ userId, firstName, lastName, email }) {
         try {
             const q =
                 'UPDATE users SET user_firstName = ?, user_lastName = ?, user_email = ? WHERE user_id = ?';
@@ -150,7 +150,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateChannelDetails(userId, userName, bio) {
+    async updateChannelDetails({ userId, userName, bio }) {
         try {
             const q =
                 'UPDATE users SET user_name = ?, user_bio = ? WHERE user_id = ?';

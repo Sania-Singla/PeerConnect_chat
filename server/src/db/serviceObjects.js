@@ -4,7 +4,7 @@ import {
     SQLlikes,
     SQLfollowers,
     SQLcomments,
-    // SQLcategories,
+    SQLcategories,
 } from '../models/SQL/index.js';
 
 import {
@@ -13,22 +13,13 @@ import {
     MongoDBlikes,
     MongoDBfollowers,
     MongoDBcomments,
-    // MongoDBcategories,
+    MongoDBcategories,
 } from '../models/MongoDB/index.js';
-
-import {
-    Oracleusers,
-    Oracleposts,
-    Oraclelikes,
-    Oraclefollowers,
-    Oraclecomments,
-    // Oraclecategories,
-} from '../models/Oracle/index.js';
 
 export default function getServiceObject(serviceType) {
     try {
         switch (process.env.DATABASE_TYPE) {
-            case 'SQL': {
+            case 'MySQL': {
                 switch (serviceType) {
                     case 'users':
                         return new SQLusers();
@@ -60,33 +51,14 @@ export default function getServiceObject(serviceType) {
                     case 'followers':
                         return new MongoDBfollowers();
                     case 'categories':
-                    // return new MongoDBcategories();
-                    default: {
-                        throw new Error('Unsupported service type');
-                    }
-                }
-            }
-            case 'Oracle': {
-                switch (serviceType) {
-                    case 'users':
-                        return new Oracleusers();
-                    case 'posts':
-                        return new Oracleposts();
-                    case 'likes':
-                        return new Oraclelikes();
-                    case 'comments':
-                        return new Oraclecomments();
-                    case 'followers':
-                        return new Oraclefollowers();
-                    case 'categories':
-                    // return new Oraclecategories();
+                        return new MongoDBcategories();
                     default: {
                         throw new Error('Unsupported service type');
                     }
                 }
             }
             default: {
-                throw new Error('Unsupported Database Type');
+                throw new Error('Unsupported DB Type');
             }
         }
     } catch (err) {

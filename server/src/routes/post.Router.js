@@ -1,6 +1,11 @@
 import express from 'express';
 export const postRouter = express.Router();
-import { upload, verifyJwt, optionalVerifyJwt } from '../middlewares/index.js';
+import {
+    upload,
+    verifyJwt,
+    optionalVerifyJwt,
+    isOwner,
+} from '../middlewares/index.js';
 
 import {
     getPost,
@@ -9,11 +14,11 @@ import {
     addPost,
     deletePost,
     updatePostDetails,
-    updatePostImage,
+    updateThumbnail,
     togglePostVisibility,
     getSavedPosts,
     toggleSavePost,
-} from '../controllers/postController.js';
+} from '../controllers/post.Controller.js';
 
 postRouter.route('/all').get(getRandomPosts);
 
@@ -23,18 +28,20 @@ postRouter.route('/post/:postId').get(optionalVerifyJwt, getPost);
 
 postRouter.use(verifyJwt);
 
-postRouter.route('/add').post(upload.single('postImage'), addPost);
-
-postRouter.route('/delete/:postId').delete(deletePost);
-
-postRouter.route('/update-details/:postId').patch(updatePostDetails);
-
-postRouter
-    .route('/update-image/:postId')
-    .patch(upload.single('postImage'), updatePostImage);
-
-postRouter.route('/toggle-visibility/:postId').patch(togglePostVisibility);
-
 postRouter.route('/saved').get(getSavedPosts);
 
 postRouter.route('/toggle-save/:postId').post(toggleSavePost);
+
+postRouter.route('/add').post(upload.single('postImage'), addPost);
+
+postRouter.use(isOwner);
+
+postRouter.route('/delete/:postId').delete(deletePost);
+
+postRouter.route('/details/:postId').patch(updatePostDetails);
+
+postRouter
+    .route('/image/:postId')
+    .patch(upload.single('postImage'), updateThumbnail);
+
+postRouter.route('/visibility/:postId').patch(togglePostVisibility);

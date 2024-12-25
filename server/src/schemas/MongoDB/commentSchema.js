@@ -1,4 +1,4 @@
-import { model, now, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 const commentSchema = new Schema({
     comment_id: {

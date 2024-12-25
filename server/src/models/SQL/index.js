@@ -3,5 +3,13 @@ import { SQLposts } from './SQLPostModel.js';
 import { SQLfollowers } from './SQLFollowerModel.js';
 import { SQLlikes } from './SQLLikeModel.js';
 import { SQLcomments } from './SQLCommentModel.js';
+import { SQLcategories } from './SQLCategoryMode.js';
 
-export { SQLusers, SQLposts, SQLfollowers, SQLlikes, SQLcomments };
+export {
+    SQLusers,
+    SQLposts,
+    SQLfollowers,
+    SQLlikes,
+    SQLcomments,
+    SQLcategories,
+};

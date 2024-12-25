@@ -7,7 +7,7 @@ import {
     deleteComment,
     getComments,
     getComment,
-} from '../controllers/commentController.js';
+} from '../controllers/comment.Controller.js';
 
 commentRouter.route('/post/:postId').get(optionalVerifyJwt, getComments);
 
@@ -16,7 +16,7 @@ commentRouter.use(verifyJwt);
 commentRouter.route('/:postId').post(addComment);
 
 commentRouter
-    .route('/:commentId')
+    .route('/comment/:commentId')
     .patch(updateComment)
     .delete(deleteComment)
     .get(getComment);

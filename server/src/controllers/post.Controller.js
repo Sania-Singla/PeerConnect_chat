@@ -1,5 +1,10 @@
 import getServiceObject from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
+import {
+    OK,
+    BAD_REQUEST,
+    SERVER_ERROR,
+    NOT_FOUND,
+} from '../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
 import {
     uploadOnCloudinary,
@@ -7,7 +12,7 @@ import {
     getCurrentTimestamp,
 } from '../utils/index.js';
 import validator from 'validator';
-import { userObject } from './userController.js';
+import { userObject } from './user.Controller.js';
 
 export const postObject = getServiceObject('posts');
 
@@ -21,6 +26,7 @@ const getRandomPosts = async (req, res) => {
             category = '',
             query = '',
         } = req.query;
+
         const randomPosts = await postObject.getRandomPosts(
             Number(limit),
             orderBy.toUpperCase(),
@@ -45,11 +51,13 @@ const getPosts = async (req, res) => {
             page = 1,
             category = '',
         } = req.query;
+
         if (!channelId || !validator.isUUID(channelId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'CHANNELID_MISSING_OR_INVALID' });
+                .json({ message: 'missing or invalid channelId' });
         }
+
         const posts = await postObject.getPosts(
             channelId,
             Number(limit),
@@ -72,24 +80,24 @@ const getPost = async (req, res) => {
         if (!postId || !validator.isUUID(postId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
+                .json({ message: 'missing or invalid postId' });
         }
+
         let userIdentifier = req.ip;
+
         if (req.user) {
             const { user_id } = req.user;
-            if (!user_id)
-                return res
-                    .status(BAD_REQUEST)
-                    .json({ message: 'MISSING_USERID' });
             await userObject.updateWatchHistory(postId, user_id);
             userIdentifier = user_id;
         }
+
         await postObject.updatePostViews(postId, userIdentifier);
+
         const post = await postObject.getPost(postId, req.user?.user_id);
         return res.status(OK).json(post);
     } catch (err) {
         res.status(SERVER_ERROR).json({
-            message: 'something wrong happened while getting the post',
+            message: 'something went wrong while getting the post',
             error: err.message,
         });
     }
@@ -102,31 +110,27 @@ const addPost = async (req, res) => {
         const { title, content, category } = req.body;
         const postId = uuid();
 
-        if (!postId) throw new Error('POSTID_CREATION_UUID_ISSUE');
-        if (!user_id)
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
         if (!title || !content || !category)
             return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+
         if (!req.file)
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'MISSING_POSTIMAGE' });
+                .json({ message: 'missing thumbnail' });
 
         const postImageLocalPath = req.file.path;
         if (!postImageLocalPath)
-            throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
+            throw new Error('thumbnail local path multer issue');
         postImage = await uploadOnCloudinary(postImageLocalPath);
-        if (!postImage) throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
-        const postImageURL = postImage.url;
 
-        const post = await postObject.createPost(
+        const post = await postObject.createPost({
             postId,
             user_id,
             title,
             content,
             category,
-            postImageURL
-        );
+            postImageURL: postImage.url,
+        });
         return res.status(OK).json(post);
     } catch (err) {
         if (postImage) await deleteFromCloudinary(postImage.url);
@@ -139,28 +143,12 @@ const addPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const { user_id } = req.user;
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
-        }
-        const post = await postObject.getPost(postId);
-        if (!post) return res.status(BAD_REQUEST).json(post);
-        if (post.post_ownerId !== user_id) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'NOT_THE_OWNER_TO_DELETE_POST' });
-        }
-        const response = await deleteFromCloudinary(post.post_image);
-        if (response.result !== 'ok') {
-            throw new Error(
-                'POSTIMAGE_DELETION_IMAGE_DELETION_CLOUDINARY_ISSUE'
-            );
-        }
-        await postObject.deletePost(postId);
-        return res.status(OK).json({ message: 'DELETION_SUCCESSFULL' });
+        const { post_image, post_id } = req.post;
+
+        await deleteFromCloudinary(post_image);
+
+        await postObject.deletePost(post_id);
+        return res.status(OK).json({ message: 'post deleted' });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while deleting the post',
@@ -171,41 +159,23 @@ const deletePost = async (req, res) => {
 
 const updatePostDetails = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const { user_id } = req.user;
+        const { post_id } = req.post;
         const { title, content, category } = req.body;
 
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
-        }
-
         if (!title || !content || !category) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
-        }
-
-        const post = await postObject.getPost(postId);
-        if (!post) {
-            return res.status(BAD_REQUEST).json(post);
-        }
-
-        if (post.post_ownerId !== user_id) {
-            return res.status(BAD_REQUEST).json({
-                message: 'NOT_THE_OWNER_TO_UPDATE_POSTDETAILS',
-            });
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
         const now = new Date();
         const updatedAt = getCurrentTimestamp(now);
 
-        const updatedPost = await postObject.updatePostDetails(
-            postId,
+        const updatedPost = await postObject.updatePostDetails({
+            postId: post_id,
             title,
             content,
             category,
-            updatedAt
-        );
+            updatedAt,
+        });
 
         return res.status(OK).json(updatedPost);
     } catch (err) {
@@ -216,49 +186,26 @@ const updatePostDetails = async (req, res) => {
     }
 };
 
-const updatePostImage = async (req, res) => {
+const updateThumbnail = async (req, res) => {
     let postImage;
     try {
-        const { postId } = req.params;
-        const { user_id } = req.user;
-
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
-        }
-
-        const post = await postObject.getPost(postId);
-        if (!post) {
-            return res.status(BAD_REQUEST).json(post);
-        }
-
-        if (post.post_ownerId !== user_id) {
-            return res.status(BAD_REQUEST).json({
-                message: 'NOT_THE_OWNER_TO_UPDATE_POSTIMAGE',
-            });
-        }
+        const { post_id, post_image } = req.post;
 
         if (!req.file) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'MISSING_POSTIMAGE' });
+                .json({ message: 'missing thumbnail' });
         }
 
         const postImageLocalPath = req.file?.path;
         if (!postImageLocalPath) {
-            throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
+            throw new Error('thumbnail local path multer issue');
         }
 
         postImage = await uploadOnCloudinary(postImageLocalPath);
-        if (!postImage) {
-            throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
-        }
-
-        const response = await deleteFromCloudinary(post.post_image);
-        if (response.result !== 'ok') {
-            throw new Error('OLD_POSTIMAGE_DELETION_CLODUINARY_ISSUE');
-        }
+       
+        // delete old thumbnail
+        await deleteFromCloudinary(post_image);
 
         const postImageURL = postImage?.url;
 
@@ -266,7 +213,7 @@ const updatePostImage = async (req, res) => {
         const updatedAt = getCurrentTimestamp(now);
 
         const updatedPost = await postObject.updatePostImage(
-            postId,
+            post_id,
             postImageURL,
             updatedAt
         );
@@ -285,29 +232,11 @@ const updatePostImage = async (req, res) => {
 
 const togglePostVisibility = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const { user_id } = req.user;
-
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
-        }
-
-        const post = await postObject.getPost(postId);
-        if (!post) {
-            return res.status(BAD_REQUEST).json(post);
-        }
-
-        if (post.post_ownerId !== user_id) {
-            return res.status(BAD_REQUEST).json({
-                message: 'NOT_THE_OWNER_TO_TOGGLE_POSTVISIBILITY',
-            });
-        }
+        const { post_id, post_visibility } = req.post;
 
         const updatedPost = await postObject.togglePostVisibility(
-            postId,
-            !post.post_visibility
+            post_id,
+            !post_visibility
         );
         return res.status(OK).json(updatedPost);
     } catch (err) {
@@ -323,19 +252,15 @@ const toggleSavePost = async (req, res) => {
         const { user_id } = req.user;
         const { postId } = req.params;
 
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_USERID' });
-        }
-
         if (!postId || !validator.isUUID(postId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
+                .json({ message: 'missing or invalid postId' });
         }
 
         const post = postObject.getPost(postId);
         if (!post) {
-            return res.status(BAD_REQUEST).json({ message: 'POST_NOT_FOUND' });
+            return res.status(NOT_FOUND).json({ message: 'post not found' });
         }
 
         const response = await postObject.toggleSavePost(postId, user_id);
@@ -352,9 +277,7 @@ const getSavedPosts = async (req, res) => {
     try {
         const { user_id } = req.user;
         const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json('MISSING_USERID');
-        }
+      
         const savedPosts = await postObject.getSavedPosts(
             user_id,
             orderBy.toUpperCase(),
@@ -376,7 +299,7 @@ export {
     getPost,
     addPost,
     updatePostDetails,
-    updatePostImage,
+    updateThumbnail,
     deletePost,
     togglePostVisibility,
     toggleSavePost,

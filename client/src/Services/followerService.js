@@ -39,13 +39,10 @@ class FollowerService {
 
     async toggleFollow(channelId) {
         try {
-            const res = await fetch(
-                `/api/v1/followers/toggle-follow/${channelId}`,
-                {
-                    method: 'POST',
-                    credentials: 'include',
-                }
-            );
+            const res = await fetch(`/api/v1/followers/toggle/${channelId}`, {
+                method: 'POST',
+                credentials: 'include',
+            });
 
             const data = await res.json();
             console.log(data);

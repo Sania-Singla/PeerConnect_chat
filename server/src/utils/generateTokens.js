@@ -1,55 +1,34 @@
-import { userObject } from '../controllers/userController.js';
 import jwt from 'jsonwebtoken';
 
-const generateAccessToken = async (userId) => {
+const generateTokens = async (user) => {
     try {
-        const user = await userObject.getUser(userId);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
+        const accessToken = await generateAccessToken(user.user_id);
+        const refreshToken = await generateRefreshToken(user.user_id);
 
-        const accessToken = jwt.sign(
-            {
-                user_id: userId,
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-            }
-        );
-
-        return accessToken;
+        return { accessToken, refreshToken };
     } catch (err) {
-        throw new Error(
-            `something went wrong while generating the access token, err: ${err.message}`
-        );
+        throw new Error(`error occured while generating tokens, error: ${err}`);
     }
+};
+
+const generateAccessToken = async (userId) => {
+    return jwt.sign(
+        {
+            userId,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    );
 };
 
 const generateRefreshToken = async (userId) => {
-    try {
-        const user = await userObject.getUser(userId);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-
-        const refreshToken = jwt.sign(
-            {
-                user_id: userId,
-            },
-            process.env.REFRESH_TOKEN_SECRET,
-            {
-                expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-            }
-        );
-        await userObject.updateRefreshToken(userId, refreshToken);
-
-        return refreshToken;
-    } catch (err) {
-        throw new Error(
-            `something went wrong while generating the refresh token, err: ${err.message}`
-        );
-    }
+    return jwt.sign(
+        {
+            userId,
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
 };
 
-export { generateAccessToken, generateRefreshToken };
+export { generateTokens, generateAccessToken, generateRefreshToken };

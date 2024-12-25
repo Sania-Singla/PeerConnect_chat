@@ -1,4 +1,4 @@
-import { Icomments } from '../../interfaces/commentInterface.js';
+import { Icomments } from '../../interfaces/comment.Interface.js';
 
 export class MongoDBcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {
