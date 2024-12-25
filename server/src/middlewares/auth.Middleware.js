@@ -58,12 +58,41 @@ const verifyJwt = async (req, res, next) => {
 };
 
 const optionalVerifyJwt = async (req, res, next) => {
-    const accessToken = extractAccessToken(req);
+    try {
+        const accessToken = extractAccessToken(req);
 
-    if (accessToken) {
-        await verifyJwt(req, res, next);
+        if (accessToken) {
+            const decodedToken = jwt.verify(
+                accessToken,
+                process.env.ACCESS_TOKEN_SECRET
+            );
+
+            if (!decodedToken) {
+                return res
+                    .status(FORBIDDEN)
+                    .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+                    .json({ message: 'invalid access token' });
+            }
+
+            const currentUser = await userObject.getUser(decodedToken.userId);
+            if (!currentUser) {
+                return res
+                    .status(NOT_FOUND)
+                    .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+                    .json({
+                        message: 'user with provided access token not found',
+                    });
+            }
+
+            req.user = currentUser;
+        }
+        next();
+    } catch (err) {
+        return res
+            .status(SERVER_ERROR)
+            .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+            .json({ message: 'expired access token', err: err.message });
     }
-    next();
 };
 
 export { verifyJwt, optionalVerifyJwt };
