@@ -14,7 +14,7 @@ class PostService {
             );
 
             const data = await res.json();
-            console.log('random', data);
+            console.log(data);
 
             if (res.status === 500) {
                 throw new Error(data.message);
