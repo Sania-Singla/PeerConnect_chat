@@ -31,7 +31,7 @@ const togglePostLike = async (req, res) => {
         const { user_id } = req.user;
         const { postId } = req.params;
         let { likedStatus } = req.query;
-        
+
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
         if (!postId || !validator.isUUID(postId)) {

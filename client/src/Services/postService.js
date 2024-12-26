@@ -162,13 +162,10 @@ class PostService {
 
     async togglePostVisibility(postId) {
         try {
-            const res = await fetch(
-                `/api/v1/posts/visibility/${postId}`,
-                {
-                    method: 'PATCH',
-                    credentials: 'include',
-                }
-            );
+            const res = await fetch(`/api/v1/posts/visibility/${postId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+            });
 
             const data = await res.json();
             console.log(data);

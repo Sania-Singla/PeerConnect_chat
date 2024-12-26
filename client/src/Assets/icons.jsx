@@ -2,7 +2,7 @@ export const icons = {
     loading: (
         <svg
             aria-hidden="true"
-            className="inline size-full fill-inherit animate-spin dark:text-inherit"
+            className="size-full fill-inherit animate-spin dark:text-inherit"
             viewBox="0 0 100 101"
             xmlns="http://www.w3.org/2000/svg"
         >

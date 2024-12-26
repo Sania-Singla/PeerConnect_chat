@@ -12,7 +12,7 @@ const getComments = async (req, res) => {
         if (!postId || !validator.isUUID(postId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'POSTID_MISSING_OR_INVALID' });
+                .json({ message: 'missing or invalid postId' });
         }
 
         const comments = await commentObject.getComments(

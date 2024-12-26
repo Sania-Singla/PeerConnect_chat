@@ -203,7 +203,7 @@ const updateThumbnail = async (req, res) => {
         }
 
         postImage = await uploadOnCloudinary(postImageLocalPath);
-       
+
         // delete old thumbnail
         await deleteFromCloudinary(post_image);
 
@@ -277,7 +277,7 @@ const getSavedPosts = async (req, res) => {
     try {
         const { user_id } = req.user;
         const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
-      
+
         const savedPosts = await postObject.getSavedPosts(
             user_id,
             orderBy.toUpperCase(),
