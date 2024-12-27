@@ -41,7 +41,7 @@ export default function PostCardView({
             </div>
 
             <div className="w-full">
-                <div className="flex items-start justify-between w-full">
+                <div className="flex items-start justify-between gap-4 w-full">
                     {/* post category */}
                     <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-3 py-[2px]">
                         <div className="size-[9px] fill-[#2556d1]">
@@ -53,7 +53,7 @@ export default function PostCardView({
                     </div>
 
                     {/* statistics */}
-                    <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                    <div className="hover:cursor-text text-wrap text-[15px] text-[#5a5a5a] text-end">
                         {formatCount(totalViews)} views &bull; posted
                         {' ' + formatDateRelative(post_createdAt)}
                     </div>
@@ -82,7 +82,7 @@ export default function PostCardView({
                                 <img
                                     alt="post owner avatar"
                                     src={avatar}
-                                    className="size-full rounded-full hover:brightness-90"
+                                    className="size-full object-cover rounded-full hover:brightness-90"
                                 />
                             </div>
                         </div>

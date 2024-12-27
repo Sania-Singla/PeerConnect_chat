@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 
 const ChannelContext = createContext();
 
-export const ChannelContextProvider = ({ children }) => {
+const ChannelContextProvider = ({ children }) => {
     const [channel, setChannel] = useState(null);
 
     return (
@@ -12,6 +12,8 @@ export const ChannelContextProvider = ({ children }) => {
     );
 };
 
-export default function useChannelContext() {
+function useChannelContext() {
     return useContext(ChannelContext);
 }
+
+export { useChannelContext, ChannelContextProvider };

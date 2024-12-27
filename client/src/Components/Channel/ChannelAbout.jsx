@@ -25,7 +25,7 @@ export default function ChannelAbout() {
     }
 
     return (
-        <div className="pl-10">
+        <div className="pl-2">
             <div className="mb-6">
                 <div className="text-4xl font-medium">
                     {user_firstName} {user_lastName}
@@ -64,7 +64,7 @@ export default function ChannelAbout() {
                         to={`/channel/${user_name}`}
                         className="text-blue-600 hover:text-blue-700 pb-1"
                     >
-                        {`https://note-manager/channel/${user_name}`}
+                        https://note-manager/channel/{user_name}
                     </NavLink>
                 </div>
 

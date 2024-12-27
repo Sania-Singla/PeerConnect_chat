@@ -197,7 +197,8 @@ const logoutUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
     try {
-        return res.status(OK).json({ user: req.user });
+        const { user_password, refresh_token, ...user } = req.user;
+        return res.status(OK).json(user);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting the current user.',

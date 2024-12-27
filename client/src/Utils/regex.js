@@ -1,3 +1,10 @@
+/**
+ * Generic Utility to validate the regular expressions
+ * @param {String} name - Key name to validate.
+ * @param {String} value - Value for the key.
+ * @param {Function} setError - State function to set the corresponding error or an empty string "".
+ */
+
 export default function verifyExpression(name, value, setError) {
     if (value) {
         switch (name) {

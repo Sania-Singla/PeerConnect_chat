@@ -16,6 +16,7 @@ import {
     RegisterPage,
     PostPage,
     ChannelPage,
+    FollowersPage,
     ServerErrorPage,
     NotFoundPage,
     SettingsPage,
@@ -30,13 +31,15 @@ import {
     AboutUsPage,
     ContactUsPage,
     FAQpage,
-    FollowersPage,
 } from './Pages';
 
-import { UserContextProvider } from './Context/UserContext';
-import { ChannelContextProvider } from './Context/ChannelContext';
-import { PopupContextProvider } from './Context/PopupContext';
-import { SearchContextProvider } from './Context/SearchContext';
+import {
+    UserContextProvider,
+    ChannelContextProvider,
+    PopupContextProvider,
+    SideBarContextProvider,
+    SearchContextProvider,
+} from './Context';
 
 import {
     DeleteAccount,
@@ -49,27 +52,24 @@ import {
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route
-            path="/"
-            element={
-                <PopupContextProvider>
-                    {/* because we are using useLocation() in this context which requires the component or the context provider to be inside a Router */}
-                    <App />
-                </PopupContextProvider>
-            }
-        >
+        <Route path="/" element={<App />}>
             <Route path="" element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
+            <Route path="followers" element={<FollowersPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
+
+            {/* static pages */}
             <Route path="support" element={<SupportPage />} />
             <Route path="about-us" element={<AboutUsPage />} />
             <Route path="contact-us" element={<ContactUsPage />} />
-            <Route path="followers" element={<FollowersPage />} />
             <Route path="faqs" element={<FAQpage />} />
+            <Route path="server-error" element={<ServerErrorPage />} />
+
+            {/* protected routes */}
             <Route
                 path="add"
                 element={
@@ -94,6 +94,8 @@ const router = createBrowserRouter(
                     </Redirect>
                 }
             />
+
+            {/* settings page */}
             <Route
                 path="settings/"
                 element={
@@ -107,6 +109,8 @@ const router = createBrowserRouter(
                 <Route path="password" element={<UpdatePassword />} />
                 <Route path="delete-account" element={<DeleteAccount />} />
             </Route>
+
+            {/* channel page */}
             <Route
                 path="channel/:userName"
                 element={
@@ -118,7 +122,7 @@ const router = createBrowserRouter(
                 <Route path="" element={<ChannelPosts />} />
                 <Route path="about" element={<ChannelAbout />} />
             </Route>
-            <Route path="server-error" element={<ServerErrorPage />} />
+
             <Route path="*" element={<NotFoundPage />} />
         </Route>
     )
@@ -127,9 +131,13 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <SearchContextProvider>
-            <RouterProvider router={router} />
-        </SearchContextProvider>
+        <PopupContextProvider>
+            <SideBarContextProvider>
+                <SearchContextProvider>
+                    <RouterProvider router={router} />
+                </SearchContextProvider>
+            </SideBarContextProvider>
+        </PopupContextProvider>
     </UserContextProvider>
     // </StrictMode>,
 );

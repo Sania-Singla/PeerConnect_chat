@@ -35,7 +35,7 @@ export default function Header() {
     ));
 
     return (
-        <div className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-8 font-medium flex items-center justify-between gap-2">
+        <div className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
             <div className="flex items-center justify-center gap-6">
                 {/* hamburgur menu btn */}
                 <Button
@@ -67,7 +67,7 @@ export default function Header() {
             </div>
 
             {/* links */}
-            <div className="md:flex items-center justify-evenly w-[40%] px-8">
+            <div className="hidden lg:flex items-center justify-evenly transition-all ease-in-out w-[50%] max-w-[600px] px-8">
                 <motion.div
                     initial={{ x: 0 }}
                     // animate={{ x: showSearchBar ? '-100%' : '0%' }}
@@ -163,7 +163,7 @@ export default function Header() {
                                     navigate('/register');
                                 }}
                                 btnText="Sign Up"
-                                className="text-white rounded-md py-[5px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                                className="text-white rounded-md py-[5px] w-[80px] h-[35px] bg-[#4977ec] hover:bg-[#3b62c2]"
                             />
 
                             <Button
@@ -171,7 +171,7 @@ export default function Header() {
                                     navigate('/login');
                                 }}
                                 btnText="Login"
-                                className="text-white rounded-md py-[5px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                                className="text-white rounded-md py-[5px] w-[80px] h-[35px] bg-[#4977ec] hover:bg-[#3b62c2]"
                             />
                         </div>
                     )}

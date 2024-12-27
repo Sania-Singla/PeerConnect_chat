@@ -149,17 +149,47 @@ export default function PostPage() {
         <div>Post Not Found !!</div>
     ) : (
         <div className="relative w-full h-full flex flex-col items-start justify-start gap-y-6 overflow-y-scroll">
-            <div className="w-full px-6">
+            <div className="w-full px-2">
                 <div className="w-full flex items-start justify-start flex-col xl:flex-row gap-6">
                     {/* post */}
                     <div className="w-full xl:w-[75%] h-full">
                         {/* post image */}
-                        <div className="h-[300px] md:h-[350px] rounded-xl overflow-hidden">
+                        <div className="relative h-[300px] md:h-[350px] rounded-xl overflow-hidden">
                             <img
                                 src={post.post_image}
                                 alt="post image"
                                 className="object-cover w-full h-full"
                             />
+
+                            {/* SMALL SCREEN */}
+                            {/* post category */}
+                            <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px]">
+                                <div className="size-[10px] fill-[#2556d1]">
+                                    {icons.dot}
+                                </div>
+                                <span className="text-[#2556d1] text-[16px]">
+                                    {post.category_name.toUpperCase()}
+                                </span>
+                            </div>
+
+                            {/* saved btn */}
+                            <div className="xl:hidden absolute top-2 right-2 flex items-center justify-center">
+                                <Button
+                                    btnText={
+                                        <div
+                                            className={`${
+                                                post.isSaved
+                                                    ? 'fill-[#4977ec] '
+                                                    : 'fill-white'
+                                            } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
+                                        >
+                                            {icons.save}
+                                        </div>
+                                    }
+                                    onClick={toggleSave}
+                                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
+                                />
+                            </div>
                         </div>
 
                         {/* post title */}
@@ -220,36 +250,6 @@ export default function PostPage() {
                                     className="bg-[#f0efef] py-[7px] px-3 hover:bg-[#ebeaea]"
                                 />
                             </div>
-                        </div>
-
-                        {/* SMALL SCREEN */}
-                        {/* post category */}
-                        <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px]">
-                            <div className="size-[10px] fill-[#2556d1]">
-                                {icons.dot}
-                            </div>
-                            <span className="text-[#2556d1] text-[16px]">
-                                {post.category_name.toUpperCase()}
-                            </span>
-                        </div>
-
-                        {/* saved btn */}
-                        <div className="xl:hidden absolute top-2 right-2 flex items-center justify-center">
-                            <Button
-                                btnText={
-                                    <div
-                                        className={`${
-                                            post.isSaved
-                                                ? 'fill-[#4977ec] '
-                                                : 'fill-white'
-                                        } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
-                                    >
-                                        {icons.save}
-                                    </div>
-                                }
-                                onClick={toggleSave}
-                                className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
-                            />
                         </div>
                     </div>
 

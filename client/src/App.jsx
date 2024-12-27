@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from './Components';
-import { useUserContext } from './Context';
+import { useSideBarContext, useUserContext, usePopupContext } from './Context';
 import { authService } from './Services';
 import { icons } from './Assets/icons';
 
@@ -9,6 +9,9 @@ export default function App() {
     const { setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const location = useLocation();
+    const { setShowSideBar } = useSideBarContext();
+    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
 
     useEffect(() => {
         (async function currentUser() {
@@ -27,15 +30,36 @@ export default function App() {
         })();
     }, []);
 
+    // Close sidebar on window resize & location changes
+    useEffect(() => {
+        const handleResize = () => {
+            setShowSideBar(false);
+        };
+        // on window resize
+        window.addEventListener('resize', handleResize);
+
+        // when location changes
+        setShowSideBar(false);
+        setLoginPopupText('');
+        setShowLoginPopup(false);
+
+        // cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, [location]);
+
     return (
         <div className="bg-white h-screen w-screen">
             {loading ? (
-                <div className="text-3xl text-white h-full w-full flex flex-col items-center justify-center">
-                    <div className="size-[50px] fill-[#8871ee] dark:text-[#b5b4b4]">
+                <div className="text-black h-full w-full flex flex-col items-center justify-center">
+                    <div className="size-[33px] fill-[#4977ec] dark:text-[#ececec]">
                         {icons.loading}
                     </div>
-                    <div>Please Wait...</div>
-                    <div>Refresh the page, if it takes too long</div>
+                    <div className="mt-2 text-2xl font-semibold">
+                        Please Wait...
+                    </div>
+                    <div className="text-[16px] mt-1">
+                        Please refresh the page, if it takes too long
+                    </div>
                 </div>
             ) : (
                 <Layout />

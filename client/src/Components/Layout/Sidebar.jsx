@@ -116,7 +116,7 @@ export default function Sidebar() {
                     className="z-[10] h-full fixed inset-0 flex justify-start overflow-y-scroll"
                 >
                     <div className="w-72 px-4 bg-[#f6f6f6] drop-shadow-md flex flex-col items-start justify-start h-full">
-                        <div className="h-[60px] pl-4 gap-5 w-full flex items-center justify-between">
+                        <div className="h-[60px] pl-2 gap-5 w-full flex items-center justify-between">
                             {/* hamburgur menu btn */}
                             <Button
                                 btnText={
@@ -136,14 +136,14 @@ export default function Sidebar() {
                                     </div>
 
                                     <Link
-                                        to={`/channel/${user.user_name}`}
+                                        to={`/channel/${user?.user_name}`}
                                         onClick={() => setShowSideBar(false)}
                                     >
-                                        <div className="size-[30px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
+                                        <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
                                             <img
-                                                src={user.user_avatar}
+                                                src={user?.user_avatar}
                                                 alt="user avatar"
-                                                className="size-full object-cover "
+                                                className="size-full object-cover"
                                             />
                                         </div>
                                     </Link>

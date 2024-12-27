@@ -27,9 +27,11 @@ export default function SettingsPage() {
             path: 'password',
         },
     ];
+    
     const tabElements = tabOptions.map((option) => (
         <NavLink
             end
+            key={option.name}
             to={option.path}
             className={({ isActive }) =>
                 `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-black bg-[#f9f9f9] text-black'} drop-shadow-md hover:backdrop-brightness-90 rounded-t-md p-[3px] border-b-[0.1rem] w-full text-center text-lg font-medium`
@@ -38,6 +40,7 @@ export default function SettingsPage() {
             <div>{option.name}</div>
         </NavLink>
     ));
+
     return (
         <div className="w-full h-full overflow-scroll">
             <div className="w-full">

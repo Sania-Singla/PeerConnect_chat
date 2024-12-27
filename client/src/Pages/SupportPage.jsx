@@ -21,7 +21,7 @@ export default function SupportPage() {
                 </h1>
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(330px,1fr))] w-full lg:w-[80%] gap-10">
+            <div className=" flex flex-wrap items-start justify-center gap-10 w-full">
                 {contributorElements}
             </div>
         </div>

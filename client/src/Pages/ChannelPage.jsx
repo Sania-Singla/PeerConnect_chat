@@ -11,7 +11,7 @@ export default function ChannelPage() {
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
     const { setShowLoginPopup, setLoginPopupText } = usePopupContext();
-
+    
     useEffect(() => {
         (async function getChannelProfile() {
             try {
@@ -92,24 +92,23 @@ export default function ChannelPage() {
                             <div className="rounded-full  overflow-hidden size-[140px] border-[0.5rem] border-white ">
                                 <img
                                     alt="user avatar"
-                                    src={user.user_avatar}
+                                    src={channel.user_avatar}
                                     className="size-full object-cover drop-shadow-md"
                                 />
                             </div>
                         </div>
 
                         {/* channel info*/}
-                        <div className="flex flex-col items-start justify-center gap-1 mt-4">
+                        <div className="flex flex-col items-start justify-center mt-6">
                             <div className="text-3xl font-medium">
-                                {user.user_firstName} {user.user_lastName}
+                                {channel.user_firstName} {channel.user_lastName}
                             </div>
-                            <div className="text-xl text-[#151515]">
-                                @{user.user_name}
+                            <div className="text-lg text-[#151515]">
+                                @{channel.user_name}
                             </div>
-                            <div className="flex gap-1 items-center justify-start text-[#3f3f3f] text-md">
+                            <div className="flex gap-1 items-center justify-start text-[#3f3f3f] text-[16px]">
                                 {channel.totalFollowers} followers &bull;{' '}
-                                {channel.totalFollowings}
-                                followings
+                                {channel.totalFollowings} followings
                             </div>
                         </div>
                     </div>

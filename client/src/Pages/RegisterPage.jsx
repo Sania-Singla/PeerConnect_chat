@@ -6,6 +6,7 @@ import { Button } from '../Components';
 import { verifyExpression, fileRestrictions } from '../Utils';
 import { LOGO } from '../Constants/constants';
 import { motion } from 'framer-motion';
+import { icons } from '../Assets/icons';
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({
@@ -257,10 +258,18 @@ export default function RegisterPage() {
 
                     <div className="w-full">
                         <Button
-                            className="text-white rounded-md py-2 mt-4 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="text-white rounded-md py-2 mt-4 h-[45px] flex items-center justify-center text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            btnText={loading ? 'Signing Up...' : 'Sign Up'}
+                            btnText={
+                                loading ? (
+                                    <div className="size-5 fill-[#4977ec] dark:text-[#a2bdff]">
+                                        {icons.loading}
+                                    </div>
+                                ) : (
+                                    'Sign Up'
+                                )
+                            }
                         />
                     </div>
                 </form>

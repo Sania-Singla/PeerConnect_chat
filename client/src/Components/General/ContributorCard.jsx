@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 export default function ContributorCard({ contributor }) {
     const { name, role, bio, image, socials } = contributor;
     return (
-        <div className="w-full max-h-[400px] flex items-center justify-center">
+        <div className="max-h-[400px] flex items-center justify-center">
             <motion.div
                 whileHover={{
                     y: -5,

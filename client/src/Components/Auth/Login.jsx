@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext, usePopupContext } from '../../Context';
 import { authService } from '../../Services';
 import { Button } from '..';
+import { icons } from '../../Assets/icons';
 
 export default function Login() {
     const [inputs, setInputs] = useState({
@@ -112,9 +113,17 @@ export default function Login() {
 
                 <div>
                     <Button
-                        className="text-white rounded-md py-2 mt-4 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                        className="text-white rounded-md py-2 mt-4 h-[45px] text-lg w-full flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2]"
                         onMouseOver={onMouseOver}
-                        btnText={loading ? 'logging in ...' : 'Login'}
+                        btnText={
+                            loading ? (
+                                <div className="size-5 fill-[#4977ec] dark:text-[#a2bdff]">
+                                    {icons.loading}
+                                </div>
+                            ) : (
+                                'Login'
+                            )
+                        }
                         disabled={disabled}
                     />
                     <p className="w-full text-center text-[16px] mt-2">

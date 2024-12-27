@@ -85,11 +85,11 @@ export default function AddPostPage() {
     }
 
     const categories = [
-        'Art',
         'Science',
         'Sci-Fi',
-        'Entertainment',
         'Technical',
+        'Art',
+        'Entertainment',
         'Others',
     ];
 
@@ -97,7 +97,7 @@ export default function AddPostPage() {
         <label
             htmlFor={category}
             key={category}
-            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px] min-w-[100px]"
+            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
         >
             <input
                 type="radio"
@@ -112,16 +112,16 @@ export default function AddPostPage() {
     ));
 
     return (
-        <div className="w-full h-full overflow-scroll px-10">
+        <div className="w-full h-full overflow-scroll">
             <h2 className="text-[#252525] w-full text-center mb-8 underline underline-offset-2">
                 Add a New Post
             </h2>
             <form
                 onSubmit={handleSubmit}
-                className="w-full h-full flex flex-col md:flex-row items-start justify-start gap-10"
+                className="w-full h-full flex flex-col lg:flex-row items-start justify-start gap-10"
             >
-                <div className="w-full md:w-[70%] h-full">
-                    <div className="w-full flex items-center justify-between gap-10">
+                <div className="w-full lg:w-[70%] h-full">
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-10">
                         <div className="w-full">
                             <div className="flex items-center justify-start gap-2">
                                 <div className="bg-white z-[1] ml-3 px-2 w-fit text-[1.1rem] relative top-3 font-medium">
@@ -192,20 +192,20 @@ export default function AddPostPage() {
                     </div>
                 </div>
 
-                <div className="h-full w-full md:w-[30%] flex flex-col items-center">
-                    <div className="drop-shadow-md w-full flex items-center justify-center">
-                        <div className="max-w-[400px] h-[220px] md:max-w-[300px] w-full md:h-[180px] rounded-lg overflow-hidden">
+                <div className="drop-shadow-md h-full w-full lg:w-[30%] mt-6 flex flex-col items-center">
+                    <div className="w-full flex items-center justify-center">
+                        <div className="drop-shadow-md border-[0.01rem] border-gray-500 max-w-[350px] w-full h-[200px] rounded-lg overflow-hidden">
                             {thumbnailPreview ? (
                                 <img
                                     src={thumbnailPreview}
                                     alt="thumbnail preview"
-                                    className="object-cover h-full w-full border-[0.01rem] border-[#838383] rounded-lg"
+                                    className="object-cover h-full w-full"
                                 />
                             ) : (
-                                <div className="flex flex-col items-center justify-center gap-2 h-full w-full border-[0.01rem] border-[#838383] rounded-xl">
+                                <div className="flex flex-col items-center justify-center gap-2 h-full w-full">
                                     <div
                                         className="bg-[#f9f9f9] p-2
-                                    rounded-full drop-shadow-md w-fit"
+                                    rounded-full w-fit"
                                     >
                                         <div className="size-[20px]">
                                             {icons.image}
@@ -219,23 +219,23 @@ export default function AddPostPage() {
                         </div>
                     </div>
 
-                    <div className="drop-shadow-md bg-[#f9f9f9] p-6 max-w-[300px] md:max-w-[280px] w-full gap-6 mt-8 flex flex-col items-center">
-                        <div className="text-xl font-medium">
+                    <div className="border-[0.01rem] border-gray-500 rounded-lg p-6 max-w-[350px] w-full gap-6 mt-8 flex flex-col items-center">
+                        <div className="text-xl font-medium text-center">
                             <span className="text-red-500">* </span>Select a
-                            Category :
+                            Category
                         </div>
-                        <div className="flex flex-col items-center justify-start gap-3">
+                        <div className="flex flex-wrap items-center justify-center gap-3">
                             {categoryElements}
                         </div>
                     </div>
 
-                    <div className="w-full text-center mt-10">
+                    <div className="w-full text-center mt-7">
                         <Button
                             btnText={loading ? 'Uploading...' : 'Upload'}
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-2 text-lg w-full max-w-[300px] md:max-w-[280px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="text-white rounded-md py-2 text-lg w-full max-w-[350px] bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 </div>
