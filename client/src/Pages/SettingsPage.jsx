@@ -27,7 +27,7 @@ export default function SettingsPage() {
             path: 'password',
         },
     ];
-    
+
     const tabElements = tabOptions.map((option) => (
         <NavLink
             end

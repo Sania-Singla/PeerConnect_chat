@@ -11,7 +11,7 @@ export default function ChannelPage() {
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
     const { setShowLoginPopup, setLoginPopupText } = usePopupContext();
-    
+
     useEffect(() => {
         (async function getChannelProfile() {
             try {
