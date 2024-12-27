@@ -1,6 +1,6 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
+import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLposts extends Iposts {
     // pending search query

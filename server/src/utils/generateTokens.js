@@ -1,5 +1,11 @@
 import jwt from 'jsonwebtoken';
 
+/**
+ * Util to generate both Access & Refresh JWT Token
+ * @param {Object} user - The data which needs to be in the token (only userId)
+ * @returns Tokens as {accessToken, refreshToken}
+ */
+
 const generateTokens = async (user) => {
     try {
         const accessToken = await generateAccessToken(user.user_id);
@@ -11,6 +17,12 @@ const generateTokens = async (user) => {
     }
 };
 
+/**
+ * Util to generate Access Token
+ * @param {Object} user - The data which needs to be in the token (only userId)
+ * @returns JWT Token
+ */
+
 const generateAccessToken = async (userId) => {
     return jwt.sign(
         {
@@ -20,6 +32,12 @@ const generateAccessToken = async (userId) => {
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
 };
+
+/**
+ * Util to generate Refresh Token
+ * @param {Object} user - The data which needs to be in the token (only userId)
+ * @returns JWT Token
+ */
 
 const generateRefreshToken = async (userId) => {
     return jwt.sign(

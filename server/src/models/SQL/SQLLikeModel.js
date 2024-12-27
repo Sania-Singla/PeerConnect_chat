@@ -1,6 +1,6 @@
 import { Ilikes } from '../../interfaces/like.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
+import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {

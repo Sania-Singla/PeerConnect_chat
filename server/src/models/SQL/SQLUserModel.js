@@ -1,7 +1,7 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { connection } from '../../server.js';
 import validator from 'validator';
-import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
+import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLusers extends Iusers {
     async getUser(searchInput) {

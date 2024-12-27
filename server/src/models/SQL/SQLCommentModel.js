@@ -1,6 +1,6 @@
 import { Icomments } from '../../interfaces/comment.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
+import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {

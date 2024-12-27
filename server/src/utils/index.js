@@ -4,8 +4,8 @@ import {
     generateRefreshToken,
     generateTokens,
 } from './generateTokens.js';
-import { getCurrentTimestamp } from './timeStamp.js';
-import { verifyOrderBy } from './verifyOrderBy.js';
+import getCurrentTimestamp from './timeStamp.js';
+import verifyOrderBy from './verifyOrderBy.js';
 
 export {
     uploadOnCloudinary,
