@@ -16,10 +16,13 @@ export default function Comments({ postId }) {
     const { user } = useUserContext();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getComments() {
             try {
                 setLoading(true);
-                const res = await commentService.getComments(postId);
+                const res = await commentService.getComments(signal, postId);
                 if (res && !res.message) {
                     setComments(res);
                 }
@@ -29,6 +32,10 @@ export default function Comments({ postId }) {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [postId, user]);
 
     async function addComment(e) {

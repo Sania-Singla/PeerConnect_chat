@@ -19,10 +19,17 @@ export default function HomePage() {
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getRandomPosts(page, LIMIT);
+                const res = await postService.getRandomPosts(
+                    signal,
+                    page,
+                    LIMIT
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
@@ -33,6 +40,10 @@ export default function HomePage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [page]);
 
     const postElements = posts

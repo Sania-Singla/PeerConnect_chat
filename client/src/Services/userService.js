@@ -1,9 +1,10 @@
 class UserService {
-    async getChannelProfile(username) {
+    async getChannelProfile(signal, username) {
         try {
             const res = await fetch(`/api/v1/users/channel/${username}`, {
                 method: 'GET',
                 credentials: 'include',
+                signal,
             });
 
             const data = await res.json();
@@ -14,8 +15,14 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getChannelProfile service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get channel profile request aborted.');
+            } else {
+                console.error(
+                    `error in getChannelProfile service: ${err.message}`
+                );
+                throw err;
+            }
         }
     }
 
@@ -140,12 +147,13 @@ class UserService {
         }
     }
 
-    async getWatchHistory(limit = 10, page = 1, orderBy = 'desc') {
+    async getWatchHistory(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
+                    signal,
                     credentials: 'include',
                 }
             );
@@ -158,8 +166,14 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getWatchHistory service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get watch history request aborted.');
+            } else {
+                console.error(
+                    `error in getWatchHistory service: ${err.message}`
+                );
+                throw err;
+            }
         }
     }
 

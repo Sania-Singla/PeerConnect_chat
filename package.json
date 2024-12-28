@@ -1,5 +1,5 @@
 {
-  "name": "insight-manager",
+  "name": "peer-connect",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,9 +8,9 @@
     "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Sania",
   "license": "ISC",
-  "description": "",
+  "description": "This is Peer Connect",
   "devDependencies": {
     "concurrently": "^9.1.0",
     "nodemon": "^3.1.7"

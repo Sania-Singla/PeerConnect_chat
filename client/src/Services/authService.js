@@ -94,11 +94,12 @@ class AuthService {
         }
     }
 
-    async getCurrentUser() {
+    async getCurrentUser(signal) {
         try {
             const res = await fetch('/api/v1/users/current', {
                 method: 'GET',
                 credentials: 'include',
+                signal,
             });
 
             const data = await res.json();
@@ -109,8 +110,14 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getCurrentUser service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get current user request aborted.');
+            } else {
+                console.error(
+                    `error in getCurrentUser service: ${err.message}`
+                );
+                throw err;
+            }
         }
     }
 

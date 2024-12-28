@@ -19,10 +19,16 @@ export default function AdminPage() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getChannelProfile() {
             try {
                 setLoading(true);
-                const res = await userService.getChannelProfile(user.user_name);
+                const res = await userService.getChannelProfile(
+                    signal,
+                    user.user_name
+                );
                 if (res && !res.message) {
                     setStatsData(res);
                 }
@@ -32,13 +38,21 @@ export default function AdminPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getChannelPosts() {
             try {
                 setPostsLoading(true);
                 const res = await postService.getPosts(
+                    signal,
                     user.user_id,
                     LIMIT,
                     page
@@ -53,6 +67,10 @@ export default function AdminPage() {
                 setPostsLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [page, user]);
 
     const stats = [

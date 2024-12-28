@@ -45,12 +45,13 @@ class LikeService {
         }
     }
 
-    async getLikedPosts(limit = 10, page = 1, orderBy = 'desc') {
+    async getLikedPosts(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
                 {
                     method: 'GET',
+                    signal,
                     credentials: 'include',
                 }
             );
@@ -63,8 +64,12 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getLikedPosts service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get liked posts request aborted.');
+            } else {
+                console.error(`error in getLikedPosts service: ${err.message}`);
+                throw err;
+            }
         }
     }
 }

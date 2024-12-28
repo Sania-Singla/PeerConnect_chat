@@ -3,6 +3,8 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "author": "Sania",
+    "description": "This is the frontend for Peer Connect.",
     "scripts": {
         "dev": "npm run format && vite",
         "format": "prettier --write .",

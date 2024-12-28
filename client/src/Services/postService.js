@@ -1,5 +1,8 @@
+import { CustomAbortError } from '../Utils';
+
 class PostService {
     async getRandomPosts(
+        signal,
         page = 1,
         limit = 10,
         category = '',
@@ -10,6 +13,7 @@ class PostService {
                 `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
                 {
                     method: 'GET',
+                    signal,
                 }
             );
 
@@ -19,20 +23,25 @@ class PostService {
             if (res.status === 500) {
                 throw new Error(data.message);
             }
+
             return data;
         } catch (err) {
-            console.error(`error in getRandomPosts service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get random posts request aborted.');
+            } else {
+                console.error(
+                    `error in getRandomPosts service: ${err.message}`
+                );
+                throw err;
+            }
         }
     }
 
-    async getPosts(channelId, limit = 10, page = 1, orderBy = 'desc') {
+    async getPosts(signal, channelId, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
-                {
-                    method: 'GET',
-                }
+                { signal, method: 'GET' }
             );
 
             const data = await res.json();
@@ -43,16 +52,21 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getPosts service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get posts request aborted.');
+            } else {
+                console.error(`error in getPosts service: ${err.message}`);
+                throw err;
+            }
         }
     }
 
-    async getPost(postId) {
+    async getPost(signal, postId) {
         try {
             const res = await fetch(`/api/v1/posts/post/${postId}`, {
                 method: 'GET',
                 credentials: 'include',
+                signal,
             });
 
             const data = await res.json();
@@ -63,8 +77,12 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getPost service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get post request aborted.');
+            } else {
+                console.error(`error in getPost service: ${err.message}`);
+                throw err;
+            }
         }
     }
 
@@ -182,13 +200,14 @@ class PostService {
         }
     }
 
-    async getSavedPosts(limit = 10, page = 1, orderBy = 'desc') {
+    async getSavedPosts(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
                     credentials: 'include',
+                    signal,
                 }
             );
 
@@ -200,8 +219,12 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getSavedPosts service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get saved posts request aborted.');
+            } else {
+                console.error(`error in getSavedPosts service: ${err.message}`);
+                throw err;
+            }
         }
     }
 

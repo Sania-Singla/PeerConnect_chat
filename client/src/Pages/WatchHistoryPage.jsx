@@ -19,10 +19,17 @@ export default function WatchHistoryPage() {
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await userService.getWatchHistory(LIMIT, page);
+                const res = await userService.getWatchHistory(
+                    signal,
+                    LIMIT,
+                    page
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
@@ -33,6 +40,10 @@ export default function WatchHistoryPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [page, user]);
 
     async function clearHistory() {

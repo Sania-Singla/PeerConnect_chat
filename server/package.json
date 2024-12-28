@@ -8,9 +8,9 @@
         "format": "prettier --write ."
     },
     "keywords": [],
-    "author": "DBMS INTERNS",
+    "author": "Sania",
     "license": "ISC",
-    "description": "This is the backend for the BLOGS APP.",
+    "description": "This is the backend for Peer Connect.",
     "dependencies": {
         "bcrypt": "^5.1.1",
         "cloudinary": "^2.4.0",

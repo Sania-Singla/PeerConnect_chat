@@ -28,10 +28,12 @@ export default function UpdatePostPage() {
     const { user } = useUserContext();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
         (async function getPost() {
             try {
                 setLoading(true);
-                const res = await postService.getPost(postId);
+                const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
                     setInputs({
@@ -49,6 +51,10 @@ export default function UpdatePostPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     function handleChange(e) {

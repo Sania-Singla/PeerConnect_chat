@@ -17,10 +17,13 @@ export default function PostPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPost() {
             try {
                 setLoading(true);
-                const res = await postService.getPost(postId);
+                const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
                 }
@@ -30,6 +33,10 @@ export default function PostPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [postId, user]);
 
     async function toggleLike() {
