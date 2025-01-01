@@ -48,11 +48,7 @@ export default function ChannelPage() {
                 return;
             }
             const res = await followerService.toggleFollow(channel.user_id);
-            if (
-                res &&
-                (res.message === 'FOLLOWED_SUCCESSFULLY' ||
-                    res.message === 'UNFOLLOWED_SUCCESSFULLY')
-            ) {
+            if (res && res.message === 'FOLLOW_TOGGLED_SUCCESSFULLY') {
                 setChannel((prev) => ({
                     ...prev,
                     isFollowed: !prev.isFollowed,

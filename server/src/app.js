@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import path from 'path';
 export const app = express();
 
 // Configurations
@@ -43,3 +44,15 @@ app.use('/api/followers', followerRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/likes', likeRouter);
 app.use('/api/categories', categoryRouter);
+
+// production mode
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+    app.get('*', (req, res) => {
+        res.sendFile(
+            path.resolve(__dirname, '..', 'client', 'dist', 'index.html')
+        );
+    });
+}

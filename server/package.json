@@ -4,8 +4,9 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
+        "format": "prettier --write .",
         "dev": "npm run format && nodemon src/server.js",
-        "format": "prettier --write ."
+        "start": "npm run format && node src/server.js"
     },
     "keywords": [],
     "author": "Sania",
@@ -24,6 +25,7 @@
         "multer": "^1.4.5-lts.1",
         "mysql2": "^3.11.0",
         "oracledb": "^6.6.0",
+        "peer-connect": "file:..",
         "socket.io": "^4.8.1",
         "uuid": "^10.0.0",
         "validator": "^13.12.0"

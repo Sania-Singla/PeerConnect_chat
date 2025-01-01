@@ -8,7 +8,7 @@
     "scripts": {
         "dev": "npm run format && vite",
         "format": "prettier --write .",
-        "build": "vite build",
+        "build": "npm run format && vite build",
         "lint": "eslint .",
         "preview": "vite preview"
     },
@@ -19,6 +19,7 @@
         "framer-motion": "^11.11.9",
         "html-react-parser": "^5.1.18",
         "node-cron": "^3.0.3",
+        "peer-connect": "file:..",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.26.2"
