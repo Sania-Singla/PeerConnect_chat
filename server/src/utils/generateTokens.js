@@ -8,8 +8,8 @@ import jwt from 'jsonwebtoken';
 
 const generateTokens = async (user) => {
     try {
-        const accessToken = await generateAccessToken(user.user_id);
-        const refreshToken = await generateRefreshToken(user.user_id);
+        const accessToken = await generateAccessToken(user);
+        const refreshToken = await generateRefreshToken(user);
 
         return { accessToken, refreshToken };
     } catch (err) {
@@ -23,10 +23,10 @@ const generateTokens = async (user) => {
  * @returns JWT Token
  */
 
-const generateAccessToken = async (userId) => {
+const generateAccessToken = async (user) => {
     return jwt.sign(
         {
-            userId,
+            userId: user.user_id,
         },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
@@ -39,10 +39,10 @@ const generateAccessToken = async (userId) => {
  * @returns JWT Token
  */
 
-const generateRefreshToken = async (userId) => {
+const generateRefreshToken = async (user) => {
     return jwt.sign(
         {
-            userId,
+            userId: user.user_id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }

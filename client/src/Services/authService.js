@@ -120,8 +120,6 @@ class AuthService {
             }
         }
     }
-
-    async refreshAccessToken() {}
 }
 
 export const authService = new AuthService();

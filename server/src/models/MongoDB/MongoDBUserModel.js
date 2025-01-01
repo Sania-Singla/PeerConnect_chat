@@ -39,7 +39,7 @@ export class MongoDBusers extends Iusers {
         }
     }
 
-    async updateRefreshToken(userId, refreshToken) {
+    async loginUser(userId, refreshToken) {
         try {
         } catch (err) {
             throw err;

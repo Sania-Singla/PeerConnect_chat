@@ -85,22 +85,8 @@ const addComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const { commentId } = req.params;
-
-        if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing or invalid commentId',
-            });
-        }
-
-        const comment = await commentObject.getComment(
-            commentId,
-            req.user?.user_id
-        );
-        if (!comment) {
-            return res.status(NOT_FOUND).json({ message: 'comment not found' });
-        }
-
+        // isOwner middleware
+        const { commentId } = req.comment; // or req.params
         const result = await commentObject.deleteComment(commentId);
         return res.status(OK).json(result);
     } catch (err) {
@@ -118,19 +104,6 @@ const updateComment = async (req, res) => {
 
         if (!commentContent) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-        if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing or invalid commentId',
-            });
-        }
-
-        const comment = await commentObject.getComment(
-            commentId,
-            req.user?.user_id
-        );
-        if (!comment) {
-            return res.status(NOT_FOUND).json({ message: 'comment not found' });
         }
 
         const updatedComment = await commentObject.editComment(

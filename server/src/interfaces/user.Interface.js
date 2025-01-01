@@ -24,7 +24,7 @@ export class Iusers {
         throw new Error('Method logoutUser not overwritten.');
     }
 
-    async updateRefreshToken(userId, refreshToken) {
+    async loginUser(userId, refreshToken) {
         throw new Error('Method updateTokens not overwritten.');
     }
 

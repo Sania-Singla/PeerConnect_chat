@@ -28,8 +28,8 @@ export class SQLusers extends Iusers {
         userName,
         firstName,
         lastName,
-        avatarURL,
-        coverImageURL,
+        avatar,
+        coverImage,
         email,
         password,
     }) {
@@ -42,8 +42,8 @@ export class SQLusers extends Iusers {
                 userName,
                 firstName,
                 lastName,
-                avatarURL,
-                coverImageURL,
+                avatar,
+                coverImage,
                 email,
                 password,
             ]);
@@ -90,7 +90,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateRefreshToken(userId, refreshToken) {
+    async loginUser(userId, refreshToken) {
         try {
             const q = 'UPDATE users SET refresh_token = ? WHERE user_id = ?';
             await connection.query(q, [refreshToken, userId]);

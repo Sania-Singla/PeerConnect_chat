@@ -18,10 +18,14 @@ export default function ChannelPosts() {
 
     // fetching posts
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getChannelPosts() {
             try {
                 setLoading(true);
                 const res = await postService.getPosts(
+                    signal,
                     channel.user_id,
                     LIMIT,
                     page
@@ -36,6 +40,10 @@ export default function ChannelPosts() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [channel.user_name, page]);
 
     // pagination

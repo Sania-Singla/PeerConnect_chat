@@ -4,7 +4,7 @@ import {
     upload,
     verifyJwt,
     optionalVerifyJwt,
-    isOwner,
+    isPostOwner,
 } from '../middlewares/index.js';
 
 import {
@@ -34,7 +34,7 @@ postRouter.route('/toggle-save/:postId').post(toggleSavePost);
 
 postRouter.route('/add').post(upload.single('postImage'), addPost);
 
-postRouter.use(isOwner);
+postRouter.use(isPostOwner);
 
 postRouter.route('/delete/:postId').delete(deletePost);
 

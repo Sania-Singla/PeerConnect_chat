@@ -34,7 +34,7 @@ export class SQLcategories extends Icategories {
     async createCategory(categoryId, categoryName) {
         try {
             const q =
-                'INSERT INTO categories(category_id,category_name) VALUES (?, ?)';
+                'INSERT INTO categories(category_id, category_name) VALUES (?, ?)';
             await connection.query(q, [categoryId, categoryName]);
 
             const category = await this.getCategory(categoryId);
@@ -63,9 +63,9 @@ export class SQLcategories extends Icategories {
     async editCategory(categoryId, categoryName) {
         try {
             const q =
-                'UPDATE comments SET category_name = ? WHERE category_id = ?';
+                'UPDATE categories SET category_name = ? WHERE category_id = ?';
             await connection.query(q, [categoryName, categoryId]);
-            const category = await this.getComment(categoryId);
+            const category = await this.getCategory(categoryId);
             if (category?.message) {
                 throw new Error('category updation db issue');
             }

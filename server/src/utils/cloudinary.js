@@ -16,7 +16,7 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
-            throw new Error('CLOUDIANRY_FILE_PATH_MISSING');
+            throw new Error('CLOUDIANRY_FILE_PATH_MISSING_MULTER_ISSUE');
         }
 
         const res = await cloudinary.uploader.upload(localFilePath, {
@@ -25,14 +25,13 @@ const uploadOnCloudinary = async (localFilePath) => {
 
         console.log('file uploaded successfully.', res.url);
 
-        fs.unlinkSync(localFilePath);
-
         return res;
     } catch (err) {
-        fs.unlinkSync(localFilePath);
         throw new Error(
             `error while uploading file on cloudinary, err: ${err.message}`
         );
+    } finally {
+        fs.unlinkSync(localFilePath);
     }
 };
 

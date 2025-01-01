@@ -13,88 +13,109 @@ import {
     uploadOnCloudinary,
     deleteFromCloudinary,
     generateTokens,
+    verifyExpression,
 } from '../utils/index.js';
 
 export const userObject = getServiceObject('users');
 
 const registerUser = async (req, res) => {
-    let coverImage, avatar;
+    let coverImageURL, avatarURL;
     try {
-        const {
-            userName,
-            firstName,
-            lastName = '',
-            email,
-            password,
-        } = req.body;
+        const data = {
+            userId: uuid(),
+            userName: req.body.userName,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password,
+            avatar: req.files?.avatar?.[0].path,
+            coverImage: req.files?.coverImage?.[0].path,
+        };
 
-        const userId = uuid();
+        if (
+            Object.entries(data).some(
+                ([key, value]) =>
+                    !value && key !== 'lastName' && key !== 'coverImage'
+            )
+        ) {
+            if (data.avatar) {
+                fs.unlinkSync(data.avatar);
+            }
+            if (data.coverImage) {
+                fs.unlinkSync(data.coverImage);
+            }
 
-        if (!userName || !firstName || !email || !password) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
-        // ⭐ format validity checks for email , username, firstname, if have lastname (frontend)
+        // format validity for email , username, firstname, if have lastname
+        let invalidField;
+        Object.entries(data).forEach(([key, value]) => {
+            if (value && key !== 'userId') {
+                let isValid;
+                if (key === 'avatar' || key === 'coverImage') {
+                    isValid = verifyExpression('file', value);
+                } else {
+                    isValid = verifyExpression(key, value);
+                }
+                if (!isValid) {
+                    invalidField = key;
+                }
+            }
+        });
 
-        const existingUser = await userObject.getUser(userName);
+        if (invalidField) {
+            if (data.avatar) {
+                fs.unlinkSync(data.avatar);
+            }
+            if (data.coverImage) {
+                fs.unlinkSync(data.coverImage);
+            }
+
+            return res.status(BAD_REQUEST).json({
+                message:
+                    invalidField === 'avatar' || invalidField === 'coverImage'
+                        ? `only png, jpg/jpeg files are allowed for ${invalidField} and File size should not exceed 100MB.`
+                        : `${invalidField} is invalid`,
+            });
+        }
+
+        const existingUser = await userObject.getUser(data.userName);
 
         if (!existingUser?.message) {
-            if (req.files?.avatar) {
-                fs.unlinkSync(req.files.avatar[0].path);
+            if (data.avatar) {
+                fs.unlinkSync(data.avatar);
             }
-            if (req.files?.coverImage) {
-                fs.unlinkSync(req.files.coverImage[0].path);
+            if (data.coverImage) {
+                fs.unlinkSync(data.coverImage);
             }
+
             return res
                 .status(BAD_REQUEST)
                 .json({ message: 'user already exists' });
         }
 
-        if (!req.files?.avatar) {
-            if (req.files?.coverImage) {
-                const coverImageLocalPath = req.files.coverImage[0].path;
-                if (!coverImageLocalPath) {
-                    throw new Error('coverImage local path multer issue');
-                }
-                fs.unlinkSync(coverImageLocalPath);
-            }
-            return res.status(BAD_REQUEST).json({ message: 'missing avatar' });
+        const avatar = await uploadOnCloudinary(data.avatar);
+        data.avatar = avatar?.url; // update localpath with cloudinary url
+        avatarURL = data.avatar;
+
+        if (data.coverImage) {
+            const coverImage = await uploadOnCloudinary(data.coverImage);
+            data.coverImage = coverImage?.url;
+            coverImageURL = data.coverImage;
         }
 
-        const avatarLocalPath = req.files.avatar[0].path;
-        if (!avatarLocalPath) {
-            throw new Error('avatar local path multer issue');
-        }
-        avatar = await uploadOnCloudinary(avatarLocalPath);
+        data.password = await bcrypt.hash(data.password, 10); // hash the password
 
-        if (req.files?.coverImage) {
-            const coverImageLocalPath = req.files.coverImage[0].path;
-            if (!coverImageLocalPath) {
-                throw new Error('coverImage local path multer issue');
-            }
-            coverImage = await uploadOnCloudinary(coverImageLocalPath);
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await userObject.createUser({
-            userId,
-            userName,
-            firstName,
-            lastName,
-            avatarURL: avatar?.url,
-            coverImageURL: coverImage?.url,
-            email,
-            hashedPassword,
-        });
+        const user = await userObject.createUser(data);
 
         return res.status(OK).json(user);
     } catch (err) {
-        if (avatar) {
-            await deleteFromCloudinary(avatar.url);
+        if (avatarURL) {
+            await deleteFromCloudinary(avatarURL);
         }
-        if (coverImage) {
-            await deleteFromCloudinary(coverImage.url);
+        if (coverImageURL) {
+            await deleteFromCloudinary(coverImageURL);
         }
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while registering the user.',
@@ -124,6 +145,8 @@ const loginUser = async (req, res) => {
         }
 
         const { accessToken, refreshToken } = await generateTokens(user);
+
+        await userObject.loginUser(user.user_id, refreshToken);
 
         const { user_password, refresh_token, ...loggedInUser } = user;
 
@@ -185,7 +208,7 @@ const logoutUser = async (req, res) => {
         return res
             .status(OK)
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-            .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+            .clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS)
             .json({ message: 'user logged out' });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -324,13 +347,7 @@ const updateAvatar = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: 'missing avatar' });
         }
 
-        const avatarLocalPath = req.file?.path;
-
-        if (!avatarLocalPath) {
-            throw new Error('avatar local path multer issue');
-        }
-
-        avatar = await uploadOnCloudinary(avatarLocalPath);
+        avatar = await uploadOnCloudinary(req.file?.path);
 
         const updatedUser = await userObject.updateAvatar(user_id, avatar?.url);
 
@@ -361,13 +378,7 @@ const updateCoverImage = async (req, res) => {
                 .json({ message: 'missing coverImage' });
         }
 
-        const coverImageLocalPath = req.file?.path;
-
-        if (!coverImageLocalPath) {
-            throw new Error('coverImage local path multer issue');
-        }
-
-        coverImage = await uploadOnCloudinary(coverImageLocalPath);
+        coverImage = await uploadOnCloudinary(req.file?.path);
 
         const updatedUser = await userObject.updateCoverImage(
             user_id,

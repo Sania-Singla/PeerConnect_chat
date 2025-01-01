@@ -118,10 +118,7 @@ const addPost = async (req, res) => {
                 .status(BAD_REQUEST)
                 .json({ message: 'missing thumbnail' });
 
-        const postImageLocalPath = req.file.path;
-        if (!postImageLocalPath)
-            throw new Error('thumbnail local path multer issue');
-        postImage = await uploadOnCloudinary(postImageLocalPath);
+        postImage = await uploadOnCloudinary(req.file.path);
 
         const post = await postObject.createPost({
             postId,
@@ -133,7 +130,9 @@ const addPost = async (req, res) => {
         });
         return res.status(OK).json(post);
     } catch (err) {
-        if (postImage) await deleteFromCloudinary(postImage.url);
+        if (postImage) {
+            await deleteFromCloudinary(postImage.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while adding a post',
             error: err.message,
@@ -197,24 +196,17 @@ const updateThumbnail = async (req, res) => {
                 .json({ message: 'missing thumbnail' });
         }
 
-        const postImageLocalPath = req.file?.path;
-        if (!postImageLocalPath) {
-            throw new Error('thumbnail local path multer issue');
-        }
-
-        postImage = await uploadOnCloudinary(postImageLocalPath);
+        postImage = await uploadOnCloudinary(req.file?.path);
 
         // delete old thumbnail
         await deleteFromCloudinary(post_image);
-
-        const postImageURL = postImage?.url;
 
         const now = new Date();
         const updatedAt = getCurrentTimestamp(now);
 
         const updatedPost = await postObject.updatePostImage(
             post_id,
-            postImageURL,
+            postImage?.url,
             updatedAt
         );
 

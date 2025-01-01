@@ -1,5 +1,3 @@
-import { CustomAbortError } from '../Utils';
-
 class PostService {
     async getRandomPosts(
         signal,
