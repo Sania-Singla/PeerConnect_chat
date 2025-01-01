@@ -8,7 +8,7 @@ class PostService {
     ) {
         try {
             const res = await fetch(
-                `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
+                `/api/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
                 {
                     method: 'GET',
                     signal,
@@ -38,7 +38,7 @@ class PostService {
     async getPosts(signal, channelId, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/v1/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
+                `/api/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
                 { signal, method: 'GET' }
             );
 
@@ -61,7 +61,7 @@ class PostService {
 
     async getPost(signal, postId) {
         try {
-            const res = await fetch(`/api/v1/posts/post/${postId}`, {
+            const res = await fetch(`/api/posts/post/${postId}`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -86,7 +86,7 @@ class PostService {
 
     async updatePostDetails(inputs, postId) {
         try {
-            const res = await fetch(`/api/v1/posts/details/${postId}`, {
+            const res = await fetch(`/api/posts/details/${postId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,7 @@ class PostService {
             const formData = new FormData();
             formData.append('postImage', postImage);
 
-            const res = await fetch(`/api/v1/posts/image/${postId}`, {
+            const res = await fetch(`/api/posts/image/${postId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -132,7 +132,7 @@ class PostService {
 
     async deletePost(postId) {
         try {
-            const res = await fetch(`/api/v1/posts/delete/${postId}`, {
+            const res = await fetch(`/api/posts/delete/${postId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -157,7 +157,7 @@ class PostService {
                 formData.append(key, value);
             });
 
-            const res = await fetch('/api/v1/posts/add', {
+            const res = await fetch('/api/posts/add', {
                 method: 'POST',
                 credentials: 'include',
                 body: formData,
@@ -178,7 +178,7 @@ class PostService {
 
     async togglePostVisibility(postId) {
         try {
-            const res = await fetch(`/api/v1/posts/visibility/${postId}`, {
+            const res = await fetch(`/api/posts/visibility/${postId}`, {
                 method: 'PATCH',
                 credentials: 'include',
             });
@@ -201,7 +201,7 @@ class PostService {
     async getSavedPosts(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/v1/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                `/api/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -228,7 +228,7 @@ class PostService {
 
     async toggleSavePost(postId) {
         try {
-            const res = await fetch(`/api/v1/posts/toggle-save/${postId}`, {
+            const res = await fetch(`/api/posts/toggle-save/${postId}`, {
                 method: 'POST',
                 credentials: 'include',
             });

@@ -1,7 +1,7 @@
 class FollowerService {
     async getFollowers(signal, channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/${channelId}`, {
+            const res = await fetch(`/api/followers/${channelId}`, {
                 method: 'GET',
                 signal,
             });
@@ -25,7 +25,7 @@ class FollowerService {
 
     async getFollowings(signal, channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/follows/${channelId}`, {
+            const res = await fetch(`/api/followers/follows/${channelId}`, {
                 method: 'GET',
                 signal,
             });
@@ -49,7 +49,7 @@ class FollowerService {
 
     async toggleFollow(channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/toggle/${channelId}`, {
+            const res = await fetch(`/api/followers/toggle/${channelId}`, {
                 method: 'POST',
                 credentials: 'include',
             });

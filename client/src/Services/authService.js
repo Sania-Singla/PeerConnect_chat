@@ -1,7 +1,7 @@
 class AuthService {
     async login(inputs) {
         try {
-            const res = await fetch('/api/v1/users/login', {
+            const res = await fetch('/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
@@ -27,7 +27,7 @@ class AuthService {
                 formData.append(key, value);
             });
 
-            const res = await fetch('/api/v1/users/register', {
+            const res = await fetch('/api/users/register', {
                 method: 'POST',
                 body: formData,
             });
@@ -54,7 +54,7 @@ class AuthService {
 
     async logout() {
         try {
-            const res = await fetch('/api/v1/users/logout', {
+            const res = await fetch('/api/users/logout', {
                 method: 'PATCH',
                 credentials: 'include',
             });
@@ -74,7 +74,7 @@ class AuthService {
 
     async deleteAccount(password) {
         try {
-            const res = await fetch('/api/v1/users/delete', {
+            const res = await fetch('/api/users/delete', {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ class AuthService {
 
     async getCurrentUser(signal) {
         try {
-            const res = await fetch('/api/v1/users/current', {
+            const res = await fetch('/api/users/current', {
                 method: 'GET',
                 credentials: 'include',
                 signal,

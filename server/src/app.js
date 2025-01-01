@@ -37,9 +37,9 @@ import {
     categoryRouter,
 } from './routes/index.js';
 
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/posts', postRouter);
-app.use('/api/v1/followers', followerRouter);
-app.use('/api/v1/comments', commentRouter);
-app.use('/api/v1/likes', likeRouter);
-app.use('/api/v1/categories', categoryRouter);
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/followers', followerRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/likes', likeRouter);
+app.use('/api/categories', categoryRouter);

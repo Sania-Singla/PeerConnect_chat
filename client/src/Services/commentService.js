@@ -2,7 +2,7 @@ class CommentService {
     async getComments(signal, postId, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/v1/comments/post/${postId}?orderBy=${orderBy}`,
+                `/api/comments/post/${postId}?orderBy=${orderBy}`,
                 {
                     method: 'GET',
                     signal,
@@ -28,7 +28,7 @@ class CommentService {
 
     async getComment(signal, commentId) {
         try {
-            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
+            const res = await fetch(`/api/comments/comment/${commentId}`, {
                 method: 'GET',
                 signal,
             });
@@ -52,7 +52,7 @@ class CommentService {
 
     async addComment(postId, content) {
         try {
-            const res = await fetch(`/api/v1/comments/${postId}`, {
+            const res = await fetch(`/api/comments/${postId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ class CommentService {
 
     async updateComment(commentId, content) {
         try {
-            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
+            const res = await fetch(`/api/comments/comment/${commentId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ class CommentService {
 
     async deleteComment(commentId) {
         try {
-            const res = await fetch(`/api/v1/comments/comment/${commentId}`, {
+            const res = await fetch(`/api/comments/comment/${commentId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });

@@ -1,7 +1,7 @@
 class UserService {
     async getChannelProfile(signal, username) {
         try {
-            const res = await fetch(`/api/v1/users/channel/${username}`, {
+            const res = await fetch(`/api/users/channel/${username}`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -28,7 +28,7 @@ class UserService {
 
     async updateAccountDetails(inputs) {
         try {
-            const res = await fetch('/api/v1/users/account', {
+            const res = await fetch('/api/users/account', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ class UserService {
 
     async updateChannelDetails(inputs) {
         try {
-            const res = await fetch('/api/v1/users/channel', {
+            const res = await fetch('/api/users/channel', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -79,7 +79,7 @@ class UserService {
             const formData = new FormData();
             formData.append('avatar', avatar);
 
-            const res = await fetch('/api/v1/users/avatar', {
+            const res = await fetch('/api/users/avatar', {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -103,7 +103,7 @@ class UserService {
             const formData = new FormData();
             formData.append('coverImage', coverImage);
 
-            const res = await fetch('/api/v1/users/coverImage', {
+            const res = await fetch('/api/users/coverImage', {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -124,7 +124,7 @@ class UserService {
 
     async updatePassword(newPassword, oldPassword) {
         try {
-            const res = await fetch('/api/v1/users/password', {
+            const res = await fetch('/api/users/password', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -150,7 +150,7 @@ class UserService {
     async getWatchHistory(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/v1/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                `/api/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
                     signal,
@@ -179,7 +179,7 @@ class UserService {
 
     async clearWatchHistory() {
         try {
-            const res = await fetch('/api/v1/users/history', {
+            const res = await fetch('/api/users/history', {
                 method: 'DELETE',
                 credentials: 'include',
             });
