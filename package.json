@@ -7,7 +7,7 @@
     "server": "cd server && npm run dev",
     "dev": "concurrently \"npm run client\" \"npm run server\"",
 
-    "build": "npm i && npm i --prefix client && npm i --prefix server && npm run build --prefix client",
+    "build": "npm i --production=false && npm i --production=false --prefix client && npm i --production=false --prefix server && npm run build --prefix client",
     "start" : "npm start --prefix server"
   },
   "keywords": [],
