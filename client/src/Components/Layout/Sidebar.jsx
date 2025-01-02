@@ -22,7 +22,7 @@ export default function Sidebar() {
         { show: user, path: '/admin', name: 'Admin', icon: icons.user },
         {
             show: user,
-            path: `/channel/${user?.user_name}`,
+            path: `/channel/${user?.user_id}`,
             name: 'My Content',
             icon: icons.image,
         },
