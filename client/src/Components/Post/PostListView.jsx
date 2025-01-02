@@ -17,6 +17,7 @@ export default function PostListView({ post, reference, children }) {
         lastName,
         userName,
         avatar,
+        post_ownerId,
     } = post;
 
     const navigate = useNavigate();
@@ -78,7 +79,7 @@ export default function PostListView({ post, reference, children }) {
 
                     {/* user info */}
                     <Link
-                        to={`/channel/${userName}`}
+                        to={`/channel/${post_ownerId}`}
                         onClick={(e) => e.stopPropagation()}
                         className="flex items-start justify-start gap-3 mt-6"
                     >

@@ -21,36 +21,35 @@ END$$
 DELIMITER ;
 
 
--- PROCEDURE FOR GET_USER 
-DELIMITER $$
-CREATE PROCEDURE getUser (IN identifier CHAR(10), IN input CHAR(40))
-BEGIN
-    DECLARE usercount INT DEFAULT 0;
-    DECLARE userid CHAR(40);
+-- PROCEDURE FOR GET_USER (not needed)
+-- DELIMITER $$
+-- CREATE PROCEDURE getUser (IN identifier CHAR(10), IN input CHAR(40))
+-- BEGIN
+--     DECLARE usercount INT DEFAULT 0;
+--     DECLARE userid CHAR(40);
     
-    IF identifier = 'email' THEN 
-		SELECT COUNT(*), user_id INTO usercount, userid
-		FROM users
-		WHERE user_email = input
-        GROUP BY user_id;
-	ELSEIF identifier = 'username' THEN 
-		SELECT COUNT(*), user_id INTO usercount, userid 
-        FROM users
-        WHERE user_name = input
-        GROUP BY user_id;
-    ELSE 
-		SELECT COUNT(*), user_id INTO usercount, userid
-        FROM users
-        WHERE user_id = input
-        GROUP BY user_id;
-	END IF;
+--     IF identifier = 'email' THEN 
+-- 		SELECT COUNT(*), user_id INTO usercount, userid
+-- 		FROM users
+-- 		WHERE user_email = input
+--         GROUP BY user_id;
+-- 	ELSEIF identifier = 'username' THEN 
+-- 		SELECT COUNT(*), user_id INTO usercount, userid 
+--         FROM users
+--         WHERE user_name = input
+--         GROUP BY user_id;
+--     ELSE 
+-- 		SELECT COUNT(*), user_id INTO usercount, userid
+--         FROM users
+--         WHERE user_id = input
+--         GROUP BY user_id;
+-- 	END IF;
         
-    IF usercount <> 0 THEN SELECT * FROM users WHERE user_id = userid;
-    ELSE SELECT 'USER_NOT_FOUND' AS message;
-	END IF;
-END$$
-DELIMITER ;
-
+--     IF usercount <> 0 THEN SELECT * FROM users WHERE user_id = userid;
+--     ELSE SELECT 'USER_NOT_FOUND' AS message;
+-- 	END IF;
+-- END$$
+-- DELIMITER ;
 
 -- PROCEDURE FOR UPDATE_WATCH_HISTORY
 DELIMITER $$
@@ -110,13 +109,11 @@ BEGIN
 	
     IF ROW_COUNT() = 0 THEN 
 		INSERT INTO post_likes(post_id,user_id,is_liked) VALUES(postId, userId, likedStatus);
-	ELSE
-        IF isLiked = likedStatus THEN 
-			DELETE FROM post_likes p WHERE p.post_id = postId AND p.user_id = userId;
-		ELSE  
-			UPDATE post_likes p SET p.is_liked = likedStatus WHERE p.post_id = postId AND p.user_id = userId;
-		END IF;
-	END IF;
+	ELSEIF isLiked = likedStatus THEN 
+        DELETE FROM post_likes p WHERE p.post_id = postId AND p.user_id = userId;
+    ELSE  
+        UPDATE post_likes p SET p.is_liked = likedStatus WHERE p.post_id = postId AND p.user_id = userId;
+    END IF;
     
     IF ROW_COUNT() = 0 THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "LIKE_TOGGLING_DB_ISSUE";
@@ -125,7 +122,6 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-
 
 -- PROCEDURE FOR TOGGLE_COMMENT_LIKE
 DELIMITER $$
@@ -139,13 +135,11 @@ BEGIN
 	
     IF ROW_COUNT() = 0 THEN 
 		INSERT INTO comment_likes(comment_id,user_id,is_liked) VALUES(commentId, userId, likedStatus); 
-	ELSE
-        IF isLiked = likedStatus THEN 
-			DELETE FROM comment_likes c WHERE c.comment_id = commentId AND c.user_id = userId;    
-		ELSE  
-			UPDATE comment_likes c SET c.is_liked = likedStatus WHERE c.comment_id = commentId AND c.user_id = userId;
-		END IF;
-	END IF;
+	ELSEIF isLiked = likedStatus THEN 
+        DELETE FROM comment_likes c WHERE c.comment_id = commentId AND c.user_id = userId;    
+    ELSE  
+        UPDATE comment_likes c SET c.is_liked = likedStatus WHERE c.comment_id = commentId AND c.user_id = userId;
+    END IF;
     
     IF ROW_COUNT() = 0 THEN 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "LIKE_TOGGLING_DB_ISSUE";

@@ -15,7 +15,7 @@ export default function Logout() {
         setLoading(true);
         try {
             const res = await authService.logout();
-            if (res && res.message === 'user logged out') {
+            if (res && res.message === 'user loggedout successfully') {
                 setUser(null);
                 setPopupText('LogOut Successfull 🙂');
                 setShowPopup(true);

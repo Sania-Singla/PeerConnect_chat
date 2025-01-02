@@ -1,11 +1,9 @@
 import { Ilikes } from '../../interfaces/like.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            verifyOrderBy(orderBy);
             const q = `
                     SELECT
                     	c.user_id,
@@ -18,6 +16,7 @@ export class SQLlikes extends Ilikes {
                         p.post_updatedAt,
                         p.post_createdAt, 
                         p.post_title, 
+                        p.post_ownerId,
                         p.post_content, 
                         p.totalViews,
                         p.post_image
@@ -37,11 +36,11 @@ export class SQLlikes extends Ilikes {
             const offset = (page - 1) * limit;
 
             const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
-            const [posts] = await connection.query(q, [userId, limit, offset]);
-
-            if (!posts?.length) {
-                return { message: 'NO_LIKED_POSTS' };
+            if (totalPosts === 0) {
+                return null;
             }
+
+            const [posts] = await connection.query(q, [userId, limit, offset]);
 
             const totalPages = Math.ceil(totalPosts / limit);
             const hasNextPage = page < totalPages;
@@ -61,29 +60,33 @@ export class SQLlikes extends Ilikes {
         }
     }
 
-    async togglePostLike(postId, userId, likedStatus) {
+    async togglePostLike(userId, postId, likedStatus) {
         try {
             const q = 'CALL togglePostLike(?, ?, ?)';
-            const [[[response]]] = await connection.query(q, [
-                userId,
-                postId,
-                likedStatus,
-            ]);
-            return response;
+            // const [[[response]]] = await connection.query(q, [
+            //     userId,
+            //     postId,
+            //     likedStatus,
+            // ]);
+            // return response;
+            const [[[res]]] = await connection.query(q, [userId, postId, likedStatus]);
+            console.log(res);
+            return ;
         } catch (err) {
             throw err;
         }
     }
 
-    async toggleCommentLike(commentId, userId, likedStatus) {
+    async toggleCommentLike(userId, commentId, likedStatus) {
         try {
             const q = 'CALL toggleCommentLike(?, ?, ?)';
-            const [[[response]]] = await connection.query(q, [
-                userId,
-                commentId,
-                likedStatus,
-            ]);
-            return response;
+            // const [[[response]]] = await connection.query(q, [
+            //     userId,
+            //     commentId,
+            //     likedStatus,
+            // ]);
+            // return response;
+            return await connection.query(q, [userId, commentId, likedStatus]);
         } catch (err) {
             throw err;
         }

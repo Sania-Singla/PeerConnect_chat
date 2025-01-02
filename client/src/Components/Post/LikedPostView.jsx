@@ -12,7 +12,7 @@ export default function LikedPostView({ post, reference }) {
     async function toggleLike() {
         try {
             const res = await likeService.togglePostLike(post_id, true);
-            if (res && res.message === 'POST_LIKE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'post like toggled successfully') {
                 setIsLiked((prev) => !prev);
             }
         } catch (err) {

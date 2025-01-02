@@ -1,7 +1,6 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 
-import typography from '@tailwindcss/typography'; 
+import typography from '@tailwindcss/typography';
 
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],

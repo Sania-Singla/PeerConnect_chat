@@ -5,8 +5,6 @@ import { verifyOrderBy } from '../../utils/index.js';
 export class SQLcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {
         try {
-            verifyOrderBy(orderBy);
-
             const q = `  
                     SELECT 
                         v.*,
@@ -15,16 +13,13 @@ export class SQLcomments extends Icomments {
                     LEFT JOIN comment_likes l 
                     ON v.comment_id = l.comment_id AND l.user_id = ?
                     WHERE v.post_id = ? 
-                    ORDER BY v.comment_createdAt ${orderBy.toUpperCase()};
+                    ORDER BY v.comment_createdAt ${orderBy.toUpperCase()}
                 `;
 
             const [comments] = await connection.query(q, [
                 currentUserId,
                 postId,
             ]);
-            if (!comments?.length) {
-                return { message: 'no comments found' };
-            }
 
             return comments;
         } catch (err) {
@@ -49,7 +44,7 @@ export class SQLcomments extends Icomments {
                 commentId,
             ]);
             if (!comment) {
-                return { message: 'comment not found' };
+                return null;
             }
 
             return comment;
@@ -69,11 +64,7 @@ export class SQLcomments extends Icomments {
                 commentContent,
             ]);
 
-            const comment = await this.getComment(commentId);
-            if (comment?.message) {
-                throw new Error('comment creation db issue');
-            }
-            return comment;
+            return await this.getComment(commentId);
         } catch (err) {
             throw err;
         }
@@ -82,11 +73,7 @@ export class SQLcomments extends Icomments {
     async deleteComment(commentId) {
         try {
             const q = 'DELETE FROM comments WHERE comment_id = ?';
-            const [response] = await connection.query(q, [commentId]);
-            if (response.affectedRows === 0) {
-                throw new Error('comment deletion db issue');
-            }
-            return { message: 'comment deleted' };
+            return await connection.query(q, [commentId]);
         } catch (err) {
             throw err;
         }
@@ -97,11 +84,7 @@ export class SQLcomments extends Icomments {
             const q =
                 'UPDATE comments SET comment_content = ? WHERE comment_id = ?';
             await connection.query(q, [commentContent, commentId]);
-            const comment = await this.getComment(commentId);
-            if (comment?.message) {
-                throw new Error('comment updation db issue');
-            }
-            return comment;
+            return await this.getComment(commentId);
         } catch (err) {
             throw err;
         }

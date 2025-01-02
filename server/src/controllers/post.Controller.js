@@ -9,10 +9,11 @@ import { v4 as uuid } from 'uuid';
 import {
     uploadOnCloudinary,
     deleteFromCloudinary,
-    getCurrentTimestamp,
+    verifyOrderBy,
 } from '../utils/index.js';
-import validator from 'validator';
 import { userObject } from './user.Controller.js';
+import { categoryObject } from './category.Controller.js';
+import validator from 'validator';
 
 export const postObject = getServiceObject('posts');
 
@@ -27,14 +28,26 @@ const getRandomPosts = async (req, res) => {
             query = '',
         } = req.query;
 
-        const randomPosts = await postObject.getRandomPosts(
+        if (!verifyOrderBy(orderBy)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'invalid orderBy value' });
+        }
+
+        const result = await postObject.getRandomPosts(
             Number(limit),
             orderBy.toUpperCase(),
             Number(page),
             category
         );
-        return res.status(OK).json(randomPosts);
+
+        if (result) {
+            return res.status(OK).json(result);
+        } else {
+            return res.status(OK).json({ message: 'no posts found' });
+        }
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting random posts',
             error: err.message,
@@ -44,7 +57,7 @@ const getRandomPosts = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const { channelId } = req.params;
+        const channelId = req.channel.user_id;
         const {
             orderBy = 'desc',
             limit = 10,
@@ -52,22 +65,28 @@ const getPosts = async (req, res) => {
             category = '',
         } = req.query;
 
-        if (!channelId || !validator.isUUID(channelId)) {
+        if (!verifyOrderBy(orderBy)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid channelId' });
+                .json({ message: 'invalid orderBy value' });
         }
 
-        const posts = await postObject.getPosts(
+        const result = await postObject.getPosts(
             channelId,
             Number(limit),
             orderBy.toUpperCase(),
             Number(page),
             category
         );
-        return res.status(OK).json(posts);
+
+        if (result) {
+            return res.status(OK).json(result);
+        } else {
+            return res.status(NOT_FOUND).json({ message: 'no posts found' });
+        }
     } catch (err) {
-        res.status(SERVER_ERROR).json({
+        console.log(err);
+        return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting user posts',
             error: err.message,
         });
@@ -77,26 +96,22 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid postId' });
-        }
+        const { user_id } = req.user;
 
-        let userIdentifier = req.ip;
+        let userIdentifier = user_id || req.ip;
 
-        if (req.user) {
-            const { user_id } = req.user;
+        // update user's watch history
+        if (user_id) {
             await userObject.updateWatchHistory(postId, user_id);
-            userIdentifier = user_id;
         }
 
+        // update post views
         await postObject.updatePostViews(postId, userIdentifier);
 
-        const post = await postObject.getPost(postId, req.user?.user_id);
-        return res.status(OK).json(post);
+        return res.status(OK).json(req.post); // from post exists middleware
     } catch (err) {
-        res.status(SERVER_ERROR).json({
+        console.log(err);
+        return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting the post',
             error: err.message,
         });
@@ -106,33 +121,40 @@ const getPost = async (req, res) => {
 const addPost = async (req, res) => {
     let postImage;
     try {
-        const { user_id } = req.user;
-        const { title, content, category } = req.body;
-        const postId = uuid();
+        const { title, content, categoryId } = req.body;
 
-        if (!title || !content || !category)
-            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        if (!title || !content || !req.file)
+            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
 
-        if (!req.file)
+        if (!categoryId || !validator.isUUID(categoryId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'missing thumbnail' });
+                .json({ message: 'missing or invalid categoryId' });
+        }
+
+        const category = await categoryObject.getCategory(categoryId);
+        if (!category) {
+            return res
+                .status(NOT_FOUND)
+                .json({ message: 'category not found' });
+        }
 
         postImage = await uploadOnCloudinary(req.file.path);
 
         const post = await postObject.createPost({
-            postId,
-            user_id,
+            postId: uuid(),
+            userId: req.user.user_id,
             title,
             content,
-            category,
-            postImageURL: postImage.url,
+            categoryId: category.category_id,
+            postImage,
         });
         return res.status(OK).json(post);
     } catch (err) {
         if (postImage) {
-            await deleteFromCloudinary(postImage.url);
+            await deleteFromCloudinary(postImage);
         }
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while adding a post',
             error: err.message,
@@ -143,12 +165,11 @@ const addPost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const { post_image, post_id } = req.post;
-
+        const result = await postObject.deletePost(post_id);
         await deleteFromCloudinary(post_image);
-
-        await postObject.deletePost(post_id);
-        return res.status(OK).json({ message: 'post deleted' });
+        return res.status(OK).json({ message: 'post deleted successfully' });
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while deleting the post',
             error: err.message,
@@ -159,25 +180,35 @@ const deletePost = async (req, res) => {
 const updatePostDetails = async (req, res) => {
     try {
         const { post_id } = req.post;
-        const { title, content, category } = req.body;
+        const { title, content, categoryId } = req.body;
 
-        if (!title || !content || !category) {
+        if (!title || !content) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
-        const now = new Date();
-        const updatedAt = getCurrentTimestamp(now);
+        if (!categoryId || !validator.isUUID(categoryId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'missing or invalid categoryId' });
+        }
+
+        const category = await categoryObject.getCategory(categoryId);
+        if (!category) {
+            return res
+                .status(NOT_FOUND)
+                .json({ message: 'category not found' });
+        }
 
         const updatedPost = await postObject.updatePostDetails({
             postId: post_id,
             title,
             content,
-            category,
-            updatedAt,
+            categoryId: category.category_id,
         });
 
         return res.status(OK).json(updatedPost);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something wrong happened while updating post details',
             error: err.message,
@@ -201,20 +232,17 @@ const updateThumbnail = async (req, res) => {
         // delete old thumbnail
         await deleteFromCloudinary(post_image);
 
-        const now = new Date();
-        const updatedAt = getCurrentTimestamp(now);
-
         const updatedPost = await postObject.updatePostImage(
             post_id,
-            postImage?.url,
-            updatedAt
+            postImage
         );
 
         return res.status(OK).json(updatedPost);
     } catch (err) {
         if (postImage) {
-            await deleteFromCloudinary(postImage.url);
+            await deleteFromCloudinary(postImage);
         }
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something wrong happened while updating post image',
             error: err.message,
@@ -225,13 +253,15 @@ const updateThumbnail = async (req, res) => {
 const togglePostVisibility = async (req, res) => {
     try {
         const { post_id, post_visibility } = req.post;
-
-        const updatedPost = await postObject.togglePostVisibility(
+        const result = await postObject.togglePostVisibility(
             post_id,
             !post_visibility
         );
-        return res.status(OK).json(updatedPost);
+        return res
+            .status(OK)
+            .json({ message: 'post visibility toggled successfully' });
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something happened wrong while updating post visibility',
             error: err.message,
@@ -242,22 +272,13 @@ const togglePostVisibility = async (req, res) => {
 const toggleSavePost = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { postId } = req.params;
-
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid postId' });
-        }
-
-        const post = postObject.getPost(postId);
-        if (!post) {
-            return res.status(NOT_FOUND).json({ message: 'post not found' });
-        }
-
-        const response = await postObject.toggleSavePost(postId, user_id);
-        return res.status(OK).json(response);
+        const { post_id } = req.post;
+        await postObject.toggleSavePost(user_id, post_id);
+        return res
+            .status(OK)
+            .json({ message: 'post save toggled successfully' });
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something happened wrong while toggling saved post',
             error: err.message,
@@ -270,14 +291,25 @@ const getSavedPosts = async (req, res) => {
         const { user_id } = req.user;
         const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
 
-        const savedPosts = await postObject.getSavedPosts(
+        if (!verifyOrderBy(orderBy)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'invalid orderBy value' });
+        }
+
+        const result = await postObject.getSavedPosts(
             user_id,
             orderBy.toUpperCase(),
             Number(limit),
             Number(page)
         );
-        return res.status(OK).json(savedPosts);
+        if (result) {
+            return res.status(OK).json(result);
+        } else {
+            return res.status(OK).json({ message: 'no saved posts' });
+        }
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something happened wrong while getting saved posts',
             error: err.message,

@@ -1,7 +1,7 @@
 import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
-import validator from 'validator';
 import { v4 as uuid } from 'uuid';
 import getServiceObject from '../db/serviceObjects.js';
+import { verifyOrderBy } from '../utils/index.js';
 
 export const commentObject = getServiceObject('comments');
 
@@ -9,10 +9,11 @@ const getComments = async (req, res) => {
     try {
         const { postId } = req.params;
         const { orderBy = 'desc' } = req.query;
-        if (!postId || !validator.isUUID(postId)) {
+
+        if (!verifyOrderBy(orderBy)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid postId' });
+                .json({ message: 'invalid orderBy value' });
         }
 
         const comments = await commentObject.getComments(
@@ -20,8 +21,14 @@ const getComments = async (req, res) => {
             req.user?.user_id,
             orderBy.toUpperCase()
         );
-        return res.status(OK).json(comments);
+
+        if (comments.length) {
+            return res.status(OK).json(comments);
+        } else {
+            return res.status(OK).json({ message: 'no comments found' });
+        }
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting the post comments',
             error: err.message,
@@ -31,19 +38,9 @@ const getComments = async (req, res) => {
 
 const getComment = async (req, res) => {
     try {
-        const { commentId } = req.params;
-        if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'COMMENTID_MISSING_OR_INVALID',
-            });
-        }
-
-        const comment = await commentObject.getComment(
-            commentId,
-            req.user?.user_id
-        );
-        return res.status(OK).json(comment);
+        return res.status(OK).json(req.comment);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting the comment',
             error: err.message,
@@ -58,12 +55,6 @@ const addComment = async (req, res) => {
         const { commentContent } = req.body;
         const commentId = uuid();
 
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid postId' });
-        }
-
         if (!commentContent) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
@@ -76,6 +67,7 @@ const addComment = async (req, res) => {
         );
         return res.status(OK).json(comment);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while creating the comment',
             error: err.message,
@@ -85,11 +77,11 @@ const addComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        // isOwner middleware
-        const { commentId } = req.comment; // or req.params
+        const { commentId } = req.params;
         const result = await commentObject.deleteComment(commentId);
-        return res.status(OK).json(result);
+        return res.status(OK).json({ message: 'comment deleted successfully' });
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while deleting the comment',
             error: err.message,
@@ -110,8 +102,9 @@ const updateComment = async (req, res) => {
             commentId,
             commentContent
         );
-        res.status(OK).json(updatedComment);
+        return res.status(OK).json(updatedComment);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while editing the comment',
             error: err.message,

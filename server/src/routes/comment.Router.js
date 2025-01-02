@@ -4,6 +4,8 @@ import {
     verifyJwt,
     optionalVerifyJwt,
     isCommentOwner,
+    doesPostExist,
+    doesCommentExist,
 } from '../middlewares/index.js';
 import {
     addComment,
@@ -13,14 +15,16 @@ import {
     getComment,
 } from '../controllers/comment.Controller.js';
 
-commentRouter.route('/post/:postId').get(optionalVerifyJwt, getComments);
+commentRouter
+    .route('/post/:postId')
+    .get(doesPostExist, optionalVerifyJwt, getComments);
 
 commentRouter.use(verifyJwt);
 
-commentRouter.route('/:postId').post(addComment);
+commentRouter.route('/:postId').post(doesPostExist, addComment);
 
 commentRouter
     .route('/comment/:commentId')
-    .patch(isCommentOwner, updateComment)
-    .delete(isCommentOwner, deleteComment)
-    .get(getComment);
+    .get(doesCommentExist, getComment)
+    .patch(doesCommentExist, isCommentOwner, updateComment)
+    .delete(doesCommentExist, isCommentOwner, deleteComment);

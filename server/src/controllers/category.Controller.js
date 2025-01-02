@@ -8,8 +8,13 @@ export const categoryObject = getServiceObject('categories');
 const getCategories = async (req, res) => {
     try {
         const categories = await categoryObject.getCategories();
-        return res.status(OK).json(categories);
+        if (categories.length) {
+            return res.status(OK).json(categories);
+        } else {
+            return res.status(OK).json({ message: 'no categories found' });
+        }
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while getting the categories',
             error: err.message,
@@ -32,6 +37,7 @@ const addCategory = async (req, res) => {
         );
         return res.status(OK).json(category);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while adding new category',
             error: err.message,
@@ -59,6 +65,7 @@ const deleteCategory = async (req, res) => {
         const result = await categoryObject.deleteCategory(categoryId);
         return res.status(OK).json(result);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while deleting the category',
             error: err.message,
@@ -91,8 +98,9 @@ const updateCategory = async (req, res) => {
             categoryId,
             categoryName
         );
-        res.status(OK).json(updatedCategory);
+        return res.status(OK).json(updatedCategory);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while updating the category',
             error: err.message,

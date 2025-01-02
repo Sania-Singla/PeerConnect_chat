@@ -1,6 +1,6 @@
 import express from 'express';
 export const categoryRouter = express.Router();
-import { verifyJwt } from '../middlewares/auth.Middleware.js';
+import { verifyJwt, doesCategoryExist } from '../middlewares/index.js';
 
 import {
     addCategory,
@@ -9,9 +9,9 @@ import {
     updateCategory,
 } from '../controllers/category.Controller.js';
 
-categoryRouter.route('/').get(getCategories).post(verifyJwt, addCategory);
-
 categoryRouter
-    .route('/categoryId')
-    .delete(verifyJwt, deleteCategory)
-    .patch(verifyJwt, updateCategory);
+    .route('/category/:categoryId')
+    .delete(verifyJwt, doesCategoryExist, deleteCategory)
+    .patch(verifyJwt, doesCategoryExist, updateCategory);
+
+categoryRouter.route('/').get(getCategories).post(verifyJwt, addCategory);

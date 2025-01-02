@@ -5,6 +5,8 @@ import {
     verifyJwt,
     optionalVerifyJwt,
     isPostOwner,
+    doesChannelExist,
+    doesPostExist,
 } from '../middlewares/index.js';
 
 import {
@@ -22,26 +24,37 @@ import {
 
 postRouter.route('/all').get(getRandomPosts);
 
-postRouter.route('/channel/:channelId').get(getPosts);
+postRouter.route('/channel/:channelId').get(doesChannelExist, getPosts);
 
-postRouter.route('/post/:postId').get(optionalVerifyJwt, getPost);
+postRouter
+    .route('/post/:postId')
+    .get(optionalVerifyJwt, doesPostExist, getPost);
 
 postRouter.use(verifyJwt);
 
 postRouter.route('/saved').get(getSavedPosts);
 
-postRouter.route('/toggle-save/:postId').post(toggleSavePost);
+postRouter.route('/toggle-save/:postId').post(doesPostExist, toggleSavePost);
 
 postRouter.route('/add').post(upload.single('postImage'), addPost);
 
-postRouter.use(isPostOwner);
+postRouter
+    .route('/delete/:postId')
+    .delete(doesPostExist, isPostOwner, deletePost);
 
-postRouter.route('/delete/:postId').delete(deletePost);
-
-postRouter.route('/details/:postId').patch(updatePostDetails);
+postRouter
+    .route('/details/:postId')
+    .patch(doesPostExist, isPostOwner, updatePostDetails);
 
 postRouter
     .route('/image/:postId')
-    .patch(upload.single('postImage'), updateThumbnail);
+    .patch(
+        doesPostExist,
+        isPostOwner,
+        upload.single('postImage'),
+        updateThumbnail
+    );
 
-postRouter.route('/visibility/:postId').patch(togglePostVisibility);
+postRouter
+    .route('/visibility/:postId')
+    .patch(doesPostExist, isPostOwner, togglePostVisibility);

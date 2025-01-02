@@ -10,13 +10,13 @@ cloudinary.config({
 /**
  * Util for uploading files on cloudinary using their local paths and deleting them afterwards
  * @param {String} localFilePath - The local path where the files are temporarely stored by multer
- * @returns {Object} The upload response recieved from cloudinary
+ * @returns {String} The url recieved from cloudinary
  */
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
-            throw new Error('CLOUDIANRY_FILE_PATH_MISSING_MULTER_ISSUE');
+            throw new Error('local file path missing');
         }
 
         const res = await cloudinary.uploader.upload(localFilePath, {
@@ -25,7 +25,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 
         console.log('file uploaded successfully.', res.url);
 
-        return res;
+        return res.url;
     } catch (err) {
         throw new Error(
             `error while uploading file on cloudinary, err: ${err.message}`

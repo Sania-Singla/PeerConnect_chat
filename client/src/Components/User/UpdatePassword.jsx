@@ -63,7 +63,7 @@ export default function UpdatePassword() {
                     inputs.newPassword,
                     inputs.oldPassword
                 );
-                if (res && !res.message) {
+                if (res && res.message === 'password updated successfully') {
                     setInputs(initialInputs);
                 } else {
                     setError((prev) => ({ ...prev, oldPassword: res.message }));

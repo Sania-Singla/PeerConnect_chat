@@ -23,8 +23,8 @@ export default function Comments({ postId }) {
             try {
                 setLoading(true);
                 const res = await commentService.getComments(signal, postId);
-                if (res && !res.message) {
-                    setComments(res);
+                if (res) {
+                    setComments(res.message === 'no comments found' ? [] : res);
                 }
             } catch (err) {
                 navigate('/server-error');
