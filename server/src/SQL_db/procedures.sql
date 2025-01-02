@@ -20,37 +20,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
--- PROCEDURE FOR GET_USER (not needed)
--- DELIMITER $$
--- CREATE PROCEDURE getUser (IN identifier CHAR(10), IN input CHAR(40))
--- BEGIN
---     DECLARE usercount INT DEFAULT 0;
---     DECLARE userid CHAR(40);
-    
---     IF identifier = 'email' THEN 
--- 		SELECT COUNT(*), user_id INTO usercount, userid
--- 		FROM users
--- 		WHERE user_email = input
---         GROUP BY user_id;
--- 	ELSEIF identifier = 'username' THEN 
--- 		SELECT COUNT(*), user_id INTO usercount, userid 
---         FROM users
---         WHERE user_name = input
---         GROUP BY user_id;
---     ELSE 
--- 		SELECT COUNT(*), user_id INTO usercount, userid
---         FROM users
---         WHERE user_id = input
---         GROUP BY user_id;
--- 	END IF;
-        
---     IF usercount <> 0 THEN SELECT * FROM users WHERE user_id = userid;
---     ELSE SELECT 'USER_NOT_FOUND' AS message;
--- 	END IF;
--- END$$
--- DELIMITER ;
-
 -- PROCEDURE FOR UPDATE_WATCH_HISTORY
 DELIMITER $$
 CREATE PROCEDURE updateWatchHistory (IN postId CHAR(40), IN userId CHAR(40)) 

@@ -8,7 +8,7 @@ import {
     toggleFollow,
 } from '../controllers/follower.Controller.js';
 
-// followerRouter.use(doesChannelExist);  // causes error because the params might have not been set yet
+// followerRouter.use(doesChannelExist);  // causes error because the params might have not been set yet (waterfall effect)
 
 followerRouter
     .route('/follows/:channelId')

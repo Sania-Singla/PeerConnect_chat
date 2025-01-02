@@ -105,7 +105,9 @@ export default function AdminPage() {
     ];
 
     const tableHeadElements = tableHeads.map((head) => (
-        <th key={head} className="text-[1.13rem] font-bold py-[18px] px-6">{head}</th>
+        <th key={head} className="text-[1.13rem] font-bold py-[18px] px-6">
+            {head}
+        </th>
     ));
 
     const statElements = stats?.map((item) => (

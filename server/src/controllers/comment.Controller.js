@@ -77,8 +77,8 @@ const addComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const { commentId } = req.params;
-        const result = await commentObject.deleteComment(commentId);
+        const { comment_id } = req.comment;
+        await commentObject.deleteComment(comment_id);
         return res.status(OK).json({ message: 'comment deleted successfully' });
     } catch (err) {
         console.log(err);
@@ -92,14 +92,14 @@ const deleteComment = async (req, res) => {
 const updateComment = async (req, res) => {
     try {
         const { commentContent } = req.body;
-        const { commentId } = req.params;
+        const { comment_id } = req.comment;
 
         if (!commentContent) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
         const updatedComment = await commentObject.editComment(
-            commentId,
+            comment_id,
             commentContent
         );
         return res.status(OK).json(updatedComment);
