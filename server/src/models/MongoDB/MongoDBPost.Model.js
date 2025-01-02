@@ -200,8 +200,8 @@ export class MongoDBposts extends Iposts {
                 },
             ];
 
-            const post = await Post.aggregate(pipeline);
-            return post[0];
+            const [post] = await Post.aggregate(pipeline);
+            return post;
         } catch (err) {
             throw err;
         }
