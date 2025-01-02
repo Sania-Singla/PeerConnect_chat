@@ -1,9 +1,9 @@
-import { User, SavedPost, WatchHistory } from './userSchema';
-import { Follower } from './followerSchema';
-import { Category } from './categorySchema';
-import { Comment } from './commentSchema';
-import { PostLike, CommentLike } from './likeSchema';
-import { Post, PostView } from './postSchema';
+import { User, SavedPost, WatchHistory } from './userSchema.js';
+import { Follower } from './followerSchema.js';
+import { Category } from './categorySchema.js';
+import { Comment } from './commentSchema.js';
+import { PostLike, CommentLike } from './likeSchema.js';
+import { Post, PostView } from './postSchema.js';
 
 export {
     User,

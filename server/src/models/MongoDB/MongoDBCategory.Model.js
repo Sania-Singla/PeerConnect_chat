@@ -22,7 +22,7 @@ export class MongoDBcategories extends Icategories {
             const category = await Category.findOne({
                 category_id: categoryId,
             });
-            
+
             return category;
         } catch (err) {
             throw err;
@@ -35,7 +35,7 @@ export class MongoDBcategories extends Icategories {
                 category_id: categoryId,
                 category_name: categoryName,
             });
-            
+
             return category;
         } catch (err) {
             throw err;
@@ -48,7 +48,6 @@ export class MongoDBcategories extends Icategories {
                 category_id: categoryId,
             });
 
-           
             return { message: 'CATEGORY_DELETED_SUCCESSFULLY' };
         } catch (err) {
             throw err;

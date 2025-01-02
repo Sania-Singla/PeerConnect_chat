@@ -96,13 +96,13 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const { user_id } = req.user;
+        const userId = req.user?.user_id;
 
-        let userIdentifier = user_id || req.ip;
+        let userIdentifier = userId || req.ip;
 
         // update user's watch history
-        if (user_id) {
-            await userObject.updateWatchHistory(postId, user_id);
+        if (userId) {
+            await userObject.updateWatchHistory(postId, userId);
         }
 
         // update post views

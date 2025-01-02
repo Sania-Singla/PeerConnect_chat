@@ -27,6 +27,16 @@ export class MongoDBusers extends Iusers {
         password
     ) {
         try {
+            console.log(
+                userId,
+                userName,
+                firstName,
+                lastName,
+                avatar,
+                coverImage,
+                email,
+                password
+            );
             const user = await User.create({
                 user_id: userId,
                 user_name: userName,
