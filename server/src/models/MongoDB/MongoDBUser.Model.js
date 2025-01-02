@@ -1,8 +1,9 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
-import { User } from '../../schemas/MongoDB/userSchema.js';
+import { User } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBusers extends Iusers {
-    async getUser(searchInput) {
+     try {
+       async getUser(searchInput) {
         const user = await User.findOne({
             $or: [
                 { user_id: searchInput },
@@ -12,7 +13,6 @@ export class MongoDBusers extends Iusers {
         }).select('-user_password -refresh_token');
 
         return user;
-        try {
         } catch (err) {
             throw err;
         }
@@ -38,6 +38,16 @@ export class MongoDBusers extends Iusers {
                 user_coverImage: coverImage,
                 user_email: email,
                 user_password: password,
+            });
+
+            const createdUser = await User.findOne({
+                user_id: user.user_id,
+            }).select('-refresh_token');
+
+            if (!createdUser) {
+                throw new Error('USER_CREATION_DB_ISSUE');
+            }
+            return createdUser;
             }).select('-user_password -refresh_token');
 
             return user;
@@ -48,6 +58,13 @@ export class MongoDBusers extends Iusers {
 
     async deleteUser(userId) {
         try {
+            const deletedUser = await User.deleteOne({
+                user_id: userId,
+            })
+
+            if(deletedUser.deletedCount === 0){
+                throw new Error("")
+            }
             await User.findByIdAndDelete(userId);
         } catch (err) {
             throw err;
@@ -74,6 +91,8 @@ export class MongoDBusers extends Iusers {
         }
     }
 
+    async updateRefreshToken(userId, refreshToken) {
+        try {
     async loginUser(userId, refreshToken) {
         try {
             const updatedUser = await User.findByIdAndUpdate(
@@ -96,7 +115,6 @@ export class MongoDBusers extends Iusers {
 
     async getChannelProfile(channelId, currentUserId) {
         try {
-            // pipeline
         } catch (err) {
             throw err;
         }
