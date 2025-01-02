@@ -1,9 +1,9 @@
-import { MongoDBusers } from './MongoDBUserModel.js';
-import { MongoDBposts } from './MongoDBPostModel.js';
-import { MongoDBfollowers } from './MongoDBFollowerModel.js';
-import { MongoDBlikes } from './MongoDBLikeModel.js';
-import { MongoDBcomments } from './MongoDBCommentModel.js';
-import { MongoDBcategories } from './MongoDBCategoryModel.js';
+import { MongoDBusers } from './MongoDBUser.Model.js';
+import { MongoDBposts } from './MongoDBPost.Model.js';
+import { MongoDBfollowers } from './MongoDBFollower.Model.js';
+import { MongoDBlikes } from './MongoDBLike.Model.js';
+import { MongoDBcomments } from './MongoDBComment.Model.js';
+import { MongoDBcategories } from './MongoDBCategory.Model.js';
 
 export {
     MongoDBusers,
