@@ -38,7 +38,7 @@ export class MongoDBcategories extends Icategories {
                 category_id: categoryId,
                 category_name: categoryName,
             });
-
+            
             return category;
         } catch (err) {
             throw err;
