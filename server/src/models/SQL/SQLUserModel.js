@@ -245,8 +245,6 @@ export class SQLusers extends Iusers {
     async updateWatchHistory(postId, userId) {
         try {
             const q = `CALL updateWatchHistory (?, ?)`;
-            // const [[[response]]] = await connection.query(q, [postId, userId]);
-            // return response;
             return await connection.query(q, [postId, userId]);
         } catch (err) {
             throw err;

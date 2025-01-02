@@ -36,8 +36,7 @@ export class SQLcategories extends Icategories {
     async deleteCategory(categoryId) {
         try {
             const q = 'DELETE FROM categories WHERE category_id = ?';
-            const [response] = await connection.query(q, [categoryId]);
-            return { message: 'category deleted' };
+            return await connection.query(q, [categoryId]);
         } catch (err) {
             throw err;
         }

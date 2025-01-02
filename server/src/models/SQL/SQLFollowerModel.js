@@ -52,11 +52,6 @@ export class SQLfollowers extends Ifollowers {
     async toggleFollow(channelId, userId) {
         try {
             const q = 'CALL toggleFollow(?, ?)';
-            // const [[[response]]] = await connection.query(q, [
-            //     channelId,
-            //     userId,
-            // ]);
-            // return response;
             return await connection.query(q, [channelId, userId]);
         } catch (err) {
             throw err;

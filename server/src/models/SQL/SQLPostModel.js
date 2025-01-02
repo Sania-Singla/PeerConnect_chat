@@ -299,8 +299,6 @@ export class SQLposts extends Iposts {
     async toggleSavePost(userId, postId) {
         try {
             const q = 'CALL toggleSavePost(?, ?)';
-            // const [[[response]]] = await connection.query(q, [userId, postId]);
-            // return response;
             return await connection.query(q, [userId, postId]);
         } catch (err) {
             throw err;

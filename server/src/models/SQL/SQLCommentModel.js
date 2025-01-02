@@ -27,7 +27,6 @@ export class SQLcomments extends Icomments {
         }
     }
 
-    // only for checking if that comment exists or not
     async getComment(commentId, currentUserId) {
         try {
             const q = `  

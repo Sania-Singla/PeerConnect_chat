@@ -63,12 +63,6 @@ export class SQLlikes extends Ilikes {
     async togglePostLike(userId, postId, likedStatus) {
         try {
             const q = 'CALL togglePostLike(?, ?, ?)';
-            // const [[[response]]] = await connection.query(q, [
-            //     userId,
-            //     postId,
-            //     likedStatus,
-            // ]);
-            // return response;
             const [[[res]]] = await connection.query(q, [userId, postId, likedStatus]);
             console.log(res);
             return ;
@@ -80,12 +74,6 @@ export class SQLlikes extends Ilikes {
     async toggleCommentLike(userId, commentId, likedStatus) {
         try {
             const q = 'CALL toggleCommentLike(?, ?, ?)';
-            // const [[[response]]] = await connection.query(q, [
-            //     userId,
-            //     commentId,
-            //     likedStatus,
-            // ]);
-            // return response;
             return await connection.query(q, [userId, commentId, likedStatus]);
         } catch (err) {
             throw err;
