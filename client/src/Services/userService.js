@@ -1,7 +1,7 @@
 class UserService {
-    async getChannelProfile(signal, username) {
+    async getChannelProfile(signal, userId) {
         try {
-            const res = await fetch(`/api/users/channel/${username}`, {
+            const res = await fetch(`/api/users/channel/${userId}`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,

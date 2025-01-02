@@ -27,7 +27,7 @@ export default function AdminPage() {
                 setLoading(true);
                 const res = await userService.getChannelProfile(
                     signal,
-                    user.user_name
+                    user.user_id
                 );
                 if (res && !res.message) {
                     setStatsData(res);
@@ -105,7 +105,7 @@ export default function AdminPage() {
     ];
 
     const tableHeadElements = tableHeads.map((head) => (
-        <th className="text-[1.13rem] font-bold py-[18px] px-6">{head}</th>
+        <th key={head} className="text-[1.13rem] font-bold py-[18px] px-6">{head}</th>
     ));
 
     const statElements = stats?.map((item) => (
