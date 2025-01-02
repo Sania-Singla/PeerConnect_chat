@@ -1,44 +1,28 @@
-import {
-    BAD_REQUEST,
-    SERVER_ERROR,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
-import getServiceObject from '../db/serviceObjects.js';
-import validator from 'validator';
+import { BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
 
-const postObject = getServiceObject('posts');
+/**
+ * Generic middleware to check if the authenticated user is the owner of the resource.
+ * @param {string} service - The Service name, ex: 'post', ' comment'.
+ * @param {string} fieldToMatchWith - The field in the db to match with the user's ID.
+ * @returns {Function} Middleware function specific to that service.
+ */
+export const isOwner = (service, fieldToMatchWith) => {
+    return async (req, res, next) => {
+        try {
+            const resource = req[service];
 
-const isOwner = async (req, res, next) => {
-    try {
-        const { user_id } = req.user;
-        const { postId } = req.params;
+            if (!resource[fieldToMatchWith] === req.user.user_id) {
+                return res
+                    .status(BAD_REQUEST)
+                    .json({ message: 'not the owner' });
+            }
 
-        if (!postId || !validator.isUUID(postId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid postId' });
-        }
-
-        const post = await postObject.getPost(postId);
-        if (!post) {
-            return res.status(NOT_FOUND).json({ message: 'post not found' });
-        }
-
-        if (post.post_ownerId !== user_id) {
-            return res.status(BAD_REQUEST).json({
-                message: 'not the owner',
+            next();
+        } catch (err) {
+            return res.status(SERVER_ERROR).json({
+                message: `Something went wrong while checking ownership for ${service}`,
+                err: err.message,
             });
         }
-
-        // post under operation
-        req.post = post;
-        next();
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while checking for the post owner',
-            err: err.message,
-        });
-    }
+    };
 };
-
-export { isOwner };

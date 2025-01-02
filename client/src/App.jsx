@@ -14,37 +14,44 @@ export default function App() {
     const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function currentUser() {
             try {
-                const data = await authService.getCurrentUser();
-                if (data && !data.message) {
-                    setUser(data);
-                } else {
-                    setUser(null);
-                }
+                setLoading(true);
+                const data = await authService.getCurrentUser(signal);
+                setUser(data && !data.message ? data : null);
             } catch (err) {
                 navigate('/server-error');
             } finally {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
-    // Close sidebar on window resize & location changes
+    // Close sidebar
     useEffect(() => {
         const handleResize = () => {
             setShowSideBar(false);
         };
+
         // on window resize
         window.addEventListener('resize', handleResize);
 
-        // when location changes
+        // on location/route change
         setShowSideBar(false);
         setLoginPopupText('');
         setShowLoginPopup(false);
 
         // cleanup
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [location]);
 
     return (
@@ -54,12 +61,12 @@ export default function App() {
                     <div className="size-[33px] fill-[#4977ec] dark:text-[#ececec]">
                         {icons.loading}
                     </div>
-                    <div className="mt-2 text-2xl font-semibold">
+                    <p className="mt-2 text-2xl font-semibold">
                         Please Wait...
-                    </div>
-                    <div className="text-[16px] mt-1">
+                    </p>
+                    <p className="text-[16px] mt-1">
                         Please refresh the page, if it takes too long
-                    </div>
+                    </p>
                 </div>
             ) : (
                 <Layout />

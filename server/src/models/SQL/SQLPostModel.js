@@ -1,13 +1,11 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
+import { getCurrentTimestamp } from '../../utils/index.js';
 
 export class SQLposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, category) {
         try {
-            verifyOrderBy(orderBy);
-
             let q = `
                     SELECT 
                         p.*,
@@ -35,17 +33,19 @@ export class SQLposts extends Iposts {
             const queryParams = category
                 ? [category, limit, offset]
                 : [limit, offset];
+
             const countParams = category ? [category] : [];
 
             const [[{ totalPosts }]] = await connection.query(
                 countQ,
                 countParams
             );
-            const [posts] = await connection.query(q, queryParams);
 
-            if (!posts?.length) {
-                return { message: 'NO_POSTS_FOUND' };
+            if (totalPosts === 0) {
+                return null;
             }
+
+            const [posts] = await connection.query(q, queryParams);
 
             const totalPages = Math.ceil(totalPosts / limit);
             const hasNextPage = page < totalPages;
@@ -66,8 +66,6 @@ export class SQLposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, category) {
         try {
-            verifyOrderBy(orderBy);
-
             let q = `
                     SELECT 
                         p.*,
@@ -99,15 +97,16 @@ export class SQLposts extends Iposts {
                 : [channelId, limit, offset];
             const countParams = category ? [channelId, category] : [channelId];
 
-            const [posts] = await connection.query(q, queryParams);
             const [[{ totalPosts }]] = await connection.query(
                 countQ,
                 countParams
             );
 
-            if (!posts?.length) {
-                return { message: 'NO_POSTS_FOUND' };
+            if (totalPosts === 0) {
+                return null;
             }
+
+            const [posts] = await connection.query(q, queryParams);
 
             const totalPages = Math.ceil(totalPosts / limit);
             const hasNextPage = page < totalPages;
@@ -144,7 +143,7 @@ export class SQLposts extends Iposts {
 
             const [[post]] = await connection.query(q, [postId]);
             if (!post) {
-                return { message: 'POST_NOT_FOUND' };
+                return null;
             }
 
             let isLiked = false;
@@ -197,33 +196,28 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async createPost({ postId, ownerId, title, content, category, image }) {
+    async createPost({
+        postId,
+        userId,
+        title,
+        content,
+        categoryId,
+        postImage,
+    }) {
         try {
-            let categoryId;
-            if (category) {
-                const q =
-                    'SELECT category_id AS categoryId FROM categories WHERE category_name = ?';
-                [[{ categoryId }]] = await connection.query(q, [category]);
-                if (!categoryId) {
-                    return {
-                        message: 'CATEGORY_NOT_FOUND',
-                    };
-                }
-            }
             const q =
                 'INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_category, post_image) VALUES (?, ?, ?, ?, ?, ?)';
             await connection.query(q, [
                 postId,
-                ownerId,
+                userId,
                 title,
                 content,
                 categoryId,
-                image,
+                postImage,
             ]);
-            const post = await this.getPost(postId);
-            if (post?.message) {
-                throw new Error('POST_CREATION_DB_ISSUE');
-            }
+
+            const post = await this.getPost(postId, userId);
+
             const {
                 post_likes,
                 post_dislikes,
@@ -233,6 +227,7 @@ export class SQLposts extends Iposts {
                 isSaved,
                 ...remainingPostDetails
             } = post;
+
             return remainingPostDetails;
         } catch (err) {
             throw err;
@@ -242,10 +237,7 @@ export class SQLposts extends Iposts {
     async deletePost(postId) {
         try {
             const q = 'DELETE FROM posts WHERE post_id = ?';
-            const [result] = await connection.query(q, [postId]);
-            if (result.affectedRows === 0) {
-                throw new Error('POST_DELETION_DB_ISSUE');
-            }
+            return await connection.query(q, [postId]);
         } catch (err) {
             throw err;
         }
@@ -253,40 +245,18 @@ export class SQLposts extends Iposts {
 
     async updatePostViews(postId, userIdentifier) {
         try {
-            const q1 =
-                'SELECT COUNT(*) AS isViewed FROM post_views WHERE post_id = ? AND user_identifier = ?';
-            const [[response]] = await connection.query(q1, [
-                postId,
-                userIdentifier,
-            ]);
-            if (response?.isViewed) {
-                return;
-            }
-
-            const q = `INSERT INTO post_views values(?, ?)`;
-            await connection.query(q, [postId, userIdentifier]);
-
-            const [[response1]] = await connection.query(q1, [
-                postId,
-                userIdentifier,
-            ]);
-            if (!response1) {
-                throw new Error('VIEW_INCREMENT_DB_ISSUE');
-            }
-            return { message: 'VIEW_INCREMENTED_SUCCESSFULLY' };
+            const q = `INSERT IGNORE INTO post_views values(?, ?)`; // wont throw error if record already exists
+            return await connection.query(q, [postId, userIdentifier]);
         } catch (err) {
             throw err;
         }
     }
 
-    async updatePostDetails({ postId, title, content, category, updatedAt }) {
+    async updatePostDetails({ postId, title, content, categoryId }) {
         try {
-            const q1 =
-                'SELECT category_id AS categoryId FROM categories WHERE category_name = ?';
-            const [[{ categoryId }]] = await connection.query(q1, [category]);
-            if (!categoryId) {
-                throw new Error('CATEGORY_NOT_FOUND');
-            }
+            const now = new Date();
+            const updatedAt = getCurrentTimestamp(now);
+
             const q =
                 'UPDATE posts SET post_title = ?, post_content = ?, post_category = ?, post_updatedAt = ? WHERE post_id = ?';
             await connection.query(q, [
@@ -296,26 +266,22 @@ export class SQLposts extends Iposts {
                 updatedAt,
                 postId,
             ]);
-            const post = await this.getPost(postId);
-            if (post?.message) {
-                throw new Error('POSTDETAILS_UPDATION_DB_ISSUE');
-            }
-            return post;
+            return await this.getPost(postId);
         } catch (err) {
             throw err;
         }
     }
 
-    async updatePostImage(postId, image, updatedAt) {
+    async updatePostImage(postId, postImage) {
         try {
+            const now = new Date();
+            const updatedAt = getCurrentTimestamp(now);
+
             const q =
                 'UPDATE posts SET post_image = ?, post_updatedAt = ? WHERE post_id = ?';
-            await connection.query(q, [image, updatedAt, postId]);
-            const post = await this.getPost(postId);
-            if (post?.message) {
-                throw new Error('POSTIMAGE_UPDATION_DB_ISSUE');
-            }
-            return post;
+            await connection.query(q, [postImage, updatedAt, postId]);
+
+            return await this.getPost(postId);
         } catch (err) {
             throw err;
         }
@@ -324,22 +290,16 @@ export class SQLposts extends Iposts {
     async togglePostVisibility(postId, visibility) {
         try {
             const q = 'UPDATE posts SET post_visibility = ? WHERE post_id = ?';
-            await connection.query(q, [visibility, postId]);
-            const post = await this.getPost(postId);
-            if (post?.message) {
-                throw new Error('POSTVISIBILITY_UPDATION_DB_ISSUE');
-            }
-            return post;
+            return await connection.query(q, [visibility, postId]);
         } catch (err) {
             throw err;
         }
     }
 
-    async toggleSavePost(postId, userId) {
+    async toggleSavePost(userId, postId) {
         try {
             const q = 'CALL toggleSavePost(?, ?)';
-            const [[[response]]] = await connection.query(q, [userId, postId]);
-            return response;
+            return await connection.query(q, [userId, postId]);
         } catch (err) {
             throw err;
         }
@@ -347,7 +307,6 @@ export class SQLposts extends Iposts {
 
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
-            verifyOrderBy(orderBy);
             const q = `
                     SELECT
                     	c.user_id,
@@ -362,6 +321,7 @@ export class SQLposts extends Iposts {
                         p.post_title, 
                         p.post_content, 
                         p.totalViews,
+                        p.post_ownerId,
                         p.post_image
                     FROM post_view p
                     JOIN channel_view c
@@ -379,10 +339,11 @@ export class SQLposts extends Iposts {
                 'SELECT COUNT(*) AS totalPosts FROM saved_posts WHERE user_id = ?';
 
             const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
-            const [posts] = await connection.query(q, [userId, limit, offset]);
-            if (!posts?.length) {
-                return { message: 'NO_SAVED_POSTS' };
+            if (totalPosts === 0) {
+                return null;
             }
+
+            const [posts] = await connection.query(q, [userId, limit, offset]);
 
             const totalPages = Math.ceil(totalPosts / limit);
             const hasNextPage = page < totalPages;

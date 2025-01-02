@@ -20,6 +20,7 @@ export default function PostCardView({
         userName,
         firstName,
         lastName,
+        post_ownerId,
         avatar,
     } = post;
 
@@ -72,7 +73,7 @@ export default function PostCardView({
                 {/* show owner info if home page */}
                 {showOwnerInfo && (
                     <Link
-                        to={`/channel/${userName}`}
+                        to={`/channel/${post_ownerId}`}
                         onClick={(e) => e.stopPropagation()}
                         className="flex items-start justify-start gap-3"
                     >

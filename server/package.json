@@ -4,13 +4,14 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
+        "format": "prettier --write .",
         "dev": "npm run format && nodemon src/server.js",
-        "format": "prettier --write ."
+        "start": "npm run format && node src/server.js"
     },
     "keywords": [],
-    "author": "DBMS INTERNS",
+    "author": "Sania",
     "license": "ISC",
-    "description": "This is the backend for the BLOGS APP.",
+    "description": "This is the backend for Peer Connect.",
     "dependencies": {
         "bcrypt": "^5.1.1",
         "cloudinary": "^2.4.0",
@@ -24,12 +25,13 @@
         "multer": "^1.4.5-lts.1",
         "mysql2": "^3.11.0",
         "oracledb": "^6.6.0",
+        "peer-connect": "file:..",
         "socket.io": "^4.8.1",
         "uuid": "^10.0.0",
         "validator": "^13.12.0"
     },
     "devDependencies": {
         "nodemon": "^3.1.4",
-        "prettier": "3.3.3"
+        "prettier": "^3.4.2"
     }
 }

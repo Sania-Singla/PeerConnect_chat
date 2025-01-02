@@ -1,6 +1,11 @@
 import express from 'express';
 export const userRouter = express.Router();
-import { upload, verifyJwt, optionalVerifyJwt } from '../middlewares/index.js';
+import {
+    upload,
+    verifyJwt,
+    optionalVerifyJwt,
+    doesChannelExist,
+} from '../middlewares/index.js';
 
 import {
     registerUser,
@@ -32,7 +37,9 @@ userRouter.route('/register').post(
     registerUser
 );
 
-userRouter.route('/channel/:input').get(optionalVerifyJwt, getChannelProfile); // because getUser is adaptable for username, email & uuid
+userRouter
+    .route('/channel/:channelId')
+    .get(doesChannelExist, optionalVerifyJwt, getChannelProfile);
 
 userRouter.route('/login').post(loginUser);
 

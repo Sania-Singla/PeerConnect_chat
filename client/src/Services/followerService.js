@@ -1,8 +1,9 @@
 class FollowerService {
-    async getFollowers(channelId) {
+    async getFollowers(signal, channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/${channelId}`, {
+            const res = await fetch(`/api/followers/${channelId}`, {
                 method: 'GET',
+                signal,
             });
 
             const data = await res.json();
@@ -13,15 +14,20 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getFollowers service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get followers request aborted.');
+            } else {
+                console.error(`error in getFollowers service: ${err.message}`);
+                throw err;
+            }
         }
     }
 
-    async getFollowings(channelId) {
+    async getFollowings(signal, channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/follows/${channelId}`, {
+            const res = await fetch(`/api/followers/follows/${channelId}`, {
                 method: 'GET',
+                signal,
             });
 
             const data = await res.json();
@@ -32,14 +38,18 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            console.error(`error in getFollowings service: ${err.message}`);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get followings request aborted.');
+            } else {
+                console.error(`error in getFollowings service: ${err.message}`);
+                throw err;
+            }
         }
     }
 
     async toggleFollow(channelId) {
         try {
-            const res = await fetch(`/api/v1/followers/toggle/${channelId}`, {
+            const res = await fetch(`/api/followers/toggle/${channelId}`, {
                 method: 'POST',
                 credentials: 'include',
             });

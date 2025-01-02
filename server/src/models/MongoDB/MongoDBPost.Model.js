@@ -1,5 +1,6 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { Category, Post, PostView } from '../../schemas/MongoDB/index.js';
+
 export class MongoDBposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, category) {
@@ -52,6 +53,7 @@ export class MongoDBposts extends Iposts {
                 ...remainingPostDetails
             } = post;
             return remainingPostDetails;
+
         } catch (err) {
             throw err;
         }

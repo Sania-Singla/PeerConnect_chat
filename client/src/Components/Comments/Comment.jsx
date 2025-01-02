@@ -16,6 +16,7 @@ export default function Comment({ comment, setComments }) {
         user_lastName,
         user_name,
         user_avatar,
+        user_id,
         likes,
         dislikes,
     } = comment;
@@ -35,7 +36,7 @@ export default function Comment({ comment, setComments }) {
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, true);
-            if (res && res.message === 'COMMENT_LIKE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'comment like toggled successfully') {
                 setComments((prev) =>
                     prev.map((item) => {
                         if (item.comment_id === comment_id) {
@@ -73,7 +74,7 @@ export default function Comment({ comment, setComments }) {
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, false);
-            if (res && res.message === 'COMMENT_LIKE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'comment like toggled successfully') {
                 setComments((prev) =>
                     prev.map((item) => {
                         if (item.comment_id === comment_id) {
@@ -136,7 +137,7 @@ export default function Comment({ comment, setComments }) {
     async function deleteComment() {
         try {
             const res = await commentService.deleteComment(comment_id);
-            if (res && res.message === 'COMMENT_DELETED_SUCCESSFULLY') {
+            if (res && res.message === 'comment deleted successfully') {
                 setComments((prev) =>
                     prev.filter((item) => item.comment_id !== comment_id)
                 );
@@ -151,7 +152,7 @@ export default function Comment({ comment, setComments }) {
     return (
         <div className="w-full mb-6 bg-white drop-shadow-md relative flex items-start justify-start gap-x-4 rounded-xl p-4">
             <div>
-                <NavLink to={`/channel/${user_name}`}>
+                <NavLink to={`/channel/${user_id}`}>
                     <div className="rounded-full size-[50px] overflow-hidden">
                         <img
                             src={user_avatar}
@@ -166,7 +167,7 @@ export default function Comment({ comment, setComments }) {
                 <div>
                     <div className="flex items-center justify-start gap-2">
                         <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
-                            <NavLink to={`/channel/${user_name}`}>
+                            <NavLink to={`/channel/${user_id}`}>
                                 {user_firstName} {user_lastName}
                             </NavLink>
                         </div>

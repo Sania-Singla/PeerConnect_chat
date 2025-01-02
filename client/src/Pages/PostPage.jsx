@@ -17,10 +17,13 @@ export default function PostPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPost() {
             try {
                 setLoading(true);
-                const res = await postService.getPost(postId);
+                const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
                 }
@@ -30,6 +33,10 @@ export default function PostPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [postId, user]);
 
     async function toggleLike() {
@@ -40,7 +47,7 @@ export default function PostPage() {
                 return;
             }
             const res = await likeService.togglePostLike(postId, true);
-            if (res && res.message === 'POST_LIKE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'post like toggled successfully') {
                 setPost((prev) => {
                     if (prev.isLiked) {
                         return {
@@ -74,7 +81,7 @@ export default function PostPage() {
                 return;
             }
             const res = await likeService.togglePostLike(postId, false);
-            if (res && res.message === 'POST_LIKE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'post like toggled successfully') {
                 setPost((prev) => {
                     if (prev.isDisliked) {
                         return {
@@ -108,7 +115,7 @@ export default function PostPage() {
                 return;
             }
             const res = await followerService.toggleFollow(post.post_ownerId);
-            if (res && res.message === 'FOLLOW_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'follow toggled successfully') {
                 setPost((prev) => ({
                     ...prev,
                     isFollowed: !prev.isFollowed,
@@ -127,7 +134,7 @@ export default function PostPage() {
                 return;
             }
             const res = await postService.toggleSavePost(postId);
-            if (res && res.message === 'POST_SAVE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'post save toggled successfully') {
                 setPopupText(
                     `${
                         post.isSaved
@@ -293,7 +300,9 @@ export default function PostPage() {
                                 {/* avatar */}
                                 <div
                                     onClick={(e) => {
-                                        navigate(`/channel/${post.userName}`);
+                                        navigate(
+                                            `/channel/${post.post_ownerId}`
+                                        );
                                     }}
                                     className="w-fit cursor-pointer"
                                 >
@@ -310,7 +319,7 @@ export default function PostPage() {
                                     <div
                                         onClick={(e) => {
                                             navigate(
-                                                `/channel/${post.userName}`
+                                                `/channel/${post.post_ownerId}`
                                             );
                                         }}
                                         className="w-fit cursor-pointer text-ellipsis line-clamp-1 text-lg xl:text-[21px] hover:text-[#5c5c5c] font-medium text-black"
@@ -321,7 +330,7 @@ export default function PostPage() {
                                     <div
                                         onClick={(e) => {
                                             navigate(
-                                                `/channel/${post.userName}`
+                                                `/channel/${post.post_ownerId}`
                                             );
                                         }}
                                         className="w-fit cursor-pointer text-black hover:text-[#5c5c5c] text-lg"

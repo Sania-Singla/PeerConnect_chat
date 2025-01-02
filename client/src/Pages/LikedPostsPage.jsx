@@ -19,10 +19,17 @@ export default function LikedPostsPage() {
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await likeService.getLikedPosts(LIMIT, page);
+                const res = await likeService.getLikedPosts(
+                    signal,
+                    LIMIT,
+                    page
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
@@ -33,6 +40,10 @@ export default function LikedPostsPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [page, user]);
 
     const postElements = posts?.map((post, index) => (

@@ -19,7 +19,7 @@ export default function DeleteAccount({ className = '' }) {
         setDisabled(true);
         try {
             const res = await authService.deleteAccount(password);
-            if (res && !res.message) {
+            if (res && res.message === 'account deleted successfully') {
                 setUser(null);
                 setPopupText('Account Deleted Successfully 😕');
                 setShowPopup(true);

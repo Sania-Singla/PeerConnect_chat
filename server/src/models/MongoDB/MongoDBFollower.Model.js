@@ -17,7 +17,6 @@ export class MongoDBfollowers extends Ifollowers {
 
     async toggleFollow(userId, channelId) {
         try {
-            
         } catch (err) {
             throw err;
         }

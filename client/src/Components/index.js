@@ -4,7 +4,7 @@ import Sidebar from './Layout/Sidebar';
 import Layout from './Layout/Layout';
 import Button from './General/Button';
 import RTE from './General/RTE';
-import ContributorCard from './General/contributorCard';
+import ContributorCard from './General/ContributorCard';
 import LoginPopup from './Popups/LoginPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';

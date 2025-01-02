@@ -10,7 +10,7 @@ export default function UpdatePostPage() {
         title: '',
         postImage: null,
         content: '',
-        category: '',
+        categoryId: '',
     });
     const [error, setError] = useState({
         title: '',
@@ -26,12 +26,15 @@ export default function UpdatePostPage() {
     const [defaultRTEValue, setDefaultRTEValue] = useState('');
     const navigate = useNavigate();
     const { user } = useUserContext();
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
         (async function getPost() {
             try {
                 setLoading(true);
-                const res = await postService.getPost(postId);
+                const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
                     setInputs({
@@ -49,6 +52,10 @@ export default function UpdatePostPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     function handleChange(e) {
@@ -92,7 +99,7 @@ export default function UpdatePostPage() {
             const res = await postService.updatePostDetails(
                 {
                     title: inputs.title,
-                    category: inputs.category,
+                    categoryId: inputs.categoryId,
                     content: inputs.content,
                 },
                 postId
@@ -125,30 +132,33 @@ export default function UpdatePostPage() {
         }
     }
 
-    const categories = [
-        'Art',
-        'Science',
-        'Sci-Fi',
-        'Entertainment',
-        'Technical',
-        'Others',
-    ];
+    useEffect(() => {
+        (async function getCategories() {
+            const res = await fetch('/api/categories/', {
+                method: 'GET',
+            });
+
+            const data = await res.json();
+            console.log(data);
+            setCategories(data);
+        })();
+    }, []);
 
     const categoryElements = categories?.map((category) => (
         <label
-            htmlFor={category}
-            key={category}
-            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px] min-w-[100px]"
+            htmlFor={category.category_name}
+            key={category.category_name}
+            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
         >
             <input
                 type="radio"
-                name="category"
-                id={category}
-                value={category}
-                checked={inputs.category === category}
+                name="categoryId"
+                id={category.category_name}
+                value={category.category_id}
+                checked={inputs.categoryId === category.category_id} // just good for verification
                 onChange={handleChange}
             />
-            {category}
+            {category.category_name}
         </label>
     ));
 

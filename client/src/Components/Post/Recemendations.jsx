@@ -14,10 +14,14 @@ export default function Recemendations({ category, currentPostId }) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getPosts() {
             try {
                 setLoading(true);
                 const res = await postService.getRandomPosts(
+                    signal,
                     page,
                     LIMIT,
                     category
@@ -35,6 +39,10 @@ export default function Recemendations({ category, currentPostId }) {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [category, page]);
 
     // pagination

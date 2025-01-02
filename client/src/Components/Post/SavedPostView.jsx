@@ -12,7 +12,7 @@ export default function SavedPostView({ post, reference }) {
     async function toggleSave() {
         try {
             const res = await postService.toggleSavePost(post_id);
-            if (res && res.message === 'POST_SAVE_TOGGLED_SUCCESSFULLY') {
+            if (res && res.message === 'post save toggled successfully') {
                 setIsSaved((prev) => !prev);
             }
         } catch (err) {

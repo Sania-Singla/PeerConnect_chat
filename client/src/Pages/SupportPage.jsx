@@ -21,7 +21,7 @@ export default function SupportPage() {
                 </h1>
             </div>
 
-            <div className=" flex flex-wrap items-start justify-center gap-10 w-full">
+            <div className="flex flex-wrap items-start justify-center gap-10 w-full">
                 {contributorElements}
             </div>
         </div>

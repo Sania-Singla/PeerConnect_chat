@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fileRestrictions, verifyExpression } from '../Utils';
 import { Button, RTE } from '../Components';
@@ -11,7 +11,7 @@ export default function AddPostPage() {
         title: '',
         postImage: null,
         content: '',
-        category: '',
+        categoryId: '',
     });
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -60,6 +60,7 @@ export default function AddPostPage() {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log(inputs);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
                 setPopupText('Post Created Successfully 🤗');
@@ -84,30 +85,35 @@ export default function AddPostPage() {
         }
     }
 
-    const categories = [
-        'Science',
-        'Sci-Fi',
-        'Technical',
-        'Art',
-        'Entertainment',
-        'Others',
-    ];
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        (async function getCategories() {
+            const res = await fetch('/api/categories/', {
+                method: 'GET',
+            });
+
+            const data = await res.json();
+            console.log(data);
+            setCategories(data);
+        })();
+    }, []);
 
     const categoryElements = categories?.map((category) => (
         <label
-            htmlFor={category}
-            key={category}
+            htmlFor={category.category_name}
+            key={category.category_name}
             className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
         >
             <input
                 type="radio"
-                name="category"
-                id={category}
-                value={category}
-                checked={inputs.category === category} // just good for verification
+                name="categoryId"
+                id={category.category_name}
+                value={category.category_id}
+                checked={inputs.categoryId === category.category_id} // just good for verification
                 onChange={handleChange}
             />
-            {category}
+            {category.category_name}
         </label>
     ));
 

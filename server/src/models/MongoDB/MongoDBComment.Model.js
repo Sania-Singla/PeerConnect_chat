@@ -1,5 +1,6 @@
 import { Icomments } from '../../interfaces/comment.Interface.js';
 import { Comment } from '../../schemas/MongoDB/index.js';
+
 export class MongoDBcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {
         try {
@@ -37,7 +38,12 @@ export class MongoDBcomments extends Icomments {
             }
 
             return comments;
-        } catch (err) {
+
+
+export class MongoDBcomments extends Icomments {
+    async getComments(postId, currentUserId, orderBy) {
+        try {
+ } catch (err) {
             throw err;
         }
     }
@@ -50,6 +56,9 @@ export class MongoDBcomments extends Icomments {
                 comment_id: commentId,
                 user_id: currentUserId,
             });
+    // only for checking if that comment exists or not
+    async getComment(commentId, currentUserId) {
+        try {
         } catch (err) {
             throw err;
         }

@@ -19,10 +19,17 @@ export default function SavedPostsPage() {
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     useEffect(() => {
-        (async function getPosts() {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        (async function getSavedPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getSavedPosts(LIMIT, page);
+                const res = await postService.getSavedPosts(
+                    signal,
+                    LIMIT,
+                    page
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
@@ -33,6 +40,10 @@ export default function SavedPostsPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [page, user]);
 
     const postElements = posts?.map((post, index) => (

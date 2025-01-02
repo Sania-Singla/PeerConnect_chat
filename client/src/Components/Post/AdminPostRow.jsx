@@ -25,7 +25,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
     async function togglePostVisibility() {
         try {
             const res = await postService.togglePostVisibility(post_id);
-            if (res && !res.message) {
+            if (res && res.message === 'post visibility toggled successfully') {
                 setPosts((prev) =>
                     prev.map((post) => {
                         if (post.post_id === post_id) {
@@ -45,7 +45,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
     async function deletePost() {
         try {
             const res = await postService.deletePost(post_id);
-            if (res && res.message === 'DELETION_SUCCESSFULL') {
+            if (res && res.message === 'post deleted successfully') {
                 setPopupText('Post Deleted Successfully 🙂');
                 setShowPopup(true);
                 setPosts((prev) =>

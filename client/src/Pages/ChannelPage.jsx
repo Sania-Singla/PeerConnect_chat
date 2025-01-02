@@ -13,10 +13,16 @@ export default function ChannelPage() {
     const { setShowLoginPopup, setLoginPopupText } = usePopupContext();
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         (async function getChannelProfile() {
             try {
                 setLoading(true);
-                const res = await userService.getChannelProfile(userName);
+                const res = await userService.getChannelProfile(
+                    signal,
+                    userName
+                );
                 if (res && !res.message) {
                     setChannel(res);
                 } else {
@@ -28,6 +34,10 @@ export default function ChannelPage() {
                 setLoading(false);
             }
         })();
+
+        return () => {
+            controller.abort();
+        };
     }, [userName, user]);
 
     async function toggleFollow() {
@@ -38,11 +48,7 @@ export default function ChannelPage() {
                 return;
             }
             const res = await followerService.toggleFollow(channel.user_id);
-            if (
-                res &&
-                (res.message === 'FOLLOWED_SUCCESSFULLY' ||
-                    res.message === 'UNFOLLOWED_SUCCESSFULLY')
-            ) {
+            if (res && res.message === 'follow toggled successfully') {
                 setChannel((prev) => ({
                     ...prev,
                     isFollowed: !prev.isFollowed,
@@ -57,6 +63,7 @@ export default function ChannelPage() {
         { name: 'posts', path: '' },
         { name: 'About', path: 'about' },
     ];
+
     const tabElements = tabs?.map((tab) => (
         <NavLink
             key={tab.name}

@@ -1,29 +1,19 @@
-import validator from 'validator';
 import { BAD_REQUEST, SERVER_ERROR, OK } from '../constants/errorCodes.js';
 import getServiceObject from '../db/serviceObjects.js';
-import { userObject } from './user.Controller.js';
 
 export const followerObject = getServiceObject('followers');
 
 const getFollowers = async (req, res) => {
     try {
-        const { channelId } = req.params;
-        if (!channelId || !validator.isUUID(channelId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing or invalid channelId',
-            });
+        const channelId = req.channel.user_id;
+        const result = await followerObject.getFollowers(channelId);
+        if (result.length) {
+            return res.status(OK).json(result);
+        } else {
+            return res.status(OK).json({ message: 'no followers found' });
         }
-
-        const channel = await userObject.getUser(channelId);
-        if (channel?.message) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'channel not found' });
-        }
-
-        const response = await followerObject.getFollowers(channelId);
-        return res.status(OK).json(response);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while fetching the total followers',
             error: err.message,
@@ -33,23 +23,15 @@ const getFollowers = async (req, res) => {
 
 const getFollowings = async (req, res) => {
     try {
-        const { channelId } = req.params;
-        if (!channelId || !validator.isUUID(channelId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing or invalid channelId',
-            });
+        const channelId = req.channel.user_id;
+        const result = await followerObject.getFollowings(channelId);
+        if (result.length) {
+            return res.status(OK).json(result);
+        } else {
+            return res.status(OK).json({ message: 'no channels followed' });
         }
-
-        const channel = await userObject.getUser(channelId);
-        if (channel?.message) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'channel not found' });
-        }
-
-        const response = await followerObject.getFollowings(channelId);
-        return res.status(OK).json(response);
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while fetching the total followings',
             error: err.message,
@@ -59,29 +41,19 @@ const getFollowings = async (req, res) => {
 
 const toggleFollow = async (req, res) => {
     try {
-        const { channelId } = req.params;
+        const channelId = req.channel.user_id; // channel to follow/unfollow
         const { user_id } = req.user;
 
-        if (!channelId || !validator.isUUID(channelId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'missing or invalid channelId',
-            });
-        }
-
         if (user_id === channelId) {
-            return res.status(BAD_REQUEST).json({ message: 'own channel' });
-        }
-
-        const channel = await userObject.getUser(channelId);
-        if (channel?.message) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'channel not found' });
+                .json({ message: "can't follow own channel" });
         }
 
-        const response = await followerObject.toggleFollow(user_id, channelId);
-        return res.status(OK).json(response);
+        await followerObject.toggleFollow(channelId, user_id);
+        return res.status(OK).json({ message: 'follow toggled successfully' });
     } catch (err) {
+        console.log(err);
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while toggling follow',
             error: err.message,

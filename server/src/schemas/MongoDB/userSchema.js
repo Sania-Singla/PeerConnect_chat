@@ -50,7 +50,7 @@ const userSchema = new Schema({
     },
 });
 
-const savedPostSchema = {
+const savedPostSchema = new Schema({
     post_id: {
         type: String,
         required: true,
@@ -62,9 +62,9 @@ const savedPostSchema = {
         ref: 'users',
         index: true,
     },
-};
+});
 
-const watchHistorySchema = {
+const watchHistorySchema = new Schema({
     post_id: {
         type: String,
         required: true,
@@ -80,9 +80,10 @@ const watchHistorySchema = {
         type: Date,
         default: Date.now(),
     },
-};
+});
 
 const User = model('User', userSchema);
 const SavedPost = model('SavedPost', savedPostSchema);
 const WatchHistory = model('WatchHistory', watchHistorySchema);
+
 export { User, SavedPost, WatchHistory };
