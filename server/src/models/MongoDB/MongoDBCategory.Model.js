@@ -5,7 +5,7 @@ import { Category } from '../../schemas/MongoDB/index.js';
 export class MongoDBcategories extends Icategories {
     async getCategories() {
         try {
-            const categories = await Category.find({});
+            const categories = await Category.find();
 
             if (!categories.length) {
                 return { message: 'CATEGORIES_NOT_FOUND' };
@@ -22,10 +22,7 @@ export class MongoDBcategories extends Icategories {
             const category = await Category.findOne({
                 category_id: categoryId,
             });
-            if (!category) {
-                return { message: 'CATEGORY_NOT_FOUND' };
-            }
-
+            
             return category;
         } catch (err) {
             throw err;
@@ -51,10 +48,7 @@ export class MongoDBcategories extends Icategories {
                 category_id: categoryId,
             });
 
-            if (!category) {
-                return { message: 'CATEGORY_NOT_FOUND' }; // extra, unnecessary (deleted doc)
-            }
-
+           
             return { message: 'CATEGORY_DELETED_SUCCESSFULLY' };
         } catch (err) {
             throw err;

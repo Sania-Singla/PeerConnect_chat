@@ -28,15 +28,15 @@ export class Iusers {
         throw new Error('Method updateTokens not overwritten.');
     }
 
-    async getChannelProfile(channelId, currentUserId) {
+    async getChannelProfile(channelId, userId) {
         throw new Error('Method getChannelProfile not overwritten.');
     }
 
-    async updateAccountDetails(userId, firstName, lastName, email) {
+    async updateAccountDetails({ userId, firstName, lastName, email }) {
         throw new Error('Method updateAccountDetails not overwritten.');
     }
 
-    async updateChannelDetails(userId, userName, bio) {
+    async updateChannelDetails({ userId, userName, bio }) {
         throw new Error('Method updateChannelDetails not overwritten.');
     }
 
@@ -52,7 +52,7 @@ export class Iusers {
         throw new Error('Method updateCoverImage not overwritten.');
     }
 
-    async getWatchHistory(userId, orderBy, limit) {
+    async getWatchHistory(userId, orderBy, limit, page) {
         throw new Error('Method getWatchHistory is not overwritten.');
     }
 
@@ -63,8 +63,4 @@ export class Iusers {
     async updateWatchHistory(postId, userId) {
         throw new Error('Method updateWatchHistory is not overwritten.');
     }
-
-    // async deleteUsers() {
-    //     throw new Error("Method deleteUsers not overwritten.");
-    // }
 }

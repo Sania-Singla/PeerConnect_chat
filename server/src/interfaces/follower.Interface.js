@@ -7,7 +7,7 @@ export class Ifollowers {
         throw new Error('Method getFollowing is not overwritten');
     }
 
-    async toggleFollow(userId, channelId) {
+    async toggleFollow(channelId, userId) {
         throw new Error('Method toggleFollow is not overwritten');
     }
 }

@@ -3,7 +3,7 @@ export class Iposts {
         throw new Error('Method getRandomPosts is not overwritten.');
     }
 
-    async getPosts(userId, limit, orderBy, page, category) {
+    async getPosts(channelId, limit, orderBy, page, category) {
         throw new Error('Method getPosts is not overwritten.');
     }
 
@@ -11,7 +11,14 @@ export class Iposts {
         throw new Error('Method getPost is not overwritten.');
     }
 
-    async createPost(postId, ownerId, title, content, category, image) {
+    async createPost({
+        postId,
+        userId,
+        title,
+        content,
+        categoryId,
+        postImage,
+    }) {
         throw new Error('Method addPost is not overwritten');
     }
 
@@ -23,11 +30,11 @@ export class Iposts {
         throw new Error('Method updatePostViews is not overwritten.');
     }
 
-    async updatePostDetails(postId, title, content, category, updatedAt) {
+    async updatePostDetails({ postId, title, content, categoryId }) {
         throw new Error('Method updatePostDetails is not overwritten.');
     }
 
-    async updatePostImage(postId, image, updatedAt) {
+    async updatePostImage(postId, postImage) {
         throw new Error('Method updatePostImage is not overwritten.');
     }
 
@@ -35,11 +42,11 @@ export class Iposts {
         throw new Error('Method togglePostVisibility is not overwritten.');
     }
 
-    async toggleSavePost(postId, userId) {
+    async toggleSavePost(userId, postId) {
         throw new Error('Method toggleSavePost is not overwritten.');
     }
 
-    async getSavedPosts(userId, orderBy) {
+    async getSavedPosts(userId, orderBy, limit, page) {
         throw new Error('Method getSavedPosts is not overwritten.');
     }
 }

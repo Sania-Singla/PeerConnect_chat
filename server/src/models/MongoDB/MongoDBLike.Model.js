@@ -8,14 +8,14 @@ export class MongoDBlikes extends Ilikes {
         }
     }
 
-    async togglePostLike(postId, userId, likedStatus) {
+    async togglePostLike(userId, postId, likedStatus) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async toggleCommentLike(commentId, userId, likedStatus) {
+    async toggleCommentLike(userId, commentId, likedStatus) {
         try {
         } catch (err) {
             throw err;

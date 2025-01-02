@@ -38,27 +38,17 @@ export class MongoDBcomments extends Icomments {
             }
 
             return comments;
-
-
-export class MongoDBcomments extends Icomments {
-    async getComments(postId, currentUserId, orderBy) {
-        try {
- } catch (err) {
+        } catch (err) {
             throw err;
         }
     }
 
-    //no need
-    // only for checking if that comment exists or not
     async getComment(commentId, currentUserId) {
         try {
-            const comment = await Comment.findOne({
+            return await Comment.findOne({
                 comment_id: commentId,
                 user_id: currentUserId,
             });
-    // only for checking if that comment exists or not
-    async getComment(commentId, currentUserId) {
-        try {
         } catch (err) {
             throw err;
         }
@@ -73,7 +63,6 @@ export class MongoDBcomments extends Icomments {
                 comment_content: commentContent,
             });
 
-            const createdComment = await Comment.findOne
             if (!comment) {
                 return { message: 'COMMENT_NOT_FOUND' };
             }
@@ -88,10 +77,7 @@ export class MongoDBcomments extends Icomments {
             const deletedComment = await Comment.deleteOne({
                 comment_id: commentId,
             });
-            //better to check whether deletion done or not, bcz deletedcomment hai ke nahi is check already in controller!//check in category part
-            if (deletedComment.deletedCount === 0) {
-                throw new Error('COMMENT_DELETION_DB_ISSUE');
-            }
+
             //msg same as in frontend
             return { message: 'COMMENT_DELETED_SUCCESSFULLY DELETED' };
         } catch (err) {
