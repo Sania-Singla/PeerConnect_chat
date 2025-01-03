@@ -19,12 +19,10 @@ commentRouter
     .route('/post/:postId')
     .get(doesPostExist, optionalVerifyJwt, getComments);
 
-commentRouter.use(verifyJwt);
-
-commentRouter.route('/:postId').post(doesPostExist, addComment);
+commentRouter.route('/:postId').post(doesPostExist, verifyJwt, addComment);
 
 commentRouter
     .route('/comment/:commentId')
-    .get(doesCommentExist, getComment)
-    .patch(doesCommentExist, isCommentOwner, updateComment)
-    .delete(doesCommentExist, isCommentOwner, deleteComment);
+    .get(doesCommentExist, optionalVerifyJwt, getComment)
+    .patch(doesCommentExist, isCommentOwner, verifyJwt, updateComment)
+    .delete(doesCommentExist, isCommentOwner, verifyJwt, deleteComment);

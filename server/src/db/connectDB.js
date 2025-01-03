@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 class DBConnection {
     constructor() {
         this.connection = null;
-        this.migrationConnection = null;
     }
 
     static getInstance() {
@@ -67,41 +66,6 @@ class DBConnection {
             );
         } catch (err) {
             return console.log("MongoDB didn't connected, error:", err.message);
-        }
-    }
-
-    async mongodbMigrationConnect() {
-        try {
-            if (!this.migrationConnection) {
-                this.migrationConnection = await mongoose.connect(
-                    `${process.env.MONGO_DB_URL}${process.env.MONGO_DB_NAME}`
-                );
-                console.log(
-                    `MongoDB connected for migration, host: ${this.migrationConnection.connection.host}`
-                );
-            }
-            return this.migrationConnection;
-        } catch (err) {
-            return console.log(
-                'Error in connecting MongoDB for migration.',
-                err.message
-            );
-        }
-    }
-
-    async mongodbMigrationDisconnect() {
-        try {
-            if (this.migrationConnection) {
-                await mongoose.disconnect();
-                this.migrationConnection = null;
-                console.log('MongoDB migration connection closed');
-            }
-            return;
-        } catch (err) {
-            return console.log(
-                'Error in closing MongoDB migration connection.',
-                err.message
-            );
         }
     }
 }

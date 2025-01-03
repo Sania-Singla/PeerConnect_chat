@@ -5,13 +5,7 @@ import { Category } from '../../schemas/MongoDB/index.js';
 export class MongoDBcategories extends Icategories {
     async getCategories() {
         try {
-            const categories = await Category.find();
-
-            if (!categories.length) {
-                return { message: 'CATEGORIES_NOT_FOUND' };
-            }
-
-            return categories;
+            return await Category.find();
         } catch (err) {
             throw err;
         }
@@ -19,11 +13,9 @@ export class MongoDBcategories extends Icategories {
 
     async getCategory(categoryId) {
         try {
-            const category = await Category.findOne({
+            return await Category.findOne({
                 category_id: categoryId,
             });
-
-            return category;
         } catch (err) {
             throw err;
         }
@@ -31,12 +23,10 @@ export class MongoDBcategories extends Icategories {
 
     async createCategory(categoryId, categoryName) {
         try {
-            const category = await Category.create({
+            return await Category.create({
                 category_id: categoryId,
                 category_name: categoryName,
             });
-
-            return category;
         } catch (err) {
             throw err;
         }
@@ -44,11 +34,9 @@ export class MongoDBcategories extends Icategories {
 
     async deleteCategory(categoryId) {
         try {
-            const category = await Category.findOneAndDelete({
+            return await Category.findOneAndDelete({
                 category_id: categoryId,
             });
-
-            return { message: 'CATEGORY_DELETED_SUCCESSFULLY' };
         } catch (err) {
             throw err;
         }
@@ -56,12 +44,11 @@ export class MongoDBcategories extends Icategories {
 
     async editCategory(categoryId, categoryName) {
         try {
-            const category = await Category.updateOne(
+            return await Category.findOneAndUpdate(
                 { category_id: categoryId },
                 { $set: { category_name: categoryName } },
                 { new: true }
             );
-            return category;
         } catch (err) {
             throw err;
         }

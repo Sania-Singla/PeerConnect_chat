@@ -2,53 +2,124 @@ import { Icomments } from '../../interfaces/comment.Interface.js';
 import { Comment } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBcomments extends Icomments {
-    async getComments(postId, currentUserId, orderBy) {
+    async getComments(postId, userId, orderBy) {
         try {
             if (orderBy === 'DESC') orderBy = -1;
-            else if (orderBy === 'ASC') orderBy = 1;
-            else return { message: 'INVALID_ORDERBY' };
+            else orderBy = 1;
 
-            const comments = await Comment.aggregate({
-                $match: {
-                    post_id: postId,
+            const pipeline = [
+                {
+                    $match: {
+                        post_id: postId,
+                    },
                 },
-
-                $lookup: {
-                    from: 'users',
-                    localFields: 'user_id',
-                    foreignFields: 'user_id',
-                    as: 'userDetails',
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: 'user_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    user_name: 1,
+                                    user_firstName: 1,
+                                    user_lastName: 1,
+                                    user_avatar: 1,
+                                },
+                            },
+                        ],
+                    },
                 },
-
-                $unwind: {
-                    path: '$userDetails',
-                    preserveNullAndEmptyArrays: true,
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localField: 'comment_id',
+                        foreignField: 'comment_id',
+                        as: 'comment_likes',
+                    },
                 },
-
-                $lookup: {
-                    from: 'commentlikes',
-                    localFields: 'post_id',
-                    foreignFields: 'post_id',
-                    as: 'post',
+                {
+                    $unwind: '$user',
                 },
-            });
+                {
+                    $addFields: {
+                        user_name: '$user.user_name',
+                        user_firstName: '$user.user_firstName',
+                        user_lastName: '$user.user_lastName',
+                        user_avatar: '$user.user_avatar',
+                        likes: {
+                            $size: {
+                                $filter: {
+                                    input: '$comment_likes',
+                                    as: 'like',
+                                    cond: { $eq: ['$$like.is_liked', 1] },
+                                },
+                            },
+                        },
+                        dislikes: {
+                            $size: {
+                                $filter: {
+                                    input: '$comment_likes',
+                                    as: 'dislike',
+                                    cond: { $eq: ['$$dislike.is_liked', 0] },
+                                },
+                            },
+                        },
+                        isLiked: {},
+                    },
+                },
+            ];
 
-            if (!comments.length) {
-                return { message: 'COMMENTS_NOT_FOUND' };
-            }
-
-            return comments;
+            return await Comment.aggregate(pipeline);
         } catch (err) {
             throw err;
         }
     }
 
-    async getComment(commentId, currentUserId) {
+    async getComment(commentId, userId) {
         try {
-            return await Comment.findOne({
-                comment_id: commentId,
-                user_id: currentUserId,
-            });
+            const pipeline = [
+                {
+                    $match: {
+                        comment_id: commentId,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localField: 'comment_id',
+                        foreignField: 'comment_id',
+                        as: 'comment_likes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    user_id: userId,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $addFields: {
+                        isLiked: {
+                            $cond: {
+                                if: { $gt: [{ $size: '$comment_likes' }, 0] },
+                                then: {
+                                    $arrayElemAt: [
+                                        '$comment_likes.is_liked', // will have only one value as [.]
+                                        0,
+                                    ],
+                                },
+                                else: -1,
+                            },
+                        },
+                    },
+                },
+            ];
+
+            const [comment] = await Comment.aggregate(pipeline);
+            return comment;
         } catch (err) {
             throw err;
         }
@@ -56,17 +127,12 @@ export class MongoDBcomments extends Icomments {
 
     async createComment(commentId, userId, postId, commentContent) {
         try {
-            const comment = await Comment.create({
+            return await Comment.create({
                 comment_id: commentId,
                 user_id: userId,
                 post_id: postId,
                 comment_content: commentContent,
             });
-
-            if (!comment) {
-                return { message: 'COMMENT_NOT_FOUND' };
-            }
-            return comment;
         } catch (err) {
             throw err;
         }
@@ -74,12 +140,9 @@ export class MongoDBcomments extends Icomments {
 
     async deleteComment(commentId) {
         try {
-            const deletedComment = await Comment.deleteOne({
+            return await Comment.findOneAndDelete({
                 comment_id: commentId,
             });
-
-            //msg same as in frontend
-            return { message: 'COMMENT_DELETED_SUCCESSFULLY DELETED' };
         } catch (err) {
             throw err;
         }
@@ -87,7 +150,7 @@ export class MongoDBcomments extends Icomments {
 
     async editComment(commentId, commentContent) {
         try {
-            const updatedComment = await Comment.updateOne(
+            return await Comment.findOneAndUpdate(
                 { comment_id: commentId },
                 {
                     $set: {
@@ -96,8 +159,6 @@ export class MongoDBcomments extends Icomments {
                 },
                 { new: true }
             );
-
-            return updatedComment;
         } catch (err) {
             throw err;
         }

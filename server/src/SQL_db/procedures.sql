@@ -1,4 +1,4 @@
--- PROCEDURE FOR TOGGLE_FOLLOW
+-- procedure for toggle follow
 DELIMITER $$
 CREATE PROCEDURE toggleFollow (IN p_following_id CHAR(40),IN p_follower_id CHAR(40))
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
 END$$
 DELIMITER ;
 
--- PROCEDURE FOR UPDATE_WATCH_HISTORY
+-- procedure for updating watch history
 DELIMITER $$
 CREATE PROCEDURE updateWatchHistory (IN postId CHAR(40), IN userId CHAR(40)) 
 BEGIN
@@ -43,7 +43,7 @@ END$$
 DELIMITER ;
 
 
--- PROCEDURE FOR TOGGLE_SAVE_POST
+-- procedure for toggling save post
 DELIMITER $$
 CREATE PROCEDURE toggleSavePost(IN userId CHAR(40), IN postId CHAR(40))
 BEGIN
@@ -66,7 +66,7 @@ END $$
 DELIMITER ;
 
 
--- PROCEDURE FOR TOGGLE_POST_LIKE
+-- procedure for toggling post like
 DELIMITER $$
 CREATE PROCEDURE togglePostLike(IN userId CHAR(40), IN postId CHAR(40), IN likedStatus INT) 
 BEGIN
@@ -92,7 +92,7 @@ BEGIN
 END $$
 DELIMITER ;
 
--- PROCEDURE FOR TOGGLE_COMMENT_LIKE
+-- procedure for toggling comment like
 DELIMITER $$
 CREATE PROCEDURE toggleCommentLike(IN userId CHAR(40), IN commentId CHAR(40), IN likedStatus INT) 
 BEGIN

@@ -1,9 +1,9 @@
 export class Icomments {
-    async getComments(postId, currentUserId, orderBy) {
+    async getComments(postId, userId, orderBy) {
         throw new Error('Method getComments not overwritten.');
     }
 
-    async getComment(commentId, currentUserId) {
+    async getComment(commentId, userId) {
         throw new Error('Method getComment not overwritten.');
     }
 

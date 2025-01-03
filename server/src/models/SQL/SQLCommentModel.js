@@ -1,9 +1,8 @@
 import { Icomments } from '../../interfaces/comment.Interface.js';
 import { connection } from '../../server.js';
-import { verifyOrderBy } from '../../utils/index.js';
 
 export class SQLcomments extends Icomments {
-    async getComments(postId, currentUserId, orderBy) {
+    async getComments(postId, userId, orderBy) {
         try {
             const q = `  
                     SELECT 
@@ -16,10 +15,7 @@ export class SQLcomments extends Icomments {
                     ORDER BY v.comment_createdAt ${orderBy.toUpperCase()}
                 `;
 
-            const [comments] = await connection.query(q, [
-                currentUserId,
-                postId,
-            ]);
+            const [comments] = await connection.query(q, [userId, postId]);
 
             return comments;
         } catch (err) {
@@ -27,7 +23,7 @@ export class SQLcomments extends Icomments {
         }
     }
 
-    async getComment(commentId, currentUserId) {
+    async getComment(commentId, userId) {
         try {
             const q = `  
                     SELECT 
@@ -38,10 +34,7 @@ export class SQLcomments extends Icomments {
                     ON v.comment_id = l.comment_id AND l.user_id = ? 
                     WHERE v.comment_id = ?  
                 `;
-            const [[comment]] = await connection.query(q, [
-                currentUserId,
-                commentId,
-            ]);
+            const [[comment]] = await connection.query(q, [userId, commentId]);
             if (!comment) {
                 return null;
             }
