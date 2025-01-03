@@ -5,6 +5,165 @@ export class MongoDBposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, category) {
         try {
+            const offset = (page - 1) * limit;
+
+            const pipeline = [
+                //All posts of a particular user
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'post_category',
+                        foreignField: 'category_id',
+                        as: 'post_categories',
+                    },
+                },
+
+                {
+                    $match: category
+                        ? {
+                              //$ or not??
+                              'post_categories.category_name': category,
+                          }
+                        : {},
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'post_ownerId',
+                        foreignField: 'user_id',
+                        as: 'post_owner',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    user_id: 1,
+                                    user_name: 1,
+                                    user_firstName: 1,
+                                    user_lastName: 1,
+                                    user_avatar: 1,
+                                    user_coverImage: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $unwind: '$post_owner',
+                },
+                //No need of total posts , total likes, total dislikes
+                {
+                    $lookup: {
+                        from: 'postlikes',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_likes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'postlikes',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_dislikes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 0,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'postviews',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_views',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'comments',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_comments',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'savedposts',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'saved_posts',
+                    },
+                },
+                {
+                    $sort: {
+                        post_updatedAt: orderBy === 'DESC' ? -1 : 1,
+                    },
+                },
+                {
+                    $skip: offset,
+                },
+                {
+                    $limit: limit,
+                },
+                {
+                    $count: 'totalPosts',
+                },
+                {
+                    $addFields: {
+                        postInfo: {
+                            totalPosts: '$totalPosts',
+                            totalPages: Math.ceil('$totalPosts' / limit),
+                            hasNextPage: page < '$totalPages',
+                            hasPrevPage: page > 1,
+                        },
+                        totalLikes: {
+                            $size: '$post_likes',
+                        },
+                        totalDislikes: {
+                            $size: '$post_dislikes',
+                        },
+                        totalViews: {
+                            $size: '$post_views',
+                        },
+                        totalComments: {
+                            $size: '$post_comments',
+                        },
+                        userName: '$post_owner.user_name',
+                        firstName: '$post_owner.user_firstName',
+                        lastName: '$post_owner.user_lastName',
+                        avatar: '$post_owner.user_avatar',
+                        coverImage: '$post_owner.user_coverImage',
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        __v: 0,
+                        post_owner: 0,
+                        post_likes: 0,
+                        post_dislikes: 0,
+                        post_views: 0,
+                        post_comments: 0,
+                        saved_posts: 0,
+                        totalPosts: 0,
+                    },
+                },
+            ];
+
+            const [post] = Post.aggregate(pipeline);
+
+            return post;
         } catch (err) {
             throw err;
         }
@@ -12,6 +171,168 @@ export class MongoDBposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, category) {
         try {
+            const offset = (page - 1) * limit;
+
+            const pipeline = [
+                //All posts of a particular user
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'post_category',
+                        foreignField: 'category_id',
+                        as: 'post_categories',
+                    },
+                },
+
+                {
+                    $match: category
+                        ? {
+                              //$ or not??
+                              'post_categories.category_name': category,
+                              post_ownerId: channelId,
+                          }
+                        : {
+                              post_ownerId: channelId,
+                          },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'post_ownerId',
+                        foreignField: 'user_id',
+                        as: 'post_owner',
+                        pipeline: [
+                            {
+                                $project: {
+                                    _id: 0,
+                                    user_id: 1,
+                                    user_name: 1,
+                                    user_firstName: 1,
+                                    user_lastName: 1,
+                                    user_avatar: 1,
+                                    user_coverImage: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $unwind: '$post_owner',
+                },
+                //No need of total posts , total likes, total dislikes
+                {
+                    $lookup: {
+                        from: 'postlikes',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_likes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'postlikes',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_dislikes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 0,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'postviews',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_views',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'comments',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_comments',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'savedposts',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'saved_posts',
+                    },
+                },
+                {
+                    $sort: {
+                        post_updatedAt: orderBy === 'DESC' ? -1 : 1,
+                    },
+                },
+                {
+                    $skip: offset,
+                },
+                {
+                    $limit: limit,
+                },
+                {
+                    $count: 'totalPosts',
+                },
+                {
+                    $addFields: {
+                        postInfo: {
+                            totalPosts: '$totalPosts',
+                            totalPages: Math.ceil('$totalPosts' / limit),
+                            hasNextPage: page < '$totalPages',
+                            hasPrevPage: page > 1,
+                        },
+                        totalLikes: {
+                            $size: '$post_likes',
+                        },
+                        totalDislikes: {
+                            $size: '$post_dislikes',
+                        },
+                        totalViews: {
+                            $size: '$post_views',
+                        },
+                        totalComments: {
+                            $size: '$post_comments',
+                        },
+                        userName: '$post_owner.user_name',
+                        firstName: '$post_owner.user_firstName',
+                        lastName: '$post_owner.user_lastName',
+                        avatar: '$post_owner.user_avatar',
+                        coverImage: '$post_owner.user_coverImage',
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        __v: 0,
+                        post_owner: 0,
+                        post_likes: 0,
+                        post_dislikes: 0,
+                        post_views: 0,
+                        post_comments: 0,
+                        saved_posts: 0,
+                        totalPosts: 0,
+                    },
+                },
+            ];
+
+            const [post] = Post.aggregate(pipeline);
+
+            return post;
         } catch (err) {
             throw err;
         }
