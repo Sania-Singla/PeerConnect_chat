@@ -12,7 +12,7 @@ export class SQLfollowers extends Ifollowers {
                     u.user_name, 
                     u.user_firstName, 
                     u.user_lastName, 
-                    user_avatar, 
+                    u.user_avatar, 
                     ${q1} 
                 FROM followers f, users u 
                 WHERE f.follower_id = u.user_id AND f.following_id = ?
