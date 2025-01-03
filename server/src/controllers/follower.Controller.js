@@ -51,6 +51,7 @@ const toggleFollow = async (req, res) => {
         }
 
         await followerObject.toggleFollow(channelId, user_id);
+        
         return res.status(OK).json({ message: 'follow toggled successfully' });
     } catch (err) {
         console.log(err);

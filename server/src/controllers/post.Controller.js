@@ -24,9 +24,24 @@ const getRandomPosts = async (req, res) => {
             limit = 10,
             orderBy = 'desc',
             page = 1,
-            category = '',
+            categoryId = '',
             query = '',
         } = req.query;
+
+        if (categoryId) {
+            if (!validator.isUUID(categoryId)) {
+                return res
+                    .status(BAD_REQUEST)
+                    .json({ message: 'missing or invalid categoryId' });
+            } else {
+                const category = await categoryObject.getCategory(categoryId);
+                if (!category) {
+                    return res
+                        .status(NOT_FOUND)
+                        .json({ message: 'category not found' });
+                }
+            }
+        }
 
         if (!verifyOrderBy(orderBy)) {
             return res
@@ -38,7 +53,7 @@ const getRandomPosts = async (req, res) => {
             Number(limit),
             orderBy.toUpperCase(),
             Number(page),
-            category
+            categoryId
         );
 
         if (result) {
@@ -62,8 +77,23 @@ const getPosts = async (req, res) => {
             orderBy = 'desc',
             limit = 10,
             page = 1,
-            category = '',
+            categoryId = '',
         } = req.query;
+
+        if (categoryId) {
+            if (!validator.isUUID(categoryId)) {
+                return res
+                    .status(BAD_REQUEST)
+                    .json({ message: 'missing or invalid categoryId' });
+            } else {
+                const category = await categoryObject.getCategory(categoryId);
+                if (!category) {
+                    return res
+                        .status(NOT_FOUND)
+                        .json({ message: 'category not found' });
+                }
+            }
+        }
 
         if (!verifyOrderBy(orderBy)) {
             return res
@@ -76,7 +106,7 @@ const getPosts = async (req, res) => {
             Number(limit),
             orderBy.toUpperCase(),
             Number(page),
-            category
+            categoryId
         );
 
         if (result) {
@@ -108,7 +138,9 @@ const getPost = async (req, res) => {
         // update post views
         await postObject.updatePostViews(postId, userIdentifier);
 
-        return res.status(OK).json(req.post); // from post exists middleware
+        const post = await postObject.getPost(postId, userId);
+
+        return res.status(OK).json(post);
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
@@ -122,7 +154,7 @@ const addPost = async (req, res) => {
     let postImage;
     try {
         const { title, content, categoryId } = req.body;
-
+        console.log(req.body);
         if (!title || !content || !req.file)
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
 
@@ -273,7 +305,9 @@ const toggleSavePost = async (req, res) => {
     try {
         const { user_id } = req.user;
         const { post_id } = req.post;
+
         await postObject.toggleSavePost(user_id, post_id);
+
         return res
             .status(OK)
             .json({ message: 'post save toggled successfully' });

@@ -83,23 +83,23 @@ export class SQLusers extends Iusers {
 
     async getChannelProfile(channelId, userId) {
         try {
-            let isFollowed = false;
-            const q1 =
-                'SELECT COUNT(*) AS isFollowed FROM followers where following_id = ? AND follower_id = ? '; // either 0 or 1
-            if (userId) {
+            const q = 'SELECT * FROM channel_view WHERE user_id = ?';
+            const [[response]] = await connection.query(q, [channelId]);
+
+            if (channelId !== userId) {
+                const q1 =
+                    'SELECT COUNT(*) AS isFollowed FROM followers where following_id = ? AND follower_id = ? '; // either 0 or 1
                 const [[response1]] = await connection.query(q1, [
                     channelId,
                     userId,
                 ]);
-                if (response1.isFollowed) {
-                    isFollowed = true;
-                }
+                return {
+                    ...response,
+                    isFollowed: response1.isFollowed || false,
+                };
+            } else {
+                return response;
             }
-
-            const q = 'SELECT * FROM channel_view WHERE user_id = ?';
-            const [[response]] = await connection.query(q, [channelId]);
-
-            return { ...response, isFollowed };
         } catch (err) {
             throw err;
         }

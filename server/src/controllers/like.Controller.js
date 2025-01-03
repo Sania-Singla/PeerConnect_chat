@@ -41,7 +41,7 @@ const togglePostLike = async (req, res) => {
         const { user_id } = req.user;
         const { post_id } = req.post;
         let { likedStatus } = req.query;
-        console.log(user_id, post_id, likedStatus);
+
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
         await likeObject.togglePostLike(user_id, post_id, likedStatus);

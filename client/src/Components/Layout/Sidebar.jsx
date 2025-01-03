@@ -19,6 +19,12 @@ export default function Sidebar() {
             name: 'Followers',
             icon: icons.group,
         },
+        {
+            show: user,
+            path: '/history',
+            name: 'Watch History',
+            icon: icons.clock,
+        },
         { show: user, path: '/admin', name: 'Admin', icon: icons.user },
         {
             show: user,
@@ -136,7 +142,7 @@ export default function Sidebar() {
                                     </div>
 
                                     <Link
-                                        to={`/channel/${user?.user_name}`}
+                                        to={`/channel/${user?.user_id}`}
                                         onClick={() => setShowSideBar(false)}
                                     >
                                         <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">

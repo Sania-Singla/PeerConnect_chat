@@ -1,5 +1,5 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
-import { User } from '../../schemas/MongoDB/index.js';
+import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
@@ -10,13 +10,13 @@ export class MongoDBusers extends Iusers {
                     { user_name: searchInput },
                     { user_email: searchInput },
                 ],
-            }).select('-user_password -refresh_token');
+            }).lean();
         } catch (err) {
             throw err;
         }
     }
 
-    async createUser(
+    async createUser({
         userId,
         userName,
         firstName,
@@ -24,8 +24,8 @@ export class MongoDBusers extends Iusers {
         avatar,
         coverImage,
         email,
-        password
-    ) {
+        password,
+    }) {
         try {
             const user = await User.create({
                 user_id: userId,
@@ -38,7 +38,9 @@ export class MongoDBusers extends Iusers {
                 user_password: password,
             });
 
-            const { refresh_token, user_password, ...createdUser } = user;
+            const { refresh_token, user_password, ...createdUser } =
+                user.toObject(); // BSON -> JS obj
+
             return createdUser;
         } catch (err) {
             throw err;
@@ -47,9 +49,11 @@ export class MongoDBusers extends Iusers {
 
     async deleteUser(userId) {
         try {
-            return await User.findByIdAndDelete(userId).select(
-                '-refresh_token -user_password'
-            );
+            return await User.findOneAndDelete({
+                user_id: userId,
+            })
+                .select('-refresh_token -user_password')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -67,7 +71,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-refresh_token -user_password');
+            )
+                .select('-refresh_token -user_password')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -85,7 +91,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-refresh_token -user_password');
+            )
+                .select('-refresh_token -user_password')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -93,12 +101,13 @@ export class MongoDBusers extends Iusers {
 
     async getChannelProfile(channelId, userId) {
         try {
-            const pipeLine = [
+            const pipeline = [
                 {
                     $match: {
                         user_id: channelId,
                     },
                 },
+                // followers[]
                 {
                     $lookup: {
                         from: 'followers',
@@ -107,6 +116,7 @@ export class MongoDBusers extends Iusers {
                         as: 'followers',
                     },
                 },
+                // followings[]
                 {
                     $lookup: {
                         from: 'followers',
@@ -115,6 +125,7 @@ export class MongoDBusers extends Iusers {
                         as: 'followings',
                     },
                 },
+                // posts[ { ..., post_likes:[], post_views:[] } ]
                 {
                     $lookup: {
                         from: 'posts',
@@ -125,60 +136,85 @@ export class MongoDBusers extends Iusers {
                             {
                                 $lookup: {
                                     from: 'postlikes',
-                                    localField: 'posts.post_id', //from this post_id, doubt
+                                    localField: 'post_id',
                                     foreignField: 'post_id',
                                     as: 'post_likes',
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                is_liked: true,
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'postviews',
+                                    localField: 'post_id',
+                                    foreignField: 'post_id',
+                                    as: 'post_views',
                                 },
                             },
                         ],
                     },
                 },
                 {
-                    $lookup: {
-                        from: 'postviews',
-                        localField: 'user_id',
-                        foreignField: 'user_id',
-                        as: 'channelViews',
-                    },
-                },
-                {
                     $addFields: {
-                        isFollowed: {
-                            $in: [
-                                //means ki channel ke followers me ye user id hai ke nahi//check
-                                userId,
-                                {
-                                    $map: {
-                                        input: '$followers',
-                                        as: 'follower',
-                                        in: '$$follower.follower_id',
-                                    },
-                                },
-                            ],
-                        },
+                        isFollowed:
+                            channelId !== userId
+                                ? {
+                                      $in: [
+                                          userId,
+                                          {
+                                              $map: {
+                                                  input: '$followers',
+                                                  as: 'follower',
+                                                  in: '$$follower.follower_id',
+                                              },
+                                          },
+                                      ],
+                                  }
+                                : false,
                         totalPosts: { $size: '$posts' },
                         totalFollowers: { $size: '$followers' },
                         totalFollowings: { $size: '$followings' },
-                        totalLikes: { $size: '$post_likes' },
-                        totalChannelViews: { $size: '$channelViews' },
+                        totalLikes: {
+                            $sum: {
+                                $map: {
+                                    input: '$posts',
+                                    as: 'post',
+                                    in: {
+                                        $size: '$$post.post_likes',
+                                    },
+                                },
+                            },
+                        },
+                        totalChannelViews: {
+                            $sum: {
+                                $map: {
+                                    input: '$posts',
+                                    as: 'post',
+                                    in: {
+                                        $size: '$$post.post_views',
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
-
                 {
                     $project: {
-                        _id: 0,
-                        __V: 0,
+                        // we can only mention 0's or 1's others will be opp. by default can't mix
                         user_password: 0,
                         refresh_token: 0,
                         followers: 0,
                         followings: 0,
                         posts: 0,
-                        post_likes: 0,
-                        channelViews: 0,
                     },
                 },
             ];
-            const [channel] = await User.aggregate(pipeLine);
+            const [channel] = await User.aggregate(pipeline);
             return channel;
         } catch (err) {
             throw err;
@@ -199,7 +235,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-user_password -refresh_token');
+            )
+                .select('-user_password -refresh_token')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -218,7 +256,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-user_password -refresh_token');
+            )
+                .select('-user_password -refresh_token')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -236,7 +276,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-user_password -refresh_token');
+            )
+                .select('-user_password -refresh_token')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -254,7 +296,9 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-user_password -refresh_token');
+            )
+                .select('-user_password -refresh_token')
+                .lean();
         } catch (err) {
             throw err;
         }
@@ -272,12 +316,15 @@ export class MongoDBusers extends Iusers {
                 {
                     new: true,
                 }
-            ).select('-user_password -refresh_token');
+            )
+                .select('-user_password -refresh_token')
+                .lean();
         } catch (err) {
             throw err;
         }
     }
 
+    // pending for testing
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
             const offset = (page - 1) * limit;
@@ -359,7 +406,7 @@ export class MongoDBusers extends Iusers {
                 {
                     $project: {
                         _id: 0,
-                        _vv: 0,
+                        __v: 0,
                         posts: 0,
                         post_owner: 0,
                         categories: 0,
@@ -398,26 +445,24 @@ export class MongoDBusers extends Iusers {
 
     async updateWatchHistory(postId, userId) {
         try {
-            const isWatched = await WatchHistory.countDocuments({
-                post_id: postId,
-                user_id: userId,
-            });
-
-            if (isWatched > 0) {
-                return await WatchHistory.findOneAndUpdate(
-                    { post_id: postId, user_id: userId },
-                    {
-                        $set: {
-                            updatedAt: new Date(),
-                        },
-                    }
-                );
-            } else {
-                return await WatchHistory.create({
+            return await WatchHistory.findOneAndUpdate(
+                {
                     post_id: postId,
                     user_id: userId,
-                });
-            }
+                },
+                {
+                    $setOnInsert: {
+                        post_id: postId,
+                        user_id: userId,
+                    },
+                    $set: {
+                        watchedAt: new Date(),
+                    },
+                },
+                {
+                    upsert: true,
+                }
+            );
         } catch (err) {
             throw err;
         }

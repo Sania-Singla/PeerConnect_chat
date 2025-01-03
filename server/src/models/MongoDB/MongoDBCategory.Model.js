@@ -5,7 +5,7 @@ import { Category } from '../../schemas/MongoDB/index.js';
 export class MongoDBcategories extends Icategories {
     async getCategories() {
         try {
-            return await Category.find();
+            return await Category.find().lean();
         } catch (err) {
             throw err;
         }
@@ -15,7 +15,7 @@ export class MongoDBcategories extends Icategories {
         try {
             return await Category.findOne({
                 category_id: categoryId,
-            });
+            }).lean();
         } catch (err) {
             throw err;
         }
@@ -23,10 +23,11 @@ export class MongoDBcategories extends Icategories {
 
     async createCategory(categoryId, categoryName) {
         try {
-            return await Category.create({
+            const category = await Category.create({
                 category_id: categoryId,
                 category_name: categoryName,
             });
+            return category.toObject();
         } catch (err) {
             throw err;
         }
@@ -36,7 +37,7 @@ export class MongoDBcategories extends Icategories {
         try {
             return await Category.findOneAndDelete({
                 category_id: categoryId,
-            });
+            }).lean();
         } catch (err) {
             throw err;
         }
@@ -48,7 +49,7 @@ export class MongoDBcategories extends Icategories {
                 { category_id: categoryId },
                 { $set: { category_name: categoryName } },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }

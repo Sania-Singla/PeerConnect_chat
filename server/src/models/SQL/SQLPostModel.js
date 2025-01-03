@@ -4,7 +4,7 @@ import { getCurrentTimestamp } from '../../utils/index.js';
 
 export class SQLposts extends Iposts {
     // pending search query
-    async getRandomPosts(limit, orderBy, page, category) {
+    async getRandomPosts(limit, orderBy, page, categoryId) {
         try {
             let q = `
                     SELECT 
@@ -22,19 +22,19 @@ export class SQLposts extends Iposts {
             let countQ = 'SELECT COUNT(*) AS totalPosts FROM post_view p ';
 
             if (category) {
-                q += ` WHERE p.category_name = ? `;
-                countQ += ` WHERE p.category_name = ? `;
+                q += ` WHERE p.category_id = ? `;
+                countQ += ` WHERE p.category_id = ? `;
             }
 
             q += ` ORDER BY post_updatedAt ${orderBy} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
 
-            const queryParams = category
-                ? [category, limit, offset]
+            const queryParams = categoryId
+                ? [categoryId, limit, offset]
                 : [limit, offset];
 
-            const countParams = category ? [category] : [];
+            const countParams = categoryId ? [categoryId] : [];
 
             const [[{ totalPosts }]] = await connection.query(
                 countQ,
@@ -64,7 +64,7 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async getPosts(channelId, limit, orderBy, page, category) {
+    async getPosts(channelId, limit, orderBy, page, categoryId) {
         try {
             let q = `
                     SELECT 
@@ -81,9 +81,9 @@ export class SQLposts extends Iposts {
 
             let countQ = 'SELECT COUNT(*) AS totalPosts FROM post_view p';
 
-            if (category) {
-                q += ` WHERE p.post_ownerId = ? AND p.category_name = ? `;
-                countQ += ` WHERE p.post_ownerId = ? AND p.category_name = ? `;
+            if (categoryId) {
+                q += ` WHERE p.post_ownerId = ? AND p.category_id = ? `;
+                countQ += ` WHERE p.post_ownerId = ? AND p.category_id = ? `;
             } else {
                 q += ' WHERE p.post_ownerId = ? ';
                 countQ += ' WHERE p.post_ownerId = ? ';
@@ -92,10 +92,12 @@ export class SQLposts extends Iposts {
             q += `ORDER BY post_updatedAt ${orderBy} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
-            const queryParams = category
-                ? [channelId, category, limit, offset]
+            const queryParams = categoryId
+                ? [channelId, categoryId, limit, offset]
                 : [channelId, limit, offset];
-            const countParams = category ? [channelId, category] : [channelId];
+            const countParams = categoryId
+                ? [channelId, categoryId]
+                : [channelId];
 
             const [[{ totalPosts }]] = await connection.query(
                 countQ,

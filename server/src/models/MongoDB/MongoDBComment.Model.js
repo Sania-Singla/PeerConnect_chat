@@ -29,15 +29,37 @@ export class MongoDBcomments extends Icomments {
                     },
                 },
                 {
+                    $unwind: '$user',
+                },
+                {
                     $lookup: {
                         from: 'commentlikes',
                         localField: 'comment_id',
                         foreignField: 'comment_id',
                         as: 'comment_likes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: true,
+                                },
+                            },
+                        ],
                     },
                 },
                 {
-                    $unwind: '$user',
+                    $lookup: {
+                        from: 'commentlikes',
+                        localField: 'comment_id',
+                        foreignField: 'comment_id',
+                        as: 'comment_dislikes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: false,
+                                },
+                            },
+                        ],
+                    },
                 },
                 {
                     $addFields: {
@@ -46,28 +68,41 @@ export class MongoDBcomments extends Icomments {
                         user_lastName: '$user.user_lastName',
                         user_avatar: '$user.user_avatar',
                         likes: {
-                            $size: {
-                                $filter: {
-                                    input: '$comment_likes',
-                                    as: 'like',
-                                    cond: { $eq: ['$$like.is_liked', 1] },
-                                },
-                            },
+                            $size: '$comment_likes',
                         },
                         dislikes: {
-                            $size: {
-                                $filter: {
-                                    input: '$comment_likes',
-                                    as: 'dislike',
-                                    cond: { $eq: ['$$dislike.is_liked', 0] },
-                                },
-                            },
+                            $size: '$comment_dislikes',
                         },
                         isLiked: userId
                             ? {
-                                  // pending
+                                  $cond: {
+                                      if: {
+                                          $in: [
+                                              userId,
+                                              '$comment_likes.user_id',
+                                          ],
+                                      },
+                                      then: 1,
+                                      else: {
+                                          $cond: {
+                                              if: {
+                                                  $in: [
+                                                      userId,
+                                                      '$comment_dislikes.user_id',
+                                                  ],
+                                              },
+                                              then: 0,
+                                              else: -1,
+                                          },
+                                      },
+                                  },
                               }
                             : -1,
+                    },
+                },
+                {
+                    $project: {
+                        user: 0,
                     },
                 },
                 {
@@ -93,6 +128,25 @@ export class MongoDBcomments extends Icomments {
                 },
                 {
                     $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: 'user_id',
+                        as: 'comment_owner',
+                    },
+                },
+                {
+                    $unwind: '$comment_owner',
+                },
+                {
+                    $addFields: {
+                        user_name: '$comment_owner.user_name',
+                        user_avatar: '$comment_owner.user_avatar',
+                        user_lastName: '$comment_owner.user_lastName',
+                        user_firstName: '$comment_owner.user_firstName',
+                    },
+                },
+                {
+                    $lookup: {
                         from: 'commentlikes',
                         localField: 'comment_id',
                         foreignField: 'comment_id',
@@ -100,7 +154,22 @@ export class MongoDBcomments extends Icomments {
                         pipeline: [
                             {
                                 $match: {
-                                    user_id: userId,
+                                    is_liked: true,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localField: 'comment_id',
+                        foreignField: 'comment_id',
+                        as: 'comment_dislikes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: false,
                                 },
                             },
                         ],
@@ -108,17 +177,40 @@ export class MongoDBcomments extends Icomments {
                 },
                 {
                     $addFields: {
-                        isLiked: {
-                            $cond: {
-                                if: { $gt: [{ $size: '$comment_likes' }, 0] },
-                                then: {
-                                    $arrayElemAt: [
-                                        '$comment_likes.is_liked', // will have only one value as [.]
-                                        0,
-                                    ],
-                                },
-                                else: -1,
-                            },
+                        isLiked: userId
+                            ? {
+                                  $cond: {
+                                      if: {
+                                          $in: [
+                                              userId,
+                                              '$comment_likes.user_id',
+                                          ],
+                                      },
+                                      then: 1,
+                                      else: {
+                                          $cond: {
+                                              if: {
+                                                  $in: [
+                                                      userId,
+                                                      '$comment_dislikes.user_id',
+                                                  ],
+                                              },
+                                              then: 0,
+                                              else: -1,
+                                          },
+                                      },
+                                  },
+                              }
+                            : -1,
+                    },
+                },
+                {
+                    $addFields: {
+                        likes: {
+                            $size: '$comment_likes',
+                        },
+                        dislikes: {
+                            $size: '$comment_dislikes',
                         },
                     },
                 },
@@ -133,12 +225,13 @@ export class MongoDBcomments extends Icomments {
 
     async createComment(commentId, userId, postId, commentContent) {
         try {
-            return await Comment.create({
+            const comment = await Comment.create({
                 comment_id: commentId,
                 user_id: userId,
                 post_id: postId,
                 comment_content: commentContent,
             });
+            return await this.getComment(commentId);
         } catch (err) {
             throw err;
         }
@@ -148,7 +241,7 @@ export class MongoDBcomments extends Icomments {
         try {
             return await Comment.findOneAndDelete({
                 comment_id: commentId,
-            });
+            }).lean();
         } catch (err) {
             throw err;
         }
@@ -164,7 +257,7 @@ export class MongoDBcomments extends Icomments {
                     },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }

@@ -2,6 +2,7 @@ import { Ifollowers } from '../../interfaces/follower.Interface.js';
 import { Follower } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBfollowers extends Ifollowers {
+    // pending for testing
     async getFollowers(channelId) {
         try {
             const pipeline = [
@@ -65,6 +66,7 @@ export class MongoDBfollowers extends Ifollowers {
         }
     }
 
+    // pending for testing
     async getFollowings(channelId) {
         try {
             const pipeline = [
@@ -133,15 +135,16 @@ export class MongoDBfollowers extends Ifollowers {
             const existingRecord = await Follower.findOne({
                 following_id: channelId,
                 follower_id: userId,
-            });
+            }); // BSON data
 
             if (existingRecord) {
                 return await existingRecord.deleteOne();
             } else {
-                return await Follower.create({
+                const record = await Follower.create({
                     following_id: channelId,
                     follower_id: userId,
                 });
+                return record.toObject();
             }
         } catch (err) {
             throw err;

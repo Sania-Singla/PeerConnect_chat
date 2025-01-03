@@ -145,7 +145,7 @@ const loginUser = async (req, res) => {
 
         await userObject.loginUser(user.user_id, refreshToken);
 
-        const { user_password, refresh_token, ...loggedInUser } = user;
+        const { user_password, refresh_token, ...loggedInUser } = user; // for mongo
 
         return res
             .status(OK)

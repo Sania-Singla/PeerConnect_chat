@@ -11,6 +11,7 @@ const postLikeSchema = new Schema({
         type: String,
         ref: 'users',
         required: true,
+        index: true,
     },
     is_liked: {
         type: Boolean,
