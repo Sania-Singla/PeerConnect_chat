@@ -4,9 +4,6 @@ import { Comment } from '../../schemas/MongoDB/index.js';
 export class MongoDBcomments extends Icomments {
     async getComments(postId, userId, orderBy) {
         try {
-            if (orderBy === 'DESC') orderBy = -1;
-            else orderBy = 1;
-
             const pipeline = [
                 {
                     $match: {
@@ -66,7 +63,16 @@ export class MongoDBcomments extends Icomments {
                                 },
                             },
                         },
-                        isLiked: {},
+                        isLiked: userId
+                            ? {
+                                  // pending
+                              }
+                            : -1,
+                    },
+                },
+                {
+                    $sort: {
+                        [comment_createdAt]: orderBy === 'DESC' ? -1 : 1,
                     },
                 },
             ];
