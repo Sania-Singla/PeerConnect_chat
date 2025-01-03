@@ -4,40 +4,110 @@ import { Comment } from '../../schemas/MongoDB/index.js';
 export class MongoDBcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {
         try {
-            if (orderBy === 'DESC') orderBy = -1;
-            else if (orderBy === 'ASC') orderBy = 1;
-            else return { message: 'INVALID_ORDERBY' };
-
-            const comments = await Comment.aggregate({
-                $match: {
-                    post_id: postId,
+            const pipeline = [
+                {
+                    $match: {
+                        post_id: postId,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localFields: 'user_id',
+                        foreignFields: 'user_id',
+                        as: 'comment_owner',
+                    },
                 },
 
-                $lookup: {
-                    from: 'users',
-                    localFields: 'user_id',
-                    foreignFields: 'user_id',
-                    as: 'userDetails',
+                {
+                    $unwind: '$comment_owner',
+                },
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localFields: 'post_id',
+                        foreignFields: 'post_id',
+                        as: 'comment_likeDislikes',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localFields: 'post_id',
+                        foreignFields: 'post_id',
+                        as: 'comment_likes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'commentlikes',
+                        localFields: 'post_id',
+                        foreignFields: 'post_id',
+                        as: 'comment_dislikes',
+                        pipeline: [
+                            {
+                                $match: {
+                                    is_liked: 0,
+                                },
+                            },
+                        ],
+                    },
                 },
 
-                $unwind: {
-                    path: '$userDetails',
-                    preserveNullAndEmptyArrays: true,
+                {
+                    $sort: {
+                        comment_createdAt: orderBy === 'DESC' ? -1 : 1,
+                    },
                 },
-
-                $lookup: {
-                    from: 'commentlikes',
-                    localFields: 'post_id',
-                    foreignFields: 'post_id',
-                    as: 'post',
+                {
+                    $addFields: {
+                        isLiked: currentUserId
+                            ? {
+                                  $in: [
+                                      currentUserId,
+                                      {
+                                          $map: {
+                                              input: '$post_likeDislikes',
+                                              as: 'like',
+                                              in: '$$like.user_id',
+                                              $match: {
+                                                  '$$ilike.is_liked': 1,//but no -1 case handled
+                                              },
+                                          },
+                                      },
+                                  ],
+                              }
+                            : false,
+                        likes: {
+                            $size: '$comment_likes',
+                        },
+                        dislikes: {
+                            $size: '$comment_dislikes',
+                        },
+                    },
                 },
-            });
-
-            if (!comments.length) {
-                return { message: 'COMMENTS_NOT_FOUND' };
-            }
-
-            return comments;
+                {
+                    $project: {
+                        _id: 0,
+                        __v: 0,
+                        comment_owner: 0,
+                        comment_likes: 0,
+                        comment_dislikes: 0,
+                        'comment_owner.user_name': 1,
+                        'comment_owner.user_firstName': 1,
+                        'comment_owner.user_lastName': 1,
+                        'comment_owner.user_avatar': 1,
+                    },
+                },
+            ];
+            return await Comment.aggregate(pipeline);
         } catch (err) {
             throw err;
         }
