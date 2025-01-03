@@ -1,5 +1,10 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
-import { Category, Post, PostView } from '../../schemas/MongoDB/index.js';
+import {
+    Category,
+    Post,
+    PostView,
+    SavedPost,
+} from '../../schemas/MongoDB/index.js';
 
 export class MongoDBposts extends Iposts {
     // pending search query
@@ -21,7 +26,7 @@ export class MongoDBposts extends Iposts {
                 {
                     $match: category
                         ? {
-                              //$ or not??
+                              //$ or not
                               'post_categories.category_name': category,
                           }
                         : {},
@@ -586,7 +591,7 @@ export class MongoDBposts extends Iposts {
             const now = new Date();
             const updatedAt = getCurrentTimestamp(now);
 
-            return await Post.updateOne(
+            return await Post.findOneAndUpdate(
                 { post_id: postId },
                 {
                     $set: {
@@ -608,7 +613,7 @@ export class MongoDBposts extends Iposts {
             const now = new Date();
             const updatedAt = getCurrentTimestamp(now);
 
-            return await Post.updateOne(
+            return await Post.findOneAndUpdate(
                 { post_id: postId },
                 {
                     $set: {
@@ -625,7 +630,7 @@ export class MongoDBposts extends Iposts {
 
     async togglePostVisibility(postId, visibility) {
         try {
-            return await Post.updateOne(
+            return await Post.findOneAndUpdate(
                 { post_id: postId },
                 { $set: { post_visibility: visibility } },
                 { new: true }
@@ -637,6 +642,22 @@ export class MongoDBposts extends Iposts {
 
     async toggleSavePost(postId, userId) {
         try {
+            const isSaved = await SavedPost.countDocuments({
+                post_id: postId,
+                user_id: userId,
+            });
+
+            if (isSaved > 0) {
+                return await SavedPost.deleteOne({
+                    post_id: postId,
+                    user_id: userId,
+                });
+            } else {
+                return await SavedPost.create({
+                    post_id: postId,
+                    user_id: userId,
+                });
+            }
         } catch (err) {
             throw err;
         }
@@ -644,6 +665,109 @@ export class MongoDBposts extends Iposts {
 
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
+            const offset = (page - 1) * limit;
+            const pipeline = [
+                {
+                    $match: {
+                        user_id: userId,
+                    },
+                },
+                {
+                    //extra se need nahi hai project ki kunki addFields me bata rhe hai kon kon si filed jayegi
+                    $lookup: {
+                        from: 'categories',
+                        localField: 'post_category',
+                        foreignField: 'category_id',
+                        as: 'post_categories',
+                    },
+                },
+                {
+                    $unwind: '$categories',
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: 'user_id',
+                        as: 'post_owner',
+                    },
+                },
+                {
+                    $unwind: '$post_owner',
+                },
+                {
+                    $lookup: {
+                        from: 'post',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'posts',
+                    },
+                },
+                {
+                    $unwind: '$posts',
+                },
+                {
+                    $lookup: {
+                        from: 'postviews',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'post_views',
+                    },
+                },
+                {
+                    $sort: {
+                        'posts.post_updatedAt': orderBy === 'DESC' ? -1 : 1,
+                    },
+                },
+                {
+                    $skip: offset,
+                },
+                {
+                    $limit: limit,
+                },
+                {
+                    $count: 'totalPosts',
+                },
+
+                {
+                    $addFields: {
+                        totalViews: {
+                            $size: '$post_views',
+                        },
+                        postInfo: {
+                            totalPosts: '$totalPosts',
+                            totalPages: Math.ceil('$totalPosts' / limit),
+                            hasNextPage: page < '$totalPages',
+                            hasPrevPage: page > 1,
+                        },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        _vv: 0,
+                        posts: 0,
+                        post_owner: 0,
+                        categories: 0,
+                        'posts.post_id': 1,
+                        'posts.post_title': 1,
+                        'posts.post_content': 1,
+                        'posts.post_updatedAt': 1,
+                        'posts.post_createdAt': 1,
+                        'posts.post_image': 1,
+                        'post_owner.user_name': 1,
+                        'post_owner.user_firstName': 1,
+                        'post_owner.user_lastName': 1,
+                        'post_owner.user_avatar': 1,
+                        'post_owner.user_coverImage': 1,
+                        'categories.category_name': 1,
+                        totalViews: 1,
+                    },
+                },
+            ];
+
+            const [posts] = await SavedPost.aggregate(pipeline);
+            return posts;
         } catch (err) {
             throw err;
         }
