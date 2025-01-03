@@ -72,7 +72,7 @@ export class MongoDBcomments extends Icomments {
                 },
                 {
                     $sort: {
-                        [comment_createdAt]: orderBy === 'DESC' ? -1 : 1,
+                        comment_createdAt: orderBy === 'DESC' ? -1 : 1,
                     },
                 },
             ];
