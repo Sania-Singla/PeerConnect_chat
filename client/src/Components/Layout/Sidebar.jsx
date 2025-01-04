@@ -112,7 +112,7 @@ export default function Sidebar() {
     return (
         <AnimatePresence>
             {showSideBar && (
-                <motion.nav
+                <motion.aside
                     variants={sideBarVariants}
                     initial="beginning"
                     animate="end"
@@ -191,7 +191,7 @@ export default function Sidebar() {
                             </div>
                         </div>
                     </div>
-                </motion.nav>
+                </motion.aside>
             )}
         </AnimatePresence>
     );
