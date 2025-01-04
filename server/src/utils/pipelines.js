@@ -1,4 +1,5 @@
-function getCommonPipeline1(categoryId, orderBy, offset, page, limit) {
+function getCommonPipeline1(categoryId, orderBy, page, limit) {
+    limit = 3;
     return [
         {
             $lookup: {
@@ -116,7 +117,7 @@ function getCommonPipeline1(categoryId, orderBy, offset, page, limit) {
                             post_updatedAt: orderBy === 'DESC' ? -1 : 1,
                         },
                     },
-                    { $skip: offset },
+                    { $skip: (page - 1) * limit },
                     { $limit: limit },
                     {
                         $addFields: {
@@ -157,7 +158,7 @@ function getCommonPipeline1(categoryId, orderBy, offset, page, limit) {
     ];
 }
 
-function getCommonPipeline2(orderBy, sortBy, offset, page, limit) {
+function getCommonPipeline2(orderBy, sortBy, page, limit) {
     return [
         {
             $lookup: {
@@ -236,7 +237,7 @@ function getCommonPipeline2(orderBy, sortBy, offset, page, limit) {
                             [sortBy]: orderBy === 'DESC' ? -1 : 1,
                         },
                     },
-                    { $skip: offset },
+                    { $skip: (page - 1) * limit },
                     { $limit: limit },
                     {
                         $addFields: {

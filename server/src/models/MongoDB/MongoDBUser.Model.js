@@ -328,11 +328,9 @@ export class MongoDBusers extends Iusers {
     // pending for testing
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
-            const offset = (page - 1) * limit;
             const commonPipeline = getCommonPipeline2(
                 orderBy,
                 'watchedAt',
-                offset,
                 page,
                 limit
             );

@@ -5,11 +5,9 @@ export class MongoDBposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, categoryId) {
         try {
-            const offset = (page - 1) * limit;
             const commonPipeline = getCommonPipeline1(
                 categoryId,
                 orderBy,
-                offset,
                 page,
                 limit
             );
@@ -23,11 +21,9 @@ export class MongoDBposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, categoryId) {
         try {
-            const offset = (page - 1) * limit;
             const commonPipeline = getCommonPipeline1(
                 categoryId,
                 orderBy,
-                offset,
                 page,
                 limit
             );

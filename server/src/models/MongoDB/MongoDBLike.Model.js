@@ -4,11 +4,9 @@ import { getCommonPipeline2 } from '../../utils/index.js';
 export class MongoDBlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            const offset = (page - 1) * limit;
             const commonPipeline = getCommonPipeline2(
                 orderBy,
                 'likedAt',
-                offset,
                 page,
                 limit
             );
