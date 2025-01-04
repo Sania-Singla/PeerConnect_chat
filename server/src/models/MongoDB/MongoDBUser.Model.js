@@ -1,5 +1,6 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
+import { getCommonPipeline2 } from '../../utils/index.js';
 
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
@@ -328,107 +329,23 @@ export class MongoDBusers extends Iusers {
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
             const offset = (page - 1) * limit;
-
+            const commonPipeline = getCommonPipeline2(
+                orderBy,
+                'watchedAt',
+                offset,
+                page,
+                limit
+            );
             const pipeline = [
                 {
                     $match: {
                         user_id: userId,
                     },
                 },
-                {
-                    $lookup: {
-                        from: 'categories',
-                        localField: 'post_category',
-                        foreignField: 'category_id',
-                        as: 'post_categories',
-                    },
-                },
-                {
-                    $unwind: '$categories',
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'user_id',
-                        foreignField: 'user_id',
-                        as: 'post_owner',
-                    },
-                },
-                {
-                    $unwind: '$post_owner',
-                },
-                {
-                    $lookup: {
-                        from: 'post',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'posts',
-                    },
-                },
-                {
-                    $unwind: '$posts',
-                },
-                {
-                    $lookup: {
-                        from: 'postviews',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'post_views',
-                    },
-                },
-                {
-                    $sort: {
-                        'posts.post_updatedAt': orderBy === 'DESC' ? -1 : 1,
-                    },
-                },
-                {
-                    $skip: offset,
-                },
-                {
-                    $limit: limit,
-                },
-                {
-                    $count: 'totalPosts',
-                },
-
-                {
-                    $addFields: {
-                        totalViews: {
-                            $size: '$post_views',
-                        },
-                        postInfo: {
-                            totalPosts: '$totalPosts',
-                            totalPages: Math.ceil('$totalPosts' / limit),
-                            hasNextPage: page < '$totalPages', //but it is not a field nah
-                            hasPrevPage: page > 1,
-                        },
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        __v: 0,
-                        posts: 0,
-                        post_owner: 0,
-                        categories: 0,
-                        'posts.post_id': 1,
-                        'posts.post_title': 1,
-                        'posts.post_content': 1,
-                        'posts.post_updatedAt': 1,
-                        'posts.post_createdAt': 1,
-                        'posts.post_image': 1,
-                        'post_owner.user_name': 1,
-                        'post_owner.user_firstName': 1,
-                        'post_owner.user_lastName': 1,
-                        'post_owner.user_avatar': 1,
-                        'post_owner.user_coverImage': 1,
-                        'categories.category_name': 1,
-                        totalViews: 1,
-                    },
-                },
+                ...commonPipeline,
             ];
-            const [posts] = await WatchHistory.aggregate(pipeline);
-            return posts;
+            const [result] = await WatchHistory.aggregate(pipeline);
+            return result;
         } catch (err) {
             throw err;
         }

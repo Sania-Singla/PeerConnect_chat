@@ -2,7 +2,6 @@ import { Ifollowers } from '../../interfaces/follower.Interface.js';
 import { Follower } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBfollowers extends Ifollowers {
-    // pending for testing
     async getFollowers(channelId) {
         try {
             const pipeline = [
@@ -59,7 +58,6 @@ export class MongoDBfollowers extends Ifollowers {
         }
     }
 
-    // pending for testing
     async getFollowings(channelId) {
         try {
             const pipeline = [

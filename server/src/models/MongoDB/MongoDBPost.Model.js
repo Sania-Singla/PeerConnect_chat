@@ -1,171 +1,12 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
-
+import { getCommonPipeline1, getCommonPipeline2 } from '../../utils/index.js';
 export class MongoDBposts extends Iposts {
-    getCommonPipeline(categoryId, orderBy, offset, page, limit) {
-        return [
-            {
-                $lookup: {
-                    from: 'categories',
-                    localField: 'post_category',
-                    foreignField: 'category_id',
-                    as: 'category_name',
-                    pipeline: categoryId
-                        ? [
-                              {
-                                  $match: {
-                                      category_id: categoryId,
-                                  },
-                              },
-                          ]
-                        : [],
-                },
-            },
-            {
-                $unwind: '$category_name',
-            },
-            {
-                $addFields: {
-                    category_name: '$category_name.category_name',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'post_ownerId',
-                    foreignField: 'user_id',
-                    as: 'post_owner',
-                },
-            },
-            {
-                $unwind: '$post_owner',
-            },
-            {
-                $lookup: {
-                    from: 'postlikes',
-                    localField: 'post_id',
-                    foreignField: 'post_id',
-                    as: 'post_likes',
-                    pipeline: [
-                        {
-                            $match: {
-                                is_liked: true,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $lookup: {
-                    from: 'postlikes',
-                    localField: 'post_id',
-                    foreignField: 'post_id',
-                    as: 'post_dislikes',
-                    pipeline: [
-                        {
-                            $match: {
-                                is_liked: false,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $lookup: {
-                    from: 'postviews',
-                    localField: 'post_id',
-                    foreignField: 'post_id',
-                    as: 'post_views',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'comments',
-                    localField: 'post_id',
-                    foreignField: 'post_id',
-                    as: 'post_comments',
-                },
-            },
-            {
-                $facet: {
-                    /* to use $count */
-                    postsInfo: [
-                        { $count: 'totalPosts' },
-                        {
-                            $addFields: {
-                                totalPages: {
-                                    $ceil: {
-                                        $divide: ['$totalPosts', limit],
-                                    },
-                                },
-                                hasNextPage: {
-                                    $gt: [
-                                        {
-                                            $ceil: {
-                                                $divide: ['$totalPosts', limit],
-                                            },
-                                        },
-                                        page,
-                                    ],
-                                },
-                                hasPrevPage: {
-                                    $gt: [page, 1],
-                                },
-                            },
-                        },
-                    ],
-                    posts: [
-                        {
-                            $sort: {
-                                post_updatedAt: orderBy === 'DESC' ? -1 : 1,
-                            },
-                        },
-                        { $skip: offset },
-                        { $limit: limit },
-                        {
-                            $addFields: {
-                                totalLikes: {
-                                    $size: '$post_likes',
-                                },
-                                totalDislikes: {
-                                    $size: '$post_dislikes',
-                                },
-                                totalViews: {
-                                    $size: '$post_views',
-                                },
-                                totalComments: {
-                                    $size: '$post_comments',
-                                },
-                                userName: '$post_owner.user_name',
-                                firstName: '$post_owner.user_firstName',
-                                lastName: '$post_owner.user_lastName',
-                                avatar: '$post_owner.user_avatar',
-                                coverImage: '$post_owner.user_coverImage',
-                            },
-                        },
-                        {
-                            $project: {
-                                post_owner: 0,
-                                post_likes: 0,
-                                post_dislikes: 0,
-                                post_views: 0,
-                                post_comments: 0,
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $unwind: '$postsInfo',
-            },
-        ];
-    }
-
     // pending search query
     async getRandomPosts(limit, orderBy, page, categoryId) {
         try {
             const offset = (page - 1) * limit;
-            const commonPipeline = this.getCommonPipeline(
+            const commonPipeline = getCommonPipeline1(
                 categoryId,
                 orderBy,
                 offset,
@@ -183,7 +24,7 @@ export class MongoDBposts extends Iposts {
     async getPosts(channelId, limit, orderBy, page, categoryId) {
         try {
             const offset = (page - 1) * limit;
-            const commonPipeline = this.getCommonPipeline(
+            const commonPipeline = getCommonPipeline1(
                 categoryId,
                 orderBy,
                 offset,
@@ -324,7 +165,7 @@ export class MongoDBposts extends Iposts {
                         pipeline: [
                             {
                                 $project: {
-                                    user_id: 1,
+                                    user_id: userId,
                                 },
                             },
                         ],
@@ -351,6 +192,9 @@ export class MongoDBposts extends Iposts {
                         isFollowed: userId
                             ? { $gt: [{ $size: '$followers' }, 0] }
                             : false,
+                        isSaved: userId
+                            ? { $gt: [{ $size: '$saved_posts' }, 0] }
+                            : false,
                         isLiked: userId
                             ? {
                                   $in: [
@@ -374,20 +218,6 @@ export class MongoDBposts extends Iposts {
                                               input: '$post_dislikes',
                                               as: 'dislike',
                                               in: '$$dislike.user_id',
-                                          },
-                                      },
-                                  ],
-                              }
-                            : false,
-                        isSaved: userId
-                            ? {
-                                  $in: [
-                                      userId,
-                                      {
-                                          $map: {
-                                              input: '$saved_posts',
-                                              as: 'save',
-                                              in: '$$save.user_id',
                                           },
                                       },
                                   ],
@@ -557,131 +387,23 @@ export class MongoDBposts extends Iposts {
         }
     }
 
-    // pending for testing
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
             const offset = (page - 1) * limit;
-
+            const commonPipeline = getCommonPipeline2(
+                orderBy,
+                'savedAt',
+                offset,
+                page,
+                limit
+            );
             const pipeline = [
                 {
                     $match: {
                         user_id: userId,
                     },
                 },
-                {
-                    $lookup: {
-                        from: 'posts',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'post',
-                        pipeline: [
-                            {
-                                $lookup: {
-                                    from: 'users',
-                                    localField: 'post_ownerId',
-                                    foreignField: 'user_id',
-                                    as: 'user',
-                                },
-                            },
-                            {
-                                $unwind: '$user',
-                            },
-                            {
-                                $lookup: {
-                                    from: 'categories',
-                                    localField: 'post_category',
-                                    foreignField: 'category_id',
-                                    as: 'category',
-                                },
-                            },
-                            {
-                                $unwind: '$category',
-                            },
-                            {
-                                $lookup: {
-                                    from: 'postviews',
-                                    localField: 'post_id',
-                                    foreignField: 'post_id',
-                                    as: 'views',
-                                },
-                            },
-                        ],
-                    },
-                },
-                {
-                    $unwind: '$post',
-                },
-                {
-                    $facet: {
-                        /* to use $count */
-                        postsInfo: [
-                            { $count: 'totalPosts' },
-                            {
-                                $addFields: {
-                                    totalPages: {
-                                        $ceil: {
-                                            $divide: ['$totalPosts', limit],
-                                        },
-                                    },
-                                    hasNextPage: {
-                                        $gt: [
-                                            {
-                                                $ceil: {
-                                                    $divide: [
-                                                        '$totalPosts',
-                                                        limit,
-                                                    ],
-                                                },
-                                            },
-                                            page,
-                                        ],
-                                    },
-                                    hasPrevPage: {
-                                        $gt: [page, 1],
-                                    },
-                                },
-                            },
-                        ],
-                        posts: [
-                            {
-                                $sort: {
-                                    post_updatedAt: orderBy === 'DESC' ? -1 : 1,
-                                },
-                            },
-                            { $skip: offset },
-                            { $limit: limit },
-                            {
-                                $addFields: {
-                                    post_ownerId: '$post.post_ownerId',
-                                    category_name:
-                                        '$post.category.category_name',
-                                    post_updatedAt: '$post.post_updatedAt',
-                                    post_createdAt: '$post.post_createdAt',
-                                    post_title: '$post.post_title',
-                                    post_content: '$post.post_content',
-                                    post_image: '$post.post_image',
-                                    userName: '$post.user.user_name',
-                                    firstName: '$post.user.user_firstName',
-                                    lastName: '$post.user.user_lastName',
-                                    avatar: '$post.user.user_avatar',
-                                    coverImage: '$post.user.user_coverImage',
-                                    totalViews: { $size: '$post.views' },
-                                },
-                            },
-                            {
-                                $project: {
-                                    user: 0,
-                                    post: 0,
-                                    user_id: 0,
-                                    is_liked: 0,
-                                },
-                            },
-                        ],
-                    },
-                },
-                {
-                    $unwind: '$postsInfo',
-                },
+                ...commonPipeline,
             ];
 
             const [result] = await SavedPost.aggregate(pipeline);

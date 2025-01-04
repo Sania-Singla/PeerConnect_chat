@@ -17,6 +17,10 @@ const postLikeSchema = new Schema({
         type: Boolean,
         required: true,
     },
+    likedAt: {
+        type: Date,
+        default: Date.now(),
+    },
 });
 
 const commentLikeSchema = new Schema({
@@ -34,6 +38,10 @@ const commentLikeSchema = new Schema({
     is_liked: {
         type: Boolean,
         required: true,
+    },
+    likedAt: {
+        type: Date,
+        default: Date.now(),
     },
 });
 

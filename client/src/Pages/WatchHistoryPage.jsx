@@ -65,7 +65,7 @@ export default function WatchHistoryPage() {
             reference={index + 1 === posts.length ? paginateRef : null}
         >
             {/* children */}
-            <div className="hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
+            <div className="sm:right-44 sm:bottom-8 sm:left-auto hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
                 watched {formatDateRelative(post.watchedAt)}
             </div>
         </PostListView>
