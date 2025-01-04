@@ -35,17 +35,6 @@ export class MongoDBposts extends Iposts {
                     localField: 'post_ownerId',
                     foreignField: 'user_id',
                     as: 'post_owner',
-                    pipeline: [
-                        {
-                            $project: {
-                                user_name: 1,
-                                user_firstName: 1,
-                                user_lastName: 1,
-                                user_avatar: 1,
-                                user_coverImage: 1,
-                            },
-                        },
-                    ],
                 },
             },
             {
@@ -57,6 +46,13 @@ export class MongoDBposts extends Iposts {
                     localField: 'post_id',
                     foreignField: 'post_id',
                     as: 'post_likes',
+                    pipeline: [
+                        {
+                            $match: {
+                                is_liked: true,
+                            },
+                        },
+                    ],
                 },
             },
             {
@@ -65,6 +61,13 @@ export class MongoDBposts extends Iposts {
                     localField: 'post_id',
                     foreignField: 'post_id',
                     as: 'post_dislikes',
+                    pipeline: [
+                        {
+                            $match: {
+                                is_liked: false,
+                            },
+                        },
+                    ],
                 },
             },
             {
@@ -169,9 +172,9 @@ export class MongoDBposts extends Iposts {
                 page,
                 limit
             );
-            const [post] = await Post.aggregate(commonPipeline);
+            const [result] = await Post.aggregate(commonPipeline);
 
-            return post;
+            return result;
         } catch (err) {
             throw err;
         }
@@ -196,8 +199,8 @@ export class MongoDBposts extends Iposts {
                 ...commonPipeline,
             ];
 
-            const [post] = await Post.aggregate(pipeline);
-            return post;
+            const [result] = await Post.aggregate(pipeline);
+            return result;
         } catch (err) {
             throw err;
         }
@@ -538,7 +541,7 @@ export class MongoDBposts extends Iposts {
             const existingRecord = await SavedPost.findOne({
                 post_id: postId,
                 user_id: userId,
-            }).lean();
+            });
 
             if (existingRecord) {
                 return await existingRecord.deleteOne();
@@ -558,6 +561,7 @@ export class MongoDBposts extends Iposts {
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
             const offset = (page - 1) * limit;
+
             const pipeline = [
                 {
                     $match: {
@@ -566,99 +570,122 @@ export class MongoDBposts extends Iposts {
                 },
                 {
                     $lookup: {
-                        from: 'categories',
-                        localField: 'post_category',
-                        foreignField: 'category_id',
-                        as: 'post_categories',
-                    },
-                },
-                {
-                    $unwind: '$categories',
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'user_id',
-                        foreignField: 'user_id',
-                        as: 'post_owner',
-                    },
-                },
-                {
-                    $unwind: '$post_owner',
-                },
-                {
-                    $lookup: {
-                        from: 'post',
+                        from: 'posts',
                         localField: 'post_id',
                         foreignField: 'post_id',
-                        as: 'posts',
+                        as: 'post',
+                        pipeline: [
+                            {
+                                $lookup: {
+                                    from: 'users',
+                                    localField: 'post_ownerId',
+                                    foreignField: 'user_id',
+                                    as: 'user',
+                                },
+                            },
+                            {
+                                $unwind: '$user',
+                            },
+                            {
+                                $lookup: {
+                                    from: 'categories',
+                                    localField: 'post_category',
+                                    foreignField: 'category_id',
+                                    as: 'category',
+                                },
+                            },
+                            {
+                                $unwind: '$category',
+                            },
+                            {
+                                $lookup: {
+                                    from: 'postviews',
+                                    localField: 'post_id',
+                                    foreignField: 'post_id',
+                                    as: 'views',
+                                },
+                            },
+                        ],
                     },
                 },
                 {
-                    $unwind: '$posts',
+                    $unwind: '$post',
                 },
                 {
-                    $lookup: {
-                        from: 'postviews',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'post_views',
+                    $facet: {
+                        /* to use $count */
+                        postsInfo: [
+                            { $count: 'totalPosts' },
+                            {
+                                $addFields: {
+                                    totalPages: {
+                                        $ceil: {
+                                            $divide: ['$totalPosts', limit],
+                                        },
+                                    },
+                                    hasNextPage: {
+                                        $gt: [
+                                            {
+                                                $ceil: {
+                                                    $divide: [
+                                                        '$totalPosts',
+                                                        limit,
+                                                    ],
+                                                },
+                                            },
+                                            page,
+                                        ],
+                                    },
+                                    hasPrevPage: {
+                                        $gt: [page, 1],
+                                    },
+                                },
+                            },
+                        ],
+                        posts: [
+                            {
+                                $sort: {
+                                    post_updatedAt: orderBy === 'DESC' ? -1 : 1,
+                                },
+                            },
+                            { $skip: offset },
+                            { $limit: limit },
+                            {
+                                $addFields: {
+                                    post_ownerId: '$post.post_ownerId',
+                                    category_name:
+                                        '$post.category.category_name',
+                                    post_updatedAt: '$post.post_updatedAt',
+                                    post_createdAt: '$post.post_createdAt',
+                                    post_title: '$post.post_title',
+                                    post_content: '$post.post_content',
+                                    post_image: '$post.post_image',
+                                    userName: '$post.user.user_name',
+                                    firstName: '$post.user.user_firstName',
+                                    lastName: '$post.user.user_lastName',
+                                    avatar: '$post.user.user_avatar',
+                                    coverImage: '$post.user.user_coverImage',
+                                    totalViews: { $size: '$post.views' },
+                                },
+                            },
+                            {
+                                $project: {
+                                    user: 0,
+                                    post: 0,
+                                    user_id: 0,
+                                    is_liked: 0,
+                                },
+                            },
+                        ],
                     },
                 },
                 {
-                    $sort: {
-                        'posts.post_updatedAt': orderBy === 'DESC' ? -1 : 1,
-                    },
-                },
-                {
-                    $skip: offset,
-                },
-                {
-                    $limit: limit,
-                },
-                {
-                    $count: 'totalPosts',
-                },
-
-                {
-                    $addFields: {
-                        totalViews: {
-                            $size: '$post_views',
-                        },
-                        postInfo: {
-                            totalPosts: '$totalPosts',
-                            totalPages: Math.ceil('$totalPosts' / limit),
-                            hasNextPage: page < '$totalPages',
-                            hasPrevPage: page > 1,
-                        },
-                    },
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        _vv: 0,
-                        posts: 0,
-                        post_owner: 0,
-                        categories: 0,
-                        'posts.post_id': 1,
-                        'posts.post_title': 1,
-                        'posts.post_content': 1,
-                        'posts.post_updatedAt': 1,
-                        'posts.post_createdAt': 1,
-                        'posts.post_image': 1,
-                        'post_owner.user_name': 1,
-                        'post_owner.user_firstName': 1,
-                        'post_owner.user_lastName': 1,
-                        'post_owner.user_avatar': 1,
-                        'post_owner.user_coverImage': 1,
-                        'categories.category_name': 1,
-                        totalViews: 1,
-                    },
+                    $unwind: '$postsInfo',
                 },
             ];
 
-            const [posts] = await SavedPost.aggregate(pipeline);
-            return posts;
+            const [result] = await SavedPost.aggregate(pipeline);
+            return result;
         } catch (err) {
             throw err;
         }

@@ -62,6 +62,10 @@ const savedPostSchema = new Schema({
         ref: 'users',
         index: true,
     },
+    // savedAt: {
+    //     type: Date,
+    //     default: Date.now(),
+    // },
 });
 
 const watchHistorySchema = new Schema({

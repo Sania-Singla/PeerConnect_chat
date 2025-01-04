@@ -21,7 +21,7 @@ export class SQLposts extends Iposts {
 
             let countQ = 'SELECT COUNT(*) AS totalPosts FROM post_view p ';
 
-            if (category) {
+            if (categoryId) {
                 q += ` WHERE p.category_id = ? `;
                 countQ += ` WHERE p.category_id = ? `;
             }

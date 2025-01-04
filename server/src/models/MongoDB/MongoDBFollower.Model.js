@@ -15,52 +15,45 @@ export class MongoDBfollowers extends Ifollowers {
                     $lookup: {
                         from: 'users',
                         localField: 'follower_id',
-                        foriegnField: 'user_id',
+                        foreignField: 'user_id',
                         as: 'follower',
-                        pipeline: [
-                            {
-                                $lookup: {
-                                    from: 'followers',
-                                    localField: 'user_id',
-                                    foriegnField: 'following_id',
-                                    as: 'followers',
-                                },
-                            },
-                            {
-                                $addFields: {
-                                    totalFollowers: {
-                                        $size: '$followers',
-                                    },
-                                },
-                            },
-                        ],
                     },
                 },
                 {
+                    $lookup: {
+                        from: 'followers',
+                        localField: 'follower_id',
+                        foreignField: 'following_id',
+                        as: 'followers',
+                    },
+                },
+                {
+                    $unwind: '$followers',
+                    $unwind: '$follower',
+                },
+                {
                     $addFields: {
+                        totalFollowers: {
+                            $size: '$followers',
+                        },
                         user_id: '$follower.user_id',
                         user_name: '$follower.user_name',
                         user_firstName: '$follower.user_firstName',
                         user_lastName: '$follower.user_lastName',
                         user_avatar: '$follower.user_avatar',
-                        totalFollowers: '$follower.totalFollowers',
                     },
                 },
                 {
                     $project: {
-                        user_id: 1,
-                        user_name: 1,
-                        user_firstName: 1,
-                        user_lastName: 1,
-                        user_avatar: 1,
-                        totalFollowers: 1,
+                        follower: 0,
+                        followers: 0,
                         follower_id: 0,
                         following_id: 0,
-                        follower: 0,
                     },
                 },
             ];
-            return await Follower.aggregate(pipeline);
+
+            return await Follower.aggregate(pipeline); // return the array itself don't destructure it
         } catch (err) {
             throw err;
         }
@@ -79,48 +72,40 @@ export class MongoDBfollowers extends Ifollowers {
                     $lookup: {
                         from: 'users',
                         localField: 'following_id',
-                        foriegnField: 'user_id',
+                        foreignField: 'user_id',
                         as: 'following',
-                        pipeline: [
-                            {
-                                $lookup: {
-                                    from: 'followers',
-                                    localField: 'user_id',
-                                    foriegnField: 'following_id',
-                                    as: 'followers',
-                                },
-                            },
-                            {
-                                $addFields: {
-                                    totalFollowers: {
-                                        $size: '$followers',
-                                    },
-                                },
-                            },
-                        ],
                     },
                 },
                 {
+                    $lookup: {
+                        from: 'followers',
+                        localField: 'following_id',
+                        foreignField: 'following_id',
+                        as: 'followers',
+                    },
+                },
+                {
+                    $unwind: '$followers',
+                    $unwind: '$following',
+                },
+                {
                     $addFields: {
+                        totalFollowers: {
+                            $size: '$followers',
+                        },
                         user_id: '$following.user_id',
                         user_name: '$following.user_name',
                         user_firstName: '$following.user_firstName',
                         user_lastName: '$following.user_lastName',
                         user_avatar: '$following.user_avatar',
-                        totalFollowers: '$following.totalFollowers',
                     },
                 },
                 {
                     $project: {
-                        user_id: 1,
-                        user_name: 1,
-                        user_firstName: 1,
-                        user_lastName: 1,
-                        user_avatar: 1,
-                        totalFollowers: 1,
+                        following: 0,
+                        followers: 0,
                         follower_id: 0,
                         following_id: 0,
-                        following: 0,
                     },
                 },
             ];

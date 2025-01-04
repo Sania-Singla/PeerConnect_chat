@@ -6,7 +6,6 @@ export class SQLlikes extends Ilikes {
         try {
             const q = `
                     SELECT
-                    	c.user_id,
                         c.user_name AS userName,
                         c.user_firstName AS firstName,
                         c.user_lastName lastName,
