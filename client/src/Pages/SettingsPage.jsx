@@ -57,7 +57,7 @@ export default function SettingsPage() {
                     <div>
                         <Button
                             btnText={
-                                <div className="size-[35px]">
+                                <div className="size-[35px] fill-[#202020]">
                                     {icons.upload}
                                 </div>
                             }
@@ -78,10 +78,10 @@ export default function SettingsPage() {
                             />
                         </div>
 
-                        <div>
+                        <div className="">
                             <Button
                                 btnText={
-                                    <div className="size-[35px]">
+                                    <div className="size-[35px] fill-[#202020]">
                                         {icons.upload}
                                     </div>
                                 }

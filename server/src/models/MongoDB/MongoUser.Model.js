@@ -325,7 +325,6 @@ export class MongoUsers extends Iusers {
         }
     }
 
-    // pending for testing
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
             const commonPipeline = getCommonPipeline2(

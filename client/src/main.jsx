@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+// import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './Styles/index.css';
@@ -31,6 +31,7 @@ import {
     AboutUsPage,
     ContactUsPage,
     FAQpage,
+    CollabsPage,
 } from './Pages';
 
 import {
@@ -48,6 +49,8 @@ import {
     UpdatePassword,
     ChannelAbout,
     ChannelPosts,
+    Chat,
+    NoChatSelected,
 } from './Components';
 
 const router = createBrowserRouter(
@@ -61,6 +64,10 @@ const router = createBrowserRouter(
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
+            <Route path="collabs" element={<CollabsPage />}>
+                <Route path="" element={<NoChatSelected />} />
+                <Route path="chat/:opponentId" element={<Chat />} />
+            </Route>
 
             {/* static pages */}
             <Route path="support" element={<SupportPage />} />

@@ -48,13 +48,14 @@ app.use('/api/categories', categoryRouter);
 app.use('/api/messages', messageRouter);
 
 // production mode
-const __dirname = path.resolve();
+const dirname = path.resolve();
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    app.use(express.static(path.join(dirname, '../client/dist')));
+
     app.get('*', (req, res) => {
         res.sendFile(
-            path.resolve(__dirname, '..', 'client', 'dist', 'index.html')
+            path.resolve(dirname, '..', 'client', 'dist', 'index.html')
         );
     });
 }

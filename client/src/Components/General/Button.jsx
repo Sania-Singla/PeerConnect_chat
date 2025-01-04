@@ -8,7 +8,7 @@ export default function Button({
         <button
             disabled={disabled}
             {...props}
-            className={`disabled:cursor-not-allowed ${className}`}
+            className={`hover:scale-110 transition-all duration-300 disabled:cursor-not-allowed ${className}`}
         >
             {btnText}
         </button>

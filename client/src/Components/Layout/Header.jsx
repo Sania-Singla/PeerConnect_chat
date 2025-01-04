@@ -35,7 +35,7 @@ export default function Header() {
     ));
 
     return (
-        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
+        <header className="drop-shadow-md fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
             <div className="flex items-center justify-center gap-6">
                 {/* hamburgur menu btn */}
                 <Button
@@ -62,7 +62,7 @@ export default function Header() {
                             className="object-cover size-full hover:brightness-95"
                         />
                     </div>
-                    <div>Peer Connect</div>
+                    <div className="hidden xs:block">Peer Connect</div>
                 </Link>
             </div>
 
@@ -136,6 +136,23 @@ export default function Header() {
                     />
                 )}
 
+                {/* collabs btn */}
+                <NavLink
+                    to={'/collabs'}
+                    className={({ isActive }) =>
+                        `${isActive && 'hidden'} p-[1px]`
+                    }
+                >
+                    <Button
+                        btnText={
+                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                                {icons.chat}
+                            </div>
+                        }
+                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                    />
+                </NavLink>
+
                 {/* add post btn */}
                 <NavLink
                     to={'/add'}
@@ -147,7 +164,6 @@ export default function Header() {
                                 {icons.plus}
                             </div>
                         }
-                        onClick={() => {}}
                         className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 </NavLink>

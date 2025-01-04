@@ -390,7 +390,6 @@ export class MongoPosts extends Iposts {
             const commonPipeline = getCommonPipeline2(
                 orderBy,
                 'savedAt',
-                offset,
                 page,
                 limit
             );
