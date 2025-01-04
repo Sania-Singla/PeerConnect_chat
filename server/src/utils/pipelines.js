@@ -1,5 +1,4 @@
 function getCommonPipeline1(categoryId, orderBy, page, limit) {
-    limit = 3;
     return [
         {
             $lookup: {
