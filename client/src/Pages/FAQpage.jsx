@@ -73,8 +73,8 @@ export default function FAQpage() {
                                         animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{
-                                            opacity: { duration: 0.3 },
-                                            height: { duration: 0.5 },
+                                            opacity: { duration: 0.2 },
+                                            height: { duration: 0.3 },
                                         }}
                                     >
                                         <p className="mt-2 text-gray-600">
