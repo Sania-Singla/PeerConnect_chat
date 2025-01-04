@@ -7,9 +7,9 @@ export default function Layout() {
             <Header />
             <hr className="w-full" />
             <Sidebar />
-            <div className="mt-[60px] px-6 py-10 min-h-[calc(100%-60px)] w-full">
+            <main className="mt-[60px] px-6 py-10 min-h-[calc(100%-60px)] w-full">
                 <Outlet />
-            </div>
+            </main>
             <hr className="w-full" />
             <Footer />
             <Popup />

@@ -47,7 +47,7 @@ export default function Footer() {
     }
 
     return (
-        <div className="px-6 pt-6 pb-4 bg-[#f6f6f6]">
+        <footer className="px-6 pt-6 pb-4 bg-[#f6f6f6]">
             <div className="flex flex-wrap justify-between gap-4">
                 <div className="">
                     <p className="text-black font-medium">
@@ -113,6 +113,6 @@ export default function Footer() {
                     {socialElements}
                 </div>
             </div>
-        </div>
+        </footer>
     );
 }

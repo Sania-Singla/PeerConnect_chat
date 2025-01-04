@@ -35,7 +35,7 @@ export default function Header() {
     ));
 
     return (
-        <div className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
+        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
             <div className="flex items-center justify-center gap-6">
                 {/* hamburgur menu btn */}
                 <Button
@@ -177,6 +177,6 @@ export default function Header() {
                     )}
                 </div>
             </div>
-        </div>
+        </header>
     );
 }
