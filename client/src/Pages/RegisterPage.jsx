@@ -31,6 +31,7 @@ export default function RegisterPage() {
     });
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { setUser } = useUserContext();
     const navigate = useNavigate();
 
@@ -129,7 +130,7 @@ export default function RegisterPage() {
             required: true,
         },
         {
-            type: 'password',
+            type: showPassword ? 'text' : 'password',
             name: 'password',
             label: 'Password',
             placeholder: 'Create password',
@@ -158,7 +159,7 @@ export default function RegisterPage() {
                     {field.label} :
                 </label>
             </div>
-            <div>
+            <div className="relative">
                 <input
                     type={field.type}
                     name={field.name}
@@ -169,6 +170,14 @@ export default function RegisterPage() {
                     placeholder={field.placeholder}
                     className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
                 />
+                {field.name === 'password' && (
+                    <div
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="size-[20px] absolute right-0 top-[50%] transform translate-y-[-50%] mr-4 cursor-pointer fill-[#474747]"
+                    >
+                        {showPassword ? icons.eyeOff : icons.eye}
+                    </div>
+                )}
             </div>
             {error[field.name] && (
                 <div className="mt-1 text-red-500 text-sm font-medium">

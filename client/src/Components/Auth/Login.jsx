@@ -12,6 +12,7 @@ export default function Login() {
     });
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { setUser } = useUserContext();
     const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } =
@@ -69,7 +70,7 @@ export default function Login() {
             required: true,
         },
         {
-            type: 'password',
+            type: showPassword ? 'text' : 'password',
             name: 'password',
             label: 'Password',
             value: inputs.password,
@@ -86,7 +87,7 @@ export default function Login() {
                     {field.required && <span className="text-red-500">*</span>}
                 </label>
             </div>
-            <div className=" ">
+            <div className="relative">
                 <input
                     type={field.type}
                     name={field.name}
@@ -96,6 +97,14 @@ export default function Login() {
                     placeholder={field.placeholder}
                     className="shadow-md shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
                 />
+                {field.name === 'password' && (
+                    <div
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="size-[20px] absolute right-0 top-[50%] transform translate-y-[-50%] mr-4 cursor-pointer fill-[#474747]"
+                    >
+                        {showPassword ? icons.eyeOff : icons.eye}
+                    </div>
+                )}
             </div>
         </div>
     ));
