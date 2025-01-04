@@ -2,7 +2,7 @@ import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
 import { getCommonPipeline2 } from '../../utils/index.js';
 
-export class MongoDBusers extends Iusers {
+export class MongoUsers extends Iusers {
     async getUser(searchInput) {
         try {
             return await User.findOne({

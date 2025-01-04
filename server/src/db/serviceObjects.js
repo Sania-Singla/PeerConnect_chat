@@ -5,15 +5,17 @@ import {
     SQLfollowers,
     SQLcomments,
     SQLcategories,
+    SQLmessages,
 } from '../models/SQL/index.js';
 
 import {
-    MongoDBusers,
-    MongoDBposts,
-    MongoDBlikes,
-    MongoDBfollowers,
-    MongoDBcomments,
-    MongoDBcategories,
+    MongoUsers,
+    MongoPosts,
+    MongoLikes,
+    MongoFollowers,
+    MongoComments,
+    MongoCategories,
+    MongoMessages,
 } from '../models/MongoDB/index.js';
 
 export default function getServiceObject(serviceType) {
@@ -33,6 +35,8 @@ export default function getServiceObject(serviceType) {
                         return new SQLfollowers();
                     case 'categories':
                         return new SQLcategories();
+                    case 'SQLmessages':
+                        return new SQLmessages();
                     default: {
                         throw new Error('Unsupported service type');
                     }
@@ -41,17 +45,19 @@ export default function getServiceObject(serviceType) {
             case 'MongoDB': {
                 switch (serviceType) {
                     case 'users':
-                        return new MongoDBusers();
+                        return new MongoUsers();
                     case 'posts':
-                        return new MongoDBposts();
+                        return new MongoPosts();
                     case 'likes':
-                        return new MongoDBlikes();
+                        return new MongoLikes();
                     case 'comments':
-                        return new MongoDBcomments();
+                        return new MongoComments();
                     case 'followers':
-                        return new MongoDBfollowers();
+                        return new MongoFollowers();
                     case 'categories':
-                        return new MongoDBcategories();
+                        return new MongoCategories();
+                    case 'messages':
+                        return new MongoMessages();
                     default: {
                         throw new Error('Unsupported service type');
                     }

@@ -1,15 +1,17 @@
-import { MongoDBusers } from './MongoDBUser.Model.js';
-import { MongoDBposts } from './MongoDBPost.Model.js';
-import { MongoDBfollowers } from './MongoDBFollower.Model.js';
-import { MongoDBlikes } from './MongoDBLike.Model.js';
-import { MongoDBcomments } from './MongoDBComment.Model.js';
-import { MongoDBcategories } from './MongoDBCategory.Model.js';
+import { MongoUsers } from './MongoUser.Model.js';
+import { MongoPosts } from './MongoPost.Model.js';
+import { MongoFollowers } from './MongoFollower.Model.js';
+import { MongoLikes } from './MongoLike.Model.js';
+import { MongoComments } from './MongoComment.Model.js';
+import { MongoCategories } from './MongoCategory.Model.js';
+import { MongoMessages } from './MongoMessage.Model.js';
 
 export {
-    MongoDBusers,
-    MongoDBcomments,
-    MongoDBfollowers,
-    MongoDBlikes,
-    MongoDBposts,
-    MongoDBcategories,
+    MongoUsers,
+    MongoComments,
+    MongoFollowers,
+    MongoLikes,
+    MongoPosts,
+    MongoCategories,
+    MongoMessages,
 };

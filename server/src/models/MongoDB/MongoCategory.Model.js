@@ -1,8 +1,7 @@
-import { NOT_FOUND } from '../../constants/errorCodes.js';
 import { Icategories } from '../../interfaces/category.Interface.js';
 import { Category } from '../../schemas/MongoDB/index.js';
 
-export class MongoDBcategories extends Icategories {
+export class MongoCategories extends Icategories {
     async getCategories() {
         try {
             return await Category.find().lean();
