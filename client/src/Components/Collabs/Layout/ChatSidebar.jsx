@@ -30,7 +30,7 @@ export default function ChatSidebar({ users, onUserSelect }) {
                 <input
                     type="text"
                     placeholder="Search or start new chat"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border bg-transparent border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
 

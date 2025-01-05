@@ -1,4 +1,57 @@
 export const icons = {
+    noChatSelected: (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-full fill-inherit stroke-inherit"
+            strokeWidth={1.5}
+            viewBox="0 0 24 24"
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8 10h.01M16 10h.01M12 18h.01M8 14h.01M12 14h.01M16 14h.01M7.992 6.436a.75.75 0 01-.992-1.113 9 9 0 0112.586 0 .75.75 0 01-.992 1.113 7.5 7.5 0 00-10.602 0z"
+            />
+            <circle cx="12" cy="12" r="9" stroke="inherit" strokeWidth="1.5" />
+        </svg>
+    ),
+    emoji: (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="fill-inherit size-full stroke-inherit"
+        >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+            <line x1="9" x2="9.01" y1="9" y2="9" />
+            <line x1="15" x2="15.01" y1="9" y2="9" />
+        </svg>
+    ),
+    link: (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="fill-inherit size-full stroke-inherit"
+        >
+            <path d="M13.234 20.252 21 12.3" />
+            <path d="m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486" />
+        </svg>
+    ),
+    send: (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="fill-inherit size-full stroke-inherit"
+        >
+            <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+            <path d="m21.854 2.147-10.94 10.939" />
+        </svg>
+    ),
     loading: (
         <svg
             aria-hidden="true"
@@ -67,17 +120,20 @@ export const icons = {
     video: (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 576 512"
-            className="size-full fill-inherit stroke-inherit"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="fill-inherit size-full stroke-inherit"
         >
-            <path d="M0 128C0 92.7 28.7 64 64 64l256 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2l0 256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 337.1l0-17.1 0-128 0-17.1 14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z" />
+            <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+            <rect x="1.5" y="5" width="14" height="13" rx="2" />
         </svg>
     ),
     cross: (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            strokeWidth="2"
+            strokeWidth="2.3"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="fill-inherit size-full stroke-inherit"

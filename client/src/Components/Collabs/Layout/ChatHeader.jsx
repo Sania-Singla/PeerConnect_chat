@@ -43,10 +43,10 @@ export default function ChatHeader({ user }) {
             {/* Right Section */}
             <div className="flex items-center gap-4">
                 <Button
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-[9px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     title="Start Video Call"
                     btnText={
-                        <div className="size-[20px] fill-[#242424] group-hover:fill-[#4977ec]">
+                        <div className="size-[23px] fill-none stroke-[#434343] hover:stroke-[#4977ec]">
                             {icons.video}
                         </div>
                     }
@@ -56,7 +56,7 @@ export default function ChatHeader({ user }) {
                     className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     title="Close Chat"
                     btnText={
-                        <div className="size-[20px] stroke-[#242424] group-hover:stroke-red-600">
+                        <div className="size-[20px] stroke-[#434343] group-hover:stroke-red-600">
                             {icons.cross}
                         </div>
                     }

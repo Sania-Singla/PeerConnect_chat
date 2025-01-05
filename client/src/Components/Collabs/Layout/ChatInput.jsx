@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Button } from '../..';
+import { icons } from '../../../Assets/icons';
 
 export default function ChatInput({ onSendMessage }) {
     const [message, setMessage] = useState('');
@@ -12,23 +14,27 @@ export default function ChatInput({ onSendMessage }) {
 
     return (
         <div className="p-4 border-t border-gray-200 bg-white flex items-center space-x-3">
+            {/* emoji Icon */}
+            <Button
+                className="group"
+                title="emoji"
+                btnText={
+                    <div className="size-6 fill-none stroke-[#5f5f5f] hover:stroke-[#4977ec]">
+                        {icons.emoji}
+                    </div>
+                }
+            />
+
             {/* Attachment Icon */}
-            <button className="text-gray-500 hover:text-blue-500">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M16.5 12.75V5.25a3.75 3.75 0 10-7.5 0v10.5a2.25 2.25 0 104.5 0V6.75"
-                    />
-                </svg>
-            </button>
+            <Button
+                className="group"
+                title="Attachment"
+                btnText={
+                    <div className="size-6 fill-none stroke-[#5f5f5f] hover:stroke-[#4977ec]">
+                        {icons.link}
+                    </div>
+                }
+            />
 
             {/* Input Field */}
             <input
@@ -40,25 +46,16 @@ export default function ChatInput({ onSendMessage }) {
             />
 
             {/* Send Button */}
-            <button
+            <Button
                 onClick={handleSend}
-                className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full flex items-center"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 12l-7.5-7.5m7.5 7.5L12 4.5m7.5 7.5l-7.5 7.5m7.5-7.5H4.5"
-                    />
-                </svg>
-            </button>
+                title="send"
+                className="group"
+                btnText={
+                    <div className="group-hover:stroke-[#4977ec] size-6 fill-none stroke-[#5f5f5f]">
+                        {icons.send}
+                    </div>
+                }
+            />
         </div>
     );
 }
