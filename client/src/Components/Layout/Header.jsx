@@ -36,7 +36,7 @@ export default function Header() {
 
     return (
         <header className="drop-shadow-md fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-6 font-medium flex items-center justify-between gap-2">
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-4">
                 {/* hamburgur menu btn */}
                 <Button
                     btnText={
@@ -53,16 +53,16 @@ export default function Header() {
                 {/* logo */}
                 <Link
                     to={'/'}
-                    className="flex items-center justify-center gap-4 text-nowrap font-medium text-xl"
+                    className="flex items-center justify-center gap-3 text-nowrap font-medium text-xl"
                 >
-                    <div className="overflow-hidden rounded-full size-[40px] drop-shadow-md">
+                    <div className="overflow-hidden rounded-full size-[40px] drop-shadow-md hover:scale-110 transition-all duration-300">
                         <img
                             src={LOGO}
                             alt="peer connect logo"
                             className="object-cover size-full hover:brightness-95"
                         />
                     </div>
-                    <div className="hidden xs:block">Peer Connect</div>
+                    <div className="hidden xs:block hover:scale-110 transition-all duration-300">Peer Connect</div>
                 </Link>
             </div>
 

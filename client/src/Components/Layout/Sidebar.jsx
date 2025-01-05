@@ -130,7 +130,7 @@ export default function Sidebar() {
                     className="z-[10] h-full fixed inset-0 flex justify-start"
                 >
                     <div className="w-[280px] px-3 bg-[#f6f6f6] drop-shadow-md flex flex-col items-start justify-start h-full">
-                        <div className="h-[60px] pl-2 gap-5 w-full flex items-center justify-between">
+                        <div className="h-[60px] pl-3 gap-5 w-full flex items-center justify-between">
                             {/* hamburgur menu btn */}
                             <Button
                                 btnText={
@@ -152,6 +152,7 @@ export default function Sidebar() {
                                     <Link
                                         to={`/channel/${user?.user_id}`}
                                         onClick={() => setShowSideBar(false)}
+                                        className='hover:scale-110 transition-all duration-300'
                                     >
                                         <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
                                             <img
