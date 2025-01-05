@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../../../Assets/icons';
+import { useChatContext } from '../../../Context';
 
 export default function ChatSidebar({ users, onUserSelect }) {
+    const { setSelectedChat } = useChatContext();
     // Example `users` prop structure:
     users = [
         {
@@ -39,7 +41,10 @@ export default function ChatSidebar({ users, onUserSelect }) {
                         <button
                             key={user.id}
                             // onClick={() => onUserSelect(user)}
-                            onClick={() => navigate('chat/456')}
+                            onClick={() => {
+                                setSelectedChat(user);
+                                navigate('chat/456');
+                            }}
                             className="flex items-center p-3 hover:bg-gray-100 focus:outline-none w-full text-left"
                         >
                             {/* Avatar Wrapper */}

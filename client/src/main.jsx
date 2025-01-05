@@ -40,6 +40,7 @@ import {
     PopupContextProvider,
     SideBarContextProvider,
     SearchContextProvider,
+    ChatContextProvider,
 } from './Context';
 
 import {
@@ -138,13 +139,15 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
-        <PopupContextProvider>
-            <SideBarContextProvider>
-                <SearchContextProvider>
-                    <RouterProvider router={router} />
-                </SearchContextProvider>
-            </SideBarContextProvider>
-        </PopupContextProvider>
+        <ChatContextProvider>
+            <PopupContextProvider>
+                <SideBarContextProvider>
+                    <SearchContextProvider>
+                        <RouterProvider router={router} />
+                    </SearchContextProvider>
+                </SideBarContextProvider>
+            </PopupContextProvider>
+        </ChatContextProvider>
     </UserContextProvider>
     // </StrictMode>,
 );
