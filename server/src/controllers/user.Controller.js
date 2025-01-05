@@ -229,6 +229,23 @@ const getCurrentUser = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) =>{
+    try{
+        const users = await userObject.getUsers();
+        if (users.length) {
+            return res.status(OK).json(users);
+        } else {
+            return res.status(OK).json({ message: 'no users found' });
+        }
+    }catch(err){
+        console.log(err);
+        return res.status(SERVER_ERROR).json({
+            message: 'something went wrong while getting all user.',
+            error: err.message,
+        });
+    }
+}
+
 const getChannelProfile = async (req, res) => {
     try {
         const channelId = req.channel.user_id;
@@ -457,6 +474,7 @@ export {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
+    getAllUsers,
     getWatchHistory,
     clearWatchHistory,
 };
