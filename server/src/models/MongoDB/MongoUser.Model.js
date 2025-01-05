@@ -3,6 +3,13 @@ import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
 import { getCommonPipeline2 } from '../../utils/index.js';
 
 export class MongoUsers extends Iusers {
+    async getUsers(){
+        try{
+            return await User.find().lean();
+        }catch(err){
+            throw err;
+        }
+    }
     async getUser(searchInput) {
         try {
             return await User.findOne({
