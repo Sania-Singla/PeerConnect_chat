@@ -1,5 +1,5 @@
 import getServiceObject from '../../db/serviceObjects.js';
-import { SERVER_ERROR, OK } from '../constants/errorCodes.js';
+import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
 
 const colabObject = getServiceObject('colabs');
 
@@ -45,12 +45,19 @@ const removeCollaboration = async (req, res) => {
 
 const createGroup = async (req, res) => {
     try {
-        const { admins, normalMembers = [] } = req.body;
+        const { members = [] } = req.body;
+        const myId = req.user.user_id;
         const colabId = uuid();
 
+        if (!Array.isArray(members)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ messages: 'members need to be sent as an array' });
+        }
+
         const group = await colabObject.createGroup(
-            admins,
-            normalMembers,
+            myId, // admin
+            members,
             colabId
         );
 

@@ -15,6 +15,7 @@ export class MongoColabs extends Icolabs {
         }
     }
 
+    // need for brain stroming
     async removeCollaboration(colabId) {
         try {
             return await Colab.deleteMany({
@@ -25,9 +26,14 @@ export class MongoColabs extends Icolabs {
         }
     }
 
-    async createGroup(admins, normalMembers, colabId) {
+    async createGroup(admin, normalMembers, colabId) {
         try {
-            const group = await Colab.create({});
+            const group = await Colab.create({
+                colab_id: colabId,
+                admins: [admin],
+                normalMembers,
+            });
+            return group.toObject();
         } catch (err) {
             throw err;
         }
@@ -56,6 +62,7 @@ export class MongoColabs extends Icolabs {
         }
     }
 
+    // need for brain stroming
     async deleteGroup(colabId) {
         try {
             return await Colab.findOneAndDelete({ colab_id: colabId }).lean();
