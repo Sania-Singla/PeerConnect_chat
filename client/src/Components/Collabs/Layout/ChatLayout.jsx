@@ -4,8 +4,9 @@ import { useChatContext } from '../../../Context';
 
 export default function ChatLayout() {
     const { selectedChat } = useChatContext();
+    
     return (
-        <div className="w-full h-full flex">
+        <div className="fixed top-[60px] inset-0 flex">
             <ChatSidebar />
             <div className="flex flex-col flex-1">
                 {selectedChat && <ChatHeader />}
