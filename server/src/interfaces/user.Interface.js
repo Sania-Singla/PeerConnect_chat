@@ -1,4 +1,7 @@
 export class Iusers {
+    async getUsers(){
+        throw new Error('Method getUsers not overwritten.');
+    }
     async getUser(searchInput) {
         throw new Error('Method getUser not overwritten.');
     }
