@@ -1,4 +1,4 @@
-import getServiceObject from '../../db/serviceObjects.js';
+import getServiceObject from '../db/serviceObjects.js';
 import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
 
 const colabObject = getServiceObject('colabs');

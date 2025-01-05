@@ -18,7 +18,7 @@ export class MongoColabs extends Icolabs {
     // need for brain stroming
     async removeCollaboration(colabId) {
         try {
-            return await Colab.deleteMany({
+            return await Colab.findOneAndDelete({
                 colab_id: colabId,
             });
         } catch (err) {

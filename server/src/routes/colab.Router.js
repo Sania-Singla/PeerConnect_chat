@@ -9,7 +9,7 @@ import {
     removeSomeoneFromGroup,
     addSomeoneToGroup,
     promoteSomeoneToAdmin,
-} from '../controllers/message.Controller.js';
+} from '../controllers/colab.Controller.js';
 
 export const colabRouter = express.Router();
 

@@ -12,7 +12,7 @@ const sendMessage = async (req, res) => {
         const { text } = req.body;
         let attachment = req.file?.path;
 
-        if (!content && !attachment) {
+        if (!text && !attachment) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
@@ -41,7 +41,7 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
     try {
         const { userId } = req.params;
-        const myId = req.user.user_id; 
+        const myId = req.user.user_id;
 
         const result = await messageObject.getMessages(myId, userId);
 
