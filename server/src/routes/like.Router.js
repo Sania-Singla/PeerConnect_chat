@@ -1,15 +1,14 @@
 import express from 'express';
 export const likeRouter = express.Router();
-import {
-    verifyJwt,
-    doesCommentExist,
-    doesPostExist,
-} from '../middlewares/index.js';
+import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
 import {
     getLikedPosts,
     toggleCommentLike,
     togglePostLike,
 } from '../controllers/like.Controller.js';
+
+const doesPostExist = doesResourceExist('post', 'postId', 'post');
+const doesCommentExist = doesResourceExist('comment', 'commentId', 'comment');
 
 likeRouter.use(verifyJwt);
 

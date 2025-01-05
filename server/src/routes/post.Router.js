@@ -4,9 +4,8 @@ import {
     upload,
     verifyJwt,
     optionalVerifyJwt,
-    isPostOwner,
-    doesChannelExist,
-    doesPostExist,
+    doesResourceExist,
+    isOwner,
 } from '../middlewares/index.js';
 
 import {
@@ -21,6 +20,10 @@ import {
     getSavedPosts,
     toggleSavePost,
 } from '../controllers/post.Controller.js';
+
+const isPostOwner = isOwner('post', 'post_ownerId');
+const doesPostExist = doesResourceExist('post', 'postId', 'post');
+const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
 
 postRouter.route('/all').get(getRandomPosts);
 

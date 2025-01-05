@@ -3,13 +3,13 @@ import { model, Schema } from 'mongoose';
 const postLikeSchema = new Schema({
     post_id: {
         type: String,
-        ref: 'posts',
+        ref: 'Post',
         required: true,
         index: true,
     },
     user_id: {
         type: String,
-        ref: 'users',
+        ref: 'User',
         required: true,
         index: true,
     },
@@ -26,13 +26,13 @@ const postLikeSchema = new Schema({
 const commentLikeSchema = new Schema({
     comment_id: {
         type: String,
-        ref: 'comments',
+        ref: 'Comment',
         required: true,
         index: true,
     },
     user_id: {
         type: String,
-        ref: 'users',
+        ref: 'User',
         required: true,
     },
     is_liked: {

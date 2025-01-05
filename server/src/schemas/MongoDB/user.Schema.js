@@ -54,12 +54,12 @@ const savedPostSchema = new Schema({
     post_id: {
         type: String,
         required: true,
-        ref: 'posts',
+        ref: 'Post',
     },
     user_id: {
         type: String,
         required: true,
-        ref: 'users',
+        ref: 'User',
         index: true,
     },
     savedAt: {
@@ -72,12 +72,12 @@ const watchHistorySchema = new Schema({
     post_id: {
         type: String,
         required: true,
-        ref: 'posts',
+        ref: 'Post',
     },
     user_id: {
         type: String,
         required: true,
-        ref: 'users',
+        ref: 'User',
         index: true,
     },
     watchedAt: {

@@ -1,6 +1,6 @@
 import express from 'express';
 export const categoryRouter = express.Router();
-import { verifyJwt, doesCategoryExist } from '../middlewares/index.js';
+import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
 
 import {
     addCategory,
@@ -8,6 +8,12 @@ import {
     getCategories,
     updateCategory,
 } from '../controllers/category.Controller.js';
+
+const doesCategoryExist = doesResourceExist(
+    'category',
+    'categoryId',
+    'category'
+);
 
 categoryRouter
     .route('/category/:categoryId')

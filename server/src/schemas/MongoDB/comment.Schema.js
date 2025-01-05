@@ -8,13 +8,14 @@ const commentSchema = new Schema({
     },
     user_id: {
         type: String,
-        ref: 'users',
+        ref: 'User',
         required: true,
     },
     post_id: {
         type: String,
-        ref: 'posts',
+        ref: 'Post',
         required: true,
+        index: true,
     },
     comment_content: {
         type: String,

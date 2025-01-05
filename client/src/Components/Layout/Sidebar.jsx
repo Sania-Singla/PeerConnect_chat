@@ -152,7 +152,7 @@ export default function Sidebar() {
                                     <Link
                                         to={`/channel/${user?.user_id}`}
                                         onClick={() => setShowSideBar(false)}
-                                        className='hover:scale-110 transition-all duration-300'
+                                        className="hover:scale-110 transition-all duration-300"
                                     >
                                         <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
                                             <img

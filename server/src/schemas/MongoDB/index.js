@@ -5,6 +5,7 @@ import { Comment } from './comment.Schema.js';
 import { PostLike, CommentLike } from './like.Schema.js';
 import { Post, PostView } from './post.Schema.js';
 import { Message } from './message.Schema.js';
+import { Colab } from './colab.Schema.js';
 
 export {
     User,
@@ -18,4 +19,5 @@ export {
     PostLike,
     PostView,
     Message,
+    Colab,
 };

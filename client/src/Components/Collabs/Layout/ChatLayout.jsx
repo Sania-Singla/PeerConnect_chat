@@ -4,7 +4,7 @@ import { useChatContext } from '../../../Context';
 
 export default function ChatLayout() {
     const { selectedChat } = useChatContext();
-    
+
     return (
         <div className="fixed top-[60px] inset-0 flex">
             <ChatSidebar />

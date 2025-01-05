@@ -3,9 +3,8 @@ export const commentRouter = express.Router();
 import {
     verifyJwt,
     optionalVerifyJwt,
-    isCommentOwner,
-    doesPostExist,
-    doesCommentExist,
+    isOwner,
+    doesResourceExist,
 } from '../middlewares/index.js';
 import {
     addComment,
@@ -14,6 +13,10 @@ import {
     getComments,
     getComment,
 } from '../controllers/comment.Controller.js';
+
+const isCommentOwner = isOwner('comment', 'user_id');
+const doesPostExist = doesResourceExist('post', 'postId', 'post');
+const doesCommentExist = doesResourceExist('comment', 'commentId', 'comment');
 
 commentRouter
     .route('/post/:postId')

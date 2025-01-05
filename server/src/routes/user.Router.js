@@ -4,7 +4,7 @@ import {
     upload,
     verifyJwt,
     optionalVerifyJwt,
-    doesChannelExist,
+    doesResourceExist,
 } from '../middlewares/index.js';
 
 import {
@@ -22,6 +22,8 @@ import {
     getWatchHistory,
     clearWatchHistory,
 } from '../controllers/user.Controller.js';
+
+const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
 
 userRouter.route('/register').post(
     upload.fields([

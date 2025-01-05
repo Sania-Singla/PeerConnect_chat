@@ -154,7 +154,7 @@ const addPost = async (req, res) => {
     let postImage;
     try {
         const { title, content, categoryId } = req.body;
-        console.log(req.body);
+
         if (!title || !content || !req.file)
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
 

@@ -5,6 +5,7 @@ import { commentRouter } from './comment.Router.js';
 import { likeRouter } from './like.Router.js';
 import { categoryRouter } from './category.Router.js';
 import { messageRouter } from './message.Router.js';
+import { colabRouter } from './colab.Router.js';
 
 export {
     userRouter,
@@ -14,4 +15,5 @@ export {
     likeRouter,
     categoryRouter,
     messageRouter,
+    colabRouter,
 };

@@ -1,12 +1,14 @@
 import express from 'express';
 export const followerRouter = express.Router();
-import { doesChannelExist, verifyJwt } from '../middlewares/index.js';
+import { doesResourceExist, verifyJwt } from '../middlewares/index.js';
 
 import {
     getFollowers,
     getFollowings,
     toggleFollow,
 } from '../controllers/follower.Controller.js';
+
+const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
 
 // followerRouter.use(doesChannelExist);  // causes error because the params might have not been set yet (waterfall effect)
 

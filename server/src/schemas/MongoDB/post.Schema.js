@@ -21,7 +21,7 @@ const postSchema = new Schema({
     },
     post_ownerId: {
         type: String,
-        ref: 'users',
+        ref: 'User',
         required: true,
     },
     post_visibility: {
@@ -31,7 +31,7 @@ const postSchema = new Schema({
     },
     post_category: {
         type: String,
-        ref: 'categories',
+        ref: 'Category',
         required: true,
     },
     post_createdAt: {
@@ -47,13 +47,13 @@ const postSchema = new Schema({
 const postViewSchema = new Schema({
     post_id: {
         type: String,
-        ref: 'posts',
+        ref: 'Post',
         required: true,
         index: true,
     },
     user_identifier: {
         type: String,
-        ref: 'users',
+        ref: 'User',
         required: true,
     },
 });

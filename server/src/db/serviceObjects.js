@@ -35,7 +35,7 @@ export default function getServiceObject(serviceType) {
                         return new SQLfollowers();
                     case 'categories':
                         return new SQLcategories();
-                    case 'SQLmessages':
+                    case 'messages':
                         return new SQLmessages();
                     default: {
                         throw new Error('Unsupported service type');

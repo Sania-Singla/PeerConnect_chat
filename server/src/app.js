@@ -37,6 +37,7 @@ import {
     likeRouter,
     categoryRouter,
     messageRouter,
+    colabRouter,
 } from './routes/index.js';
 
 app.use('/api/users', userRouter);
@@ -46,6 +47,7 @@ app.use('/api/comments', commentRouter);
 app.use('/api/likes', likeRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/messages', messageRouter);
+app.use('/api/colabs', colabRouter);
 
 // production mode
 const dirname = path.resolve();
