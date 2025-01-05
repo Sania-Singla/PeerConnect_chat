@@ -63,7 +63,7 @@ export default function Header() {
                         />
                     </div>
                     <div className="hidden xs:block hover:scale-110 transition-all duration-300">
-                        Peer Connect
+                        PeerConnect
                     </div>
                 </Link>
             </div>

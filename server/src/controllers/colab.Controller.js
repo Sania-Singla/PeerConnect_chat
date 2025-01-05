@@ -94,8 +94,13 @@ const leaveGroup = async (req, res) => {
         const { user_id } = req.user;
         const { colabId } = req.params;
 
-        await colabObject.leaveGroup(colabId, user_id);
-
+        const updatedGroup = await colabObject.leaveGroup(colabId, user_id);
+        if (!updatedGroup.admins.length && !updatedGroup.normalMembers.length) {
+            await colabObject.deleteGroup(colabId);
+            return res.status(OK).json({
+                message: 'successfully left the group & group has been deleted',
+            });
+        }
         return res.status(OK).json({
             message: 'successfully left the group',
         });

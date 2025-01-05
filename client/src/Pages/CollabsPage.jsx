@@ -7,7 +7,7 @@ export default function CollabsPage() {
     const { setSelectedChat } = useChatContext();
 
     useEffect(() => {
-        setSelectedChat(null);
+        setSelectedChat(null); // fetch the params user and set = that
     }, []);
 
     return user ? <ChatLayout /> : <div>Login to Collaborate with others</div>;
