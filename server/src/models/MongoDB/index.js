@@ -5,6 +5,7 @@ import { MongoLikes } from './MongoLike.Model.js';
 import { MongoComments } from './MongoComment.Model.js';
 import { MongoCategories } from './MongoCategory.Model.js';
 import { MongoMessages } from './MongoMessage.Model.js';
+import { MongoColabs } from './MongoColab.Model.js';
 
 export {
     MongoUsers,
@@ -14,4 +15,5 @@ export {
     MongoPosts,
     MongoCategories,
     MongoMessages,
+    MongoColabs,
 };

@@ -4,11 +4,11 @@ import { sendMessage, getMessages } from '../controllers/message.Controller.js';
 
 export const messageRouter = express.Router();
 
-const doesReciverExist = doesResourceExist('user', 'reciverId', 'reciver');
+const doesOtherUserExist = doesResourceExist('user', 'userId', 'otherUser');
 
 messageRouter.use(verifyJwt);
 
 messageRouter
-    .route('/:recieverId')
-    .get(doesReciverExist, getMessages)
-    .post(doesReciverExist, sendMessage);
+    .route('/:userId')
+    .get(doesOtherUserExist, getMessages)
+    .post(doesOtherUserExist, sendMessage);

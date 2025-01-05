@@ -16,6 +16,7 @@ import {
     MongoComments,
     MongoCategories,
     MongoMessages,
+    MongoColabs,
 } from '../models/MongoDB/index.js';
 
 export default function getServiceObject(serviceType) {
@@ -58,6 +59,8 @@ export default function getServiceObject(serviceType) {
                         return new MongoCategories();
                     case 'messages':
                         return new MongoMessages();
+                    case 'colabs':
+                        return new MongoColabs();
                     default: {
                         throw new Error('Unsupported service type');
                     }

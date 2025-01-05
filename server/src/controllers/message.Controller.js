@@ -7,8 +7,8 @@ const messageObject = getServiceObject('messages');
 
 const sendMessage = async (req, res) => {
     try {
-        const recieverId = req.reciever.user_id;
-        const senderId = req.user.user_id; // my ID
+        const { userId } = req.params;
+        const myId = req.user.user_id;
         const { text } = req.body;
         let attachment = req.file?.path;
 
@@ -22,8 +22,8 @@ const sendMessage = async (req, res) => {
 
         const result = await messageObject.sendMessage(
             uuid(), // messageId
-            senderId,
-            recieverId,
+            myId,
+            userId,
             text,
             attachment
         );
@@ -40,10 +40,10 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
     try {
-        const recieverId = req.reciever.reciever_id;
-        const senderId = req.user.user_id; // my ID
+        const { userId } = req.params;
+        const myId = req.user.user_id; 
 
-        const result = await messageObject.getMessages(senderId, recieverId);
+        const result = await messageObject.getMessages(myId, userId);
 
         if (result.length) {
             return res.status(OK).json(result);
@@ -58,7 +58,5 @@ const getMessages = async (req, res) => {
         });
     }
 };
-
-const 
 
 export { getMessages, sendMessage };

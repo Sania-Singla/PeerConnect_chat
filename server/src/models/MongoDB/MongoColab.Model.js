@@ -25,7 +25,7 @@ export class MongoColabs extends Icolabs {
         }
     }
 
-    async createGroup(admins, normalMembers = [], colabId) {
+    async createGroup(admins, normalMembers, colabId) {
         try {
             const group = await Colab.create({});
         } catch (err) {

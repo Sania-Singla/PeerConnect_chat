@@ -1,22 +1,43 @@
-import { SERVER_ERROR } from '../constants/errorCodes';
+import getServiceObject from '../../db/serviceObjects.js';
+import { SERVER_ERROR, OK } from '../constants/errorCodes.js';
+
+const colabObject = getServiceObject('colabs');
 
 const addCollaboration = async (req, res) => {
     try {
+        const { userId } = req.params;
+        const myId = req.user.user_id;
+
+        const colab = await colabObject.addCollaboration(
+            uuid(), //colabId
+            myId,
+            userId
+        );
+
+        return res.status(OK).json(colab);
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while adding the collaboration',
+            message: 'Something went wrong while adding the collaboration',
             error: err.message,
         });
     }
 };
 
+// what happens on other side
 const removeCollaboration = async (req, res) => {
     try {
+        const { colabId } = req.params;
+
+        await colabObject.removeCollaboration(colabId);
+
+        return res.status(OK).json({
+            message: 'collaboration removed successfully',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while removing the collaboration',
+            message: 'Something went wrong while removing the collaboration',
             error: err.message,
         });
     }
@@ -24,10 +45,20 @@ const removeCollaboration = async (req, res) => {
 
 const createGroup = async (req, res) => {
     try {
+        const { admins, normalMembers = [] } = req.body;
+        const colabId = uuid();
+
+        const group = await colabObject.createGroup(
+            admins,
+            normalMembers,
+            colabId
+        );
+
+        return res.status(OK).json(group);
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while creating the group',
+            message: 'Something went wrong while creating the group',
             error: err.message,
         });
     }
@@ -35,10 +66,17 @@ const createGroup = async (req, res) => {
 
 const deleteGroup = async (req, res) => {
     try {
+        const { colabId } = req.params;
+
+        await colabObject.deleteGroup(colabId);
+
+        return res.status(OK).json({
+            message: 'group deleted successfully',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while deleting the group',
+            message: 'Something went wrong while deleting the group',
             error: err.message,
         });
     }
@@ -46,10 +84,18 @@ const deleteGroup = async (req, res) => {
 
 const leaveGroup = async (req, res) => {
     try {
+        const { user_id } = req.user;
+        const { colabId } = req.params;
+
+        await colabObject.leaveGroup(colabId, user_id);
+
+        return res.status(OK).json({
+            message: 'successfully left the group',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while leaving the group',
+            message: 'Something went wrong while leaving the group',
             error: err.message,
         });
     }
@@ -57,11 +103,18 @@ const leaveGroup = async (req, res) => {
 
 const removeSomeoneFromGroup = async (req, res) => {
     try {
+        const { colabId, userId } = req.params;
+
+        await colabObject.removeSomeoneFromGroup(colabId, userId);
+
+        return res.status(OK).json({
+            message: 'user removed from group successfully',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
             message:
-                'something went wrong while removing someone form the group',
+                'Something went wrong while removing someone from the group',
             error: err.message,
         });
     }
@@ -69,10 +122,17 @@ const removeSomeoneFromGroup = async (req, res) => {
 
 const addSomeoneToGroup = async (req, res) => {
     try {
+        const { colabId, userId } = req.params;
+
+        await colabObject.addSomeoneToGroup(colabId, userId);
+
+        return res.status(OK).json({
+            message: 'user added to group successfully',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while adding someone to the group',
+            message: 'Something went wrong while adding someone to the group',
             error: err.message,
         });
     }
@@ -80,11 +140,17 @@ const addSomeoneToGroup = async (req, res) => {
 
 const promoteSomeoneToAdmin = async (req, res) => {
     try {
+        const { colabId, userId } = req.params;
+
+        await colabObject.promoteToAdmin(colabId, userId);
+
+        return res.status(OK).json({
+            message: 'user promoted to admin successfully',
+        });
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({
-            message:
-                'something went wrong while promoting someone as admin of the group',
+            message: 'Something went wrong while promoting someone to admin',
             error: err.message,
         });
     }
