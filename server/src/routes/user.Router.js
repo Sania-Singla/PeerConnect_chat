@@ -19,6 +19,7 @@ import {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
+    getAllUsers,
     getWatchHistory,
     clearWatchHistory,
 } from '../controllers/user.Controller.js';
@@ -50,6 +51,8 @@ userRouter.route('/logout').patch(logoutUser);
 userRouter.route('/delete').delete(deleteAccount);
 
 userRouter.route('/current').get(getCurrentUser);
+
+userRouter.route('/allUsers').get(getAllUsers);
 
 userRouter.route('/account').patch(updateAccountDetails);
 
