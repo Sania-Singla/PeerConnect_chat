@@ -8,11 +8,11 @@ const chatObject = getServiceObject('chats');
 const addChat = async (req, res) => {
     try {
         const myId = req.user.user_id;
-        const otherUserId = req.params.userId;
+        const { userId } = req.params;
 
         // check if both users exists
 
-        const chat = await chatObject.addChat(uuid(), [myId, otherUserId]);
+        const chat = await chatObject.addChat(uuid(), [myId, userId]);
 
         return res.status(OK).json(chat);
     } catch (err) {
@@ -27,9 +27,11 @@ const addChat = async (req, res) => {
 const deleteChat = async (req, res) => {
     try {
         const { chatId } = req.params;
+        // or use myId & userId
+        // const myId = req.user.user_id;
+        // const { userId } = req.params;
 
         // check if chat exists
-
         await chatObject.deleteChat(chatId);
 
         return res.status(OK).json({ message: 'chat deleted successfully' });
@@ -67,7 +69,7 @@ const sendMessage = async (req, res) => {
     try {
         // just the db part right now
         const myId = req.user.user_id;
-        const otherUserId = req.params.userId;
+        const chatId = req.params;
         const { text } = req.body;
         let attachement = req.file?.path;
 
@@ -81,8 +83,8 @@ const sendMessage = async (req, res) => {
 
         const message = await chatObject.sendMessage(
             uuid(), // messageId
+            chatId,
             myId,
-            otherUserId,
             text,
             attachement
         );
