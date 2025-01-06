@@ -4,11 +4,11 @@ import { useChatContext, useSideBarContext } from '../../../Context';
 import { Button } from '../../';
 import { LOGO } from '../../../Constants/constants';
 
-export default function ChatSidebar({ users, onUserSelect }) {
+export default function ChatSidebar() {
     const { setSelectedChat } = useChatContext();
     const { setShowSideBar } = useSideBarContext();
     // Example `users` prop structure:
-    users = [
+    const users = [
         {
             id: 1,
             name: 'John Doe',
@@ -86,7 +86,6 @@ export default function ChatSidebar({ users, onUserSelect }) {
                             }}
                             className="flex items-center hover:bg-gray-100 focus:outline-none w-full text-left"
                         >
-                            {/* Avatar Wrapper */}
                             <div className="relative">
                                 {/* Avatar */}
                                 {user?.avatar ? (
@@ -106,6 +105,7 @@ export default function ChatSidebar({ users, onUserSelect }) {
                                     <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-white rounded-full"></span>
                                 )}
                             </div>
+                            
                             {/* User Info */}
                             <div className="ml-3 flex-1">
                                 <div className="flex justify-between items-center">
