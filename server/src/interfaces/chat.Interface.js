@@ -1,1 +1,1 @@
-export class IindividualChats {}
+export class Ichats {}

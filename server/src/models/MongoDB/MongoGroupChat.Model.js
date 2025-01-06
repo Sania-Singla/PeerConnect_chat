@@ -6,7 +6,14 @@ import {
 } from '../../schemas/MongoDB/index.js';
 
 export class MongoGroupChats extends IGroupChats {
-    async addCollaboration(colabId, myId, otherUserId) {
+    async createGroup(groupId, groupName, createdBy, memberIds) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async leaveGroup(groupId, myId) {
         try {
         } catch (err) {
             throw err;
@@ -14,50 +21,49 @@ export class MongoGroupChats extends IGroupChats {
     }
 
     // need for brain stroming
-    async removeCollaboration(colabId) {
+    async deleteGroup(groupId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async createGroup(admin, normalMembers, colabId) {
+    async getParticipants(groupId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async leaveGroup(colabId, userId) {
+    async getAdmins(groupId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    // need for brain stroming
-    async deleteGroup(colabId) {
+    async getNormalMembers(groupId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async removeSomeoneFromGroup(colabId, userId) {
+    async removeSomeoneFromGroup(groupId, userId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async addSomeoneToGroup(colabId, userId) {
+    async addSomeoneToGroup(groupId, userId) {
         try {
         } catch (err) {
             throw err;
         }
     }
 
-    async promoteToAdmin(colabId, userId) {
+    async promoteSomeoneToAdmin(groupId, userId) {
         try {
         } catch (err) {
             throw err;

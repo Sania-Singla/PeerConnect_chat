@@ -37,8 +37,8 @@ const deleteGroup = async (req, res) => {
 
         // inly delete the group if there are no members in the group
 
-        const members = await groupObject.getMembers(groupId);
-        if (members.length) {
+        const {admins, normalMembers} = await groupObject.getParticipants(groupId);
+        if (admins.length || normalMembers.length) {
             return res
                 .status(BAD_REQUEST)
                 .json({ message: 'can not delete group with members' });
@@ -156,11 +156,9 @@ const promoteSomeoneToAdmin = async (req, res) => {
         // we should be an admin to make someone admin
         const admins = await groupObject.getAdmins(groupId);
         if (!admins.includes(myId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({
-                    message: 'only admins can promote other members to admin',
-                });
+            return res.status(BAD_REQUEST).json({
+                message: 'only admins can promote other members to admin',
+            });
         } else {
             await groupObject.promoteSomeoneToAdmin(groupId, userId);
             return res

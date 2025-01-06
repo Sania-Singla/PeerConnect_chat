@@ -1,8 +1,6 @@
 import express from 'express';
 import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
 import {
-    addCollaboration,
-    removeCollaboration,
     createGroup,
     deleteGroup,
     leaveGroup,
@@ -17,14 +15,6 @@ const doesColabExist = doesResourceExist('colab', 'colabId', 'colab');
 const doesOtherUserExist = doesResourceExist('user', 'userId', 'otherUser');
 
 groupChatRouter.use(verifyJwt);
-
-groupChatRouter
-    .route('/colaboration/add/:userId')
-    .post(doesOtherUserExist, addCollaboration);
-
-groupChatRouter
-    .route('/remove/:colabId')
-    .delete(doesColabExist, removeCollaboration);
 
 groupChatRouter.route('/group/create').post(createGroup);
 
