@@ -4,7 +4,7 @@ import { followerRouter } from './follower.Router.js';
 import { commentRouter } from './comment.Router.js';
 import { likeRouter } from './like.Router.js';
 import { categoryRouter } from './category.Router.js';
-import { individualChatRouter } from './individualChat.Router.js';
+import { chatRouter } from './chat.Router.js';
 import { groupChatRouter } from './groupChat.Router.js';
 
 export {
@@ -14,6 +14,6 @@ export {
     commentRouter,
     likeRouter,
     categoryRouter,
-    individualChatRouter,
+    chatRouter,
     groupChatRouter,
 };

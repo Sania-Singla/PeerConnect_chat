@@ -1,4 +1,4 @@
-import { IindividualChats } from '../../interfaces/individualChat.Interface.js';
+import { IindividualChats } from '../../interfaces/chat.Interface.js';
 import { Message } from '../../schemas/MongoDB/index.js';
 
 export class MongoIndividualChats extends IindividualChats {

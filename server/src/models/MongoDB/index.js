@@ -4,7 +4,7 @@ import { MongoFollowers } from './MongoFollower.Model.js';
 import { MongoLikes } from './MongoLike.Model.js';
 import { MongoComments } from './MongoComment.Model.js';
 import { MongoCategories } from './MongoCategory.Model.js';
-import { MongoIndividualChats } from './MongoIndividualChat.Model.js';
+import { MongoChats } from './MongoChat.Model.js';
 import { MongoGroupChats } from './MongoGroupChat.Model.js';
 
 export {
@@ -14,6 +14,6 @@ export {
     MongoLikes,
     MongoPosts,
     MongoCategories,
-    MongoIndividualChats,
+    MongoChats,
     MongoGroupChats,
 };
