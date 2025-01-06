@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { icons } from '../../Assets/icons';
-import { useChatContext } from '../../../Context';
+import { useChatContext } from '../../Context';
 
 export default function NoChatSelected() {
     const { setSelectedChat } = useChatContext();

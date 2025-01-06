@@ -19,7 +19,7 @@ export default function Chat() {
     }, [colabId]);
 
     // example
-    messages = [
+    const messages = [
         { text: 'Hello!', senderId: '1', timestamp: '2023-01-04T10:00:00Z' },
         {
             text: 'Hi, how are you?',
@@ -28,7 +28,7 @@ export default function Chat() {
         },
     ];
 
-    currentUser = { id: '1', name: 'Alice' };
+    const currentUser = { id: '1', name: 'Alice' };
 
     return (
         <div className="flex flex-col h-full bg-gray-50">
