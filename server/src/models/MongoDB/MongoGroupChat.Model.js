@@ -20,7 +20,6 @@ export class MongoGroupChats extends IGroupChats {
         }
     }
 
-    // need for brain stroming
     async deleteGroup(groupId) {
         try {
         } catch (err) {
