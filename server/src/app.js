@@ -36,8 +36,8 @@ import {
     commentRouter,
     likeRouter,
     categoryRouter,
-    messageRouter,
-    colabRouter,
+    individualChatRouter,
+    groupChatRouter,
 } from './routes/index.js';
 
 app.use('/api/users', userRouter);
@@ -46,8 +46,8 @@ app.use('/api/followers', followerRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/likes', likeRouter);
 app.use('/api/categories', categoryRouter);
-app.use('/api/messages', messageRouter);
-app.use('/api/colabs', colabRouter);
+app.use('/api/individual-chats', individualChatRouter);
+app.use('/api/group-chats', groupChatRouter);
 
 // production mode
 const dirname = path.resolve();

@@ -10,7 +10,7 @@ export default function ChatHeader({ user }) {
     };
 
     return (
-        <div className="bg-[#f6f6f6] flex items-center justify-between px-4 py-3 drop-shadow-md">
+        <div className="bg-[#f6f6f6] h-[60px] border-b-[0.01rem] border-b-[#e6e6e6] flex items-center justify-between px-4 py-3">
             {/* Left Section */}
             <div className="flex items-center">
                 {user?.avatar ? (

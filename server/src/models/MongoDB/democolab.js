@@ -1,7 +1,11 @@
-import { Icolabs } from '../../interfaces/colab.Interface.js';
-import { Colab } from '../../schemas/MongoDB/index.js';
+import { IGroupChats } from '../../interfaces/groupChat.Interface.js';
+import {
+    GroupChat,
+    GroupMessage,
+    GroupParticipant,
+} from '../../schemas/MongoDB/index.js';
 
-export class MongoColabs extends Icolabs {
+export class MongoGroupChats extends IGroupChats {
     async addCollaboration(colabId, myId, otherUserId) {
         try {
             const colab = await Colab.create({

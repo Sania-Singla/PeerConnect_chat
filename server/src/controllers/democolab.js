@@ -1,7 +1,7 @@
 import getServiceObject from '../db/serviceObjects.js';
 import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
 
-const colabObject = getServiceObject('colabs');
+const colabObject = getServiceObject('groupChats');
 
 const addCollaboration = async (req, res) => {
     try {

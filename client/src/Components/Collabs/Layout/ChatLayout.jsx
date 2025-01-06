@@ -1,17 +1,12 @@
-import { ChatHeader, ChatInput, ChatSidebar } from '../..';
+import { ChatSidebar } from '../..';
 import { Outlet } from 'react-router-dom';
-import { useChatContext } from '../../../Context';
 
 export default function ChatLayout() {
-    const { selectedChat } = useChatContext();
-
     return (
-        <div className="fixed top-[60px] inset-0 flex">
+        <div className="fixed z-[100] inset-0 flex">
             <ChatSidebar />
-            <div className="flex flex-col flex-1">
-                {selectedChat && <ChatHeader />}
+            <div className="flex-1">
                 <Outlet />
-                {selectedChat && <ChatInput />}
             </div>
         </div>
     );

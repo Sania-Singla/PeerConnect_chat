@@ -219,7 +219,7 @@ export default function RegisterPage() {
         <div className="py-10 text-black flex flex-col items-center justify-start gap-4 overflow-y-scroll z-[1] bg-white fixed inset-0">
             <Link
                 to={'/'}
-                className="w-full flex items-center justify-center hover:brightness-95"
+                className="w-fit flex items-center justify-center hover:brightness-95"
             >
                 <div className="overflow-hidden rounded-full size-[90px] drop-shadow-md">
                     <img

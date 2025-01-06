@@ -5,7 +5,6 @@ import {
     SQLfollowers,
     SQLcomments,
     SQLcategories,
-    SQLmessages,
 } from '../models/SQL/index.js';
 
 import {
@@ -15,8 +14,8 @@ import {
     MongoFollowers,
     MongoComments,
     MongoCategories,
-    MongoMessages,
-    MongoColabs,
+    MongoIndividualChats,
+    MongoGroupChats,
 } from '../models/MongoDB/index.js';
 
 export default function getServiceObject(serviceType) {
@@ -36,8 +35,6 @@ export default function getServiceObject(serviceType) {
                         return new SQLfollowers();
                     case 'categories':
                         return new SQLcategories();
-                    case 'messages':
-                        return new SQLmessages();
                     default: {
                         throw new Error('Unsupported service type');
                     }
@@ -57,10 +54,10 @@ export default function getServiceObject(serviceType) {
                         return new MongoFollowers();
                     case 'categories':
                         return new MongoCategories();
-                    case 'messages':
-                        return new MongoMessages();
-                    case 'colabs':
-                        return new MongoColabs();
+                    case 'individualChats':
+                        return new MongoIndividualChats();
+                    case 'groupChats':
+                        return new MongoGroupChats();
                     default: {
                         throw new Error('Unsupported service type');
                     }

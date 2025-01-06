@@ -3,7 +3,7 @@ import getServiceObject from '../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
 import { uploadOnCloudinary } from '../utils/index.js';
 
-const messageObject = getServiceObject('messages');
+const messageObject = getServiceObject('individualChats');
 
 const sendMessage = async (req, res) => {
     try {

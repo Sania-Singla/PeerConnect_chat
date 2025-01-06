@@ -9,37 +9,41 @@ import {
     removeSomeoneFromGroup,
     addSomeoneToGroup,
     promoteSomeoneToAdmin,
-} from '../controllers/colab.Controller.js';
+} from '../controllers/groupChat.Controller.js';
 
-export const colabRouter = express.Router();
+export const groupChatRouter = express.Router();
 
 const doesColabExist = doesResourceExist('colab', 'colabId', 'colab');
 const doesOtherUserExist = doesResourceExist('user', 'userId', 'otherUser');
 
-colabRouter.use(verifyJwt);
+groupChatRouter.use(verifyJwt);
 
-colabRouter
+groupChatRouter
     .route('/colaboration/add/:userId')
     .post(doesOtherUserExist, addCollaboration);
 
-colabRouter
+groupChatRouter
     .route('/remove/:colabId')
     .delete(doesColabExist, removeCollaboration);
 
-colabRouter.route('/group/create').post(createGroup);
+groupChatRouter.route('/group/create').post(createGroup);
 
-colabRouter.route('/group/delete/:colabId').delete(doesColabExist, deleteGroup);
+groupChatRouter
+    .route('/group/delete/:colabId')
+    .delete(doesColabExist, deleteGroup);
 
-colabRouter.route('/group/leave/:colabId').patch(doesColabExist, leaveGroup);
+groupChatRouter
+    .route('/group/leave/:colabId')
+    .patch(doesColabExist, leaveGroup);
 
-colabRouter
+groupChatRouter
     .route('/group/add-member/:colabId/:userId')
     .patch(doesColabExist, doesOtherUserExist, addSomeoneToGroup);
 
-colabRouter
+groupChatRouter
     .route('/group/remove-member/:colabId/:userId')
     .patch(doesColabExist, doesOtherUserExist, removeSomeoneFromGroup);
 
-colabRouter
+groupChatRouter
     .route('/group/promote/:colabId/:userId')
     .patch(doesColabExist, doesOtherUserExist, promoteSomeoneToAdmin);

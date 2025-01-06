@@ -1,14 +1,17 @@
 import express from 'express';
 import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
-import { sendMessage, getMessages } from '../controllers/message.Controller.js';
+import {
+    sendMessage,
+    getMessages,
+} from '../controllers/individualChat.Controller.js';
 
-export const messageRouter = express.Router();
+export const individualChatRouter = express.Router();
 
 const doesOtherUserExist = doesResourceExist('user', 'userId', 'otherUser');
 
-messageRouter.use(verifyJwt);
+individualChatRouter.use(verifyJwt);
 
-messageRouter
+individualChatRouter
     .route('/:userId')
     .get(doesOtherUserExist, getMessages)
     .post(doesOtherUserExist, sendMessage);

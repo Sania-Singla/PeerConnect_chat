@@ -63,13 +63,12 @@ export default function Sidebar() {
         <NavLink
             key={item.name}
             className={({ isActive }) =>
-                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2 px-[14px] rounded-md hover:backdrop-brightness-90`
+                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2 px-[10px] rounded-md hover:backdrop-brightness-90`
             }
             to={item.path}
-            onClick={() => setShowSideBar(false)}
         >
             <div className="flex items-center justify-start gap-4">
-                <div className="size-[19px] fill-[#202020]">{item.icon}</div>
+                <div className="size-[19px] fill-[#2a2a2a]">{item.icon}</div>
                 <div>{item.name}</div>
             </div>
         </NavLink>
@@ -79,9 +78,8 @@ export default function Sidebar() {
         <NavLink
             key={item.name}
             to={item.path}
-            onClick={() => setShowSideBar(false)}
             className={({ isActive }) =>
-                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2  px-[14px] rounded-md hover:backdrop-brightness-90`
+                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2 px-[10px] rounded-md hover:backdrop-brightness-90`
             }
         >
             <div className="flex items-center justify-start gap-4">
@@ -107,12 +105,29 @@ export default function Sidebar() {
             x: 0,
             transition: {
                 type: 'tween',
+                duration: 0.2,
             },
         },
         exit: {
             x: '-100vw',
             transition: {
                 type: 'tween',
+                duration: 0.2,
+            },
+        },
+    };
+
+    const backdropVariants = {
+        visible: {
+            backdropFilter: 'brightness(0.65)',
+            transition: {
+                duration: 0.2,
+            },
+        },
+        hidden: {
+            backdropFilter: 'brightness(1)',
+            transition: {
+                duration: 0.2,
             },
         },
     };
@@ -120,87 +135,94 @@ export default function Sidebar() {
     return (
         <AnimatePresence>
             {showSideBar && (
-                <motion.aside
-                    variants={sideBarVariants}
-                    initial="beginning"
-                    animate="end"
-                    exit="exit"
+                <motion.div
                     ref={sideBarRef}
                     onClick={closeSideBar}
-                    className="z-[10] h-full fixed inset-0 flex justify-start"
+                    className="fixed inset-0 z-[1000]"
+                    variants={backdropVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
                 >
-                    <div className="w-[280px] px-3 bg-[#f6f6f6] drop-shadow-md flex flex-col items-start justify-start h-full">
-                        <div className="h-[60px] pl-3 gap-5 w-full flex items-center justify-between">
-                            {/* hamburgur menu btn */}
-                            <Button
-                                btnText={
-                                    <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
-                                        {icons.hamburgur}
-                                    </div>
-                                }
-                                onClick={() => {
-                                    setShowSideBar((prev) => !prev);
-                                }}
-                                className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
-                            />
-                            {user ? (
-                                <div className="w-full h-full py-3 flex items-center justify-end gap-4">
-                                    <div onClick={() => setShowSideBar(false)}>
-                                        <Logout />
-                                    </div>
-
-                                    <Link
-                                        to={`/channel/${user?.user_id}`}
-                                        onClick={() => setShowSideBar(false)}
-                                        className="hover:scale-110 transition-all duration-300"
-                                    >
-                                        <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
-                                            <img
-                                                src={user?.user_avatar}
-                                                alt="user avatar"
-                                                className="size-full object-cover"
-                                            />
+                    <motion.aside
+                        variants={sideBarVariants}
+                        initial="beginning"
+                        animate="end"
+                        exit="exit"
+                        className="h-full w-[265px] flex justify-start"
+                    >
+                        <div className="w-full px-3 bg-[#f6f6f6] drop-shadow-md flex flex-col items-start justify-start h-full">
+                            <div className="h-[60px] gap-5 w-full flex items-center justify-between">
+                                {/* hamburgur menu btn */}
+                                <Button
+                                    btnText={
+                                        <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                                            {icons.hamburgur}
                                         </div>
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="w-full h-full py-3 flex items-center justify-end gap-2">
-                                    <Button
-                                        onClick={() => {
-                                            navigate('/register');
-                                            setShowSideBar(false);
-                                        }}
-                                        btnText="Sign Up"
-                                        className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                                    />
+                                    }
+                                    onClick={() =>
+                                        setShowSideBar((prev) => !prev)
+                                    }
+                                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
+                                />
+                                {user ? (
+                                    <div className="w-full h-full py-3 flex items-center justify-end gap-4">
+                                        <div
+                                            onClick={() =>
+                                                setShowSideBar(false)
+                                            }
+                                        >
+                                            <Logout />
+                                        </div>
 
-                                    <div className="h-full border-r-[0.01rem] border-[#c8c8c8]" />
+                                        <Link
+                                            to={`/channel/${user?.user_id}`}
+                                            className="hover:scale-110 transition-all duration-300"
+                                        >
+                                            <div className="size-[35px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
+                                                <img
+                                                    src={user?.user_avatar}
+                                                    alt="user avatar"
+                                                    className="size-full object-cover"
+                                                />
+                                            </div>
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-full py-3 flex items-center justify-end gap-2">
+                                        <Button
+                                            onClick={() =>
+                                                navigate('/register')
+                                            }
+                                            btnText="Sign Up"
+                                            className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        />
 
-                                    <Button
-                                        onClick={() => {
-                                            navigate('/login');
-                                            setShowSideBar(false);
-                                        }}
-                                        btnText="Login"
-                                        className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                                    />
-                                </div>
-                            )}
-                        </div>
+                                        <div className="h-full border-r-[0.01rem] border-[#c8c8c8]" />
 
-                        <hr className="w-full" />
-
-                        <div className="overflow-y-scroll text-[17px] text-black w-full h-[calc(100%-60px)] py-3 flex flex-col items-start justify-between">
-                            <div className="w-full flex flex-col gap-1 items-start justify-start">
-                                {itemElements}
+                                        <Button
+                                            onClick={() => navigate('/login')}
+                                            btnText="Login"
+                                            className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        />
+                                    </div>
+                                )}
                             </div>
-                            <div className="w-full flex flex-col gap-1 items-start justify-start">
-                                <hr className="w-full" />
-                                {systemItemElements}
+
+                            <hr className="w-full" />
+
+                            <div className="overflow-y-scroll text-[17px] text-black w-full h-[calc(100%-60px)] py-3 flex flex-col items-start justify-between">
+                                <div className="w-full flex flex-col gap-1 items-start justify-start">
+                                    {itemElements}
+                                </div>
+                                <div className="w-full flex flex-col gap-1 items-start justify-start">
+                                    <hr className="w-full" />
+                                    {systemItemElements}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </motion.aside>
+                    </motion.aside>
+                </motion.div>
             )}
         </AnimatePresence>
     );

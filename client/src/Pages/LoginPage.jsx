@@ -8,7 +8,7 @@ export default function LoginPage() {
         <div className="text-black flex flex-col items-center justify-center gap-5 fixed z-[1] bg-white inset-0">
             <Link
                 to={'/'}
-                className="w-full flex items-center justify-center hover:brightness-95"
+                className="w-fit flex items-center justify-center hover:brightness-95"
             >
                 <div className="overflow-hidden rounded-full size-[90px] drop-shadow-md">
                     <img

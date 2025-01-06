@@ -4,7 +4,6 @@ import { SQLfollowers } from './SQLFollowerModel.js';
 import { SQLlikes } from './SQLLikeModel.js';
 import { SQLcomments } from './SQLCommentModel.js';
 import { SQLcategories } from './SQLCategory.Model.js';
-import { SQLmessages } from './SQLMessage.Model.js';
 
 export {
     SQLusers,
@@ -13,5 +12,4 @@ export {
     SQLlikes,
     SQLcomments,
     SQLcategories,
-    SQLmessages,
 };

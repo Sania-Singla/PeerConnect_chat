@@ -1,4 +1,23 @@
-export default function Chat({ messages, currentUser }) {
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useChatContext } from '../../Context';
+
+export default function Chat() {
+    const { colabId } = useParams();
+    const { selectedChat, setSelectedChat } = useChatContext();
+
+    useEffect(() => {
+        if (!selectedChat) {
+            // fetch colab
+            // setSelectedChat(colab);
+        } else {
+            setSelectedChat(colabId);
+        }
+
+        // fetch messages for this colabId
+        // setMessages(messages);
+    }, [colabId]);
+
     // example
     messages = [
         { text: 'Hello!', senderId: '1', timestamp: '2023-01-04T10:00:00Z' },

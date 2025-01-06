@@ -4,8 +4,8 @@ import { followerRouter } from './follower.Router.js';
 import { commentRouter } from './comment.Router.js';
 import { likeRouter } from './like.Router.js';
 import { categoryRouter } from './category.Router.js';
-import { messageRouter } from './message.Router.js';
-import { colabRouter } from './colab.Router.js';
+import { individualChatRouter } from './individualChat.Router.js';
+import { groupChatRouter } from './groupChat.Router.js';
 
 export {
     userRouter,
@@ -14,6 +14,6 @@ export {
     commentRouter,
     likeRouter,
     categoryRouter,
-    messageRouter,
-    colabRouter,
+    individualChatRouter,
+    groupChatRouter,
 };
