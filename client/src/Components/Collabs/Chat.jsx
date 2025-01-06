@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useChatContext } from '../../Context';
+import ChatHeader from './Layout/ChatHeader';
+import ChatInput from './Layout/ChatInput';
 
 export default function Chat() {
     const { colabId } = useParams();
@@ -32,6 +34,7 @@ export default function Chat() {
 
     return (
         <div className="flex flex-col h-full bg-gray-50">
+            <ChatHeader />
             {/* Messages Container */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((message, index) => (
@@ -72,6 +75,7 @@ export default function Chat() {
                     User is typing...
                 </p>
             </div>
+            <ChatInput />
         </div>
     );
 }
