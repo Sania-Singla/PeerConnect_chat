@@ -17,7 +17,8 @@ const doesCategoryExist = doesResourceExist(
 
 categoryRouter
     .route('/category/:categoryId')
-    .delete(verifyJwt, doesCategoryExist, deleteCategory)
-    .patch(verifyJwt, doesCategoryExist, updateCategory);
+    .all(verifyJwt, doesCategoryExist)
+    .delete(deleteCategory)
+    .patch(updateCategory);
 
 categoryRouter.route('/').get(getCategories).post(verifyJwt, addCategory);

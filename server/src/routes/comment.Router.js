@@ -26,6 +26,7 @@ commentRouter.route('/:postId').post(doesPostExist, verifyJwt, addComment);
 
 commentRouter
     .route('/comment/:commentId')
-    .get(doesCommentExist, optionalVerifyJwt, getComment)
-    .patch(doesCommentExist, verifyJwt, isCommentOwner, updateComment)
-    .delete(doesCommentExist, verifyJwt, isCommentOwner, deleteComment);
+    .all(doesCommentExist)
+    .get(optionalVerifyJwt, getComment)
+    .patch(verifyJwt, isCommentOwner, updateComment)
+    .delete(verifyJwt, isCommentOwner, deleteComment);

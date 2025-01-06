@@ -37,7 +37,8 @@ const deleteGroup = async (req, res) => {
 
         // inly delete the group if there are no members in the group
 
-        const {admins, normalMembers} = await groupObject.getParticipants(groupId);
+        const { admins, normalMembers } =
+            await groupObject.getParticipants(groupId);
         if (admins.length || normalMembers.length) {
             return res
                 .status(BAD_REQUEST)

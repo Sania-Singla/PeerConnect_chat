@@ -15,6 +15,7 @@ import {
     MongoComments,
     MongoCategories,
     MongoChats,
+    MongoMessages,
     MongoGroupChats,
 } from '../models/MongoDB/index.js';
 
@@ -56,6 +57,8 @@ export default function getServiceObject(serviceType) {
                         return new MongoCategories();
                     case 'chats':
                         return new MongoChats();
+                    case 'messages':
+                        return new MongoMessages();
                     case 'groupChats':
                         return new MongoGroupChats();
                     default: {
