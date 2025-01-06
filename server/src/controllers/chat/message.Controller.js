@@ -2,12 +2,12 @@ import getServiceObject from '../../db/serviceObjects.js';
 import { uploadOnCloudinary, deleteFromCloudinary } from '../../utils/index.js';
 import { BAD_REQUEST, OK, SERVER_ERROR } from '../../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
+import { io } from '../../socket.js';
 
 const messageObject = getServiceObject('messages');
 
 const sendMessage = async (req, res) => {
     try {
-        // just the db part right now
         const myId = req.user.user_id;
         const { chatId } = req.params;
         const { text } = req.body;
@@ -28,6 +28,8 @@ const sendMessage = async (req, res) => {
             text,
             attachement
         );
+
+        // todo: io.to(recieverSocketId).emit("newMessage", message);
 
         return res.status(OK).json(message);
     } catch (err) {

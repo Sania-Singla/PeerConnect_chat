@@ -17,8 +17,11 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
 
+    // todo: update online users ****** for the current user ******
+
     socket.on('disconnect', () => {
         console.log('a user disconnected', socket.id);
+        // todo: update online users ****** for the current user ******
     });
 });
 
