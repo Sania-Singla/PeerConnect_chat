@@ -1,6 +1,6 @@
-import getServiceObject from '../db/serviceObjects.js';
-import { uploadOnCloudinary, deleteFromCloudinary } from '../utils/index.js';
-import { BAD_REQUEST, OK, SERVER_ERROR } from '../constants/errorCodes.js';
+import getServiceObject from '../../db/serviceObjects.js';
+import { uploadOnCloudinary, deleteFromCloudinary } from '../../utils/index.js';
+import { BAD_REQUEST, OK, SERVER_ERROR } from '../../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
 
 const messageObject = getServiceObject('messages');

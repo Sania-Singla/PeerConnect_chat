@@ -4,7 +4,7 @@ import {
     deleteMessage,
     sendMessage,
     getMessages,
-} from '../controllers/message.Controller.js';
+} from '../controllers/chat/message.Controller.js';
 
 export const messageRouter = express.Router();
 

@@ -1,4 +1,4 @@
-import getServiceObject from '../db/serviceObjects.js';
+import getServiceObject from '../../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
 
 const chatObject = getServiceObject('chats');

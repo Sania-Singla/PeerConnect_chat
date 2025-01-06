@@ -4,7 +4,7 @@ import {
     addChat,
     deleteChat,
     getChats,
-} from '../controllers/chat.Controller.js';
+} from '../controllers/chat/chat.Controller.js';
 
 export const chatRouter = express.Router();
 
