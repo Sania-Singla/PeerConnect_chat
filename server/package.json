@@ -26,6 +26,7 @@
         "mysql2": "^3.11.0",
         "oracledb": "^6.6.0",
         "peer-connect": "file:..",
+        "redis": "^4.7.0",
         "socket.io": "^4.8.1",
         "uuid": "^10.0.0",
         "validator": "^13.12.0"

@@ -141,9 +141,7 @@ export default function Header() {
                 {/* collabs btn */}
                 <NavLink
                     to={'/collabs'}
-                    className={({ isActive }) =>
-                        `${isActive && 'hidden'} p-[1px]`
-                    }
+                    className={({ isActive }) => `${isActive && 'hidden'}`}
                 >
                     <Button
                         btnText={

@@ -2,6 +2,39 @@ import { Ichats } from '../../interfaces/chat.Interface.js';
 import { Chat, Message } from '../../schemas/MongoDB/index.js';
 
 export class MongoChats extends Ichats {
+    async getChat(input) {
+        try {
+            if (Array.isArray(input)) {
+                return await Chat.findOne({
+                    participants: input,
+                }).lean();
+            }
+            return await Chat.findOne({ chat_id: input }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async updateLastMessage(chatId, message = '') {
+        try {
+            return await Chat.findOneAndUpdate(
+                {
+                    chat_id: chatId,
+                },
+                {
+                    $set: {
+                        lastMessage: message,
+                    },
+                },
+                {
+                    new: true,
+                }
+            ).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async addChat(chatId, participants) {
         try {
             const chat = await Chat.create({
@@ -10,11 +43,7 @@ export class MongoChats extends Ichats {
             });
             return chat.toObject();
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while getting the messages.',
-                error: err.message,
-            });
+            throw err;
         }
     }
 
@@ -22,11 +51,7 @@ export class MongoChats extends Ichats {
         try {
             return await Chat.findOneAndDelete({ chat_id: chatId }).lean();
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while getting the messages.',
-                error: err.message,
-            });
+            throw err;
         }
     }
 
@@ -41,7 +66,7 @@ export class MongoChats extends Ichats {
                 {
                     $addFields: {
                         otherParticipant: {
-                            $arrayElementAt: [
+                            $arrayElemAt: [
                                 {
                                     $filter: {
                                         input: '$participants',
@@ -99,57 +124,7 @@ export class MongoChats extends Ichats {
             ];
             return await Chat.aggregate(pipeline);
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while getting the chats.',
-                error: err.message,
-            });
-        }
-    }
-
-    async sendMessage(messageId, chatId, myId, text, attachement) {
-        try {
-            const message = await Message.create({
-                message_id: messageId,
-                chat_id: chatId,
-                senderId: myId,
-                text,
-                attachement,
-            });
-
-            return message.toObject();
-        } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while sending the message.',
-                error: err.message,
-            });
-        }
-    }
-
-    async deleteMessage(messageId) {
-        try {
-            return await Message.findOneAndDelete({
-                message_id: messageId,
-            }).lean();
-        } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while sending the message.',
-                error: err.message,
-            });
-        }
-    }
-
-    async getMessages(chatId, limit = 50) {
-        try {
-            return await Message.find({ chat_id: chatId }).lean();
-        } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while getting the messages.',
-                error: err.message,
-            });
+            throw err;
         }
     }
 }

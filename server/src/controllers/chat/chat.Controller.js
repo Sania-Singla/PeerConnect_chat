@@ -1,14 +1,23 @@
 import getServiceObject from '../../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
+import { SERVER_ERROR, OK, BAD_REQUEST } from '../../constants/errorCodes.js';
 
-const chatObject = getServiceObject('chats');
+export const chatObject = getServiceObject('chats');
 
 const addChat = async (req, res) => {
     try {
         const myId = req.user.user_id;
         const { userId } = req.params;
 
-        const chat = await chatObject.addChat(uuid(), [myId, userId]);
+        // check if chat between these two already exists
+        let chat = await chatObject.getChat([myId, userId]);
+        if (chat) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'chat already exists' });
+        }
+
+        chat = await chatObject.addChat(uuid(), [myId, userId]);
 
         return res.status(OK).json(chat);
     } catch (err) {
@@ -23,9 +32,6 @@ const addChat = async (req, res) => {
 const deleteChat = async (req, res) => {
     try {
         const { chatId } = req.params;
-        // or use myId & userId
-        // const myId = req.user.user_id;
-        // const { userId } = req.params;
 
         await chatObject.deleteChat(chatId);
 

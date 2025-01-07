@@ -12,6 +12,8 @@ import { MongoMessages } from './MongoMessage.Model.js';
 // group chat
 import { MongoGroupChats } from './MongoGroupChat.Model.js';
 
+import { MongoOnlineUsers } from './MongoOnlineUser.Model.js';
+
 export {
     MongoUsers,
     MongoComments,
@@ -22,4 +24,5 @@ export {
     MongoChats,
     MongoMessages,
     MongoGroupChats,
+    MongoOnlineUsers,
 };

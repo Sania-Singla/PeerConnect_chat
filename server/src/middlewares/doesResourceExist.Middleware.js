@@ -50,6 +50,14 @@ export const doesResourceExist = (service, idParam, reqKey) => {
                     resource = await serviceObject.getCategory(resourceId);
                     break;
                 }
+                case 'chat': {
+                    resource = await serviceObject.getChat(resourceId);
+                    break;
+                }
+                case 'message': {
+                    resource = await serviceObject.getMessage(resourceId);
+                    break;
+                }
                 default: {
                     console.log('invalid service type');
                 }

@@ -2,14 +2,16 @@ import getServiceObject from '../../db/serviceObjects.js';
 import { uploadOnCloudinary, deleteFromCloudinary } from '../../utils/index.js';
 import { BAD_REQUEST, OK, SERVER_ERROR } from '../../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
-import { io } from '../../socket.js';
+import { io, getSocketIdByUserId } from '../../socket.js';
 
 const messageObject = getServiceObject('messages');
+import { chatObject } from './chat.Controller.js';
 
 const sendMessage = async (req, res) => {
     try {
         const myId = req.user.user_id;
         const { chatId } = req.params;
+        const chat = req.chat;
         const { text } = req.body;
         let attachement = req.file?.path;
 
@@ -29,7 +31,16 @@ const sendMessage = async (req, res) => {
             attachement
         );
 
-        // todo: io.to(recieverSocketId).emit("newMessage", message);
+        await chatObject.updateLastMessage(chatId, message);
+
+        // socket.io
+        const [reciverId] = chat.participants.filter(
+            (userId) => userId !== myId
+        );
+
+        const recieverSocketId = getSocketIdByUserId(reciverId);
+
+        io.to(recieverSocketId).emit('newMessage', message);
 
         return res.status(OK).json(message);
     } catch (err) {

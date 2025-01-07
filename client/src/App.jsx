@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from './Components';
-import { useSideBarContext, useUserContext, usePopupContext } from './Context';
+import {
+    useSideBarContext,
+    useUserContext,
+    usePopupContext,
+    useSocketContext,
+} from './Context';
 import { authService } from './Services';
 import { icons } from './Assets/icons';
 
 export default function App() {
-    const { setUser } = useUserContext();
+    const { setUser, user } = useUserContext();
+    const { connectSocket, socket, disconnectSocket } = useSocketContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,7 +27,11 @@ export default function App() {
             try {
                 setLoading(true);
                 const data = await authService.getCurrentUser(signal);
-                setUser(data && !data.message ? data : null);
+                if (data && !data.message) {
+                    setUser(data);
+                } else {
+                    setUser(null);
+                }
             } catch (err) {
                 navigate('/server-error');
             } finally {
@@ -33,6 +43,17 @@ export default function App() {
             controller.abort();
         };
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            if (socket) {
+                disconnectSocket();
+            }
+            connectSocket();
+        } else {
+            disconnectSocket();
+        }
+    }, [user]);
 
     // Close sidebar
     useEffect(() => {

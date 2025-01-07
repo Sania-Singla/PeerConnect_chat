@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 export default function CollabsPage() {
     const { user } = useUserContext();
-    const { userId } = useParams();
+    const { userId } = useParams;
     const { setSelectedChat } = useChatContext();
 
     useEffect(() => {

@@ -10,6 +10,7 @@ import {
     GroupMessage,
     GroupParticipant,
 } from './groupChat.Schema.js';
+import { OnlineUser } from './onlineUser.Schema.js';
 
 export {
     User,
@@ -27,4 +28,5 @@ export {
     GroupChat,
     GroupMessage,
     GroupParticipant,
+    OnlineUser,
 };

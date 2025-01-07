@@ -3,28 +3,77 @@ import { icons } from '../../../Assets/icons';
 import { useChatContext, useSideBarContext } from '../../../Context';
 import { Button } from '../../';
 import { LOGO } from '../../../Constants/constants';
+import { useEffect, useState } from 'react';
 
 export default function ChatSidebar() {
-    const { setSelectedChat } = useChatContext();
+    const { setSelectedChat, onlineChatIds, chats, setChats } =
+        useChatContext();
     const { setShowSideBar } = useSideBarContext();
-    // Example `users` prop structure:
-    const users = [
-        {
-            id: 1,
-            name: 'John Doe',
-            // avatar: 'https://example.com/avatar1.jpg',
-            lastMessage: 'Hello!',
-            isOnline: true,
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            // avatar: 'https://example.com/avatar2.jpg',
-            lastMessage: 'How are you?',
-            isOnline: false,
-        },
-    ];
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        try {
+            setLoading(true);
+            const onlineChatIdsSet = new Set(onlineChatIds);
+            setChats((prev) =>
+                prev.map((chat) => ({
+                    ...chat,
+                    isOnline: onlineChatIdsSet.has(chat.chat_id),
+                }))
+            );
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
+    }, [onlineChatIds]);
+
+    const chatElements = chats.map((chat) => (
+        <Button
+            key={chat.chat_id}
+            onClick={() => {
+                setSelectedChat(chat);
+                navigate('chat/456');
+            }}
+            className="flex items-center hover:bg-gray-100 focus:outline-none w-full text-left"
+            btnText={
+                <div>
+                    <div className="relative">
+                        {/* Avatar */}
+                        {chat.user_avatar ? (
+                            <img
+                                src={chat.user_avatar}
+                                alt="User Avatar"
+                                className="w-12 h-12 rounded-full border border-gray-200"
+                            />
+                        ) : (
+                            <div className="size-12 fill-gray-300 drop-shadow-md">
+                                {icons.circleUser}
+                            </div>
+                        )}
+
+                        {/* Online Indicator */}
+                        {chat.isOnline && (
+                            <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-white rounded-full"></span>
+                        )}
+                    </div>
+
+                    {/* User Info */}
+                    <div className="ml-3 flex-1">
+                        <div className="flex justify-between items-center">
+                            <h4 className="text-sm font-semibold text-gray-800 truncate">
+                                {chat.user_name}
+                            </h4>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">
+                            {chat.lastMessage || 'No messages yet'}
+                        </p>
+                    </div>
+                </div>
+            }
+        />
+    ));
 
     return (
         <div className="w-[280px] border-r-[0.01rem] border-r-[#e6e6e6] h-full px-3 bg-[#f6f6f6] flex flex-col">
@@ -74,55 +123,20 @@ export default function ChatSidebar() {
                 </div>
             </div>
 
-            {/* User List */}
-            <div className="flex-1 overflow-y-auto">
-                {users.length > 0 ? (
-                    users.map((user) => (
-                        <button
-                            key={user.id}
-                            onClick={() => {
-                                setSelectedChat(user);
-                                navigate('chat/456');
-                            }}
-                            className="flex items-center hover:bg-gray-100 focus:outline-none w-full text-left"
-                        >
-                            <div className="relative">
-                                {/* Avatar */}
-                                {user?.avatar ? (
-                                    <img
-                                        src={user.avatar}
-                                        alt="User Avatar"
-                                        className="w-12 h-12 rounded-full border border-gray-200"
-                                    />
-                                ) : (
-                                    <div className="size-12 fill-gray-300 drop-shadow-md">
-                                        {icons.circleUser}
-                                    </div>
-                                )}
-
-                                {/* Online Indicator */}
-                                {user.isOnline && (
-                                    <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-white rounded-full"></span>
-                                )}
-                            </div>
-                            
-                            {/* User Info */}
-                            <div className="ml-3 flex-1">
-                                <div className="flex justify-between items-center">
-                                    <h4 className="text-sm font-semibold text-gray-800 truncate">
-                                        {user.name}
-                                    </h4>
-                                </div>
-                                <p className="text-xs text-gray-500 truncate">
-                                    {user.lastMessage || 'No messages yet'}
-                                </p>
-                            </div>
-                        </button>
-                    ))
-                ) : (
-                    <p className="text-sm text-gray-500 p-4">No users found.</p>
-                )}
-            </div>
+            {loading ? (
+                <div>loading...</div>
+            ) : (
+                // user list
+                <div className="flex-1 overflow-y-auto">
+                    {chats.length > 0 ? (
+                        chatElements
+                    ) : (
+                        <p className="text-sm text-gray-500 p-4">
+                            No users found.
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

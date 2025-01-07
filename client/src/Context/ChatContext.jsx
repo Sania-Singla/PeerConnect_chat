@@ -5,20 +5,20 @@ const ChatContext = createContext();
 const ChatContextProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [messages, setMessages] = useState([]);
-    const [onlineUsers, setOnlineUsers] = useState([]);
-    const [collabUsers, setCollabUsers] = useState([]);
+    const [onlineChatIds, setOnlineChatIds] = useState([]);
+    const [chats, setChats] = useState([]);
 
     return (
         <ChatContext.Provider
             value={{
                 selectedChat,
                 messages,
-                onlineUsers,
-                collabUsers,
-                setCollabUsers,
+                onlineChatIds,
+                chats,
+                setOnlineChatIds,
+                setChats,
                 setSelectedChat,
                 setMessages,
-                setOnlineUsers,
             }}
         >
             {children}

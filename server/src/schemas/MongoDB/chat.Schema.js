@@ -12,6 +12,10 @@ const chatSchema = new Schema({
             ref: 'User',
         },
     ],
+    lastMessage: {
+        type: String,
+        default: '',
+    },
     chat_createdAt: {
         type: Date,
         default: Date.now(),

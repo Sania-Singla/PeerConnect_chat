@@ -5,6 +5,14 @@ import { getCommonPipeline2 } from '../../utils/index.js';
 export class MongoUsers extends Iusers {
     async getUser(searchInput) {
         try {
+            if (typeof searchInput === 'object' && searchInput !== null) {
+                return await User.findOne({
+                    $or: [
+                        { user_name: searchInput.userName },
+                        { user_email: searchInput.email },
+                    ],
+                }).lean();
+            }
             return await User.findOne({
                 $or: [
                     { user_id: searchInput },

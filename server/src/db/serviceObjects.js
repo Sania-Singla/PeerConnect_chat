@@ -17,6 +17,7 @@ import {
     MongoChats,
     MongoMessages,
     MongoGroupChats,
+    MongoOnlineUsers,
 } from '../models/MongoDB/index.js';
 
 export default function getServiceObject(serviceType) {
@@ -61,6 +62,8 @@ export default function getServiceObject(serviceType) {
                         return new MongoMessages();
                     case 'groupChats':
                         return new MongoGroupChats();
+                    case 'onlineUsers':
+                        return new MongoOnlineUsers();
                     default: {
                         throw new Error('Unsupported service type');
                     }

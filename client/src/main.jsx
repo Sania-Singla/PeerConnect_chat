@@ -40,6 +40,7 @@ import {
     PopupContextProvider,
     SideBarContextProvider,
     SearchContextProvider,
+    SocketContextProvider,
     ChatContextProvider,
 } from './Context';
 
@@ -140,13 +141,15 @@ createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
         <ChatContextProvider>
-            <PopupContextProvider>
-                <SideBarContextProvider>
-                    <SearchContextProvider>
-                        <RouterProvider router={router} />
-                    </SearchContextProvider>
-                </SideBarContextProvider>
-            </PopupContextProvider>
+            <SocketContextProvider>
+                <PopupContextProvider>
+                    <SideBarContextProvider>
+                        <SearchContextProvider>
+                            <RouterProvider router={router} />
+                        </SearchContextProvider>
+                    </SideBarContextProvider>
+                </PopupContextProvider>
+            </SocketContextProvider>
         </ChatContextProvider>
     </UserContextProvider>
     // </StrictMode>,

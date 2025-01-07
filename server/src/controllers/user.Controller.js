@@ -77,7 +77,10 @@ const registerUser = async (req, res) => {
             }
         }
 
-        const existingUser = await userObject.getUser(data.userName);
+        const existingUser = await userObject.getUser({
+            email: data.email,
+            userName: data.userName,
+        });
 
         if (existingUser) {
             // Remove uploaded files if any
