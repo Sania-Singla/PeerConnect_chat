@@ -21,7 +21,7 @@ export default function Comment({ comment, setComments }) {
         dislikes,
     } = comment;
     const navigate = useNavigate();
-    const { user } = useUserContext();
+    const { user, loginStatus } = useUserContext();
     const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
         usePopupContext();
     const [newContent, setNewContent] = useState(comment_content);
@@ -30,7 +30,7 @@ export default function Comment({ comment, setComments }) {
 
     async function handleLike() {
         try {
-            if (!user) {
+            if (!loginStatus) {
                 setShowLoginPopup(true);
                 setLoginPopupText('Follow');
                 return;
@@ -68,7 +68,7 @@ export default function Comment({ comment, setComments }) {
 
     async function handleDislike() {
         try {
-            if (!user) {
+            if (!loginStatus) {
                 setShowLoginPopup(true);
                 setLoginPopupText('Follow');
                 return;
@@ -268,7 +268,7 @@ export default function Comment({ comment, setComments }) {
                 </div>
             </div>
 
-            {user_name === user?.user_name && !isEditing && (
+            {loginStatus && user_name === user?.user_name && !isEditing && (
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 absolute top-2 right-2">
                     <Button
                         onClick={() => setIsEditing(true)}

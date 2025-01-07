@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
 
 export default function Sidebar() {
-    const { user } = useUserContext();
+    const { user, loginStatus } = useUserContext();
     const navigate = useNavigate();
     const { showSideBar, setShowSideBar } = useSideBarContext();
     const items = [
@@ -14,27 +14,27 @@ export default function Sidebar() {
         { show: true, path: '/liked', name: 'Liked Blogs', icon: icons.like },
         { show: true, path: '/saved', name: 'Saved Blogs', icon: icons.save },
         {
-            show: user,
+            show: loginStatus,
             path: '/collabs',
             name: 'Collaborations',
             icon: icons.chat,
         },
         {
-            show: user,
+            show: loginStatus,
             path: '/followers',
             name: 'Followers',
             icon: icons.group,
         },
         {
-            show: user,
+            show: loginStatus,
             path: '/history',
             name: 'Watch History',
             icon: icons.clock,
         },
 
-        { show: user, path: '/admin', name: 'Admin', icon: icons.user },
+        { show: loginStatus, path: '/admin', name: 'Admin', icon: icons.user },
         {
-            show: user,
+            show: loginStatus,
             path: `/channel/${user?.user_id}`,
             name: 'My Content',
             icon: icons.image,
@@ -52,7 +52,7 @@ export default function Sidebar() {
             icon: icons.contact,
         },
         {
-            show: user,
+            show: loginStatus,
             path: '/settings',
             name: 'Settings',
             icon: icons.settings,
@@ -165,7 +165,7 @@ export default function Sidebar() {
                                     }
                                     className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
                                 />
-                                {user ? (
+                                {loginStatus ? (
                                     <div className="w-full h-full py-3 flex items-center justify-end gap-4">
                                         <div
                                             onClick={() =>

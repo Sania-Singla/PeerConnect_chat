@@ -11,7 +11,7 @@ import { authService } from './Services';
 import { icons } from './Assets/icons';
 
 export default function App() {
-    const { setUser, user } = useUserContext();
+    const { setUser, loginStatus } = useUserContext();
     const { connectSocket, socket, disconnectSocket } = useSocketContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -45,15 +45,12 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        if (user) {
-            if (socket) {
-                disconnectSocket();
-            }
+        if (loginStatus) {
             connectSocket();
         } else {
             disconnectSocket();
         }
-    }, [user]);
+    }, [loginStatus]);
 
     // Close sidebar
     useEffect(() => {

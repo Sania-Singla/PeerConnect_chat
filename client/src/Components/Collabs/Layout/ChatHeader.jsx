@@ -1,9 +1,9 @@
 import { Button } from '../..';
 import { icons } from '../../../Assets/icons';
 
-export default function ChatHeader({ user }) {
+export default function ChatHeader() {
     // Example structure for "user"
-    user = {
+    const user = {
         name: 'John Doe',
         // avatar: 'https://example.com/avatar.jpg',
         status: 'online', // "offline" or "online"
