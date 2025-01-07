@@ -12,7 +12,7 @@ import { icons } from './Assets/icons';
 
 export default function App() {
     const { setUser, loginStatus } = useUserContext();
-    const { connectSocket, socket, disconnectSocket } = useSocketContext();
+    const { connectSocket, disconnectSocket } = useSocketContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
