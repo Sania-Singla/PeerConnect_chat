@@ -38,7 +38,7 @@ const sendMessage = async (req, res) => {
             (userId) => userId !== myId
         );
 
-        const recieverSocketId = getSocketIdByUserId(reciverId);
+        const recieverSocketId = await getSocketIdByUserId(reciverId);
 
         io.to(recieverSocketId).emit('newMessage', message);
 
