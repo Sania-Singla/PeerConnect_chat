@@ -7,7 +7,7 @@ import { icons } from '../../Assets/icons';
 
 export default function Logout() {
     const [loading, setLoading] = useState(false);
-    const { setUser, setLoginStatus } = useUserContext();
+    const { setUser } = useUserContext();
     const { setShowPopup, setPopupText } = usePopupContext();
     const navigate = useNavigate();
 
@@ -17,7 +17,6 @@ export default function Logout() {
             const res = await authService.logout();
             if (res && res.message === 'user loggedout successfully') {
                 setUser(null);
-                setLoginStatus(false);
                 setPopupText('LogOut Successfull 🙂');
                 setShowPopup(true);
             }

@@ -13,7 +13,7 @@ export default function Comments({ postId }) {
     const [input, setInput] = useState('');
     const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
         usePopupContext();
-    const { user, loginStatus } = useUserContext();
+    const { user } = useUserContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -41,7 +41,7 @@ export default function Comments({ postId }) {
     async function addComment(e) {
         e.preventDefault();
         try {
-            if (!loginStatus) {
+            if (!user) {
                 setShowLoginPopup(true);
                 setLoginPopupText('Comment');
                 return;

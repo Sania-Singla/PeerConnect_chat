@@ -7,7 +7,7 @@ import { Button } from '..';
 export default function DeleteAccount({ className = '' }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const { setUser, setLoginStatus } = useUserContext();
+    const { setUser } = useUserContext();
     const navigate = useNavigate();
     const [check, setCheck] = useState(false);
     const [disabled, setDisabled] = useState(false);
@@ -21,7 +21,6 @@ export default function DeleteAccount({ className = '' }) {
             const res = await authService.deleteAccount(password);
             if (res && res.message === 'account deleted successfully') {
                 setUser(null);
-                setLoginStatus(false);
                 setPopupText('Account Deleted Successfully 😕');
                 setShowPopup(true);
             } else {

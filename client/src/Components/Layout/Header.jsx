@@ -11,7 +11,7 @@ import { icons } from '../../Assets/icons';
 import { motion } from 'framer-motion';
 
 export default function Header() {
-    const { loginStatus } = useUserContext();
+    const { user } = useUserContext();
     const { setShowSideBar } = useSideBarContext();
     const navigate = useNavigate();
     const { search, setSearch } = useSearchContext();
@@ -170,7 +170,7 @@ export default function Header() {
 
                 <div className="hidden sm:flex">
                     {/* login/logout btn */}
-                    {loginStatus ? (
+                    {user ? (
                         <Logout />
                     ) : (
                         <div className="flex items-center justify-center gap-4">

@@ -11,8 +11,8 @@ import { authService } from './Services';
 import { icons } from './Assets/icons';
 
 export default function App() {
-    const { setUser, loginStatus, setLoginStatus } = useUserContext();
-    const { connectSocket, disconnectSocket } = useSocketContext();
+    const { setUser, user } = useUserContext();
+    const { connectSocket, socket, disconnectSocket } = useSocketContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,10 +29,8 @@ export default function App() {
                 const data = await authService.getCurrentUser(signal);
                 if (data && !data.message) {
                     setUser(data);
-                    setLoginStatus(true);
                 } else {
                     setUser(null);
-                    setLoginStatus(false);
                 }
             } catch (err) {
                 navigate('/server-error');
@@ -47,12 +45,15 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        if (loginStatus) {
+        if (user) {
+            if (socket) {
+                disconnectSocket();
+            }
             connectSocket();
         } else {
             disconnectSocket();
         }
-    }, [loginStatus]);
+    }, [user]);
 
     // Close sidebar
     useEffect(() => {

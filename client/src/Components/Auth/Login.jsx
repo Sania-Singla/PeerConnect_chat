@@ -14,7 +14,7 @@ export default function Login() {
     const [disabled, setDisabled] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
-    const { setUser, setLoginStatus } = useUserContext();
+    const { setUser } = useUserContext();
     const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } =
         usePopupContext();
     const navigate = useNavigate();
@@ -41,7 +41,6 @@ export default function Login() {
             const res = await authService.login(inputs, setLoading);
             if (res && !res.message) {
                 setUser(res);
-                setLoginStatus(true);
                 setPopupText('Login Successfully 😉');
                 setShowPopup(true);
                 if (showLoginPopup) {
