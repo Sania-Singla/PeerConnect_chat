@@ -17,7 +17,7 @@ class FollowerService {
             if (err.name === 'AbortError') {
                 console.log('get followers request aborted.');
             } else {
-                console.error(`error in getFollowers service: ${err.message}`);
+                console.error(`error in getFollowers service: ${err}`);
                 throw err;
             }
         }
@@ -41,7 +41,7 @@ class FollowerService {
             if (err.name === 'AbortError') {
                 console.log('get followings request aborted.');
             } else {
-                console.error(`error in getFollowings service: ${err.message}`);
+                console.error(`error in getFollowings service: ${err}`);
                 throw err;
             }
         }
@@ -62,7 +62,7 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            console.error(`error in toggleFollow service: ${err.message}`);
+            console.error(`error in toggleFollow service: ${err}`);
             throw err;
         }
     }

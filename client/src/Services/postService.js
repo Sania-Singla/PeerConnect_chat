@@ -27,9 +27,7 @@ class PostService {
             if (err.name === 'AbortError') {
                 console.log('get random posts request aborted.');
             } else {
-                console.error(
-                    `error in getRandomPosts service: ${err.message}`
-                );
+                console.error(`error in getRandomPosts service: ${err}`);
                 throw err;
             }
         }
@@ -53,7 +51,7 @@ class PostService {
             if (err.name === 'AbortError') {
                 console.log('get posts request aborted.');
             } else {
-                console.error(`error in getPosts service: ${err.message}`);
+                console.error(`error in getPosts service: ${err}`);
                 throw err;
             }
         }
@@ -78,7 +76,7 @@ class PostService {
             if (err.name === 'AbortError') {
                 console.log('get post request aborted.');
             } else {
-                console.error(`error in getPost service: ${err.message}`);
+                console.error(`error in getPost service: ${err}`);
                 throw err;
             }
         }
@@ -101,7 +99,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updatePostDetails service: ${err.message}`);
+            console.error(`error in updatePostDetails service: ${err}`);
             throw err;
         }
     }
@@ -125,7 +123,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updatePostImage service: ${err.message}`);
+            console.error(`error in updatePostImage service: ${err}`);
             throw err;
         }
     }
@@ -145,7 +143,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in deletePost service: ${err.message}`);
+            console.error(`error in deletePost service: ${err}`);
             throw err;
         }
     }
@@ -171,7 +169,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in addPost service: ${err.message}`);
+            console.error(`error in addPost service: ${err}`);
             throw err;
         }
     }
@@ -191,9 +189,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(
-                `error in togglePostVisibility service: ${err.message}`
-            );
+            console.error(`error in togglePostVisibility service: ${err}`);
             throw err;
         }
     }
@@ -220,7 +216,7 @@ class PostService {
             if (err.name === 'AbortError') {
                 console.log('get saved posts request aborted.');
             } else {
-                console.error(`error in getSavedPosts service: ${err.message}`);
+                console.error(`error in getSavedPosts service: ${err}`);
                 throw err;
             }
         }
@@ -241,7 +237,7 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in toggleSavePost service: ${err.message}`);
+            console.error(`error in toggleSavePost service: ${err}`);
             throw err;
         }
     }

@@ -17,7 +17,7 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            console.error(`error in togglePostLike service: ${err.message}`);
+            console.error(`error in togglePostLike service: ${err}`);
             throw err;
         }
     }
@@ -40,7 +40,7 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            console.error(`error in toggleCommentLike service: ${err.message}`);
+            console.error(`error in toggleCommentLike service: ${err}`);
             throw err;
         }
     }
@@ -67,7 +67,7 @@ class LikeService {
             if (err.name === 'AbortError') {
                 console.log('get liked posts request aborted.');
             } else {
-                console.error(`error in getLikedPosts service: ${err.message}`);
+                console.error(`error in getLikedPosts service: ${err}`);
                 throw err;
             }
         }

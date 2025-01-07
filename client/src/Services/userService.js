@@ -18,9 +18,7 @@ class UserService {
             if (err.name === 'AbortError') {
                 console.log('get channel profile request aborted.');
             } else {
-                console.error(
-                    `error in getChannelProfile service: ${err.message}`
-                );
+                console.error(`error in getChannelProfile service: ${err}`);
                 throw err;
             }
         }
@@ -43,9 +41,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(
-                `error in updateAccountDetails service: ${err.message}`
-            );
+            console.error(`error in updateAccountDetails service: ${err}`);
             throw err;
         }
     }
@@ -67,9 +63,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(
-                `error in updateChannelDetails service: ${err.message}`
-            );
+            console.error(`error in updateChannelDetails service: ${err}`);
             throw err;
         }
     }
@@ -93,7 +87,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateAvatar service: ${err.message}`);
+            console.error(`error in updateAvatar service: ${err}`);
             throw err;
         }
     }
@@ -117,7 +111,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateCoverImage service: ${err.message}`);
+            console.error(`error in updateCoverImage service: ${err}`);
             throw err;
         }
     }
@@ -142,7 +136,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updatePassword service: ${err.message}`);
+            console.error(`error in updatePassword service: ${err}`);
             throw err;
         }
     }
@@ -169,9 +163,7 @@ class UserService {
             if (err.name === 'AbortError') {
                 console.log('get watch history request aborted.');
             } else {
-                console.error(
-                    `error in getWatchHistory service: ${err.message}`
-                );
+                console.error(`error in getWatchHistory service: ${err}`);
                 throw err;
             }
         }
@@ -192,7 +184,7 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in clearWatchHistory service: ${err.message}`);
+            console.error(`error in clearWatchHistory service: ${err}`);
             throw err;
         }
     }

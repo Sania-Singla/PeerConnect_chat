@@ -18,7 +18,7 @@ class ChatService {
             if (err.name === 'AbortError') {
                 console.log('get chats request aborted.');
             } else {
-                console.error(`error in getChats service: ${err.message}`);
+                console.error(`error in getChats service: ${err}`);
                 throw err;
             }
         }

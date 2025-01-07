@@ -20,7 +20,7 @@ class CommentService {
             if (err.name === 'AbortError') {
                 console.log('get comments request aborted.');
             } else {
-                console.error(`error in getComments service: ${err.message}`);
+                console.error(`error in getComments service: ${err}`);
                 throw err;
             }
         }
@@ -44,7 +44,7 @@ class CommentService {
             if (err.name === 'AbortError') {
                 console.log('get comment request aborted.');
             } else {
-                console.error(`error in getComment service: ${err.message}`);
+                console.error(`error in getComment service: ${err}`);
                 throw err;
             }
         }
@@ -67,7 +67,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in addComment service: ${err.message}`);
+            console.error(`error in addComment service: ${err}`);
             throw err;
         }
     }
@@ -89,7 +89,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateComment service: ${err.message}`);
+            console.error(`error in updateComment service: ${err}`);
             throw err;
         }
     }
@@ -109,7 +109,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in deleteComment service: ${err.message}`);
+            console.error(`error in deleteComment service: ${err}`);
             throw err;
         }
     }
