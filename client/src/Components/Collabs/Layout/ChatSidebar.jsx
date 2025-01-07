@@ -13,20 +13,15 @@ export default function ChatSidebar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        try {
-            setLoading(true);
-            const onlineChatIdsSet = new Set(onlineChatIds);
-            setChats((prev) =>
-                prev.map((chat) => ({
-                    ...chat,
-                    isOnline: onlineChatIdsSet.has(chat.chat_id),
-                }))
-            );
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        const onlineChatIdsSet = new Set(onlineChatIds);
+        setChats((prev) =>
+            prev.map((chat) => ({
+                ...chat,
+                isOnline: onlineChatIdsSet.has(chat.chat_id),
+            }))
+        );
+        setLoading(false);
     }, [onlineChatIds]);
 
     const chatElements = chats.map((chat) => (
