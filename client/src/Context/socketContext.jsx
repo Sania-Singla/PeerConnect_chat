@@ -72,7 +72,7 @@ const SocketContextProvider = ({ children }) => {
             console.log('status changed', isOnline);
 
             setChats((prev) =>
-                prev.map((chat) => {
+                prev?.map((chat) => {
                     if (chat.chat_id === chatId)
                         return {
                             ...chat,

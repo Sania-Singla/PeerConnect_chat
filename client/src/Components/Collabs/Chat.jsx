@@ -24,7 +24,35 @@ export default function Chat() {
         (async function getMessages() {
             try {
                 setLoading(true);
-                const res = await chatService.getMessages(signal, chatId);
+                // const res = await chatService.getMessages(signal, chatId);
+                const res = [
+                    {
+                        sender_id: 'user123',
+                        text: 'Hey, how are you doing?',
+                        attachment: null,
+                        message_createdAt: '2025-01-08T14:30:00Z',
+                    },
+                    {
+                        sender_id: 'user123',
+                        text: 'Doing well! Just been busy with work.',
+                        attachment: null,
+                        message_createdAt: '2025-01-08T14:34:00Z',
+                    },
+                    {
+                        sender_id: 'ec6fc297-1687-4689-b80c-e17300a4f7ce',
+                        text: 'weekend?',
+                        attachment:
+                            'https://www.healthyeating.org/images/default-source/home-0.0/nutrition-topics-2.0/general-nutrition-wellness/2-2-2-3foodgroups_fruits_detailfeature_thumb.jpg?sfvrsn=7abe71fe_4',
+                        message_createdAt: '2025-01-08T14:35:00Z',
+                    },
+                    {
+                        sender_id: 'user123',
+                        text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident earum soluta labore perspiciatis, tempore recusandae inventore quibusdam, accusantium nobis debitis amet aliquam doloremque, assumenda corporis reiciendis fuga incidunt ullam tenetur!Ducimus vero alias illum dicta deserunt cumque similique, doloribus inventore a. Eaque tenetur quibusdam placeat illum enim odio necessitatibus voluptas commodi. Incidunt expedita debitis quas nulla et in minima quibusdam?Natus vitae et quasi quaerat harum quisquam distinctio maiores, repellendus ducimus eos sit deleniti esse consequuntur ab aperiam quam magni impedit minus dolorem unde. Accusamus incidunt facere iusto sapiente consectetur.Aut, deserunt ducimus blanditiis nobis dolore aliquam nisi eaque perspiciatis quibusdam sequi amet minus quisquam reiciendis similique, totam autem debitis obcaecati impedit quidem culpa sapiente, itaque rerum. Architecto, harum reprehenderit?',
+                        attachment:
+                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQx3xYZ8ECf4UKckANTqcdzF2Pbv3W1K6g-MQ9oI5-R9N4X4mXyZvxuUyx6neu0zZHjfZ2lceHJGzBn8O-PDdLMAg',
+                        message_createdAt: '2025-01-08T14:36:00Z',
+                    },
+                ];
                 if (res && !res.message) {
                     setMessages(res);
                 }
