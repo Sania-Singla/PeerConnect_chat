@@ -88,18 +88,24 @@ io.on('connection', async (socket) => {
             console.error('Error marking user offline:', err);
         }
 
-        // Notify chats that the user is offline
-        const chats = await chatObject.getChats(userId);
+        try {
+            // Notify chats that the user is offline
+            const chats = await chatObject.getChats(userId);
 
-        for (const chat of chats) {
-            const participantSocketId = await getSocketIdByUserId(chat.user_id);
+            for (const chat of chats) {
+                const participantSocketId = await getSocketIdByUserId(
+                    chat.user_id
+                );
 
-            if (participantSocketId) {
-                io.to(participantSocketId).emit('chatStatusChange', {
-                    chatId: chat.chat_id,
-                    isOnline: false,
-                });
+                if (participantSocketId) {
+                    io.to(participantSocketId).emit('chatStatusChange', {
+                        chatId: chat.chat_id,
+                        isOnline: false,
+                    });
+                }
             }
+        } catch (err) {
+            return console.error('Error fetching online participants:', err);
         }
     });
 });
