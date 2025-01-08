@@ -4,6 +4,7 @@ import {
     addChat,
     deleteChat,
     getChats,
+    getChat,
 } from '../controllers/chat/chat.Controller.js';
 
 export const chatRouter = express.Router();
@@ -15,6 +16,6 @@ chatRouter.use(verifyJwt);
 
 chatRouter.route('/add/:userId').post(doesUserExist, addChat);
 
-chatRouter.route('/delete/:chatId').delete(doesChatExist, deleteChat);
+chatRouter.route('/:chatId').delete(doesChatExist, deleteChat).get(getChat);
 
 chatRouter.route('/').get(getChats);

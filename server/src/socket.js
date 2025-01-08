@@ -51,38 +51,29 @@ io.on('connection', async (socket) => {
         return console.error('Error marking user as online:', err);
     }
 
-    // Send online chats to the user
     try {
+        // get the chats of the connectec user
         const chats = await chatObject.getChats(userId);
-
         const onlineChatIds = [];
 
+        // Notify chats when the user goes online
         for (const chat of chats) {
             const participantSocketId = await getSocketIdByUserId(chat.user_id);
 
             if (participantSocketId) {
                 onlineChatIds.push(chat.chat_id);
-            }
-        }
 
-        socket.emit('onlineChats', { onlineChatIds, allChats: chats });
-    } catch (err) {
-        return console.error('Error fetching online participants:', err);
-    }
-
-    // Notify chats when the user goes online
-    socket.on('notify', async (chats) => {
-        for (const chat of chats) {
-            const participantSocketId = await getSocketIdByUserId(chat.user_id);
-
-            if (participantSocketId) {
                 io.to(participantSocketId).emit('chatStatusChange', {
                     chatId: chat.chat_id,
                     isOnline: true,
                 });
             }
         }
-    });
+
+        socket.emit('chats', { onlineChatIds, allChats: chats });
+    } catch (err) {
+        return console.error('Error fetching online participants:', err);
+    }
 
     // disconnection
     socket.on('disconnect', async () => {

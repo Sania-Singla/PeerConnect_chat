@@ -12,7 +12,7 @@ import { icons } from './Assets/icons';
 
 export default function App() {
     const { setUser, user } = useUserContext();
-    const { connectSocket, socket, disconnectSocket } = useSocketContext();
+    const { connectSocket, disconnectSocket } = useSocketContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
@@ -44,15 +44,9 @@ export default function App() {
         };
     }, []);
 
+    // socket setup
     useEffect(() => {
-        if (user) {
-            if (socket) {
-                disconnectSocket();
-            }
-            connectSocket();
-        } else {
-            disconnectSocket();
-        }
+        user ? connectSocket() : disconnectSocket();
     }, [user]);
 
     // Close sidebar

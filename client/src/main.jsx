@@ -8,6 +8,7 @@ import {
     createBrowserRouter,
     createRoutesFromElements,
     RouterProvider,
+    useNavigate,
 } from 'react-router-dom';
 
 import {
@@ -55,9 +56,29 @@ import {
     NoChatSelected,
 } from './Components';
 
+function Wrapper() {
+    const navigate = useNavigate();
+
+    return (
+        <UserContextProvider>
+            <ChatContextProvider>
+                <SocketContextProvider navigate={navigate}>
+                    <PopupContextProvider>
+                        <SideBarContextProvider>
+                            <SearchContextProvider>
+                                <App />
+                            </SearchContextProvider>
+                        </SideBarContextProvider>
+                    </PopupContextProvider>
+                </SocketContextProvider>
+            </ChatContextProvider>
+        </UserContextProvider>
+    );
+}
+
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/" element={<App />}>
+        <Route path="/" element={<Wrapper />}>
             <Route path="" element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
@@ -68,7 +89,7 @@ const router = createBrowserRouter(
             <Route path="saved" element={<SavedPostsPage />} />
             <Route path="collabs" element={<CollabsPage />}>
                 <Route path="" element={<NoChatSelected />} />
-                <Route path="chat/:opponentId" element={<Chat />} />
+                <Route path="chat/:chatId" element={<Chat />} />
             </Route>
 
             {/* static pages */}
@@ -139,18 +160,6 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
-    <UserContextProvider>
-        <ChatContextProvider>
-            <SocketContextProvider>
-                <PopupContextProvider>
-                    <SideBarContextProvider>
-                        <SearchContextProvider>
-                            <RouterProvider router={router} />
-                        </SearchContextProvider>
-                    </SideBarContextProvider>
-                </PopupContextProvider>
-            </SocketContextProvider>
-        </ChatContextProvider>
-    </UserContextProvider>
+    <RouterProvider router={router} />
     // </StrictMode>,
 );

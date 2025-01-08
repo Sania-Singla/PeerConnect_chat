@@ -1,41 +1,39 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../..';
 import { icons } from '../../../Assets/icons';
+import { useChatContext } from '../../../Context';
 
 export default function ChatHeader() {
-    // Example structure for "user"
-    const user = {
-        name: 'John Doe',
-        // avatar: 'https://example.com/avatar.jpg',
-        status: 'online', // "offline" or "online"
-    };
+    const { selectedChat } = useChatContext();
+    const navigate = useNavigate();
 
     return (
         <div className="bg-[#f6f6f6] h-[60px] border-b-[0.01rem] border-b-[#e6e6e6] flex items-center justify-between px-4 py-3">
             {/* Left Section */}
-            <div className="flex items-center">
-                {user?.avatar ? (
+            <div
+                className="flex items-center w-fit"
+                onClick={() => navigate(`/channel/${selectedChat?.user_id}`)}
+            >
+                <div className="size-12 rounded-full overflow-hidden">
                     <img
-                        src={user.avatar}
+                        src={selectedChat?.user_avatar}
                         alt="User Avatar"
-                        className="w-12 h-12 rounded-full border border-gray-200"
+                        className="size-full rounded-full border border-gray-200"
                     />
-                ) : (
-                    <div className="size-12 fill-gray-300 drop-shadow-md">
-                        {icons.circleUser}
-                    </div>
-                )}
+                </div>
                 <div className="ml-3">
                     <h4 className="text-lg font-semibold text-gray-800">
-                        {user?.name || 'Anonymous'}
+                        {selectedChat?.user_firstName}{' '}
+                        {selectedChat?.user_lastName}
                     </h4>
                     <span
                         className={`text-sm ${
-                            user?.status === 'online'
+                            selectedChat?.isOnline
                                 ? 'text-green-500'
                                 : 'text-red-400'
                         }`}
                     >
-                        {user?.status === 'online' ? 'Online' : 'Offline'}
+                        {selectedChat?.isOnline ? 'Online' : 'Offline'}
                     </span>
                 </div>
             </div>

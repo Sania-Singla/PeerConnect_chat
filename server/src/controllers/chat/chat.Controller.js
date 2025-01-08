@@ -1,6 +1,11 @@
 import getServiceObject from '../../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../../constants/errorCodes.js';
+import {
+    SERVER_ERROR,
+    OK,
+    BAD_REQUEST,
+    NOT_FOUND,
+} from '../../constants/errorCodes.js';
 
 export const chatObject = getServiceObject('chats');
 
@@ -10,7 +15,7 @@ const addChat = async (req, res) => {
         const { userId } = req.params;
 
         // check if chat between these two already exists
-        let chat = await chatObject.getChat([myId, userId]);
+        let chat = await chatObject.doesChatAlreadyExist([myId, userId]);
         if (chat) {
             return res
                 .status(BAD_REQUEST)
@@ -66,4 +71,25 @@ const getChats = async (req, res) => {
     }
 };
 
-export { addChat, deleteChat, getChats };
+const getChat = async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const myId = req.user.user_id;
+
+        const chat = await chatObject.getChat(chatId, myId);
+        console.log(chat);
+        if (chat) {
+            return res.status(OK).json(chat);
+        } else {
+            return res.status(NOT_FOUND).json({ message: 'chat not found' });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(SERVER_ERROR).json({
+            message: 'something went wrong while getting the chat.',
+            error: err.message,
+        });
+    }
+};
+
+export { addChat, deleteChat, getChats, getChat };

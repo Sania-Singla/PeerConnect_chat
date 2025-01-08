@@ -2,55 +2,94 @@ import { useContext, createContext, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useChatContext } from './ChatContext';
 import { useUserContext } from './UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const SocketContext = createContext();
 
 const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
+    const [isSocketConnected, setIsSocketConnected] = useState(false);
     const { user } = useUserContext();
-    const { setOnlineChatIds, setChats } = useChatContext();
+    const { setChats } = useChatContext();
+    const navigate = useNavigate();
+    let isConnecting = false;
 
     function connectSocket() {
-        if (!user) return;
+        isConnecting = true;
+        if (!user || socket) return;
 
-        const socket = io(import.meta.env.VITE_BACKEND_BASE_URL, {
+        const socketInstance = io(import.meta.env.VITE_BACKEND_BASE_URL, {
             query: {
                 userId: user?.user_id,
             },
         });
 
-        socket.connect();
-
-        setSocket(socket);
-
-        socket.on('onlineChats', async ({ onlineChatIds, allChats }) => {
-            console.log('online participants listener', onlineChatIds);
-
-            await setChats(allChats);
-            await setOnlineChatIds(onlineChatIds);
-
-            socket.emit('notify', allChats);
+        socketInstance.on('connect', () => {
+            console.log('socket connected...', socketInstance.id);
+            isConnecting = false;
+            setSocket(socketInstance);
+            setIsSocketConnected(true);
         });
 
-        socket.on('chatStatusChange', ({ chatId, isOnline }) => {
-            setOnlineChatIds((prev) => {
-                const updatedSet = new Set(prev);
-
-                if (isOnline) {
-                    updatedSet.add(chatId); // Add to the set if the user is online
-                } else {
-                    updatedSet.delete(chatId); // Remove from the set if the user is offline
-                }
-
-                return Array.from(updatedSet); // Convert the set back to an array
-            });
+        socketInstance.on('disconnect', () => {
+            console.log('socket disconnected...');
+            setSocket(null);
+            setIsSocketConnected(false);
         });
+
+        socketInstance.on('connect_error', (err) => {
+            console.error('Socket connection error:', err);
+            navigate('/server-error');
+        });
+
+        socketInstance.on('disconnect_error', (err) => {
+            console.error('Socket disconnect error:', err);
+            navigate('/server-error');
+        });
+
+        // Handle any generic socket errors
+        socketInstance.on('error', (err) => {
+            console.error('Socket error:', err);
+            navigate('/server-error');
+        });
+
+        socketInstance.on('chats', (data) => {
+            const { onlineChatIds, allChats } = data;
+
+            console.log('chats', allChats);
+
+            const onlineChatSet = new Set(onlineChatIds);
+
+            const updatedChats = allChats.map((chat) => ({
+                ...chat,
+                isOnline: onlineChatSet.has(chat.chat_id),
+            }));
+
+            setChats(updatedChats);
+        });
+
+        socketInstance.on('chatStatusChange', ({ chatId, isOnline }) => {
+            console.log('status changed', isOnline);
+
+            setChats((prev) =>
+                prev.map((chat) => {
+                    if (chat.chat_id === chatId)
+                        return {
+                            ...chat,
+                            isOnline,
+                        };
+                    else return chat;
+                })
+            );
+        });
+
+        // Finally, establish the connection
+        socketInstance.connect();
     }
 
     function disconnectSocket() {
-        if (socket?.connected) {
-            socket.disconnect();
-            setSocket(null);
+        if (socket) {
+            socket.disconnect(); // will set socket = null implicitly
         }
     }
 
@@ -58,6 +97,8 @@ const SocketContextProvider = ({ children }) => {
         <SocketContext.Provider
             value={{
                 socket,
+                isSocketConnected,
+                setIsSocketConnected,
                 setSocket,
                 connectSocket,
                 disconnectSocket,

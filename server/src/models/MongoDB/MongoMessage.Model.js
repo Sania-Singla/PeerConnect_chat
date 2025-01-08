@@ -38,6 +38,7 @@ export class MongoMessages extends Imessages {
 
     async getMessages(chatId, limit = 50) {
         try {
+            // apply pagination later
             return await Message.find({ chat_id: chatId }).lean();
         } catch (err) {
             console.log(err);

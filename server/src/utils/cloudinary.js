@@ -23,9 +23,9 @@ const uploadOnCloudinary = async (localFilePath) => {
             resource_type: 'auto',
         });
 
-        console.log('file uploaded successfully.', res.url);
+        console.log('file uploaded successfully.', res.secure_url);
 
-        return res.url;
+        return res.secure_url;
     } catch (err) {
         throw new Error(
             `error while uploading file on cloudinary, err: ${err.message}`
