@@ -17,7 +17,7 @@ export const doesResourceExist = (service, idParam, reqKey) => {
     return async (req, res, next) => {
         try {
             const resourceId = req.params[idParam];
-
+            console.log(resourceId);
             if (!resourceId || !validator.isUUID(resourceId)) {
                 return res.status(BAD_REQUEST).json({
                     message: `missing or invalid ${idParam}`,
@@ -25,43 +25,8 @@ export const doesResourceExist = (service, idParam, reqKey) => {
             }
 
             const serviceObject = getServiceObject(service + 's');
-            let resource;
-
-            switch (service) {
-                case 'post': {
-                    resource = await serviceObject.getPost(
-                        resourceId,
-                        req.user?.user_id
-                    );
-                    break;
-                }
-                case 'comment': {
-                    resource = await serviceObject.getComment(
-                        resourceId,
-                        req.user?.user_id
-                    );
-                    break;
-                }
-                case 'user': {
-                    resource = await serviceObject.getUser(resourceId);
-                    break;
-                }
-                case 'category': {
-                    resource = await serviceObject.getCategory(resourceId);
-                    break;
-                }
-                case 'chat': {
-                    resource = await serviceObject.getChat(resourceId);
-                    break;
-                }
-                case 'message': {
-                    resource = await serviceObject.getMessage(resourceId);
-                    break;
-                }
-                default: {
-                    console.log('invalid service type');
-                }
-            }
+            const methodName = service + 'Existance';
+            const resource = await serviceObject[methodName](resourceId);
 
             if (!resource) {
                 return res
@@ -69,7 +34,7 @@ export const doesResourceExist = (service, idParam, reqKey) => {
                     .json({ message: `${service} not found` });
             }
 
-            req[reqKey] = resource;
+            if (reqKey) req[reqKey] = resource;
             next();
         } catch (err) {
             return res.status(SERVER_ERROR).json({

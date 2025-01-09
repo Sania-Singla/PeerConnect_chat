@@ -44,6 +44,14 @@ export class MongoPosts extends Iposts {
         }
     }
 
+    async postExistance(postId) {
+        try {
+            return await Post.findOne({ post_id: postId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async getPost(postId, userId) {
         try {
             const pipeline = [

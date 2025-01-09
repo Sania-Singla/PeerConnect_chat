@@ -12,6 +12,14 @@ export class MongoChats extends Ichats {
         }
     }
 
+    async chatExistance(chatId) {
+        try {
+            return await Chat.findOne({ chat_id: chatId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async getChat(chatId, myId) {
         try {
             const pipeline = [

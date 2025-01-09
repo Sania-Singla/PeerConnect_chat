@@ -197,7 +197,7 @@ const addPost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const { post_image, post_id } = req.post;
-        const result = await postObject.deletePost(post_id);
+        await postObject.deletePost(post_id);
         await deleteFromCloudinary(post_image);
         return res.status(OK).json({ message: 'post deleted successfully' });
     } catch (err) {
@@ -285,10 +285,7 @@ const updateThumbnail = async (req, res) => {
 const togglePostVisibility = async (req, res) => {
     try {
         const { post_id, post_visibility } = req.post;
-        const result = await postObject.togglePostVisibility(
-            post_id,
-            !post_visibility
-        );
+        await postObject.togglePostVisibility(post_id, !post_visibility);
         return res
             .status(OK)
             .json({ message: 'post visibility toggled successfully' });

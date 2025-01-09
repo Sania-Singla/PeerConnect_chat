@@ -163,6 +163,7 @@ export default function Sidebar() {
                                     onClick={() =>
                                         setShowSideBar((prev) => !prev)
                                     }
+                                    title="Close Sidebar"
                                     className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
                                 />
                                 {user ? (

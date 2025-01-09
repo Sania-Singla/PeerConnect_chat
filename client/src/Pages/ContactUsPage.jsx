@@ -200,6 +200,7 @@ export default function ContactUsPage() {
 
                             <Button
                                 btnText={'Submit'}
+                                type="submit"
                                 className="text-white mt-4 rounded-md w-full py-2 px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
                             />
                         </form>

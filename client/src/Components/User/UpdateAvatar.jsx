@@ -83,7 +83,6 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                             }`}
                         />
                     }
-                    type="button"
                     className="rounded-full size-fit overflow-hidden"
                     onClick={() => ref.current.click()}
                 />
@@ -120,7 +119,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
 
             {/* cross */}
             <Button
-                type="button"
+                title="Close"
                 btnText={
                     <div className="size-[23px] fill-none stroke-slate-700">
                         {icons.cross}

@@ -153,21 +153,20 @@ export default function UpdateAccountDetails() {
                     <div className="flex flex-col gap-4">{inputElements}</div>
                     <div className="flex gap-6 mt-6">
                         <Button
-                            btnText={loading ? 'Updating...' : 'Update'}
-                            disabled={disabled}
-                            type="submit"
-                            onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                        />
-                        <Button
                             onMouseOver={onMouseOver}
                             btnText="Cancel"
-                            type="button"
                             onClick={() => {
                                 setInputs(initialInputs);
                                 setError(nullErrors);
                             }}
                             disabled={loading}
+                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                        />
+                        <Button
+                            btnText={loading ? 'Updating...' : 'Update'}
+                            disabled={disabled}
+                            type="submit"
+                            onMouseOver={onMouseOver}
                             className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>

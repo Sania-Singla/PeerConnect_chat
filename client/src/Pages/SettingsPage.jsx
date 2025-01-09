@@ -123,7 +123,6 @@ export default function SettingsPage() {
                 )}
             </div>
 
-            {/* difference sections */}
             <Outlet />
         </div>
     );

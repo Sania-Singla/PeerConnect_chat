@@ -267,6 +267,7 @@ export default function RegisterPage() {
 
                     <div className="w-full">
                         <Button
+                            type="submit"
                             className="text-white rounded-md py-2 mt-4 h-[45px] flex items-center justify-center text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                             disabled={disabled}
                             onMouseOver={onMouseOver}

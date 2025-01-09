@@ -25,6 +25,14 @@ export class MongoUsers extends Iusers {
         }
     }
 
+    async userExistance(userId) {
+        try {
+            return await User.findOne({ user_id: userId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async createUser({
         userId,
         userName,

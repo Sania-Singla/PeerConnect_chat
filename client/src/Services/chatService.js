@@ -74,22 +74,23 @@ class ChatService {
         }
     }
 
-    async sendMessage(signal, chatId, input) {
+    async sendMessage(chatId, message) {
         try {
-            let body;
-            if (input.attachment) {
+            let body, headers;
+            if (message.attachment) {
                 const formData = new FormData();
-                formData.append('attachment', input.attachment);
-                formData.append('text', input.text);
+                formData.append('attachment', message.attachment);
+                formData.append('text', message.text);
                 body = formData;
             } else {
-                body = JSON.stringify({ text: input.text });
+                body = JSON.stringify({ text: message.text });
+                headers = { 'Content-Type': 'application/json' };
             }
 
             const res = await fetch(`/api/messages/${chatId}`, {
                 method: 'POST',
                 credentials: 'include',
-                signal,
+                headers,
                 body,
             });
 
@@ -101,12 +102,8 @@ class ChatService {
             }
             return data;
         } catch (err) {
-            if (err.name === 'AbortError') {
-                console.log('send message request aborted.');
-            } else {
-                console.error(`error in sendMessage service: ${err}`);
-                throw err;
-            }
+            console.error(`error in sendMessage service: ${err}`);
+            throw err;
         }
     }
 }

@@ -5,7 +5,7 @@
  * @param {Function} setError - State function to set the corresponding error or an empty string "".
  */
 
-export default function fileRestrictions(file, name, setError) {
+function fileRestrictions(file, name, setError) {
     if (file) {
         const extension = file.name.split('.').pop().toLowerCase();
         const fileSizeMB = file.size / (1024 * 1024);
@@ -22,3 +22,21 @@ export default function fileRestrictions(file, name, setError) {
         return 'file is missing';
     }
 }
+
+function fileSizeRestriction(file, name, setError) {
+    if (file) {
+        const fileSizeMB = file.size / (1024 * 1024);
+        const maxSizeMB = 100;
+        if (fileSizeMB > maxSizeMB) {
+            return setError((prevError) => ({
+                ...prevError,
+                [name]: 'File size should not exceed 100MB.',
+            }));
+        }
+        setError((prevError) => ({ ...prevError, [name]: '' }));
+    } else {
+        return 'file is missing';
+    }
+}
+
+export { fileRestrictions, fileSizeRestriction };

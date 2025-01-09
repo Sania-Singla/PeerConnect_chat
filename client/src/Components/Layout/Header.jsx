@@ -44,6 +44,7 @@ export default function Header() {
                             {icons.hamburgur}
                         </div>
                     }
+                    title="Show Sidebar"
                     onClick={() => {
                         setShowSideBar((prev) => !prev);
                     }}
@@ -113,6 +114,7 @@ export default function Header() {
                                     {icons.cross}
                                 </div>
                             }
+                            title="Close"
                             onClick={() => {
                                 setShowSearchBar(false);
                             }}
@@ -131,6 +133,7 @@ export default function Header() {
                                 {icons.search}
                             </div>
                         }
+                        title="Search"
                         onClick={() => {
                             setShowSearchBar((prev) => !prev);
                         }}
@@ -149,6 +152,7 @@ export default function Header() {
                                 {icons.chat}
                             </div>
                         }
+                        title="Collaborations"
                         className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 </NavLink>
@@ -164,6 +168,7 @@ export default function Header() {
                                 {icons.plus}
                             </div>
                         }
+                        title="Add Post"
                         className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 </NavLink>
@@ -179,6 +184,7 @@ export default function Header() {
                                     navigate('/register');
                                 }}
                                 btnText="Sign Up"
+                                title="Sign Up"
                                 className="text-white rounded-md py-[5px] w-[80px] h-[35px] bg-[#4977ec] hover:bg-[#3b62c2]"
                             />
 
@@ -187,6 +193,7 @@ export default function Header() {
                                     navigate('/login');
                                 }}
                                 btnText="Login"
+                                title="Login"
                                 className="text-white rounded-md py-[5px] w-[80px] h-[35px] bg-[#4977ec] hover:bg-[#3b62c2]"
                             />
                         </div>

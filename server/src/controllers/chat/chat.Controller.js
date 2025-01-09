@@ -73,16 +73,13 @@ const getChats = async (req, res) => {
 
 const getChat = async (req, res) => {
     try {
+        // chat exists
         const { chatId } = req.params;
         const myId = req.user.user_id;
 
         const chat = await chatObject.getChat(chatId, myId);
-        console.log(chat);
-        if (chat) {
-            return res.status(OK).json(chat);
-        } else {
-            return res.status(NOT_FOUND).json({ message: 'chat not found' });
-        }
+
+        return res.status(OK).json(chat);
     } catch (err) {
         console.log(err);
         return res.status(SERVER_ERROR).json({

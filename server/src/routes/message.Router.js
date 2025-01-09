@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
+import { verifyJwt, doesResourceExist, upload } from '../middlewares/index.js';
 import {
     deleteMessage,
     sendMessage,
@@ -17,6 +17,6 @@ messageRouter
     .route('/:chatId')
     .all(doesChatExist)
     .get(getMessages)
-    .post(sendMessage);
+    .post(upload.single('attachment'), sendMessage);
 
 messageRouter.route('/:messageId').delete(doesMessageExist, deleteMessage); // can have edit message too

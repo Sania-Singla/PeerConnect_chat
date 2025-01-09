@@ -29,6 +29,7 @@ export default function LoginPopup() {
                                 {icons.cross}
                             </div>
                         }
+                        title="Close"
                         onClick={() => setShowLoginPopup(false)}
                         className="absolute top-2 right-2"
                     />

@@ -16,6 +16,6 @@ chatRouter.use(verifyJwt);
 
 chatRouter.route('/add/:userId').post(doesUserExist, addChat);
 
-chatRouter.route('/:chatId').delete(doesChatExist, deleteChat).get(getChat);
+chatRouter.route('/:chatId').all(doesChatExist).delete(deleteChat).get(getChat);
 
 chatRouter.route('/').get(getChats);

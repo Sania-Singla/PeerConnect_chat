@@ -124,6 +124,7 @@ export default function Login() {
                     <Button
                         className="text-white rounded-md py-2 mt-4 h-[45px] text-lg w-full flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2]"
                         onMouseOver={onMouseOver}
+                        type="submit"
                         btnText={
                             loading ? (
                                 <div className="size-5 fill-[#4977ec] dark:text-[#a2bdff]">

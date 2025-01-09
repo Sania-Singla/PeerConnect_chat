@@ -20,6 +20,14 @@ export class MongoCategories extends Icategories {
         }
     }
 
+    async categoryExistance(categoryId) {
+        try {
+            return await Category.findOne({ category_id: categoryId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async createCategory(categoryId, categoryName) {
         try {
             const category = await Category.create({

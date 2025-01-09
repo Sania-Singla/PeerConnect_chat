@@ -118,6 +118,14 @@ export class MongoComments extends Icomments {
         }
     }
 
+    async commentExistance(commentId) {
+        try {
+            return await Comment.findOne({ comment_id: commentId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async getComment(commentId, userId) {
         try {
             const pipeline = [

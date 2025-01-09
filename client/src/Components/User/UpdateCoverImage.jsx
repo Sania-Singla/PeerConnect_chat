@@ -75,7 +75,6 @@ export default function UpdateCoverImage({
 
             {/* preview */}
             <Button
-                type="button"
                 btnText={
                     <img
                         alt="preview"
@@ -123,7 +122,7 @@ export default function UpdateCoverImage({
             {/* cross */}
             <div>
                 <Button
-                    type="button"
+                    title="Close"
                     btnText={
                         <div className="size-[23px] fill-none stroke-slate-700">
                             {icons.cross}

@@ -149,7 +149,6 @@ export default function UpdatePassword() {
                         <Button
                             btnText="Cancel"
                             onMouseOver={onMouseOver}
-                            type="button"
                             disabled={loading}
                             onClick={() => {
                                 setInputs(initialInputs);

@@ -10,7 +10,7 @@ const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const { user } = useUserContext();
-    const { setChats } = useChatContext();
+    const { setChats, setMessages } = useChatContext();
     const navigate = useNavigate();
     let isConnecting = false;
 
@@ -81,6 +81,11 @@ const SocketContextProvider = ({ children }) => {
                     else return chat;
                 })
             );
+        });
+
+        socketInstance.on('newMessage', (message) => {
+            console.log('new message');
+            setMessages((prev) => (prev ? [...prev, message] : [message]));
         });
 
         // Finally, establish the connection

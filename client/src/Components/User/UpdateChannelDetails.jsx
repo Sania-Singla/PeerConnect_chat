@@ -159,7 +159,6 @@ export default function UpdateChannelDetails() {
                         <Button
                             btnText="Cancel"
                             onMouseOver={onMouseOver}
-                            type="button"
                             disabled={loading}
                             onClick={() => {
                                 setInputs(initialInputs);

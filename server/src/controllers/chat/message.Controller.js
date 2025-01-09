@@ -13,14 +13,15 @@ const sendMessage = async (req, res) => {
         const { chatId } = req.params;
         const chat = req.chat;
         const { text } = req.body;
-        let attachement = req.file?.path;
+        console.log(req.body);
+        let attachment = req.file?.path;
 
-        if (!text && !attachement) {
+        if (!text && !attachment) {
             return res.status(BAD_REQUEST).json({ message: 'missing fields' });
         }
 
-        if (attachement) {
-            attachement = await uploadOnCloudinary(attachement);
+        if (attachment) {
+            attachment = await uploadOnCloudinary(attachment);
         }
 
         const message = await messageObject.sendMessage(
@@ -28,15 +29,17 @@ const sendMessage = async (req, res) => {
             chatId,
             myId,
             text,
-            attachement
+            attachment
         );
 
-        await chatObject.updateLastMessage(chatId, message);
+        if (text) {
+            await chatObject.updateLastMessage(chatId, text);
+        } else {
+            await chatObject.updateLastMessage(chatId, req.file.fileName);
+        }
 
         // socket.io
-        const [reciverId] = chat.participants.filter(
-            (userId) => userId !== myId
-        );
+        const reciverId = chat.participants.find((userId) => userId !== myId);
 
         const recieverSocketId = await getSocketIdByUserId(reciverId);
 
@@ -57,12 +60,11 @@ const deleteMessage = async (req, res) => {
         // just the db part right now
         const { messageId } = req.params;
 
-        // check if that message exist
         const { attachement } = req.message;
 
         await messageObject.deleteMessage(messageId);
 
-        await deleteFromCloudinary(attachement);
+        if (attachement) await deleteFromCloudinary(attachement);
 
         return res.status(OK).json({ message: 'message deleted successfully' });
     } catch (err) {
@@ -77,8 +79,6 @@ const deleteMessage = async (req, res) => {
 const getMessages = async (req, res) => {
     try {
         const { chatId } = req.params;
-
-        // check if chat exists
 
         const messages = await messageObject.getMessages(chatId);
 

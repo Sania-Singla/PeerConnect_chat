@@ -2,23 +2,27 @@ import { Imessages } from '../../interfaces/message.Interface.js';
 import { Message } from '../../schemas/MongoDB/index.js';
 
 export class MongoMessages extends Imessages {
-    async sendMessage(messageId, chatId, myId, text, attachement) {
+    async sendMessage(messageId, chatId, myId, text, attachment) {
         try {
             const message = await Message.create({
                 message_id: messageId,
                 chat_id: chatId,
-                senderId: myId,
+                sender_id: myId,
                 text,
-                attachement,
+                attachment,
             });
 
             return message.toObject();
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while sending the message.',
-                error: err.message,
-            });
+            throw err;
+        }
+    }
+
+    async messageExistance(messageId) {
+        try {
+            return await Message.findOne({ message_id: messageId }).lean();
+        } catch (err) {
+            throw err;
         }
     }
 
@@ -28,11 +32,7 @@ export class MongoMessages extends Imessages {
                 message_id: messageId,
             }).lean();
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while sending the message.',
-                error: err.message,
-            });
+            throw err;
         }
     }
 
@@ -41,11 +41,7 @@ export class MongoMessages extends Imessages {
             // apply pagination later
             return await Message.find({ chat_id: chatId }).lean();
         } catch (err) {
-            console.log(err);
-            return res.status(SERVER_ERROR).json({
-                message: 'something went wrong while getting the messages.',
-                error: err.message,
-            });
+            throw err;
         }
     }
 }

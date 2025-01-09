@@ -39,12 +39,12 @@ const getLikedPosts = async (req, res) => {
 const togglePostLike = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { post_id } = req.post;
+        const { postId } = req.params;
         let { likedStatus } = req.query;
 
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
-        await likeObject.togglePostLike(user_id, post_id, likedStatus);
+        await likeObject.togglePostLike(user_id, postId, likedStatus);
         return res
             .status(OK)
             .json({ message: 'post like toggled successfully' });
@@ -60,11 +60,11 @@ const togglePostLike = async (req, res) => {
 const toggleCommentLike = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { comment_id } = req.comment;
+        const { commentId } = req.params;
         let { likedStatus } = req.query;
         likedStatus = likedStatus === 'true' ? 1 : 0;
 
-        await likeObject.toggleCommentLike(user_id, comment_id, likedStatus);
+        await likeObject.toggleCommentLike(user_id, commentId, likedStatus);
         return res
             .status(OK)
             .json({ message: 'comment like toggled successfully' });

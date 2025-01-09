@@ -140,6 +140,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 <div className="flex items-center justify-center gap-4">
                     <Button
                         onClick={deletePost}
+                        title="Delete"
                         className="bg-[#ffffff] group p-2 rounded-full drop-shadow-md w-fit"
                         btnText={
                             <div className="size-[20px] fill-black group-hover:fill-[#d42828]">
@@ -148,6 +149,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                         }
                     />
                     <Button
+                        title="Edit"
                         onClick={() => navigate(`/update/${post_id}`)}
                         className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                         btnText={

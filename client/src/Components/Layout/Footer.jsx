@@ -97,6 +97,7 @@ export default function Footer() {
                         />
                         <Button
                             btnText={'Submit'}
+                            type="submit"
                             className="text-white rounded-md px-3 h-full bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>

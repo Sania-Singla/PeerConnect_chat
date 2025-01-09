@@ -200,7 +200,6 @@ export default function Comment({ comment, setComments }) {
                         <div className="flex items-center gap-x-3">
                             {/* reset btn */}
                             <Button
-                                type="button"
                                 onClick={() => {
                                     setIsEditing(false);
                                     setNewContent(comment_content);
@@ -226,6 +225,7 @@ export default function Comment({ comment, setComments }) {
                 <div className="bg-[#f0efef] rounded-full overflow-hidden mt-4 drop-shadow-md hover:bg-[#ebeaea] w-fit">
                     <Button
                         onClick={handleLike}
+                        title="Like"
                         btnText={
                             <div className="flex items-center justify-center gap-2">
                                 <div
@@ -247,6 +247,7 @@ export default function Comment({ comment, setComments }) {
 
                     <Button
                         onClick={handleDislike}
+                        title="Dislike"
                         btnText={
                             <div className="flex items-center justify-center gap-2">
                                 <div
@@ -277,6 +278,7 @@ export default function Comment({ comment, setComments }) {
                                 {icons.edit}
                             </div>
                         }
+                        title="Edit"
                         className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                     />
 
@@ -287,6 +289,7 @@ export default function Comment({ comment, setComments }) {
                                 {icons.delete}
                             </div>
                         }
+                        title="Delete"
                         className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                     />
                 </div>
