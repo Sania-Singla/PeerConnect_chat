@@ -2,7 +2,7 @@ import { Imessages } from '../../interfaces/message.Interface.js';
 import { Message } from '../../schemas/MongoDB/index.js';
 
 export class MongoMessages extends Imessages {
-    async sendMessage(messageId, chatId, myId, text, attachment) {
+    async sendMessage(messageId, chatId, myId, text, attachment, fileName) {
         try {
             const message = await Message.create({
                 message_id: messageId,
@@ -10,6 +10,7 @@ export class MongoMessages extends Imessages {
                 sender_id: myId,
                 text,
                 attachment,
+                fileName,
             });
 
             return message.toObject();

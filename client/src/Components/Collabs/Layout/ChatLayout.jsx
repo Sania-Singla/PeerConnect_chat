@@ -10,7 +10,9 @@ export default function ChatLayout() {
         <div className="fixed z-[100] inset-0">
             {socket ? (
                 <div className="w-full h-full flex">
-                    <ChatSidebar />
+                    <div className="w-[280px]">
+                        <ChatSidebar />
+                    </div>
                     <div className="flex-1">
                         <Outlet />
                     </div>

@@ -85,6 +85,22 @@ const SocketContextProvider = ({ children }) => {
 
         socketInstance.on('newMessage', (message) => {
             console.log('new message');
+
+            // update last message
+            setChats((prev) =>
+                prev.map((chat) => {
+                    if (chat.chat_id === message.chat_id) {
+                        return {
+                            ...chat,
+                            lastMessage: message.text || message.fileName,
+                        };
+                    } else {
+                        return chat;
+                    }
+                })
+            );
+
+            // append message
             setMessages((prev) => (prev ? [...prev, message] : [message]));
         });
 

@@ -13,7 +13,6 @@ const sendMessage = async (req, res) => {
         const { chatId } = req.params;
         const chat = req.chat;
         const { text } = req.body;
-        console.log(req.body);
         let attachment = req.file?.path;
 
         if (!text && !attachment) {
@@ -23,19 +22,20 @@ const sendMessage = async (req, res) => {
         if (attachment) {
             attachment = await uploadOnCloudinary(attachment);
         }
-
+        console.log(attachment);
         const message = await messageObject.sendMessage(
             uuid(), // messageId
             chatId,
             myId,
             text,
-            attachment
+            attachment?.secure_url,
+            req.file?.originalname
         );
 
         if (text) {
             await chatObject.updateLastMessage(chatId, text);
         } else {
-            await chatObject.updateLastMessage(chatId, req.file.fileName);
+            await chatObject.updateLastMessage(chatId, req.file?.originalname);
         }
 
         // socket.io

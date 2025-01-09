@@ -65,10 +65,10 @@ export default function ChatSidebar() {
 
                 {/* User Info */}
                 <div className="ml-3 flex-1">
-                    <h4 className="text-[16px] font-semibold text-[#2b2b2b] truncate leading-4 line-clamp-1">
+                    <h4 className="text-[16px] font-semibold text-[#2b2b2b] leading-4 line-clamp-1">
                         {chat.user_firstName} {chat.user_lastName}
                     </h4>
-                    <p className="text-[13px] text-gray-500 truncate leading-5 line-clamp-1">
+                    <p className="text-[13px] text-gray-500 leading-5 line-clamp-1">
                         {chat.lastMessage || 'No messages yet'}
                     </p>
                 </div>

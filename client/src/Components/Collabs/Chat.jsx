@@ -56,7 +56,7 @@ export default function Chat() {
     // Scroll to bottom when messages change
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, chatId]);
 
     if (loading || !selectedChat) {
         return (
@@ -68,8 +68,8 @@ export default function Chat() {
         );
     }
 
-    const messageElements = messages?.map((message, index) => (
-        <Message message={message} key={index} />
+    const messageElements = messages?.map((message) => (
+        <Message message={message} key={message.message_id} />
     ));
 
     return (

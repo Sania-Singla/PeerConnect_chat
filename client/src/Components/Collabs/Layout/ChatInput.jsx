@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Button } from '../..';
 import { icons } from '../../../Assets/icons';
-import { useChatContext } from '../../../Context';
+import { useChatContext, useUserContext } from '../../../Context';
 import { fileSizeRestriction } from '../../../Utils';
 import { chatService } from '../../../Services';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ export default function ChatInput() {
         attachment: null,
         text: '',
     });
-    const { setMessages } = useChatContext();
+    const { setMessages, setChats } = useChatContext();
     const attachmentRef = useRef();
     const { chatId } = useParams();
     const [attachmentPreview, setAttachmentPreview] = useState(null);
@@ -21,8 +21,23 @@ export default function ChatInput() {
     const navigate = useNavigate();
 
     async function handleSend(e) {
+        e.preventDefault();
+
+        // update last message
+        setChats((prev) =>
+            prev.map((chat) => {
+                if (chat.chat_id === chatId) {
+                    return {
+                        ...chat,
+                        lastMessage: message.text || message.attachment?.name,
+                    };
+                } else {
+                    return chat;
+                }
+            })
+        );
+
         try {
-            e.preventDefault();
             const res = await chatService.sendMessage(chatId, message);
             if (res && !res.message) {
                 setMessages((prev) => [...prev, res]);
@@ -37,6 +52,7 @@ export default function ChatInput() {
 
     function handleChange(e) {
         const { name, value, files, type } = e.target;
+
         if (type === 'file' && files[0]) {
             const file = files[0];
             setMessage((prev) => ({ ...prev, [name]: file }));

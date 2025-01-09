@@ -171,7 +171,8 @@ const addPost = async (req, res) => {
                 .json({ message: 'category not found' });
         }
 
-        postImage = await uploadOnCloudinary(req.file.path);
+        const result = await uploadOnCloudinary(req.file.path);
+        postImage = result.secure_url;
 
         const post = await postObject.createPost({
             postId: uuid(),
@@ -259,7 +260,8 @@ const updateThumbnail = async (req, res) => {
                 .json({ message: 'missing thumbnail' });
         }
 
-        postImage = await uploadOnCloudinary(req.file?.path);
+        const result = await uploadOnCloudinary(req.file?.path);
+        postImage = result.secure_url;
 
         // delete old thumbnail
         await deleteFromCloudinary(post_image);

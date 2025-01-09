@@ -41,9 +41,15 @@ const messageSchema = new Schema({
     }, // obvious other participant is the reciever
     text: {
         type: String,
+        default: '',
     },
     attachment: {
         type: String,
+        default: '',
+    },
+    fileName: {
+        type: String,
+        default: '',
     },
     message_createdAt: {
         type: Date,

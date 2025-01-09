@@ -96,11 +96,13 @@ const registerUser = async (req, res) => {
                 .json({ message: 'user already exists' });
         }
 
-        data.avatar = await uploadOnCloudinary(data.avatar);
+        let result = await uploadOnCloudinary(data.avatar);
+        data.avatar = result.secure_url;
         avatarURL = data.avatar;
 
         if (data.coverImage) {
-            data.coverImage = await uploadOnCloudinary(data.coverImage);
+            result = await uploadOnCloudinary(data.coverImage);
+            data.coverImage = result.secure_url;
             coverImageURL = data.coverImage;
         }
 
@@ -345,7 +347,8 @@ const updateAvatar = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: 'missing avatar' });
         }
 
-        avatar = await uploadOnCloudinary(req.file.path);
+        const result = await uploadOnCloudinary(req.file.path);
+        avatar = result.secure_url;
 
         const updatedUser = await userObject.updateAvatar(user_id, avatar);
 
@@ -377,7 +380,8 @@ const updateCoverImage = async (req, res) => {
                 .json({ message: 'missing coverImage' });
         }
 
-        coverImage = await uploadOnCloudinary(req.file.path);
+        const result = await uploadOnCloudinary(req.file.path);
+        coverImage = result.secure_url;
 
         const updatedUser = await userObject.updateCoverImage(
             user_id,
