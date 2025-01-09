@@ -26,15 +26,22 @@ export default function ChatHeader() {
                         {selectedChat?.user_firstName}{' '}
                         {selectedChat?.user_lastName}
                     </h4>
-                    <span
-                        className={`text-sm ${
-                            selectedChat?.isOnline
-                                ? 'text-green-500'
-                                : 'text-red-400'
-                        }`}
-                    >
-                        {selectedChat?.isOnline ? 'Online' : 'Offline'}
-                    </span>
+
+                    {selectedChat?.isTyping ? (
+                        <span className="text-sm text-green-500">
+                            typing...
+                        </span>
+                    ) : (
+                        <span
+                            className={`text-sm ${
+                                selectedChat?.isOnline
+                                    ? 'text-green-500'
+                                    : 'text-red-400'
+                            }`}
+                        >
+                            {selectedChat?.isOnline ? 'Online' : 'Offline'}
+                        </span>
+                    )}
                 </div>
             </div>
 

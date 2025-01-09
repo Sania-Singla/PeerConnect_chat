@@ -91,11 +91,11 @@ export default function Chat() {
                 )}
             </div>
 
-            {/* <div className="px-4 py-2">
-                <p className="text-gray-500 text-sm italic">
-                    'User is typing...'
+            {selectedChat.isTyping && (
+                <p className="px-4 py-2 text-gray-500 text-sm italic">
+                    User is typing...
                 </p>
-            </div> */}
+            )}
 
             <ChatInput />
         </div>

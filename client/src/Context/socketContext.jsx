@@ -104,6 +104,36 @@ const SocketContextProvider = ({ children }) => {
             setMessages((prev) => (prev ? [...prev, message] : [message]));
         });
 
+        socketInstance.on('typing', (chatId) => {
+            console.log("typing");
+            
+            setChats((prev) =>
+                prev?.map((chat) => {
+                    if (chat.chat_id === chatId) {
+                        return {
+                            ...chat,
+                            isTyping: true,
+                        };
+                    } else return chat;
+                })
+            );
+        });
+
+        socketInstance.on('stoppedTyping', (chatId) => {
+            console.log("stopped typing");
+
+            setChats((prev) =>
+                prev?.map((chat) => {
+                    if (chat.chat_id === chatId) {
+                        return {
+                            ...chat,
+                            isTyping: false,
+                        };
+                    } else return chat;
+                })
+            );
+        });
+
         // Finally, establish the connection
         socketInstance.connect();
     }

@@ -68,9 +68,15 @@ export default function ChatSidebar() {
                     <h4 className="text-[16px] font-semibold text-[#2b2b2b] leading-4 line-clamp-1">
                         {chat.user_firstName} {chat.user_lastName}
                     </h4>
-                    <p className="text-[13px] text-gray-500 leading-5 line-clamp-1">
-                        {chat.lastMessage || 'No messages yet'}
-                    </p>
+                    {chat.isTyping ? (
+                        <p className="text-[13px] text-green-500 leading-5 line-clamp-1">
+                            typing...
+                        </p>
+                    ) : (
+                        <p className="text-[13px] text-gray-500 leading-5 line-clamp-1">
+                            {chat.lastMessage || 'No messages yet'}
+                        </p>
+                    )}
                 </div>
             </div>
         ));

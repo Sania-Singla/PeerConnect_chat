@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Button } from '../..';
 import { icons } from '../../../Assets/icons';
-import { useChatContext, useUserContext } from '../../../Context';
+import { useChatContext, useSocketContext } from '../../../Context';
 import { fileSizeRestriction } from '../../../Utils';
 import { chatService } from '../../../Services';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,10 +11,12 @@ export default function ChatInput() {
         attachment: null,
         text: '',
     });
-    const { setMessages, setChats } = useChatContext();
+    const { setMessages, setChats, selectedChat } = useChatContext();
     const attachmentRef = useRef();
     const { chatId } = useParams();
     const [attachmentPreview, setAttachmentPreview] = useState(null);
+    const { socket } = useSocketContext();
+    const [typing, setTyping] = useState(false);
     const [error, setError] = useState({
         attachment: '',
     });
@@ -57,7 +59,7 @@ export default function ChatInput() {
             const file = files[0];
             setMessage((prev) => ({ ...prev, [name]: file }));
 
-            // fileSizeRestriction(file, name, setError);
+            fileSizeRestriction(file, name, setError);
 
             const isVideo = file.type.startsWith('video/');
 
@@ -75,6 +77,21 @@ export default function ChatInput() {
             }
         } else {
             setMessage((prev) => ({ ...prev, [name]: value }));
+
+            // Emit typing event
+            if (value.trim() && !typing) {
+                setTyping(true);
+                socket.emit('typing', {
+                    chatId,
+                    participantId: selectedChat.user_id,
+                });
+            } else if (!value.trim() && typing) {
+                setTyping(false);
+                socket.emit('stoppedTyping', {
+                    chatId,
+                    participantId: selectedChat.user_id,
+                });
+            }
         }
     }
 
@@ -147,6 +164,7 @@ export default function ChatInput() {
                 <div className="w-full">
                     <input
                         type="text"
+                        autoFocus
                         name="text"
                         value={message.text}
                         onChange={handleChange}

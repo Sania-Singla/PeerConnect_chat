@@ -26,7 +26,7 @@ async function getSocketIdByUserId(userId) {
         const user = await onlineUserObject.getOnlineUser(userId);
         if (user) {
             socketId = user.socket_id;
-            await redisClient.set(userId, socketId); // set it in redis again
+            await redisClient.setEx(userId, 86400, socketId); // 24hr exp // set it in redis again
         }
     }
     return socketId;
@@ -44,7 +44,7 @@ io.on('connection', async (socket) => {
 
     // add user to Redis and mark online in MongoDB
     try {
-        await redisClient.set(userId, socket.id);
+        await redisClient.setEx(userId, 86400, socket.id); // 24hr exp
         await onlineUserObject.markUserOnline(userId, socket.id);
         console.log(`User ${userId} marked as online.`);
     } catch (err) {
@@ -72,8 +72,21 @@ io.on('connection', async (socket) => {
 
         socket.emit('chats', { onlineChatIds, allChats: chats });
     } catch (err) {
-        return console.error('Error fetching online participants:', err);
+        return console.error(
+            'Error notifying other participants of connection:',
+            err
+        );
     }
+
+    socket.on('typing', async ({ chatId, participantId }) => {
+        const participantSocketId = await getSocketIdByUserId(participantId);
+        io.to(participantSocketId).emit('typing', chatId);
+    });
+
+    socket.on('stoppedTyping', async ({ chatId, participantId }) => {
+        const participantSocketId = await getSocketIdByUserId(participantId);
+        io.to(participantSocketId).emit('stoppedTyping', chatId);
+    });
 
     // disconnection
     socket.on('disconnect', async () => {
@@ -105,7 +118,10 @@ io.on('connection', async (socket) => {
                 }
             }
         } catch (err) {
-            return console.error('Error fetching online participants:', err);
+            return console.error(
+                'Error notifying other participants of disconnection:',
+                err
+            );
         }
     });
 });

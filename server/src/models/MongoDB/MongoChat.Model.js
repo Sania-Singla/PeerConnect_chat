@@ -22,71 +22,75 @@ export class MongoChats extends Ichats {
 
     async getChat(chatId, myId) {
         try {
-            const pipeline = [
-                {
-                    $match: { chat_id: chatId },
-                },
-                // populate only other user
-                {
-                    $addFields: {
-                        otherUserId: {
-                            $arrayElemAt: [
-                                {
-                                    $filter: {
-                                        input: '$participants',
-                                        as: 'participant',
-                                        cond: {
-                                            $ne: ['$$participant', myId],
+            if (myId) {
+                const pipeline = [
+                    {
+                        $match: { chat_id: chatId },
+                    },
+                    // populate only other user
+                    {
+                        $addFields: {
+                            otherUserId: {
+                                $arrayElemAt: [
+                                    {
+                                        $filter: {
+                                            input: '$participants',
+                                            as: 'participant',
+                                            cond: {
+                                                $ne: ['$$participant', myId],
+                                            },
                                         },
                                     },
+                                    0,
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'otherUserId',
+                            foreignField: 'user_id',
+                            as: 'otherUser',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        user_id: 1,
+                                        user_name: 1,
+                                        user_avatar: 1,
+                                        user_firstName: 1,
+                                        user_lastName: 1,
+                                    },
                                 },
-                                0,
                             ],
                         },
                     },
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'otherUserId',
-                        foreignField: 'user_id',
-                        as: 'otherUser',
-                        pipeline: [
-                            {
-                                $project: {
-                                    user_id: 1,
-                                    user_name: 1,
-                                    user_avatar: 1,
-                                    user_firstName: 1,
-                                    user_lastName: 1,
-                                },
-                            },
-                        ],
+                    {
+                        $unwind: '$otherUser',
                     },
-                },
-                {
-                    $unwind: '$otherUser',
-                },
-                {
-                    $addFields: {
-                        user_id: '$otherUser.user_id',
-                        user_name: '$otherUser.user_name',
-                        user_avatar: '$otherUser.user_avatar',
-                        user_firstName: '$otherUser.user_firstName',
-                        user_lastName: '$otherUser.user_lastName',
+                    {
+                        $addFields: {
+                            user_id: '$otherUser.user_id',
+                            user_name: '$otherUser.user_name',
+                            user_avatar: '$otherUser.user_avatar',
+                            user_firstName: '$otherUser.user_firstName',
+                            user_lastName: '$otherUser.user_lastName',
+                        },
                     },
-                },
-                {
-                    $project: {
-                        participants: 0,
-                        otherUser: 0,
-                        otherUserId: 0,
+                    {
+                        $project: {
+                            participants: 0,
+                            otherUser: 0,
+                            otherUserId: 0,
+                        },
                     },
-                },
-            ];
+                ];
 
-            const result = await Chat.aggregate(pipeline);
-            return result.length ? result[0] : null;
+                const result = await Chat.aggregate(pipeline);
+                return result.length ? result[0] : null;
+            } else {
+                return await Chat.findOne({ chat_id: chatId }).lean();
+            }
         } catch (err) {
             throw err;
         }
