@@ -22,7 +22,7 @@ const sendMessage = async (req, res) => {
         if (attachment) {
             attachment = await uploadOnCloudinary(attachment);
         }
-        console.log(attachment);
+
         const message = await messageObject.sendMessage(
             uuid(), // messageId
             chatId,

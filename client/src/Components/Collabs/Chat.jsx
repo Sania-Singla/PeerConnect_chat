@@ -55,8 +55,10 @@ export default function Chat() {
 
     // Scroll to bottom when messages change
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages, chatId]);
+        if (!loading && messages?.length) {
+            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages, loading]);
 
     if (loading || !selectedChat) {
         return (

@@ -57,7 +57,7 @@ export default function ChatInput() {
             const file = files[0];
             setMessage((prev) => ({ ...prev, [name]: file }));
 
-            fileSizeRestriction(file, name, setError);
+            // fileSizeRestriction(file, name, setError);
 
             const isVideo = file.type.startsWith('video/');
 
