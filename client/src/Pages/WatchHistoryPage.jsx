@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from '../Services';
 import { paginate, formatDateRelative } from '../Utils';
 import { LIMIT } from '../Constants/constants';
-import { useUserContext } from '../Context';
+import { usePopupContext, useUserContext } from '../Context';
 
 export default function WatchHistoryPage() {
     const [posts, setPosts] = useState([]);
@@ -14,6 +14,7 @@ export default function WatchHistoryPage() {
     const [loading, setLoading] = useState(true);
     const { user } = useUserContext();
     const navigate = useNavigate();
+    const { setShowPopup, setPopupText } = usePopupContext();
 
     // pagination
     const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
@@ -49,9 +50,11 @@ export default function WatchHistoryPage() {
     async function clearHistory() {
         try {
             const res = await userService.clearWatchHistory();
-            if (res && res.message === 'WATCH_HISTORY_CLEARED_SUCCESSFULLY') {
+            if (res && res.message === 'watch history cleared successfully') {
                 setPosts([]);
                 setPostsInfo({});
+                setPopupText('Watch History Cleared 😏');
+                setShowPopup(true);
             }
         } catch (err) {
             navigate('/server-error');
@@ -112,7 +115,7 @@ export default function WatchHistoryPage() {
                     </div>
                 )
             ) : (
-                postElements.length < 0 && <div>No read posts !!</div>
+                postElements.length === 0 && <div>No read posts !!</div>
             )}
         </div>
     );

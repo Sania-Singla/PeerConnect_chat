@@ -144,7 +144,7 @@ export default function UpdatePostPage() {
         })();
     }, []);
 
-    const categoryElements = categories?.map((category) => (
+    const categoryElements = !categories.length ? []: categories.map((category) => (
         <label
             htmlFor={category.category_name}
             key={category.category_name}
