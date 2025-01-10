@@ -115,7 +115,9 @@ export default function WatchHistoryPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No read posts !!</div>
+                postElements.length === 0 && (
+                    <div className="text-black">No read posts !!</div>
+                )
             )}
         </div>
     );

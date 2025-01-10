@@ -18,7 +18,6 @@ import AboutUsPage from './AboutUsPage';
 import ContactUsPage from './ContactUsPage';
 import FAQpage from './FAQpage';
 import FollowersPage from './FollowersPage';
-import CollabsPage from './CollabsPage';
 
 export {
     AboutUsPage,
@@ -41,5 +40,4 @@ export {
     ContactUsPage,
     FAQpage,
     FollowersPage,
-    CollabsPage,
 };

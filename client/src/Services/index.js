@@ -4,7 +4,6 @@ import { commentService } from './commentService';
 import { postService } from './postService';
 import { userService } from './userService';
 import { authService } from './authService';
-import { chatService } from './chatService';
 
 export {
     likeService,
@@ -13,5 +12,4 @@ export {
     postService,
     userService,
     authService,
-    chatService,
 };

@@ -5,7 +5,7 @@ import {
     generateTokens,
     extractAccessToken,
     extractRefreshToken,
-} from './tokens.js';
+} from './token.js';
 import getCurrentTimestamp from './timeStamp.js';
 import verifyOrderBy from './verifyOrderBy.js';
 import verifyExpression from './regex.js';

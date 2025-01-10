@@ -7,6 +7,7 @@ export default function ChannelAbout() {
     const { channel } = useChannelContext();
     const { setPopupText, setShowPopup } = usePopupContext();
     const {
+        user_id,
         user_name,
         user_firstName,
         user_lastName,
@@ -61,7 +62,7 @@ export default function ChannelAbout() {
                         {icons.globe}
                     </div>
                     <NavLink
-                        to={`/channel/${user_name}`}
+                        to={`/channel/${user_id}`}
                         className="text-blue-600 hover:text-blue-700 pb-1"
                     >
                         https://note-manager/channel/{user_name}

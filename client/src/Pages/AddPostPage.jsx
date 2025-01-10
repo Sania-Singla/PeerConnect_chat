@@ -17,8 +17,8 @@ export default function AddPostPage() {
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const { setShowPopup, setPopupText } = usePopupContext();
     const [categories, setCategories] = useState([]);
+    const { setShowPopup, setPopupText } = usePopupContext();
     const [error, setError] = useState({
         title: '',
         postImage: '',

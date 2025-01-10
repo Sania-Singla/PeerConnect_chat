@@ -141,22 +141,6 @@ export default function Header() {
                     />
                 )}
 
-                {/* collabs btn */}
-                <NavLink
-                    to={'/collabs'}
-                    className={({ isActive }) => `${isActive && 'hidden'}`}
-                >
-                    <Button
-                        btnText={
-                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
-                                {icons.chat}
-                            </div>
-                        }
-                        title="Collaborations"
-                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
-                    />
-                </NavLink>
-
                 {/* add post btn */}
                 <NavLink
                     to={'/add'}
