@@ -144,23 +144,25 @@ export default function UpdatePostPage() {
         })();
     }, []);
 
-    const categoryElements = categories?.map((category) => (
-        <label
-            htmlFor={category.category_name}
-            key={category.category_name}
-            className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
-        >
-            <input
-                type="radio"
-                name="categoryId"
-                id={category.category_name}
-                value={category.category_id}
-                checked={inputs.categoryId === category.category_id} // just good for verification
-                onChange={handleChange}
-            />
-            {category.category_name}
-        </label>
-    ));
+    const categoryElements = !categories.length
+        ? []
+        : categories.map((category) => (
+              <label
+                  htmlFor={category.category_name}
+                  key={category.category_name}
+                  className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
+              >
+                  <input
+                      type="radio"
+                      name="categoryId"
+                      id={category.category_name}
+                      value={category.category_id}
+                      checked={inputs.categoryId === category.category_id} // just good for verification
+                      onChange={handleChange}
+                  />
+                  {category.category_name}
+              </label>
+          ));
 
     return loading ? (
         <div>loading...</div>

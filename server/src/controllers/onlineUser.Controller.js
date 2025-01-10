@@ -1,5 +1,5 @@
-import getServiceObject from '../../db/serviceObjects.js';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../../constants/errorCodes.js';
+import getServiceObject from '../db/serviceObjects.js';
+import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
 
 export const onlineUserObject = getServiceObject('onlineUsers');
 

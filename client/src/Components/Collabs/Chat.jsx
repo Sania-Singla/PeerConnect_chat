@@ -55,7 +55,8 @@ export default function Chat() {
         const signal = controller.signal;
 
         (async function getMessages() {
-            try {console.log(page);
+            try {
+                console.log(page);
                 setLoading(true);
                 const res = await chatService.getMessages(signal, chatId);
                 if (res && !res.message) {

@@ -1,4 +1,3 @@
-import mysql from 'mysql2';
 import mongoose from 'mongoose';
 
 class DBConnection {
@@ -17,10 +16,6 @@ class DBConnection {
         try {
             if (!this.connection) {
                 switch (process.env.DATABASE_TYPE) {
-                    case 'MySQL': {
-                        await this.connectMYSQL();
-                        break;
-                    }
                     case 'MongoDB': {
                         await this.connectMongoDB();
                         break;
@@ -35,26 +30,6 @@ class DBConnection {
             return console.log("DB didn't connected, error:", err.message);
         }
     };
-
-    async connectMYSQL() {
-        try {
-            this.connection = mysql
-                .createPool({
-                    host: process.env.MYSQL_HOST,
-                    user: process.env.MYSQL_USER,
-                    password: process.env.MYSQL_PASSWORD,
-                    database: process.env.MYSQL_DATABASE_NAME,
-                })
-                .promise();
-
-            // Testing the connection
-            const conn = await this.connection.getConnection();
-            console.log(`MySQL connected, host: ${conn.config.host}`);
-            conn.release();
-        } catch (err) {
-            return console.log("MySQL didn't connected, error:", err.message);
-        }
-    }
 
     async connectMongoDB() {
         try {

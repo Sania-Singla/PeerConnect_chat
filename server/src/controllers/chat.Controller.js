@@ -1,6 +1,6 @@
-import getServiceObject from '../../db/serviceObjects.js';
+import getServiceObject from '../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../../constants/errorCodes.js';
+import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
 
 export const chatObject = getServiceObject('chats');
 
