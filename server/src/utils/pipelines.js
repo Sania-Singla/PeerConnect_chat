@@ -1,4 +1,4 @@
-function getCommonPipeline1(categoryId, orderBy, page, limit) {
+function getPipeline1(categoryId, orderBy) {
     return [
         {
             $lookup: {
@@ -83,81 +83,44 @@ function getCommonPipeline1(categoryId, orderBy, page, limit) {
             },
         },
         {
-            $facet: {
-                /* to use $count */
-                postsInfo: [
-                    { $count: 'totalPosts' },
-                    {
-                        $addFields: {
-                            totalPages: {
-                                $ceil: {
-                                    $divide: ['$totalPosts', limit],
-                                },
-                            },
-                            hasNextPage: {
-                                $gt: [
-                                    {
-                                        $ceil: {
-                                            $divide: ['$totalPosts', limit],
-                                        },
-                                    },
-                                    page,
-                                ],
-                            },
-                            hasPrevPage: {
-                                $gt: [page, 1],
-                            },
-                        },
-                    },
-                ],
-                posts: [
-                    {
-                        $sort: {
-                            post_updatedAt: orderBy === 'DESC' ? -1 : 1,
-                        },
-                    },
-                    { $skip: (page - 1) * limit },
-                    { $limit: limit },
-                    {
-                        $addFields: {
-                            totalLikes: {
-                                $size: '$post_likes',
-                            },
-                            totalDislikes: {
-                                $size: '$post_dislikes',
-                            },
-                            totalViews: {
-                                $size: '$post_views',
-                            },
-                            totalComments: {
-                                $size: '$post_comments',
-                            },
-                            userName: '$post_owner.user_name',
-                            firstName: '$post_owner.user_firstName',
-                            lastName: '$post_owner.user_lastName',
-                            avatar: '$post_owner.user_avatar',
-                            coverImage: '$post_owner.user_coverImage',
-                        },
-                    },
-                    {
-                        $project: {
-                            post_owner: 0,
-                            post_likes: 0,
-                            post_dislikes: 0,
-                            post_views: 0,
-                            post_comments: 0,
-                        },
-                    },
-                ],
+            $sort: {
+                post_updatedAt: orderBy === 'DESC' ? -1 : 1,
             },
         },
         {
-            $unwind: '$postsInfo',
+            $addFields: {
+                totalLikes: {
+                    $size: '$post_likes',
+                },
+                totalDislikes: {
+                    $size: '$post_dislikes',
+                },
+                totalViews: {
+                    $size: '$post_views',
+                },
+                totalComments: {
+                    $size: '$post_comments',
+                },
+                userName: '$post_owner.user_name',
+                firstName: '$post_owner.user_firstName',
+                lastName: '$post_owner.user_lastName',
+                avatar: '$post_owner.user_avatar',
+                coverImage: '$post_owner.user_coverImage',
+            },
+        },
+        {
+            $project: {
+                post_owner: 0,
+                post_likes: 0,
+                post_dislikes: 0,
+                post_views: 0,
+                post_comments: 0,
+            },
         },
     ];
 }
 
-function getCommonPipeline2(orderBy, sortBy, page, limit) {
+function getPipeline2(orderBy, sortBy) {
     return [
         {
             $lookup: {
@@ -202,74 +165,38 @@ function getCommonPipeline2(orderBy, sortBy, page, limit) {
         {
             $unwind: '$post',
         },
+
         {
-            $facet: {
-                /* to use $count */
-                postsInfo: [
-                    { $count: 'totalPosts' },
-                    {
-                        $addFields: {
-                            totalPages: {
-                                $ceil: {
-                                    $divide: ['$totalPosts', limit],
-                                },
-                            },
-                            hasNextPage: {
-                                $gt: [
-                                    {
-                                        $ceil: {
-                                            $divide: ['$totalPosts', limit],
-                                        },
-                                    },
-                                    page,
-                                ],
-                            },
-                            hasPrevPage: {
-                                $gt: [page, 1],
-                            },
-                        },
-                    },
-                ],
-                posts: [
-                    {
-                        $sort: {
-                            [sortBy]: orderBy === 'DESC' ? -1 : 1,
-                        },
-                    },
-                    { $skip: (page - 1) * limit },
-                    { $limit: limit },
-                    {
-                        $addFields: {
-                            post_ownerId: '$post.post_ownerId',
-                            category_name: '$post.category.category_name',
-                            post_updatedAt: '$post.post_updatedAt',
-                            post_createdAt: '$post.post_createdAt',
-                            post_title: '$post.post_title',
-                            post_content: '$post.post_content',
-                            post_image: '$post.post_image',
-                            userName: '$post.user.user_name',
-                            firstName: '$post.user.user_firstName',
-                            lastName: '$post.user.user_lastName',
-                            avatar: '$post.user.user_avatar',
-                            coverImage: '$post.user.user_coverImage',
-                            totalViews: { $size: '$post.views' },
-                        },
-                    },
-                    {
-                        $project: {
-                            user: 0,
-                            post: 0,
-                            user_id: 0,
-                            is_liked: 0,
-                        },
-                    },
-                ],
+            $sort: {
+                [sortBy]: orderBy === 'DESC' ? -1 : 1,
             },
         },
         {
-            $unwind: '$postsInfo',
+            $addFields: {
+                post_ownerId: '$post.post_ownerId',
+                category_name: '$post.category.category_name',
+                post_updatedAt: '$post.post_updatedAt',
+                post_createdAt: '$post.post_createdAt',
+                post_title: '$post.post_title',
+                post_content: '$post.post_content',
+                post_image: '$post.post_image',
+                userName: '$post.user.user_name',
+                firstName: '$post.user.user_firstName',
+                lastName: '$post.user.user_lastName',
+                avatar: '$post.user.user_avatar',
+                coverImage: '$post.user.user_coverImage',
+                totalViews: { $size: '$post.views' },
+            },
+        },
+        {
+            $project: {
+                user: 0,
+                post: 0,
+                user_id: 0,
+                is_liked: 0,
+            },
         },
     ];
 }
 
-export { getCommonPipeline1, getCommonPipeline2 };
+export { getPipeline1, getPipeline2 };

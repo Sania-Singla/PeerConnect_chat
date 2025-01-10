@@ -16,7 +16,7 @@ export default function LikedPostsPage() {
     const navigate = useNavigate();
 
     // pagination
-    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
+    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -50,7 +50,11 @@ export default function LikedPostsPage() {
         <LikedPostView
             key={post.post_id}
             post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
+            reference={
+                index + 1 === posts.length && postsInfo?.hasNextPage
+                    ? paginateRef
+                    : null
+            }
         />
     ));
 
@@ -58,6 +62,8 @@ export default function LikedPostsPage() {
         <div>Login to see liked posts</div>
     ) : (
         <div>
+            {postElements.length > 0 && <div>{postElements}</div>}
+
             {loading ? (
                 page === 1 ? (
                     <div className="w-full text-center">
@@ -65,16 +71,13 @@ export default function LikedPostsPage() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#4977ec]">
+                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait...</span>
                     </div>
                 )
-            ) : postElements.length > 0 ? (
-                <div>{postElements}</div>
             ) : (
-                <div>No liked posts !!</div>
+                postElements.length === 0 && <div>No liked posts !!</div>
             )}
         </div>
     );

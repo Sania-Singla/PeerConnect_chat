@@ -14,7 +14,6 @@ export default function ChatSidebar() {
     const { chatId } = useParams();
 
     useEffect(() => {
-        // null -> [] or [...]
         if (Array.isArray(chats)) {
             setLoading(false);
         }
@@ -129,6 +128,7 @@ export default function ChatSidebar() {
                 </div>
             </div>
 
+            {/* Chats */}
             <div className="flex-1 overflow-y-scroll flex flex-col gap-[3px]">
                 {loading ? (
                     <div className="text-center">loading ...</div>
@@ -136,7 +136,7 @@ export default function ChatSidebar() {
                     chatElements
                 ) : (
                     <p className="text-sm text-gray-500 text-center">
-                        No users found.
+                        No Chats Found.
                     </p>
                 )}
             </div>

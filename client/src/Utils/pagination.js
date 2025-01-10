@@ -15,8 +15,8 @@ export default function paginate(hasNextPage, loading, setPage) {
             if (loading) return;
             if (observer) observer.disconnect();
             observer = new IntersectionObserver((entries) => {
-                const lastPost = entries[0];
-                if (lastPost.isIntersecting && hasNextPage) {
+                const lastElement = entries[0];
+                if (lastElement.isIntersecting && hasNextPage) {
                     setPage((prev) => prev + 1);
                 }
             });

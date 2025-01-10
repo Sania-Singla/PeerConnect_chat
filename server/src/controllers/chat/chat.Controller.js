@@ -1,11 +1,6 @@
 import getServiceObject from '../../db/serviceObjects.js';
 import { v4 as uuid } from 'uuid';
-import {
-    SERVER_ERROR,
-    OK,
-    BAD_REQUEST,
-    NOT_FOUND,
-} from '../../constants/errorCodes.js';
+import { SERVER_ERROR, OK, BAD_REQUEST } from '../../constants/errorCodes.js';
 
 export const chatObject = getServiceObject('chats');
 
@@ -50,7 +45,6 @@ const deleteChat = async (req, res) => {
     }
 };
 
-// the collaborated users basically
 const getChats = async (req, res) => {
     try {
         const myId = req.user.user_id;
@@ -73,7 +67,6 @@ const getChats = async (req, res) => {
 
 const getChat = async (req, res) => {
     try {
-        // chat exists
         const { chatId } = req.params;
         const myId = req.user.user_id;
 

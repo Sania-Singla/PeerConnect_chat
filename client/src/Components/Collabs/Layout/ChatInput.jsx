@@ -58,7 +58,6 @@ export default function ChatInput() {
         if (type === 'file' && files[0]) {
             const file = files[0];
             setMessage((prev) => ({ ...prev, [name]: file }));
-
             fileSizeRestriction(file, name, setError);
 
             const isVideo = file.type.startsWith('video/');
@@ -95,11 +94,54 @@ export default function ChatInput() {
         }
     }
 
+    let filePreview;
+    if (attachmentPreview) {
+        if (message.attachment?.type?.startsWith('video/')) {
+            filePreview = (
+                <video
+                    src={attachmentPreview}
+                    controls
+                    className="w-full aspect-[1.618] rounded-lg object-cover"
+                />
+            );
+        } else if (message.attachment?.type?.startsWith('image/')) {
+            filePreview = (
+                <img
+                    src={attachmentPreview}
+                    alt="attachment preview"
+                    className="w-full aspect-[1.618] rounded-lg object-cover"
+                />
+            );
+        } else {
+            filePreview = (
+                <div className="w-[150px] text-white aspect-[1.618] rounded-lg p-2 bg-blue-500">
+                    <div className="h-full p-2 bg-[#ffffff42] rounded-lg flex flex-col items-center justify-center">
+                        <div className="w-full flex items-center justify-center gap-1">
+                            <div className="w-[25px] h-[25px] stroke-[#f6f6f6] fill-none">
+                                {icons.doc}
+                            </div>
+                            <p className="text-sm max-w-[80px] truncate">
+                                {message.attachment?.name}
+                            </p>
+                        </div>
+
+                        <div className="w-full text-xs text-center text-gray-100">
+                            {(
+                                message.attachment?.size /
+                                (1024 * 1024)
+                            ).toPrecision(2)}{' '}
+                            MB
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     return (
         <div className="">
             {attachmentPreview && (
                 <div className="p-4 flex absolute bottom-[60px] w-fit">
-                    {/* attachment array */}
                     <div className="drop-shadow-md max-w-[150px]">
                         {error && (
                             <p className="text-center text-red-500 text-sm">
@@ -107,19 +149,7 @@ export default function ChatInput() {
                             </p>
                         )}
 
-                        {attachmentPreview.startsWith('blob:') ? (
-                            <video
-                                src={attachmentPreview}
-                                controls
-                                className="w-full aspect-[1.618] rounded-lg object-cover"
-                            />
-                        ) : (
-                            <img
-                                src={attachmentPreview}
-                                alt="attachment preview"
-                                className="w-full aspect-[1.618] rounded-lg object-cover"
-                            />
-                        )}
+                        {filePreview}
                     </div>
                 </div>
             )}

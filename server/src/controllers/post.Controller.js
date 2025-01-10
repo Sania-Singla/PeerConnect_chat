@@ -56,8 +56,16 @@ const getRandomPosts = async (req, res) => {
             categoryId
         );
 
-        if (result) {
-            return res.status(OK).json(result);
+        if (result.docs.length) {
+            const data = {
+                posts: result.docs,
+                postaInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalPosts: result.totalDocs,
+                },
+            };
+            return res.status(OK).json(data);
         } else {
             return res.status(OK).json({ message: 'no posts found' });
         }
@@ -109,10 +117,18 @@ const getPosts = async (req, res) => {
             categoryId
         );
 
-        if (result) {
-            return res.status(OK).json(result);
+        if (result.docs.length) {
+            const data = {
+                posts: result.docs,
+                postaInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalPosts: result.totalDocs,
+                },
+            };
+            return res.status(OK).json(data);
         } else {
-            return res.status(NOT_FOUND).json({ message: 'no posts found' });
+            return res.status(OK).json({ message: 'no posts found' });
         }
     } catch (err) {
         console.log(err);
@@ -336,8 +352,17 @@ const getSavedPosts = async (req, res) => {
             Number(limit),
             Number(page)
         );
-        if (result) {
-            return res.status(OK).json(result);
+
+        if (result.docs.length) {
+            const data = {
+                posts: result.docs,
+                postaInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalPosts: result.totalDocs,
+                },
+            };
+            return res.status(OK).json(data);
         } else {
             return res.status(OK).json({ message: 'no saved posts' });
         }

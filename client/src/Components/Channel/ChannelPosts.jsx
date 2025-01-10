@@ -47,14 +47,18 @@ export default function ChannelPosts() {
     }, [channel.user_name, page]);
 
     // pagination
-    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
+    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     // displaying posts
     const postElements = posts?.map((post, index) => (
         <PostCardView
             key={post.post_id}
             post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
+            reference={
+                index + 1 === posts.length && postsInfo?.hasNextPage
+                    ? paginateRef
+                    : null
+            }
         />
     ));
 
@@ -79,6 +83,18 @@ export default function ChannelPosts() {
                 )}
             </div>
 
+            {postElements.length > 0 && (
+                <div
+                    className={
+                        postElements.lenght > 1
+                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6'
+                            : 'w-[450px]'
+                    }
+                >
+                    {postElements}
+                </div>
+            )}
+
             {loading ? (
                 page === 1 ? (
                     <div className="w-full text-center">
@@ -86,22 +102,13 @@ export default function ChannelPosts() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait . . .</span>
                     </div>
-                )
-            ) : postElements.length > 0 ? (
-                postElements.length > 1 ? (
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6">
-                        {postElements}
-                    </div>
-                ) : (
-                    <div className="w-[450px]">{postElements}</div>
                 )
             ) : (
-                <div>No posts found !!</div>
+                postElements.length === 0 && <div>No posts found !!</div>
             )}
         </div>
     );

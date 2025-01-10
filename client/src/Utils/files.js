@@ -33,11 +33,24 @@ function fileRestrictions(file, name, setError) {
 function fileSizeRestriction(file, name, setError) {
     if (file) {
         const fileSizeMB = file.size / (1024 * 1024);
-        const maxSizeMB = 100;
+        const fileType = file.type.split('/')[0];
+        let maxSizeMB;
+
+        switch (fileType) {
+            case 'video':
+            case 'image': {
+                maxSizeMB = 100;
+                break;
+            }
+            default: {
+                maxSizeMB = 10; // raw
+            }
+        }
+
         if (fileSizeMB > maxSizeMB) {
             return setError((prevError) => ({
                 ...prevError,
-                [name]: 'File size should not exceed 100MB.',
+                [name]: `File size should not exceed ${maxSizeMB}MB.`,
             }));
         }
         setError((prevError) => ({ ...prevError, [name]: '' }));

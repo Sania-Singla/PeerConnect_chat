@@ -37,10 +37,24 @@ export class MongoMessages extends Imessages {
         }
     }
 
-    async getMessages(chatId, limit = 50) {
+    async getMessages(chatId, limit, page) {
         try {
-            // apply pagination later
-            return await Message.find({ chat_id: chatId }).lean();
+            return await Message.aggregatePaginate(
+                // pipeline
+                [
+                    {
+                        $match: { chat_id: chatId },
+                    },
+                    {
+                        $sort: { message_createdAt: -1 }, // latest first
+                    },
+                ],
+                // options
+                {
+                    limit,
+                    page,
+                }
+            );
         } catch (err) {
             throw err;
         }

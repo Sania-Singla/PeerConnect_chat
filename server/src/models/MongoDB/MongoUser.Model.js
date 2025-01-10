@@ -1,6 +1,6 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
-import { getCommonPipeline2 } from '../../utils/index.js';
+import { getPipeline2 } from '../../utils/index.js';
 
 export class MongoUsers extends Iusers {
     async getUser(searchInput) {
@@ -343,22 +343,19 @@ export class MongoUsers extends Iusers {
 
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
-            const commonPipeline = getCommonPipeline2(
-                orderBy,
-                'watchedAt',
-                page,
-                limit
-            );
+            const pipeline2 = getPipeline2(orderBy, 'watchedAt');
             const pipeline = [
                 {
                     $match: {
                         user_id: userId,
                     },
                 },
-                ...commonPipeline,
+                ...pipeline2,
             ];
-            const [result] = await WatchHistory.aggregate(pipeline);
-            return result;
+            return await WatchHistory.aggregatePaginate(pipeline, {
+                page,
+                limit,
+            });
         } catch (err) {
             throw err;
         }

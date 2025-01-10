@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const postLikeSchema = new Schema({
     post_id: {
@@ -44,6 +45,8 @@ const commentLikeSchema = new Schema({
         default: Date.now(),
     },
 });
+
+postLikeSchema.plugin(aggregatePaginate);
 
 const PostLike = model('PostLike', postLikeSchema);
 const CommentLike = model('CommentLike', commentLikeSchema);

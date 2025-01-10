@@ -103,6 +103,7 @@ export default function Comments({ postId }) {
                 </div>
             </form>
 
+            {/* TODO: pagination */}
             {comments.length > 0 ? (
                 <div className="">
                     <div className="mt-4 text-black">

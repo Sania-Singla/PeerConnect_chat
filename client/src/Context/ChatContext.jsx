@@ -4,7 +4,7 @@ const ChatContext = createContext();
 
 const ChatContextProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
-    const [messages, setMessages] = useState(null);
+    const [messages, setMessages] = useState([]); // can use [] instead of null
     const [chats, setChats] = useState(null); // don't use []
 
     return (

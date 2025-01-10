@@ -15,15 +15,23 @@ const getLikedPosts = async (req, res) => {
                 .json({ message: 'invalid orderBy value' });
         }
 
-        const likedPosts = await likeObject.getLikedPosts(
+        const result = await likeObject.getLikedPosts(
             user_id,
             orderBy.toUpperCase(),
             Number(limit),
             Number(page)
         );
 
-        if (likedPosts) {
-            return res.status(OK).json(likedPosts);
+        if (result.docs.length) {
+            const data = {
+                posts: result.docs,
+                postaInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalPosts: result.totalDocs,
+                },
+            };
+            return res.status(OK).json(data);
         } else {
             return res.status(OK).json({ message: 'no posts liked' });
         }

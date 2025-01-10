@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const chatSchema = new Schema({
     chat_id: {
@@ -66,6 +67,8 @@ messageSchema.index(
     { chat_id: 1, message_createdAt: -1 },
     { name: 'chat_message_createdAt' }
 );
+
+messageSchema.plugin(aggregatePaginate);
 
 export const Message = model('Message', messageSchema);
 export const Chat = model('Chat', chatSchema);

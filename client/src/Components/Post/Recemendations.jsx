@@ -46,19 +46,29 @@ export default function Recemendations({ category, currentPostId }) {
     }, [category, page]);
 
     // pagination
-    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
+    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     const postElements = posts?.map((post, index) => (
         <PostCardView
             key={post.post_id}
             post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
+            reference={
+                index + 1 === posts.length && postsInfo?.hasNextPage
+                    ? paginateRef
+                    : null
+            }
             showOwnerInfo={true}
         />
     ));
 
     return (
         <div className="w-full h-full">
+            {postElements.length > 0 && (
+                <div className="w-full overflow-x-auto grid grid-flow-col auto-cols-[minmax(350px,350px)] gap-6">
+                    {postElements}
+                </div>
+            )}
+
             {loading ? (
                 page === 1 ? (
                     <div className="w-full text-center">
@@ -66,20 +76,17 @@ export default function Recemendations({ category, currentPostId }) {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait . . .</span>
                     </div>
                 )
-            ) : postElements.length > 0 ? (
-                <div className="w-full overflow-x-auto grid grid-flow-col auto-cols-[minmax(350px,350px)] gap-6">
-                    {postElements}
-                </div>
             ) : (
-                <div className="text-lg text-[#363636]">
-                    No Similar Posts Found !!
-                </div>
+                postElements.length === 0 && (
+                    <div className="text-lg text-[#363636]">
+                        No Similar Posts Found !!
+                    </div>
+                )
             )}
         </div>
     );

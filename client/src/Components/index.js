@@ -38,6 +38,7 @@ import Chat from './Collabs/Chat';
 import ProfilePopup from './Collabs/ProfilePopup';
 import User from './Collabs/User';
 import Message from './Collabs/Message';
+import FilePreview from './Collabs/FilePreview';
 import NoChatSelected from './Collabs/NoChatSelected';
 
 export {
@@ -79,5 +80,6 @@ export {
     ProfilePopup,
     User,
     Message,
+    FilePreview,
     NoChatSelected,
 };

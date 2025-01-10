@@ -79,13 +79,22 @@ const deleteMessage = async (req, res) => {
 const getMessages = async (req, res) => {
     try {
         const { chatId } = req.params;
+        const { limit = 10, page = 1 } = req.query;
 
-        const messages = await messageObject.getMessages(chatId);
+        const result = await messageObject.getMessages(chatId, limit, page);
 
-        if (messages.length) {
-            return res.status(OK).json(messages);
-        } else {
-            return res.status(OK).json({ message: 'no messages found' });
+        if (result?.docs.length) {
+            const data = {
+                messages: result.docs,
+                messagesInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalMessages: result.totalDocs,
+                },
+            };
+            setTimeout(() => {
+                return res.status(OK).json(data);
+            }, 3000);
         }
     } catch (err) {
         console.log(err);

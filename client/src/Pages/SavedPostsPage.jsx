@@ -16,7 +16,7 @@ export default function SavedPostsPage() {
     const navigate = useNavigate();
 
     // pagination
-    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
+    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -50,7 +50,11 @@ export default function SavedPostsPage() {
         <SavedPostView
             key={post.post_id}
             post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
+            reference={
+                index + 1 === posts.length && postsInfo?.hasNextPage
+                    ? paginateRef
+                    : null
+            }
         >
             {/* children */}
             <div>
@@ -69,6 +73,8 @@ export default function SavedPostsPage() {
         <div>Login to see Saved posts</div>
     ) : (
         <div>
+            {postElements.length > 0 && <div>{postElements}</div>}
+
             {loading ? (
                 page === 1 ? (
                     <div className="w-full text-center">
@@ -76,16 +82,13 @@ export default function SavedPostsPage() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#4977ec]">
+                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait...</span>
                     </div>
                 )
-            ) : postElements.length > 0 ? (
-                <div className="">{postElements}</div>
             ) : (
-                <div>No saved posts !!</div>
+                postElements.length === 0 && <div>No saved posts !!</div>
             )}
         </div>
     );

@@ -1,5 +1,6 @@
 import { useContext, createContext, useState } from 'react';
 import { io } from 'socket.io-client';
+// import { useChatContext, useUserContext } from '.';
 import { useChatContext } from './ChatContext';
 import { useUserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +13,7 @@ const SocketContextProvider = ({ children }) => {
     const { user } = useUserContext();
     const { setChats, setMessages } = useChatContext();
     const navigate = useNavigate();
-    let isConnecting = false;
+    let isConnecting = false; // pending to test in creating multiple connections
 
     function connectSocket() {
         isConnecting = true;
@@ -63,6 +64,7 @@ const SocketContextProvider = ({ children }) => {
             const updatedChats = allChats.map((chat) => ({
                 ...chat,
                 isOnline: onlineChatSet.has(chat.chat_id),
+                isTyping: false,
             }));
 
             setChats(updatedChats);
@@ -77,6 +79,7 @@ const SocketContextProvider = ({ children }) => {
                         return {
                             ...chat,
                             isOnline,
+                            isTyping: isOnline ? prev.isTyping : false,
                         };
                     else return chat;
                 })
@@ -105,8 +108,8 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socketInstance.on('typing', (chatId) => {
-            console.log("typing");
-            
+            console.log('typing');
+
             setChats((prev) =>
                 prev?.map((chat) => {
                     if (chat.chat_id === chatId) {
@@ -120,7 +123,7 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socketInstance.on('stoppedTyping', (chatId) => {
-            console.log("stopped typing");
+            console.log('stopped typing');
 
             setChats((prev) =>
                 prev?.map((chat) => {

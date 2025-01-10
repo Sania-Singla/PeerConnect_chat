@@ -1,16 +1,11 @@
 import { Ilikes } from '../../interfaces/like.Interface.js';
 import { CommentLike, PostLike } from '../../schemas/MongoDB/index.js';
-import { getCommonPipeline2 } from '../../utils/index.js';
+import { getPipeline2 } from '../../utils/index.js';
 
 export class MongoLikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            const commonPipeline = getCommonPipeline2(
-                orderBy,
-                'likedAt',
-                page,
-                limit
-            );
+            const pipeline2 = getPipeline2(orderBy, 'likedAt');
             const pipeline = [
                 {
                     $match: {
@@ -18,11 +13,13 @@ export class MongoLikes extends Ilikes {
                         is_liked: true,
                     },
                 },
-                ...commonPipeline,
+                ...pipeline2,
             ];
 
-            const [result] = await PostLike.aggregate(pipeline);
-            return result;
+            return await PostLike.aggregatePaginate(pipeline, {
+                page,
+                limit,
+            });
         } catch (err) {
             throw err;
         }

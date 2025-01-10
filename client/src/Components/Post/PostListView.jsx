@@ -3,8 +3,9 @@ import { formatCount, formatDateRelative } from '../../Utils';
 import { Button, PostCardView } from '..';
 import { icons } from '../../Assets/icons';
 import parse from 'html-react-parser';
+import { memo } from 'react';
 
-export default function PostListView({ post, reference, children }) {
+const PostListView = memo(({ post, reference, children }) => {
     const {
         post_id,
         category_name,
@@ -23,12 +24,11 @@ export default function PostListView({ post, reference, children }) {
     const navigate = useNavigate();
 
     return (
-        <div>
+        <div ref={reference}>
             {/* CARD VIEW */}
             <div className="sm:hidden">
                 <PostCardView
                     post={post}
-                    reference={reference}
                     showOwnerInfo={true}
                     children={children}
                 />
@@ -36,7 +36,6 @@ export default function PostListView({ post, reference, children }) {
 
             {/* LIST VIEW */}
             <div
-                ref={reference}
                 onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
                 className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 bg-white drop-shadow-md rounded-2xl overflow-hidden"
             >
@@ -125,4 +124,6 @@ export default function PostListView({ post, reference, children }) {
             </div>
         </div>
     );
-}
+});
+
+export default PostListView;

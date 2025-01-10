@@ -49,9 +49,9 @@ class ChatService {
         }
     }
 
-    async getMessages(signal, chatId) {
+    async getMessages(signal, chatId, page, limit) {
         try {
-            const res = await fetch(`/api/messages/${chatId}`, {
+            const res = await fetch(`/api/messages/${chatId}?page=${page}`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,

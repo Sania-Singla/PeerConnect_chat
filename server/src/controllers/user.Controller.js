@@ -422,8 +422,17 @@ const getWatchHistory = async (req, res) => {
             Number(limit),
             Number(page)
         );
-        if (result) {
-            return res.status(OK).json(result);
+
+        if (result.docs.length) {
+            const data = {
+                posts: result.docs,
+                postaInfo: {
+                    hasNextPage: result.hasNextPage,
+                    hasPrevPage: result.hasPrevPage,
+                    totalPosts: result.totalDocs,
+                },
+            };
+            return res.status(OK).json(data);
         } else {
             return res.status(OK).json({ message: 'empty watch history' });
         }

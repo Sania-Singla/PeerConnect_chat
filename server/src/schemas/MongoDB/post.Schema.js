@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const postSchema = new Schema({
     post_id: {
@@ -57,6 +58,8 @@ const postViewSchema = new Schema({
         required: true,
     },
 });
+
+postSchema.plugin(aggregatePaginate);
 
 const Post = model('Post', postSchema);
 const PostView = model('PostView', postViewSchema);

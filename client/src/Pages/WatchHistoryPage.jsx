@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from '../Services';
 import { paginate, formatDateRelative } from '../Utils';
 import { LIMIT } from '../Constants/constants';
-import { useUserContext } from '../Context';
+import { useUserContext, usePopupContext } from '../Context';
 
 export default function WatchHistoryPage() {
     const [posts, setPosts] = useState([]);
@@ -13,10 +13,11 @@ export default function WatchHistoryPage() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const { user } = useUserContext();
+    const { setShowPopup, setPopupText } = usePopupContext();
     const navigate = useNavigate();
 
     // pagination
-    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
+    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -49,9 +50,11 @@ export default function WatchHistoryPage() {
     async function clearHistory() {
         try {
             const res = await userService.clearWatchHistory();
-            if (res && res.message === 'WATCH_HISTORY_CLEARED_SUCCESSFULLY') {
+            if (res && res.message === 'watch history cleared successfully') {
                 setPosts([]);
                 setPostsInfo({});
+                setPopupText('Watch History Cleared 😏');
+                setShowPopup(true);
             }
         } catch (err) {
             navigate('/server-error');
@@ -62,7 +65,11 @@ export default function WatchHistoryPage() {
         <PostListView
             key={post.post_id}
             post={post}
-            reference={index + 1 === posts.length ? paginateRef : null}
+            reference={
+                index + 1 === posts.length && postsInfo?.hasNextPage
+                    ? paginateRef
+                    : null
+            }
         >
             {/* children */}
             <div className="sm:right-44 sm:bottom-8 sm:left-auto hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
@@ -75,20 +82,7 @@ export default function WatchHistoryPage() {
         <div>Login to see history</div>
     ) : (
         <div className="w-full h-full overflow-scroll">
-            {loading ? (
-                page === 1 ? (
-                    <div className="w-full text-center">
-                        loading first batch...
-                    </div>
-                ) : (
-                    <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#4977ec]">
-                            {icons.loading}
-                        </div>
-                        <span className="text-xl ml-3">Please wait . . .</span>
-                    </div>
-                )
-            ) : postElements.length > 0 ? (
+            {postElements.length > 0 && (
                 <div>
                     <div className="w-full flex items-center justify-center mb-8">
                         <Button
@@ -106,8 +100,22 @@ export default function WatchHistoryPage() {
                     </div>
                     <div className="">{postElements}</div>
                 </div>
+            )}
+
+            {loading ? (
+                page === 1 ? (
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center my-2 w-full">
+                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
+                            {icons.loading}
+                        </div>
+                    </div>
+                )
             ) : (
-                <div>No read posts !!</div>
+                postElements.length === 0 && <div>No read posts !!</div>
             )}
         </div>
     );

@@ -29,8 +29,10 @@ export default function App() {
                 const data = await authService.getCurrentUser(signal);
                 if (data && !data.message) {
                     setUser(data);
+                    // connectSocket();
                 } else {
                     setUser(null);
+                    // disconnectSocket();
                 }
             } catch (err) {
                 navigate('/server-error');

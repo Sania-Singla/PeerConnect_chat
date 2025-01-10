@@ -1,20 +1,17 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
-import { getCommonPipeline1, getCommonPipeline2 } from '../../utils/index.js';
+import { getPipeline1, getPipeline2 } from '../../utils/index.js';
 
 export class MongoPosts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, categoryId) {
         try {
-            const commonPipeline = getCommonPipeline1(
-                categoryId,
-                orderBy,
-                page,
-                limit
-            );
-            const [result] = await Post.aggregate(commonPipeline);
+            const pipeline = getPipeline1(categoryId, orderBy, page, limit);
 
-            return result;
+            return await Post.aggregatePaginate(pipeline, {
+                page,
+                limit,
+            });
         } catch (err) {
             throw err;
         }
@@ -22,23 +19,21 @@ export class MongoPosts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, categoryId) {
         try {
-            const commonPipeline = getCommonPipeline1(
-                categoryId,
-                orderBy,
-                page,
-                limit
-            );
+            const pipeline1 = getPipeline1(categoryId, orderBy);
+
             const pipeline = [
                 {
                     $match: {
                         post_ownerId: channelId,
                     },
                 },
-                ...commonPipeline,
+                ...pipeline1,
             ];
 
-            const [result] = await Post.aggregate(pipeline);
-            return result;
+            return await Post.aggregatePaginate(pipeline, {
+                page,
+                limit,
+            });
         } catch (err) {
             throw err;
         }
@@ -394,24 +389,20 @@ export class MongoPosts extends Iposts {
 
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
-            const offset = (page - 1) * limit;
-            const commonPipeline = getCommonPipeline2(
-                orderBy,
-                'savedAt',
-                page,
-                limit
-            );
+            const pipeline2 = getPipeline2(orderBy, 'savedAt');
             const pipeline = [
                 {
                     $match: {
                         user_id: userId,
                     },
                 },
-                ...commonPipeline,
+                ...pipeline2,
             ];
 
-            const [result] = await SavedPost.aggregate(pipeline);
-            return result;
+            return await SavedPost.aggregatePaginate(pipeline, {
+                page,
+                limit,
+            });
         } catch (err) {
             throw err;
         }

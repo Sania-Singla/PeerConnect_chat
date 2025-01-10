@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const userSchema = new Schema({
     user_id: {
@@ -85,6 +86,10 @@ const watchHistorySchema = new Schema({
         default: Date.now(),
     },
 });
+
+userSchema.plugin(aggregatePaginate);
+savedPostSchema.plugin(aggregatePaginate);
+watchHistorySchema.plugin(aggregatePaginate);
 
 const User = model('User', userSchema);
 const SavedPost = model('SavedPost', savedPostSchema);
