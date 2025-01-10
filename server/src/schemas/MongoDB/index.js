@@ -4,6 +4,13 @@ import { Category } from './category.Schema.js';
 import { Comment } from './comment.Schema.js';
 import { PostLike, CommentLike } from './like.Schema.js';
 import { Post, PostView } from './post.Schema.js';
+import { Chat, Message } from './chat.Schema.js';
+import {
+    GroupChat,
+    GroupMessage,
+    GroupParticipant,
+} from './groupChat.Schema.js';
+import { OnlineUser } from './onlineUser.Schema.js';
 
 export {
     User,
@@ -16,4 +23,10 @@ export {
     Post,
     PostLike,
     PostView,
+    Chat,
+    Message,
+    GroupChat,
+    GroupMessage,
+    GroupParticipant,
+    OnlineUser,
 };

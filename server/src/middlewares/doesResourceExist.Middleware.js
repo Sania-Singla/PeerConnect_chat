@@ -17,7 +17,7 @@ export const doesResourceExist = (service, idParam, reqKey) => {
     return async (req, res, next) => {
         try {
             const resourceId = req.params[idParam];
-
+            console.log(resourceId);
             if (!resourceId || !validator.isUUID(resourceId)) {
                 return res.status(BAD_REQUEST).json({
                     message: `missing or invalid ${idParam}`,

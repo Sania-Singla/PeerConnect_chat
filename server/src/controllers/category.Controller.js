@@ -2,7 +2,6 @@ import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
 import validator from 'validator';
 import { v4 as uuid } from 'uuid';
 import getServiceObject from '../db/serviceObjects.js';
-import { Category } from '../schemas/MongoDB/category.Schema.js';
 
 export const categoryObject = getServiceObject('categories');
 

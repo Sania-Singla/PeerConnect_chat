@@ -8,6 +8,7 @@ import {
     createBrowserRouter,
     createRoutesFromElements,
     RouterProvider,
+    useNavigate,
 } from 'react-router-dom';
 
 import {
@@ -31,6 +32,7 @@ import {
     AboutUsPage,
     ContactUsPage,
     FAQpage,
+    CollabsPage,
 } from './Pages';
 
 import {
@@ -39,6 +41,8 @@ import {
     PopupContextProvider,
     SideBarContextProvider,
     SearchContextProvider,
+    SocketContextProvider,
+    ChatContextProvider,
 } from './Context';
 
 import {
@@ -48,11 +52,33 @@ import {
     UpdatePassword,
     ChannelAbout,
     ChannelPosts,
+    Chat,
+    NoChatSelected,
 } from './Components';
+
+function Wrapper() {
+    const navigate = useNavigate();
+
+    return (
+        <UserContextProvider>
+            <ChatContextProvider>
+                <SocketContextProvider navigate={navigate}>
+                    <PopupContextProvider>
+                        <SideBarContextProvider>
+                            <SearchContextProvider>
+                                <App />
+                            </SearchContextProvider>
+                        </SideBarContextProvider>
+                    </PopupContextProvider>
+                </SocketContextProvider>
+            </ChatContextProvider>
+        </UserContextProvider>
+    );
+}
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/" element={<App />}>
+        <Route path="/" element={<Wrapper />}>
             <Route path="" element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
@@ -61,6 +87,10 @@ const router = createBrowserRouter(
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
+            <Route path="collabs" element={<CollabsPage />}>
+                <Route path="" element={<NoChatSelected />} />
+                <Route path="chat/:chatId" element={<Chat />} />
+            </Route>
 
             {/* static pages */}
             <Route path="support" element={<SupportPage />} />
@@ -130,14 +160,6 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
     // <StrictMode>
-    <UserContextProvider>
-        <PopupContextProvider>
-            <SideBarContextProvider>
-                <SearchContextProvider>
-                    <RouterProvider router={router} />
-                </SearchContextProvider>
-            </SideBarContextProvider>
-        </PopupContextProvider>
-    </UserContextProvider>
+    <RouterProvider router={router} />
     // </StrictMode>,
 );

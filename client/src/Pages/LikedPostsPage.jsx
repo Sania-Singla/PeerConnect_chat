@@ -77,7 +77,7 @@ export default function LikedPostsPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No liked posts !!</div>
+                postElements.length < 0 && <div>No liked posts !!</div>
             )}
         </div>
     );

@@ -3,12 +3,11 @@ import {
     generateAccessToken,
     generateRefreshToken,
     generateTokens,
-    extractAccessToken,
-    extractRefreshToken,
-} from './token.js';
+} from './generateTokens.js';
 import getCurrentTimestamp from './timeStamp.js';
 import verifyOrderBy from './verifyOrderBy.js';
 import verifyExpression from './regex.js';
+import { extractAccessToken, extractRefreshToken } from './extractTokens.js';
 import { getPipeline1, getPipeline2 } from './pipelines.js';
 
 export {

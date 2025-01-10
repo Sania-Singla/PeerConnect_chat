@@ -88,7 +88,7 @@ export default function SavedPostsPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No saved posts !!</div>
+                postElements.length < 0 && <div>No saved posts !!</div>
             )}
         </div>
     );

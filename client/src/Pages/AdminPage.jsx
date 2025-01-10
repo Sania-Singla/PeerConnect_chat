@@ -121,7 +121,7 @@ export default function AdminPage() {
     ));
 
     // pagination
-    const paginateRef = paginate(postsInfo?.hasNextPage, postsLoading, setPage);
+    const paginateRef = paginate(postsInfo.hasNextPage, postsLoading, setPage);
 
     const postElements = posts
         ?.filter((post) => {
@@ -134,11 +134,7 @@ export default function AdminPage() {
                 key={post.post_id}
                 post={post}
                 setPosts={setPosts}
-                reference={
-                    posts.length === index + 1 && postsInfo?.hasNextPage
-                        ? paginateRef
-                        : null
-                }
+                reference={posts.length === index + 1 ? paginateRef : null}
             />
         ));
 
@@ -226,6 +222,7 @@ export default function AdminPage() {
                             <div className="size-7 fill-[#4977ec]">
                                 {icons.loading}
                             </div>
+                            <span className="text-xl ml-3">Please wait...</span>
                         </div>
                     ))}
             </div>

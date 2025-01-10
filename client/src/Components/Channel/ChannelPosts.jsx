@@ -108,7 +108,7 @@ export default function ChannelPosts() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No posts found !!</div>
+                postElements.length < 0 && <div>No posts found !!</div>
             )}
         </div>
     );

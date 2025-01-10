@@ -29,6 +29,18 @@ import Comments from './Comments/Comments';
 import Comment from './Comments/Comment';
 import Popup from './Popups/Popup';
 
+// collabs
+import ChatHeader from './Collabs/Layout/ChatHeader';
+import ChatSidebar from './Collabs/Layout/ChatSidebar';
+import ChatLayout from './Collabs/Layout/ChatLayout';
+import ChatInput from './Collabs/Layout/ChatInput';
+import Chat from './Collabs/Chat';
+import ProfilePopup from './Collabs/ProfilePopup';
+import User from './Collabs/User';
+import Message from './Collabs/Message';
+import FilePreview from './Collabs/FilePreview';
+import NoChatSelected from './Collabs/NoChatSelected';
+
 export {
     Header,
     Footer,
@@ -60,4 +72,14 @@ export {
     LikedPostView,
     SavedPostView,
     Popup,
+    ChatHeader,
+    ChatSidebar,
+    ChatLayout,
+    ChatInput,
+    Chat,
+    ProfilePopup,
+    User,
+    Message,
+    FilePreview,
+    NoChatSelected,
 };
