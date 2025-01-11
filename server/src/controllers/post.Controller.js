@@ -1,15 +1,12 @@
-import getServiceObject from '../db/serviceObjects.js';
-import {
-    OK,
-    BAD_REQUEST,
-    SERVER_ERROR,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
+import { getServiceObject } from '../db/serviceObjects.js';
+import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
 import {
     uploadOnCloudinary,
     deleteFromCloudinary,
     verifyOrderBy,
+    tryCatch,
+    ErrorHandler,
 } from '../utils/index.js';
 import { userObject } from './user.Controller.js';
 import { categoryObject } from './category.Controller.js';
@@ -18,173 +15,138 @@ import validator from 'validator';
 export const postObject = getServiceObject('posts');
 
 // pending searchTerm (query)
-const getRandomPosts = async (req, res) => {
-    try {
-        const {
-            limit = 10,
-            orderBy = 'desc',
-            page = 1,
-            categoryId = '',
-            query = '',
-        } = req.query;
+const getRandomPosts = tryCatch('get random posts', async (req, res, next) => {
+    const {
+        limit = 10,
+        orderBy = 'desc',
+        page = 1,
+        categoryId,
+        query = '',
+    } = req.query;
 
-        if (categoryId) {
-            if (!validator.isUUID(categoryId)) {
-                return res
-                    .status(BAD_REQUEST)
-                    .json({ message: 'missing or invalid categoryId' });
-            } else {
-                const category = await categoryObject.getCategory(categoryId);
-                if (!category) {
-                    return res
-                        .status(NOT_FOUND)
-                        .json({ message: 'category not found' });
-                }
+    if (!verifyOrderBy(orderBy)) {
+        return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
+    }
+
+    if (categoryId) {
+        if (!validator.isUUID(categoryId)) {
+            return next(
+                new ErrorHandler('missing or invalid categoryId', BAD_REQUEST)
+            );
+        } else {
+            const category = await categoryObject.getCategory(categoryId);
+            if (!category) {
+                return next(new ErrorHandler('category not found', NOT_FOUND));
             }
         }
-
-        if (!verifyOrderBy(orderBy)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid orderBy value' });
-        }
-
-        const result = await postObject.getRandomPosts(
-            Number(limit),
-            orderBy.toUpperCase(),
-            Number(page),
-            categoryId
-        );
-
-        if (result.docs.length) {
-            const data = {
-                posts: result.docs,
-                postaInfo: {
-                    hasNextPage: result.hasNextPage,
-                    hasPrevPage: result.hasPrevPage,
-                    totalPosts: result.totalDocs,
-                },
-            };
-            return res.status(OK).json(data);
-        } else {
-            return res.status(OK).json({ message: 'no posts found' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting random posts',
-            error: err.message,
-        });
     }
-};
 
-const getPosts = async (req, res) => {
-    try {
-        const channelId = req.channel.user_id;
-        const {
-            orderBy = 'desc',
-            limit = 10,
-            page = 1,
-            categoryId = '',
-        } = req.query;
+    const result = await postObject.getRandomPosts(
+        Number(limit),
+        orderBy.toUpperCase(),
+        Number(page),
+        categoryId
+    );
 
-        if (categoryId) {
-            if (!validator.isUUID(categoryId)) {
-                return res
-                    .status(BAD_REQUEST)
-                    .json({ message: 'missing or invalid categoryId' });
-            } else {
-                const category = await categoryObject.getCategory(categoryId);
-                if (!category) {
-                    return res
-                        .status(NOT_FOUND)
-                        .json({ message: 'category not found' });
-                }
+    if (result.docs.length) {
+        const data = {
+            posts: result.docs,
+            postaInfo: {
+                hasNextPage: result.hasNextPage,
+                hasPrevPage: result.hasPrevPage,
+                totalPosts: result.totalDocs,
+            },
+        };
+        return res.status(OK).json(data);
+    } else {
+        return res.status(OK).json({ message: 'no posts found' });
+    }
+});
+
+const getPosts = tryCatch('get posts', async (req, res, next) => {
+    const channelId = req.channel.user_id;
+    const {
+        orderBy = 'desc',
+        limit = 10,
+        page = 1,
+        categoryId = '',
+    } = req.query;
+
+    if (!verifyOrderBy(orderBy)) {
+        return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
+    }
+
+    if (categoryId) {
+        if (!validator.isUUID(categoryId)) {
+            return next(
+                new ErrorHandler('missing or invalid categoryId', BAD_REQUEST)
+            );
+        } else {
+            const category = await categoryObject.getCategory(categoryId);
+            if (!category) {
+                return next(new ErrorHandler('category not found', NOT_FOUND));
             }
         }
-
-        if (!verifyOrderBy(orderBy)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid orderBy value' });
-        }
-
-        const result = await postObject.getPosts(
-            channelId,
-            Number(limit),
-            orderBy.toUpperCase(),
-            Number(page),
-            categoryId
-        );
-
-        if (result.docs.length) {
-            const data = {
-                posts: result.docs,
-                postaInfo: {
-                    hasNextPage: result.hasNextPage,
-                    hasPrevPage: result.hasPrevPage,
-                    totalPosts: result.totalDocs,
-                },
-            };
-            return res.status(OK).json(data);
-        } else {
-            return res.status(OK).json({ message: 'no posts found' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting user posts',
-            error: err.message,
-        });
     }
-};
 
-const getPost = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const userId = req.user?.user_id;
+    const result = await postObject.getPosts(
+        channelId,
+        Number(limit),
+        orderBy.toUpperCase(),
+        Number(page),
+        categoryId
+    );
 
-        let userIdentifier = userId || req.ip;
-
-        // update user's watch history
-        if (userId) {
-            await userObject.updateWatchHistory(postId, userId);
-        }
-
-        // update post views
-        await postObject.updatePostViews(postId, userIdentifier);
-
-        const post = await postObject.getPost(postId, userId);
-
-        return res.status(OK).json(post);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the post',
-            error: err.message,
-        });
+    if (result.docs.length) {
+        const data = {
+            posts: result.docs,
+            postaInfo: {
+                hasNextPage: result.hasNextPage,
+                hasPrevPage: result.hasPrevPage,
+                totalPosts: result.totalDocs,
+            },
+        };
+        return res.status(OK).json(data);
+    } else {
+        return res.status(OK).json({ message: 'no posts found' });
     }
-};
+});
 
-const addPost = async (req, res) => {
+const getPost = tryCatch('get post', async (req, res) => {
+    const { postId } = req.params;
+    const userId = req.user?.user_id;
+
+    let userIdentifier = userId || req.ip;
+
+    // update user's watch history
+    if (userId) {
+        await userObject.updateWatchHistory(postId, userId);
+    }
+
+    // update post views
+    await postObject.updatePostViews(postId, userIdentifier);
+
+    const post = await postObject.getPost(postId, userId);
+    return res.status(OK).json(post);
+});
+
+const addPost = tryCatch('add post', async (req, res, next) => {
     let postImage;
     try {
         const { title, content, categoryId } = req.body;
 
         if (!title || !content || !req.file)
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
+            return next(new ErrorHandler('missing fields', BAD_REQUEST));
 
         if (!categoryId || !validator.isUUID(categoryId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid categoryId' });
+            return next(
+                new ErrorHandler('missing or invalid categoryId', BAD_REQUEST)
+            );
         }
 
         const category = await categoryObject.getCategory(categoryId);
         if (!category) {
-            return res
-                .status(NOT_FOUND)
-                .json({ message: 'category not found' });
+            return next(new ErrorHandler('category not found', NOT_FOUND));
         }
 
         const result = await uploadOnCloudinary(req.file.path);
@@ -203,49 +165,36 @@ const addPost = async (req, res) => {
         if (postImage) {
             await deleteFromCloudinary(postImage);
         }
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while adding a post',
-            error: err.message,
-        });
+        throw err;
     }
-};
+});
 
-const deletePost = async (req, res) => {
-    try {
-        const { post_image, post_id } = req.post;
-        await postObject.deletePost(post_id);
-        await deleteFromCloudinary(post_image);
-        return res.status(OK).json({ message: 'post deleted successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while deleting the post',
-            error: err.message,
-        });
-    }
-};
+const deletePost = tryCatch('delete post', async (req, res) => {
+    const { post_image, post_id } = req.post;
+    await postObject.deletePost(post_id);
+    await deleteFromCloudinary(post_image);
+    return res.status(OK).json({ message: 'post deleted successfully' });
+});
 
-const updatePostDetails = async (req, res) => {
-    try {
+const updatePostDetails = tryCatch(
+    'update post details',
+    async (req, res, next) => {
         const { post_id } = req.post;
         const { title, content, categoryId } = req.body;
 
         if (!title || !content) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
+            return next(new ErrorHandler('missing fields', BAD_REQUEST));
         }
 
         if (!categoryId || !validator.isUUID(categoryId)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing or invalid categoryId' });
+            return next(
+                new ErrorHandler('missing or invalid categoryId', BAD_REQUEST)
+            );
         }
 
         const category = await categoryObject.getCategory(categoryId);
         if (!category) {
-            return res
-                .status(NOT_FOUND)
-                .json({ message: 'category not found' });
+            return next(new ErrorHandler('category not found', NOT_FOUND));
         }
 
         const updatedPost = await postObject.updatePostDetails({
@@ -256,124 +205,88 @@ const updatePostDetails = async (req, res) => {
         });
 
         return res.status(OK).json(updatedPost);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something wrong happened while updating post details',
-            error: err.message,
-        });
     }
-};
+);
 
-const updateThumbnail = async (req, res) => {
-    let postImage;
-    try {
-        const { post_id, post_image } = req.post;
+const updateThumbnail = tryCatch(
+    'update post thumbnail',
+    async (req, res, next) => {
+        let postImage;
+        try {
+            const { post_id, post_image } = req.post;
 
-        if (!req.file) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing thumbnail' });
+            if (!req.file) {
+                return next(new ErrorHandler('missing thumbnail', BAD_REQUEST));
+            }
+
+            const result = await uploadOnCloudinary(req.file?.path);
+            postImage = result.secure_url;
+
+            // delete old thumbnail
+            await deleteFromCloudinary(post_image);
+
+            const updatedPost = await postObject.updatePostImage(
+                post_id,
+                postImage
+            );
+
+            return res.status(OK).json(updatedPost);
+        } catch (err) {
+            if (postImage) {
+                await deleteFromCloudinary(postImage);
+            }
+            throw err;
         }
-
-        const result = await uploadOnCloudinary(req.file?.path);
-        postImage = result.secure_url;
-
-        // delete old thumbnail
-        await deleteFromCloudinary(post_image);
-
-        const updatedPost = await postObject.updatePostImage(
-            post_id,
-            postImage
-        );
-
-        return res.status(OK).json(updatedPost);
-    } catch (err) {
-        if (postImage) {
-            await deleteFromCloudinary(postImage);
-        }
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something wrong happened while updating post image',
-            error: err.message,
-        });
     }
-};
+);
 
-const togglePostVisibility = async (req, res) => {
-    try {
+const togglePostVisibility = tryCatch(
+    'toggle post visibility',
+    async (req, res) => {
         const { post_id, post_visibility } = req.post;
         await postObject.togglePostVisibility(post_id, !post_visibility);
         return res
             .status(OK)
             .json({ message: 'post visibility toggled successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something happened wrong while updating post visibility',
-            error: err.message,
-        });
     }
-};
+);
 
-const toggleSavePost = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        const { post_id } = req.post;
+const toggleSavePost = tryCatch('toggle save post', async (req, res) => {
+    const { user_id } = req.user;
+    const { post_id } = req.post;
+    await postObject.toggleSavePost(user_id, post_id);
+    return res.status(OK).json({ message: 'post save toggled successfully' });
+});
 
-        await postObject.toggleSavePost(user_id, post_id);
+const getSavedPosts = tryCatch('get saved posts', async (req, res, next) => {
+    const { user_id } = req.user;
+    const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
 
-        return res
-            .status(OK)
-            .json({ message: 'post save toggled successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something happened wrong while toggling saved post',
-            error: err.message,
-        });
+    if (!verifyOrderBy(orderBy)) {
+        return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
     }
-};
 
-const getSavedPosts = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
+    const result = await postObject.getSavedPosts(
+        user_id,
+        orderBy.toUpperCase(),
+        Number(limit),
+        Number(page)
+    );
 
-        if (!verifyOrderBy(orderBy)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid orderBy value' });
-        }
-
-        const result = await postObject.getSavedPosts(
-            user_id,
-            orderBy.toUpperCase(),
-            Number(limit),
-            Number(page)
-        );
-
-        if (result.docs.length) {
-            const data = {
-                posts: result.docs,
-                postaInfo: {
-                    hasNextPage: result.hasNextPage,
-                    hasPrevPage: result.hasPrevPage,
-                    totalPosts: result.totalDocs,
-                },
-            };
-            return res.status(OK).json(data);
-        } else {
-            return res.status(OK).json({ message: 'no saved posts' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something happened wrong while getting saved posts',
-            error: err.message,
-        });
+    if (result.docs.length) {
+        const data = {
+            posts: result.docs,
+            postaInfo: {
+                hasNextPage: result.hasNextPage,
+                hasPrevPage: result.hasPrevPage,
+                totalPosts: result.totalDocs,
+            },
+        };
+        return res.status(OK).json(data);
+    } else {
+        return res.status(OK).json({ message: 'no saved posts' });
     }
-};
+});
 
 export {
     getRandomPosts,

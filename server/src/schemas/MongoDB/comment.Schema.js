@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 
 const commentSchema = new Schema({
     comment_id: {
@@ -7,12 +7,12 @@ const commentSchema = new Schema({
         required: true,
     },
     user_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'User',
         required: true,
     },
     post_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'Post',
         required: true,
         index: true,

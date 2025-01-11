@@ -4,14 +4,8 @@ import { MongoFollowers } from './MongoFollower.Model.js';
 import { MongoLikes } from './MongoLike.Model.js';
 import { MongoComments } from './MongoComment.Model.js';
 import { MongoCategories } from './MongoCategory.Model.js';
-
-// one to one chat
 import { MongoChats } from './MongoChat.Model.js';
 import { MongoMessages } from './MongoMessage.Model.js';
-
-// group chat
-import { MongoGroupChats } from './MongoGroupChat.Model.js';
-
 import { MongoOnlineUsers } from './MongoOnlineUser.Model.js';
 
 export {
@@ -23,6 +17,5 @@ export {
     MongoCategories,
     MongoChats,
     MongoMessages,
-    MongoGroupChats,
     MongoOnlineUsers,
 };

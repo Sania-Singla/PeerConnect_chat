@@ -1,11 +1,5 @@
-import getServiceObject from '../db/serviceObjects.js';
-import {
-    OK,
-    SERVER_ERROR,
-    BAD_REQUEST,
-    COOKIE_OPTIONS,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
+import { getServiceObject } from '../db/serviceObjects.js';
+import { OK, BAD_REQUEST, COOKIE_OPTIONS } from '../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
@@ -15,11 +9,13 @@ import {
     generateTokens,
     verifyExpression,
     verifyOrderBy,
+    tryCatch,
+    ErrorHandler,
 } from '../utils/index.js';
 
 export const userObject = getServiceObject('users');
 
-const registerUser = async (req, res) => {
+const registerUser = tryCatch('register user', async (req, res, next) => {
     let coverImageURL, avatarURL;
     try {
         const { userName, email, firstName, lastName, password } = req.body;
@@ -47,9 +43,7 @@ const registerUser = async (req, res) => {
                     fs.unlinkSync(data.coverImage);
                 }
 
-                return res
-                    .status(BAD_REQUEST)
-                    .json({ message: 'missing fields' });
+                return next(new ErrorHandler('missing fields', BAD_REQUEST));
             }
 
             if (value && key !== 'userId') {
@@ -67,12 +61,14 @@ const registerUser = async (req, res) => {
                         fs.unlinkSync(data.coverImage);
                     }
 
-                    return res.status(BAD_REQUEST).json({
-                        message:
+                    return next(
+                        new ErrorHandler(
                             key === 'avatar' || key === 'coverImage'
                                 ? `only png, jpg/jpeg files are allowed for ${key} and File size should not exceed 100MB.`
                                 : `${key} is invalid`,
-                    });
+                            BAD_REQUEST
+                        )
+                    );
                 }
             }
         }
@@ -91,9 +87,7 @@ const registerUser = async (req, res) => {
                 fs.unlinkSync(data.coverImage);
             }
 
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'user already exists' });
+            return next(new ErrorHandler('user already exists', BAD_REQUEST));
         }
 
         let result = await uploadOnCloudinary(data.avatar);
@@ -118,71 +112,56 @@ const registerUser = async (req, res) => {
         if (coverImageURL) {
             await deleteFromCloudinary(coverImageURL);
         }
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while registering the user.',
-            error: err.message,
-        });
+        throw err;
     }
-};
+});
 
-const loginUser = async (req, res) => {
-    try {
-        const { loginInput, password } = req.body;
+const loginUser = tryCatch('login user', async (req, res, next) => {
+    const { loginInput, password } = req.body;
 
-        if (!loginInput || !password) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-
-        const user = await userObject.getUser(loginInput);
-        if (!user) {
-            return res.status(NOT_FOUND).json({ message: 'user not found' });
-        }
-
-        const isPassValid = bcrypt.compareSync(password, user.user_password);
-        if (!isPassValid) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid credentials' });
-        }
-
-        const { accessToken, refreshToken } = await generateTokens(user);
-
-        await userObject.loginUser(user.user_id, refreshToken);
-
-        const { user_password, refresh_token, ...loggedInUser } = user; // for mongo
-
-        return res
-            .status(OK)
-            .cookie('peerConnect_accessToken', accessToken, {
-                ...COOKIE_OPTIONS,
-                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
-            })
-            .cookie('peerConnect_refreshToken', refreshToken, {
-                ...COOKIE_OPTIONS,
-                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
-            })
-            .json(loggedInUser);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while logging the user.',
-            error: err.message,
-        });
+    if (!loginInput || !password) {
+        return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
-};
 
-const deleteAccount = async (req, res) => {
-    try {
+    const user = await userObject.getUser(loginInput);
+    if (!user) {
+        return next(new ErrorHandler('user not found', BAD_REQUEST));
+    }
+
+    const isPassValid = bcrypt.compareSync(password, user.user_password);
+    if (!isPassValid) {
+        return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
+    }
+
+    const { accessToken, refreshToken } = await generateTokens(user);
+
+    await userObject.loginUser(user.user_id, refreshToken);
+
+    const { user_password, refresh_token, ...loggedInUser } = user; // for mongo
+
+    return res
+        .status(OK)
+        .cookie('peerConnect_accessToken', accessToken, {
+            ...COOKIE_OPTIONS,
+            maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
+        })
+        .cookie('peerConnect_refreshToken', refreshToken, {
+            ...COOKIE_OPTIONS,
+            maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
+        })
+        .json(loggedInUser);
+});
+
+const deleteAccount = tryCatch(
+    'delete user account',
+    async (req, res, next) => {
         const { user_id, user_password, user_coverImage, user_avatar } =
             req.user;
         const { password } = req.body;
 
         const isPassValid = bcrypt.compareSync(password, user_password);
         if (!isPassValid) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid credentials' });
+            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
         }
 
         await userObject.deleteUser(user_id);
@@ -195,74 +174,43 @@ const deleteAccount = async (req, res) => {
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
             .clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS)
             .json({ message: 'account deleted successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while deleting the user account.',
-            error: err.message,
-        });
     }
-};
+);
 
-const logoutUser = async (req, res) => {
-    try {
-        await userObject.logoutUser(req.user?.user_id);
-        return res
-            .status(OK)
-            .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-            .clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS)
-            .json({ message: 'user loggedout successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while logging the user out.',
-            error: err.message,
-        });
-    }
-};
+const logoutUser = tryCatch('logout user', async (req, res) => {
+    await userObject.logoutUser(req.user?.user_id);
+    return res
+        .status(OK)
+        .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+        .clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS)
+        .json({ message: 'user loggedout successfully' });
+});
 
-const getCurrentUser = async (req, res) => {
-    try {
-        const { user_password, refresh_token, ...user } = req.user;
-        return res.status(OK).json(user);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the current user.',
-            error: err.message,
-        });
-    }
-};
+const getCurrentUser = tryCatch('get Current user', (req, res) => {
+    const { user_password, refresh_token, ...user } = req.user;
+    return res.status(OK).json(user);
+});
 
-const getChannelProfile = async (req, res) => {
-    try {
-        const channelId = req.channel.user_id;
-        const userId = req.user?.user_id;
+const getChannelProfile = tryCatch('get channel profile', async (req, res) => {
+    const channelId = req.channel.user_id;
+    const userId = req.user?.user_id;
 
-        const channelProfile = await userObject.getChannelProfile(
-            channelId,
-            userId
-        );
-        return res.status(OK).json(channelProfile);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the channel profile.',
-            error: err.message,
-        });
-    }
-};
+    const channelProfile = await userObject.getChannelProfile(
+        channelId,
+        userId
+    );
+    return res.status(OK).json(channelProfile);
+});
 
-const updateAccountDetails = async (req, res) => {
-    try {
+const updateAccountDetails = tryCatch(
+    'update account details',
+    async (req, res, next) => {
         const { user_id, user_password } = req.user;
         const { firstName, lastName, email, password } = req.body;
 
         const isPassValid = bcrypt.compareSync(password, user_password);
         if (!isPassValid) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid credentials' });
+            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
         }
 
         const updatedUser = await userObject.updateAccountDetails({
@@ -273,25 +221,18 @@ const updateAccountDetails = async (req, res) => {
         });
 
         return res.status(OK).json(updatedUser);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating account details.',
-            error: err.message,
-        });
     }
-};
+);
 
-const updateChannelDetails = async (req, res) => {
-    try {
+const updateChannelDetails = tryCatch(
+    'update channel details',
+    async (req, res, next) => {
         const { user_id, user_password } = req.user;
         const { userName, bio, password } = req.body;
 
         const isPassValid = bcrypt.compareSync(password, user_password);
         if (!isPassValid) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid credentials' });
+            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
         }
 
         const updatedUser = await userObject.updateChannelDetails({
@@ -301,50 +242,32 @@ const updateChannelDetails = async (req, res) => {
         });
 
         return res.status(OK).json(updatedUser);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating channel details.',
-            error: err.message,
-        });
     }
-};
+);
 
-const updatePassword = async (req, res) => {
-    try {
-        const { user_id, user_password } = req.user;
-        const { oldPassword, newPassword } = req.body;
+const updatePassword = tryCatch('update password', async (req, res, next) => {
+    const { user_id, user_password } = req.user;
+    const { oldPassword, newPassword } = req.body;
 
-        const isPassValid = bcrypt.compareSync(oldPassword, user_password);
-        if (!isPassValid) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid credentials' });
-        }
-
-        const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
-
-        await userObject.updatePassword(user_id, hashedNewPassword);
-
-        return res
-            .status(OK)
-            .json({ message: 'password updated successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating password.',
-            error: err.message,
-        });
+    const isPassValid = bcrypt.compareSync(oldPassword, user_password);
+    if (!isPassValid) {
+        return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
     }
-};
 
-const updateAvatar = async (req, res) => {
+    const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
+
+    await userObject.updatePassword(user_id, hashedNewPassword);
+
+    return res.status(OK).json({ message: 'password updated successfully' });
+});
+
+const updateAvatar = tryCatch('update avatar', async (req, res, next) => {
     let avatar;
     try {
         const { user_id, user_avatar } = req.user;
 
         if (!req.file) {
-            return res.status(BAD_REQUEST).json({ message: 'missing avatar' });
+            return next(new ErrorHandler('missing avatar', BAD_REQUEST));
         }
 
         const result = await uploadOnCloudinary(req.file.path);
@@ -361,59 +284,53 @@ const updateAvatar = async (req, res) => {
         if (avatar) {
             await deleteFromCloudinary(avatar);
         }
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating avatar.',
-            error: err.message,
-        });
+        throw err;
     }
-};
+});
 
-const updateCoverImage = async (req, res) => {
-    let coverImage;
-    try {
-        const { user_id, user_coverImage } = req.user;
+const updateCoverImage = tryCatch(
+    'update coverImage',
+    async (req, res, next) => {
+        let coverImage;
+        try {
+            const { user_id, user_coverImage } = req.user;
 
-        if (!req.file) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'missing coverImage' });
+            if (!req.file) {
+                return next(
+                    new ErrorHandler('missing coverImage', BAD_REQUEST)
+                );
+            }
+
+            const result = await uploadOnCloudinary(req.file.path);
+            coverImage = result.secure_url;
+
+            const updatedUser = await userObject.updateCoverImage(
+                user_id,
+                coverImage
+            );
+
+            if (updatedUser && user_coverImage) {
+                await deleteFromCloudinary(user_coverImage);
+            }
+
+            return res.status(OK).json(updatedUser);
+        } catch (err) {
+            if (coverImage) {
+                await deleteFromCloudinary(coverImage);
+            }
+            throw err;
         }
-
-        const result = await uploadOnCloudinary(req.file.path);
-        coverImage = result.secure_url;
-
-        const updatedUser = await userObject.updateCoverImage(
-            user_id,
-            coverImage
-        );
-
-        if (updatedUser && user_coverImage) {
-            await deleteFromCloudinary(user_coverImage);
-        }
-
-        return res.status(OK).json(updatedUser);
-    } catch (err) {
-        if (coverImage) {
-            await deleteFromCloudinary(coverImage);
-        }
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating coverImage.',
-            error: err.message,
-        });
     }
-};
+);
 
-const getWatchHistory = async (req, res) => {
-    try {
+const getWatchHistory = tryCatch(
+    'get watch history',
+    async (req, res, next) => {
         const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
         const { user_id } = req.user;
 
         if (!verifyOrderBy(orderBy)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid orderBy value' });
+            return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
         }
 
         const result = await userObject.getWatchHistory(
@@ -436,30 +353,15 @@ const getWatchHistory = async (req, res) => {
         } else {
             return res.status(OK).json({ message: 'empty watch history' });
         }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the watch history',
-            error: err.message,
-        });
     }
-};
+);
 
-const clearWatchHistory = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        await userObject.clearWatchHistory(user_id);
-        return res
-            .status(OK)
-            .json({ message: 'watch history cleared successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while clearing the watch history',
-            error: err.message,
-        });
-    }
-};
+const clearWatchHistory = tryCatch('clear watch history', async (req, res) => {
+    await userObject.clearWatchHistory(req.user?.user_id);
+    return res
+        .status(OK)
+        .json({ message: 'watch history cleared successfully' });
+});
 
 export {
     registerUser,

@@ -16,11 +16,10 @@ import {
     MongoCategories,
     MongoChats,
     MongoMessages,
-    MongoGroupChats,
     MongoOnlineUsers,
 } from '../models/MongoDB/index.js';
 
-export default function getServiceObject(serviceType) {
+export function getServiceObject(serviceType) {
     try {
         switch (process.env.DATABASE_TYPE) {
             case 'MySQL': {
@@ -60,8 +59,6 @@ export default function getServiceObject(serviceType) {
                         return new MongoChats();
                     case 'messages':
                         return new MongoMessages();
-                    case 'groupChats':
-                        return new MongoGroupChats();
                     case 'onlineUsers':
                         return new MongoOnlineUsers();
                     default: {

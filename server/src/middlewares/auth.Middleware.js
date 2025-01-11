@@ -11,7 +11,7 @@ import {
     extractRefreshToken,
     generateAccessToken,
 } from '../utils/index.js';
-import getServiceObject from '../db/serviceObjects.js';
+import { getServiceObject } from '../db/serviceObjects.js';
 
 const userObject = getServiceObject('users');
 

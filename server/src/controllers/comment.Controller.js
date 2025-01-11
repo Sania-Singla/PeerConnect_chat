@@ -1,117 +1,75 @@
-import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
+import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
-import getServiceObject from '../db/serviceObjects.js';
-import { verifyOrderBy } from '../utils/index.js';
+import { getServiceObject } from '../db/serviceObjects.js';
+import { ErrorHandler, tryCatch, verifyOrderBy } from '../utils/index.js';
 
 export const commentObject = getServiceObject('comments');
 
-const getComments = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const { orderBy = 'desc' } = req.query;
+const getComments = tryCatch('get comments', async (req, res, next) => {
+    const { postId } = req.params;
+    const { orderBy = 'desc' } = req.query;
 
-        if (!verifyOrderBy(orderBy)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'invalid orderBy value' });
-        }
-
-        const comments = await commentObject.getComments(
-            postId,
-            req.user?.user_id,
-            orderBy.toUpperCase()
-        );
-
-        if (comments.length) {
-            return res.status(OK).json(comments);
-        } else {
-            return res.status(OK).json({ message: 'no comments found' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the post comments',
-            error: err.message,
-        });
+    if (!verifyOrderBy(orderBy)) {
+        return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
     }
-};
 
-const getComment = async (req, res) => {
-    try {
-        const { commentId } = req.params;
-        const comment = await commentObject.getComment(commentId);
-        return res.status(OK).json(comment);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the comment',
-            error: err.message,
-        });
+    const comments = await commentObject.getComments(
+        postId,
+        req.user?.user_id,
+        orderBy.toUpperCase()
+    );
+
+    if (comments.length) {
+        return res.status(OK).json(comments);
+    } else {
+        return res.status(OK).json({ message: 'no comments found' });
     }
-};
+});
 
-const addComment = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        const { postId } = req.params;
-        const { commentContent } = req.body;
-        const commentId = uuid();
+const getComment = tryCatch('get comment', async (req, res) => {
+    const { commentId } = req.params;
+    const comment = await commentObject.getComment(commentId);
+    return res.status(OK).json(comment);
+});
 
-        if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
+const addComment = tryCatch('add comment', async (req, res, next) => {
+    const { user_id } = req.user;
+    const { postId } = req.params;
+    const { commentContent } = req.body;
+    const commentId = uuid();
 
-        const comment = await commentObject.createComment(
-            commentId,
-            user_id,
-            postId,
-            commentContent
-        );
-        return res.status(OK).json(comment);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while creating the comment',
-            error: err.message,
-        });
+    if (!commentContent) {
+        return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
-};
 
-const deleteComment = async (req, res) => {
-    try {
-        const { commentId } = req.params;
-        await commentObject.deleteComment(commentId);
-        return res.status(OK).json({ message: 'comment deleted successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while deleting the comment',
-            error: err.message,
-        });
+    const comment = await commentObject.createComment(
+        commentId,
+        user_id,
+        postId,
+        commentContent
+    );
+    return res.status(OK).json(comment);
+});
+
+const deleteComment = tryCatch('delete comment', async (req, res) => {
+    const { commentId } = req.params;
+    await commentObject.deleteComment(commentId);
+    return res.status(OK).json({ message: 'comment deleted successfully' });
+});
+
+const updateComment = tryCatch('update comment', async (req, res, next) => {
+    const { commentContent } = req.body;
+    const { commentId } = req.params;
+
+    if (!commentContent) {
+        return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
-};
 
-const updateComment = async (req, res) => {
-    try {
-        const { commentContent } = req.body;
-        const { commentId } = req.params;
-
-        if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-
-        const updatedComment = await commentObject.editComment(
-            commentId,
-            commentContent
-        );
-        return res.status(OK).json(updatedComment);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while editing the comment',
-            error: err.message,
-        });
-    }
-};
+    const updatedComment = await commentObject.editComment(
+        commentId,
+        commentContent
+    );
+    return res.status(OK).json(updatedComment);
+});
 
 export { getComments, getComment, addComment, deleteComment, updateComment };

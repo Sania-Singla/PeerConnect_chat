@@ -1,5 +1,4 @@
-import { Schema, model } from 'mongoose';
-import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
+import { Schema, Types, model } from 'mongoose';
 
 const chatSchema = new Schema({
     chat_id: {
@@ -7,10 +6,28 @@ const chatSchema = new Schema({
         required: true,
         unique: true,
     },
-    participants: [
+    chat_name: {
+        type: String,
+    },
+    isGroupChat: {
+        type: Boolean,
+        default: false,
+    },
+    creator: {
+        type: Types.UUID,
+        ref: 'User',
+    },
+    members: [
         {
-            type: String,
-            ref: 'User',
+            user_id: {
+                type: Types.UUID,
+                ref: 'User',
+            },
+            role: {
+                type: String,
+                enum: ['admin', 'member'],
+                default: 'member',
+            },
         },
     ],
     lastMessage: {
@@ -23,52 +40,4 @@ const chatSchema = new Schema({
     },
 });
 
-const messageSchema = new Schema({
-    message_id: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    chat_id: {
-        type: String,
-        ref: 'Chat',
-        required: true,
-        index: true,
-    },
-    sender_id: {
-        type: String,
-        ref: 'User',
-        required: true,
-    }, // obvious other participant is the reciever
-    text: {
-        type: String,
-        default: '',
-    },
-    attachment: {
-        type: String,
-        default: '',
-    },
-    fileName: {
-        type: String,
-        default: '',
-    },
-    message_createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    message_updatedAt: {
-        type: Date,
-        default: Date.now(),
-    },
-});
-
-// a compound index
-messageSchema.index(
-    { chat_id: 1, message_createdAt: -1 },
-    { name: 'chat_message_createdAt' }
-);
-
-messageSchema.plugin(aggregatePaginate);
-
-export const Message = model('Message', messageSchema);
 export const Chat = model('Chat', chatSchema);

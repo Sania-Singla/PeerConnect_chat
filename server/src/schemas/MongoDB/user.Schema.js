@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Types, Schema } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const userSchema = new Schema({
@@ -53,12 +53,12 @@ const userSchema = new Schema({
 
 const savedPostSchema = new Schema({
     post_id: {
-        type: String,
+        type: Types.UUID,
         required: true,
         ref: 'Post',
     },
     user_id: {
-        type: String,
+        type: Types.UUID,
         required: true,
         ref: 'User',
         index: true,
@@ -71,12 +71,12 @@ const savedPostSchema = new Schema({
 
 const watchHistorySchema = new Schema({
     post_id: {
-        type: String,
+        type: Types.UUID,
         required: true,
         ref: 'Post',
     },
     user_id: {
-        type: String,
+        type: Types.UUID,
         required: true,
         ref: 'User',
         index: true,

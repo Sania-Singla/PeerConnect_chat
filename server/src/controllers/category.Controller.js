@@ -1,88 +1,48 @@
-import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
-import validator from 'validator';
+import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { v4 as uuid } from 'uuid';
-import getServiceObject from '../db/serviceObjects.js';
+import { getServiceObject } from '../db/serviceObjects.js';
+import { tryCatch, ErrorHandler } from '../utils/index.js';
 
 export const categoryObject = getServiceObject('categories');
 
-const getCategories = async (req, res) => {
-    try {
-        const categories = await categoryObject.getCategories();
-        if (categories.length) {
-            return res.status(OK).json(categories);
-        } else {
-            return res.status(OK).json({ message: 'no categories found' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the categories',
-            error: err.message,
-        });
+const getCategories = tryCatch('get categories', async (req, res) => {
+    const categories = await categoryObject.getCategories();
+    if (categories.length) {
+        return res.status(OK).json(categories);
+    } else {
+        return res.status(OK).json({ message: 'no categories found' });
     }
-};
+});
 
-const addCategory = async (req, res) => {
-    try {
-        const { categoryName } = req.body;
-        const categoryId = uuid();
+const addCategory = tryCatch('add category', async (req, res, next) => {
+    const { categoryName } = req.body;
 
-        if (!categoryName) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-
-        const category = await categoryObject.addCategory(
-            categoryId,
-            categoryName
-        );
-        return res.status(OK).json(category);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while adding new category',
-            error: err.message,
-        });
+    if (!categoryName) {
+        return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
-};
 
-const deleteCategory = async (req, res) => {
-    try {
-        const { category_id } = req.category;
+    const category = await categoryObject.addCategory(uuid(), categoryName);
+    return res.status(OK).json(category);
+});
 
-        await categoryObject.deleteCategory(category_id);
-        return res
-            .status(OK)
-            .json({ message: 'category deleted successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while deleting the category',
-            error: err.message,
-        });
+const deleteCategory = tryCatch('delete category', async (req, res) => {
+    await categoryObject.deleteCategory(req.category?.category_id);
+    return res.status(OK).json({ message: 'category deleted successfully' });
+});
+
+const updateCategory = tryCatch('update category', async (req, res, next) => {
+    const { categoryName } = req.body;
+    const { category_id } = req.category;
+
+    if (!categoryName) {
+        return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
-};
 
-const updateCategory = async (req, res) => {
-    try {
-        const { categoryName } = req.body;
-        const { category_id } = req.category;
-
-        if (!categoryName) {
-            return res.status(BAD_REQUEST).json({ message: 'missing fields' });
-        }
-
-        const updatedCategory = await categoryObject.editCategory(
-            category_id,
-            categoryName
-        );
-        return res.status(OK).json(updatedCategory);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while updating the category',
-            error: err.message,
-        });
-    }
-};
+    const updatedCategory = await categoryObject.editCategory(
+        category_id,
+        categoryName
+    );
+    return res.status(OK).json(updatedCategory);
+});
 
 export { getCategories, addCategory, deleteCategory, updateCategory };

@@ -1,15 +1,15 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const postLikeSchema = new Schema({
     post_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'Post',
         required: true,
         index: true,
     },
     user_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'User',
         required: true,
         index: true,
@@ -26,13 +26,13 @@ const postLikeSchema = new Schema({
 
 const commentLikeSchema = new Schema({
     comment_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'Comment',
         required: true,
         index: true,
     },
     user_id: {
-        type: String,
+        type: Types.UUID,
         ref: 'User',
         required: true,
     },

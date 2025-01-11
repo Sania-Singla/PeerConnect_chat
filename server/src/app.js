@@ -5,7 +5,6 @@ import path from 'path';
 export const app = express();
 
 // Configurations
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('../public'));
@@ -27,31 +26,7 @@ app.use(
     })
 );
 
-// Routing
-
-import {
-    userRouter,
-    postRouter,
-    followerRouter,
-    commentRouter,
-    likeRouter,
-    categoryRouter,
-    chatRouter,
-    groupChatRouter,
-    messageRouter,
-} from './routes/index.js';
-
-app.use('/api/users', userRouter);
-app.use('/api/posts', postRouter);
-app.use('/api/followers', followerRouter);
-app.use('/api/comments', commentRouter);
-app.use('/api/likes', likeRouter);
-app.use('/api/categories', categoryRouter);
-app.use('/api/chats', chatRouter);
-app.use('/api/messages', messageRouter);
-app.use('/api/group-chats', groupChatRouter);
-
-// production mode
+// Deployment
 const dirname = path.resolve();
 
 if (process.env.NODE_ENV === 'production') {
@@ -63,3 +38,26 @@ if (process.env.NODE_ENV === 'production') {
         );
     });
 }
+
+// Routes
+import {
+    userRouter,
+    postRouter,
+    followerRouter,
+    commentRouter,
+    likeRouter,
+    categoryRouter,
+    chatRouter,
+    messageRouter,
+} from './routes/index.js';
+import { errorMiddleware } from './middlewares/index.js';
+
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/followers', followerRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/likes', likeRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/chats', chatRouter);
+app.use('/api/messages', messageRouter);
+app.use(errorMiddleware);
