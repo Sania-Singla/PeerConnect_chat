@@ -6,6 +6,7 @@ import {
     optionalVerifyJwt,
     doesResourceExist,
     isOwner,
+    validateUUID,
 } from '../middlewares/index.js';
 
 import {
@@ -31,7 +32,7 @@ postRouter.route('/channel/:channelId').get(doesChannelExist, getPosts);
 
 postRouter
     .route('/post/:postId')
-    .get(optionalVerifyJwt, doesPostExist, getPost);
+    .get(validateUUID('postId'), optionalVerifyJwt, getPost);
 
 postRouter.use(verifyJwt);
 

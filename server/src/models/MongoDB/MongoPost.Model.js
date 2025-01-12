@@ -1,6 +1,6 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
-import { getPipeline1, getPipeline2 } from '../../utils/index.js';
+import { getPipeline1, getPipeline2 } from '../../helpers/index.js';
 
 export class MongoPosts extends Iposts {
     // pending search query
@@ -157,34 +157,38 @@ export class MongoPosts extends Iposts {
                 },
                 // Step 7: Lookup saved posts
                 {
-                    $lookup: {
-                        from: 'savedposts',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'saved_posts',
-                        pipeline: [
-                            {
-                                $project: {
-                                    user_id: userId,
-                                },
-                            },
-                        ],
-                    },
+                    $lookup: userId
+                        ? {
+                              from: 'savedposts',
+                              localField: 'post_id',
+                              foreignField: 'post_id',
+                              as: 'saved_posts',
+                              pipeline: [
+                                  {
+                                      $project: {
+                                          user_id: userId,
+                                      },
+                                  },
+                              ],
+                          }
+                        : {},
                 },
                 {
-                    $lookup: {
-                        from: 'followers',
-                        localField: 'post_ownerId',
-                        foreignField: 'following_id',
-                        as: 'followers',
-                        pipeline: [
-                            {
-                                $match: {
-                                    follower_id: userId,
-                                },
-                            },
-                        ],
-                    },
+                    $lookup: userId
+                        ? {
+                              from: 'followers',
+                              localField: 'post_ownerId',
+                              foreignField: 'following_id',
+                              as: 'followers',
+                              pipeline: [
+                                  {
+                                      $match: {
+                                          follower_id: userId,
+                                      },
+                                  },
+                              ],
+                          }
+                        : {},
                 },
                 // Step 8: Add conditional fields and computed fields
                 {
@@ -262,17 +266,9 @@ export class MongoPosts extends Iposts {
         }
     }
 
-    async createPost({
-        postId,
-        userId,
-        title,
-        content,
-        categoryId,
-        postImage,
-    }) {
+    async createPost({ userId, title, content, categoryId, postImage }) {
         try {
             const post = await Post.create({
-                post_id: postId,
                 post_ownerId: userId,
                 post_title: title,
                 post_content: content,

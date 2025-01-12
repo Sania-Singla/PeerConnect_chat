@@ -1,17 +1,7 @@
 import { Ichats } from '../../interfaces/chat.Interface.js';
-import { Chat } from '../../schemas/MongoDB/index.js';
+import { Chat, Request } from '../../schemas/MongoDB/index.js';
 
 export class MongoChats extends Ichats {
-    async doesChatAlreadyExist(participants) {
-        try {
-            return await Chat.findOne({
-                participants,
-            }).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
     async chatExistance(chatId) {
         try {
             return await Chat.findOne({ chat_id: chatId }).lean();
@@ -20,248 +10,121 @@ export class MongoChats extends Ichats {
         }
     }
 
-    async getChat(chatId, myId) {
+    async requestExistance(requestId) {
         try {
-            if (myId) {
-                const pipeline = [
-                    {
-                        $match: { chat_id: chatId },
-                    },
-                    // populate only other user
-                    {
-                        $addFields: {
-                            otherUserId: {
-                                $arrayElemAt: [
-                                    {
-                                        $filter: {
-                                            input: '$participants',
-                                            as: 'participant',
-                                            cond: {
-                                                $ne: ['$$participant', myId],
-                                            },
-                                        },
-                                    },
-                                    0,
-                                ],
-                            },
-                        },
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'otherUserId',
-                            foreignField: 'user_id',
-                            as: 'otherUser',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        user_id: 1,
-                                        user_name: 1,
-                                        user_avatar: 1,
-                                        user_firstName: 1,
-                                        user_lastName: 1,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        $unwind: '$otherUser',
-                    },
-                    {
-                        $addFields: {
-                            user_id: '$otherUser.user_id',
-                            user_name: '$otherUser.user_name',
-                            user_avatar: '$otherUser.user_avatar',
-                            user_firstName: '$otherUser.user_firstName',
-                            user_lastName: '$otherUser.user_lastName',
-                        },
-                    },
-                    {
-                        $project: {
-                            participants: 0,
-                            otherUser: 0,
-                            otherUserId: 0,
-                        },
-                    },
-                ];
-
-                const result = await Chat.aggregate(pipeline);
-                return result.length ? result[0] : null;
-            } else {
-                return await Chat.findOne({ chat_id: chatId }).lean();
-            }
+            return await Request.findOne({ request_id: requestId }).lean();
         } catch (err) {
             throw err;
         }
     }
 
-    async updateLastMessage(chatId, message = '') {
+    async createGroup(members, creator, chatName) {
+        const groupChat = await Chat.create({
+            creator,
+            members,
+            chat_name: chatName,
+        });
+
+        return groupChat.toObject();
+    }
+
+    async deleteChat(chatId) {
+        return await Chat.findOneAndDelete({ chat_id: chatId }).lean();
+    }
+
+    async leaveGroup(chatId, memberLeaving) {
+        const chat = await Chat.findOneAndUpdate(
+            {
+                chat_id: chatId,
+            },
+            {
+                $pull: {
+                    members: { user_id: memberLeaving },
+                },
+            },
+            {
+                new: true,
+            }
+        );
+
+        const hasAdmin = chat.members.some(({ role }) => role === 'admin');
+
+        if (!hasAdmin) {
+            chat.members[0].role = 'admin';
+        }
+
+        await chat.save();
+        return chat.toObject();
+    }
+
+    async sendRequest(senderId, receiverId) {
+        const [request, chat] = await Promise.all([
+            Request.findOne({
+                $or: [
+                    { sender_id: senderId, receiver_id: receiverId },
+                    { sender_id: receiverId, receiver_id: senderId },
+                ],
+                status: 'pending',
+            }),
+            Chat.findOne({
+                isGroupChat: false,
+                members: [senderId, receiverId],
+            }),
+        ]);
+
+        if (request) {
+            return 'request already exists';
+        }
+
+        if (chat) {
+            return 'chat already exists';
+        }
+
+        const newRequest = await Request.create({
+            sender_id: senderId,
+            receiver_id: receiverId,
+        });
+
+        return newRequest.toObject();
+    }
+
+    async rejectRequest(requestId) {
         try {
-            return await Chat.findOneAndUpdate(
+            return await Request.findOneAndUpdate(
                 {
-                    chat_id: chatId,
+                    request_id: requestId,
                 },
                 {
                     $set: {
-                        lastMessage: message,
+                        status: 'rejected',
                     },
                 },
-                {
-                    new: true,
-                }
+                { new: true }
             ).lean();
         } catch (err) {
             throw err;
         }
     }
 
-    async addChat(chatId, participants) {
+    async acceptRequest(requestId) {
         try {
+            const request = await Request.findOneAndUpdate(
+                {
+                    request_id: requestId,
+                },
+                {
+                    $set: {
+                        status: 'accepted',
+                    },
+                },
+                { new: true }
+            ).lean();
+
             const chat = await Chat.create({
-                chat_id: chatId,
-                participants,
+                creator: request.sender_id,
+                members: [request.sender_id, request.receiver_id],
             });
             return chat.toObject();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async deleteChat(chatId) {
-        try {
-            return await Chat.findOneAndDelete({ chat_id: chatId }).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async getChats(myId) {
-        try {
-            const pipeline = [
-                {
-                    $match: {
-                        participants: myId,
-                    },
-                },
-                {
-                    $addFields: {
-                        otherParticipant: {
-                            $arrayElemAt: [
-                                {
-                                    $filter: {
-                                        input: '$participants',
-                                        as: 'participant',
-                                        cond: { $ne: ['$$participant', myId] },
-                                    },
-                                },
-                                0,
-                            ],
-                        },
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'otherParticipant',
-                        foreignField: 'user_id',
-                        as: 'otherParticipant',
-                        pipeline: [
-                            {
-                                $project: {
-                                    user_id: 1,
-                                    user_name: 1,
-                                    user_firstName: 1,
-                                    user_lastName: 1,
-                                    user_avatar: 1,
-                                },
-                            },
-                        ],
-                    },
-                },
-                {
-                    $unwind: '$otherParticipant',
-                },
-                {
-                    $addFields: {
-                        user_id: '$otherParticipant.user_id',
-                        user_name: '$otherParticipant.user_name',
-                        user_firstName: '$otherParticipant.user_firstName',
-                        user_lastName: '$otherParticipant.user_lastName',
-                        user_avatar: '$otherParticipant.user_avatar',
-                    },
-                },
-                {
-                    $project: {
-                        otherParticipant: 0,
-                        participants: 0,
-                    },
-                },
-            ];
-            return await Chat.aggregate(pipeline);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async createGroup(groupId, groupName, createdBy, memberIds) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async leaveGroup(groupId, myId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async deleteGroup(groupId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async getParticipants(groupId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async getAdmins(groupId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async getNormalMembers(groupId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async removeSomeoneFromGroup(groupId, userId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async addSomeoneToGroup(groupId, userId) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async promoteSomeoneToAdmin(groupId, userId) {
-        try {
         } catch (err) {
             throw err;
         }

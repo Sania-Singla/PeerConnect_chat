@@ -1,20 +1,22 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
+import { v4 as uuid } from 'uuid';
 
 const messageSchema = new Schema({
     message_id: {
         type: String,
         required: true,
         unique: true,
+        default: uuid(),
     },
     chat_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'Chat',
         required: true,
         index: true,
     },
     sender_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
         required: true,
     },

@@ -1,26 +1,30 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 const chatSchema = new Schema({
     chat_id: {
         type: String,
         required: true,
         unique: true,
-    },
-    chat_name: {
-        type: String,
+        default: uuid(),
     },
     isGroupChat: {
         type: Boolean,
         default: false,
     },
+    chat_name: {
+        type: String,
+        default: '', // only exists if group chat
+    },
     creator: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
+        default: '',
     },
     members: [
         {
             user_id: {
-                type: Types.UUID,
+                type: String,
                 ref: 'User',
             },
             role: {

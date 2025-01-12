@@ -10,7 +10,7 @@ import {
     extractAccessToken,
     extractRefreshToken,
     generateAccessToken,
-} from '../utils/index.js';
+} from '../helpers/index.js';
 import { getServiceObject } from '../db/serviceObjects.js';
 
 const userObject = getServiceObject('users');

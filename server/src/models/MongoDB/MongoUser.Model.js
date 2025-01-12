@@ -1,6 +1,6 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
-import { getPipeline2 } from '../../utils/index.js';
+import { getPipeline2 } from '../../helpers/index.js';
 
 export class MongoUsers extends Iusers {
     async getUser(searchInput) {
@@ -34,7 +34,6 @@ export class MongoUsers extends Iusers {
     }
 
     async createUser({
-        userId,
         userName,
         firstName,
         lastName,
@@ -45,7 +44,6 @@ export class MongoUsers extends Iusers {
     }) {
         try {
             const user = await User.create({
-                user_id: userId,
                 user_name: userName,
                 user_firstName: firstName,
                 user_lastName: lastName,
@@ -231,8 +229,8 @@ export class MongoUsers extends Iusers {
                     },
                 },
             ];
-            const [channel] = await User.aggregate(pipeline);
-            return channel;
+            const [profile] = await User.aggregate(pipeline);
+            return profile;
         } catch (err) {
             throw err;
         }

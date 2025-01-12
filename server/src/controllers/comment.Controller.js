@@ -1,5 +1,4 @@
 import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
-import { v4 as uuid } from 'uuid';
 import { getServiceObject } from '../db/serviceObjects.js';
 import { ErrorHandler, tryCatch, verifyOrderBy } from '../utils/index.js';
 
@@ -36,14 +35,12 @@ const addComment = tryCatch('add comment', async (req, res, next) => {
     const { user_id } = req.user;
     const { postId } = req.params;
     const { commentContent } = req.body;
-    const commentId = uuid();
 
     if (!commentContent) {
         return next(new ErrorHandler('missing fields', BAD_REQUEST));
     }
 
     const comment = await commentObject.createComment(
-        commentId,
         user_id,
         postId,
         commentContent

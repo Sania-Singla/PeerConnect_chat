@@ -1,13 +1,7 @@
 import { getServiceObject } from '../db/serviceObjects.js';
 import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
-import { v4 as uuid } from 'uuid';
-import {
-    uploadOnCloudinary,
-    deleteFromCloudinary,
-    verifyOrderBy,
-    tryCatch,
-    ErrorHandler,
-} from '../utils/index.js';
+import { verifyOrderBy, tryCatch, ErrorHandler } from '../utils/index.js';
+import { uploadOnCloudinary, deleteFromCloudinary } from '../helpers/index.js';
 import { userObject } from './user.Controller.js';
 import { categoryObject } from './category.Controller.js';
 import validator from 'validator';
@@ -112,9 +106,14 @@ const getPosts = tryCatch('get posts', async (req, res, next) => {
     }
 });
 
-const getPost = tryCatch('get post', async (req, res) => {
+const getPost = tryCatch('get post', async (req, res, next) => {
     const { postId } = req.params;
     const userId = req.user?.user_id;
+
+    const post = await postObject.getPost(postId, userId);
+    if (!post) {
+        return next(new ErrorHandler('post not found', NOT_FOUND));
+    }
 
     let userIdentifier = userId || req.ip;
 
@@ -126,7 +125,6 @@ const getPost = tryCatch('get post', async (req, res) => {
     // update post views
     await postObject.updatePostViews(postId, userIdentifier);
 
-    const post = await postObject.getPost(postId, userId);
     return res.status(OK).json(post);
 });
 
@@ -153,7 +151,6 @@ const addPost = tryCatch('add post', async (req, res, next) => {
         postImage = result.secure_url;
 
         const post = await postObject.createPost({
-            postId: uuid(),
             userId: req.user.user_id,
             title,
             content,

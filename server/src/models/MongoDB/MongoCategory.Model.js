@@ -28,10 +28,9 @@ export class MongoCategories extends Icategories {
         }
     }
 
-    async createCategory(categoryId, categoryName) {
+    async createCategory(categoryName) {
         try {
             const category = await Category.create({
-                category_id: categoryId,
                 category_name: categoryName,
             });
             return category.toObject();

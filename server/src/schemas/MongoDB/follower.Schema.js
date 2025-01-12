@@ -1,13 +1,13 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 const followerSchema = new Schema({
     follower_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
         required: true,
     },
     following_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
         required: true,
     },

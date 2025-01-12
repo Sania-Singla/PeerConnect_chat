@@ -1,8 +1,8 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const onlineUserSchema = new Schema({
     user_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
         required: true,
         index: true,

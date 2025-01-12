@@ -1,5 +1,6 @@
 import { Icomments } from '../../interfaces/comment.Interface.js';
 import { connection } from '../../server.js';
+import { v4 as uuid } from 'uuid';
 
 export class SQLcomments extends Icomments {
     async getComments(postId, userId, orderBy) {
@@ -45,8 +46,9 @@ export class SQLcomments extends Icomments {
         }
     }
 
-    async createComment(commentId, userId, postId, commentContent) {
+    async createComment(userId, postId, commentContent) {
         try {
+            const commentId = uuid();
             const q =
                 'INSERT INTO comments(comment_id, user_id, post_id, comment_content) VALUES (?, ?, ?, ?)';
             await connection.query(q, [

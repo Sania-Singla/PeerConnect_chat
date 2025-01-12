@@ -1,268 +1,178 @@
 import { getServiceObject } from '../db/serviceObjects.js';
-import { v4 as uuid } from 'uuid';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
+import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
+import { ErrorHandler, tryCatch } from '../utils/index.js';
 
 export const chatObject = getServiceObject('chats');
 
-const addChat = async (req, res) => {
-    try {
-        const myId = req.user.user_id;
-        const { userId } = req.params;
+const getMyChats = tryCatch('get my chats', async (req, res, next) => {});
 
-        // check if chat between these two already exists
-        let chat = await chatObject.doesChatAlreadyExist([myId, userId]);
-        if (chat) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'chat already exists' });
+const getMyGroups = tryCatch('get my groups', async (req, res, next) => {});
+
+const createGroup = tryCatch(
+    'creating new group chat',
+    async (req, res, next) => {
+        const { chat_name = '', members = [] } = req.body; // members excluding me
+
+        // todo: check if chat between these members already exists
+
+        if (!chat_name) {
+            return next(
+                new ErrorHandler(
+                    'chat name is required for group chat',
+                    BAD_REQUEST
+                )
+            );
         }
 
-        chat = await chatObject.addChat(uuid(), [myId, userId]);
+        if (!members.length) {
+            return next(
+                new ErrorHandler(
+                    'atleast 1 more member is required',
+                    BAD_REQUEST
+                )
+            );
+        }
+
+        const chat = await chatObject.createGroup({
+            members,
+            creator: req.user.user_id,
+            chat_name,
+        });
+
+        // todo: Socket.io event to update chats on sidebar
 
         return res.status(OK).json(chat);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the messages.',
-            error: err.message,
-        });
     }
-};
+);
 
-const deleteChat = async (req, res) => {
-    try {
-        const { chatId } = req.params;
+const deleteChat = tryCatch('delete chat', async (req, res, next) => {
+    const { chatId } = req.params;
+    const chat = req.chat; // resource exists middleware
 
-        await chatObject.deleteChat(chatId);
-
-        return res.status(OK).json({ message: 'chat deleted successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the messages.',
-            error: err.message,
-        });
-    }
-};
-
-const getChats = async (req, res) => {
-    try {
-        const myId = req.user.user_id;
-
-        const chats = await chatObject.getChats(myId);
-
-        if (chats.length) {
-            return res.status(OK).json(chats);
-        } else {
-            return res.status(OK).json({ message: 'no chats found' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the chats.',
-            error: err.message,
-        });
-    }
-};
-
-const getChat = async (req, res) => {
-    try {
-        const { chatId } = req.params;
-        const myId = req.user.user_id;
-
-        const chat = await chatObject.getChat(chatId, myId);
-
-        return res.status(OK).json(chat);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'something went wrong while getting the chat.',
-            error: err.message,
-        });
-    }
-};
-
-const createGroup = async (req, res) => {
-    try {
-        const myId = req.user.user_id;
-        const { memberIds = [], groupName = 'Anonymous' } = req.body;
-
-        if (!Array.isArray(memberIds)) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'memberIds need to be an array of userIds' });
-        }
-
-        const group = await groupObject.createGroup(
-            uuid(), //groupId
-            groupName,
-            myId, // createdBy
-            memberIds
+    if (chat.isGroupChat && chat.creator !== req.user.user_id) {
+        return next(
+            new ErrorHandler(
+                'only the creator can delete the group',
+                BAD_REQUEST
+            )
         );
-
-        return res.status(OK).json(group);
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'Something went wrong while creating the group',
-            error: err.message,
-        });
     }
-};
 
-const deleteGroup = async (req, res) => {
-    try {
-        const groupId = req.params;
+    await chatObject.deleteChat(chatId);
 
-        // inly delete the group if there are no members in the group
+    // todo: emit event to refetch chats
+    return res.status(OK).json({ message: 'chat has been deleted' });
+});
 
-        const { admins, normalMembers } =
-            await groupObject.getParticipants(groupId);
-        if (admins.length || normalMembers.length) {
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'can not delete group with members' });
-        } else {
-            await groupObject.deleteGroup(groupId);
-            return res
-                .status(OK)
-                .json({ message: 'group deleted successfully' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'Something went wrong while deleting the group',
-            error: err.message,
-        });
+const leaveGroup = tryCatch('leave group', async (req, res, next) => {
+    const { chatId } = req.params;
+    const memberLeaving = req.user.user_id;
+    const chat = req.chat; // middleware
+
+    if (!chat.isGroupChat) {
+        return next(new ErrorHandler('this is not a group chat', BAD_REQUEST));
     }
-};
 
-const leaveGroup = async (req, res) => {
-    try {
-        const { groupId } = req.params;
-        const myId = req.user.user_id;
-
-        // check if we were the only admin then make someother member as admin and leave
-        const { admins, normalMembers } =
-            await groupObject.getParticipants(groupId);
-
-        if (admins.length === 1 && admins[0] === myId) {
-            if (normalMembers.length) {
-                // will have some other members so promote someone to admin
-                await groupObject.promoteSomeoneToAdmin(
-                    groupId,
-                    normalMembers[0]
-                );
-            }
-        }
-        await groupObject.leaveGroup(myId, groupId);
-
-        return res.status(OK).json({ message: 'group left successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'Something went wrong while leaving the group',
-            error: err.message,
-        });
+    if (!chat.members.includes(memberLeaving)) {
+        return next(
+            new ErrorHandler(' you are not a member of this group', BAD_REQUEST)
+        );
     }
-};
 
-const removeSomeoneFromGroup = async (req, res) => {
-    try {
-        const { groupId, userId } = req.params;
-        const myId = req.user.user_id;
-
-        // we should be the admin to remove someone from the group and that person should not be an admin
-        const admins = await groupObject.getAdmins(groupId);
-
-        if (!admins.includes(myId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'only admins can remove members from the group',
-            });
-        } else if (admins.includes(userId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'cannot remove an admin from the group',
-            });
-        }
-
-        await groupObject.removeSomeoneFromGroup(groupId, userId);
-
-        return res
-            .status(OK)
-            .json({ message: 'member removed from the group successfully' });
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message:
-                'Something went wrong while removing someone from the group',
-            error: err.message,
-        });
+    if (chat.members.length === 1) {
+        await chatObject.deleteChat(chatId);
+        return res.status(OK).json({ message: 'group no longer exists' });
     }
-};
 
-const addSomeoneToGroup = async (req, res) => {
-    try {
-        const { groupId, userId } = req.params;
-        const myId = req.user.user_id;
+    const result = await chatObject.leaveGroup(chatId, memberLeaving);
 
-        // check if already a member
-        const { admins, normalMembers } =
-            await groupObject.getParticipants(groupId);
+    // todo: socket emit inform other about what user left the group
 
-        if (!admins.includes(userId) && !normalMembers.includes(userId)) {
-            await groupObject.addSomeoneToGroup(groupId, userId);
-            return res
-                .status(OK)
-                .json({ message: 'member added to successfully' });
-        } else {
-            return res.status(BAD_REQUEST).json({
-                message: 'already a member of the group',
-            });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'Something went wrong while adding someone to the group',
-            error: err.message,
-        });
+    return res.status(OK).json(result);
+});
+
+const addMembers = tryCatch(
+    'add members to group',
+    async (req, res, next) => {}
+);
+
+const removeMember = tryCatch(
+    'removing a member from group',
+    async (req, res, next) => {}
+);
+
+const renameGroup = tryCatch(
+    'renaming the group',
+    async (req, res, next) => {}
+);
+
+const getGroupDetails = tryCatch(
+    'get group details',
+    async (req, res, next) => {}
+);
+
+const sendRequest = tryCatch('send request', async (req, res, next) => {
+    const { userId } = req.params;
+    const sender = req.user.user_id;
+
+    const result = await chatObject.sendRequest(sender, userId);
+
+    if (typeof result === 'string') {
+        return next(new ErrorHandler(result, BAD_REQUEST));
+    } else {
+        return res.status(OK).json(result);
     }
-};
+});
 
-const promoteSomeoneToAdmin = async (req, res) => {
-    try {
-        const myId = req.user.user_id;
-        const { userId, groupId } = req.params;
+// could remove the request as well for cleanup
+const rejectRequest = tryCatch('reject request', async (req, res, next) => {
+    const { requestId } = req.params;
+    const request = req.request; // resource exist middleware
 
-        // we should be an admin to make someone admin
-        const admins = await groupObject.getAdmins(groupId);
-        if (!admins.includes(myId)) {
-            return res.status(BAD_REQUEST).json({
-                message: 'only admins can promote other members to admin',
-            });
-        } else {
-            await groupObject.promoteSomeoneToAdmin(groupId, userId);
-            return res
-                .status(OK)
-                .json({ message: 'member promoted to admin successfully' });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(SERVER_ERROR).json({
-            message: 'Something went wrong while promoting someone to admin',
-            error: err.message,
-        });
+    if (request.receiver_id !== req.user.user_id) {
+        return next(
+            new ErrorHandler(
+                'we are not authorized to reject the request',
+                BAD_REQUEST
+            )
+        );
     }
-};
+    await chatObject.rejectRequest(requestId);
+    return res.status(OK).json({ message: 'request has been rejected' });
+});
+
+// could remove the request as well for cleanup if dont want to show on frontend
+const acceptRequest = tryCatch('accept request', async (req, res, next) => {
+    const { requestId } = req.params;
+    const request = req.request; // resource exist middleware
+
+    if (request.receiver_id !== req.user.user_id) {
+        return next(
+            new ErrorHandler(
+                'we are not authorized to accept the request',
+                BAD_REQUEST
+            )
+        );
+    }
+
+    const newChat = await chatObject.acceptRequest(requestId);
+
+    // todo: emit event to refetch chats because new 1-1 chat has been created
+
+    return res.status(OK).json({ message: 'request has been accepted' });
+});
 
 export {
-    addChat,
-    deleteChat,
-    getChats,
-    getChat,
+    getGroupDetails,
+    getMyChats,
+    getMyGroups,
+    addMembers,
+    removeMember,
     createGroup,
-    deleteGroup,
     leaveGroup,
-    removeSomeoneFromGroup,
-    addSomeoneToGroup,
-    promoteSomeoneToAdmin,
+    deleteChat,
+    renameGroup,
+    sendRequest,
+    acceptRequest,
+    rejectRequest,
 };

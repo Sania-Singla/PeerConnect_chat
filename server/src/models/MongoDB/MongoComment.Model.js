@@ -231,10 +231,9 @@ export class MongoComments extends Icomments {
         }
     }
 
-    async createComment(commentId, userId, postId, commentContent) {
+    async createComment(userId, postId, commentContent) {
         try {
             const comment = await Comment.create({
-                comment_id: commentId,
                 user_id: userId,
                 post_id: postId,
                 comment_content: commentContent,

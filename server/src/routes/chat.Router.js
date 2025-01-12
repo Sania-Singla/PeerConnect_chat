@@ -1,50 +1,53 @@
 import express from 'express';
-import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
+import { verifyJwt, validateUUID, doesResourceExist } from '../middlewares/index.js';
 import {
-    addChat,
-    deleteChat,
-    getChats,
-    getChat,
+    sendRequest,
+    acceptRequest,
+    rejectRequest,
     createGroup,
-    deleteGroup,
+    deleteChat,
+    renameGroup,
     leaveGroup,
-    removeSomeoneFromGroup,
-    addSomeoneToGroup,
-    promoteSomeoneToAdmin,
+    addMembers,
+    removeMember,
+    getMyChats,
+    getMyGroups,
+    getGroupDetails,
 } from '../controllers/chat.Controller.js';
 
 export const chatRouter = express.Router();
 
-const doesUserExist = doesResourceExist('user', 'userId', 'otherUser');
+const doesRequestExist = doesResourceExist('request', 'requestId', 'request');
 const doesChatExist = doesResourceExist('chat', 'chatId', 'chat');
 
 chatRouter.use(verifyJwt);
 
-chatRouter.route('/add/:userId').post(doesUserExist, addChat);
-
-chatRouter.route('/:chatId').all(doesChatExist).delete(deleteChat).get(getChat);
-
-chatRouter.route('/').get(getChats);
-
-const doesColabExist = doesResourceExist('colab', 'colabId', 'colab');
-const doesOtherUserExist = doesResourceExist('user', 'userId', 'otherUser');
-
-chatRouter.use(verifyJwt);
-
-chatRouter.route('/group/create').post(createGroup);
-
-chatRouter.route('/group/delete/:colabId').delete(doesColabExist, deleteGroup);
-
-chatRouter.route('/group/leave/:colabId').patch(doesColabExist, leaveGroup);
+chatRouter
+    .route('/requests/send/userId')
+    .post(validateUUID('userId'), sendRequest);
 
 chatRouter
-    .route('/group/add-member/:colabId/:userId')
-    .patch(doesColabExist, doesOtherUserExist, addSomeoneToGroup);
+    .route('/requests/accept/requestId')
+    .patch(doesRequestExist, acceptRequest);
 
 chatRouter
-    .route('/group/remove-member/:colabId/:userId')
-    .patch(doesColabExist, doesOtherUserExist, removeSomeoneFromGroup);
+    .route('/requests/reject/requestId')
+    .patch(doesRequestExist, rejectRequest);
 
-chatRouter
-    .route('/group/promote/:colabId/:userId')
-    .patch(doesColabExist, doesOtherUserExist, promoteSomeoneToAdmin);
+chatRouter.route('/groups/new').post(createGroup);
+
+chatRouter.route('/groups/leave/:chatId').patch(doesChatExist, leaveGroup);
+
+chatRouter.route('/groups/rename/:chatId').patch(doesChatExist, renameGroup);
+
+chatRouter.route('/groups/members/add').patch(doesChatExist, addMembers);
+
+chatRouter.route('/groups/members/remove').patch(doesChatExist, removeMember);
+
+chatRouter.route('/groups/:chatId').get(getGroupDetails);
+
+chatRouter.route('/groups').get(getMyGroups);
+
+chatRouter.route('/:chatId').delete(doesChatExist, deleteChat);
+
+chatRouter.route('/').get(getMyChats);

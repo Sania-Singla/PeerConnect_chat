@@ -3,6 +3,7 @@ import { verifyJwt, optionalVerifyJwt } from './auth.Middleware.js';
 import { isOwner } from './isOwner.Middleware.js';
 import { doesResourceExist } from './doesResourceExist.Middleware.js';
 import { errorMiddleware } from './error.Middleware.js';
+import { validateUUID } from './validator.Middleware.js';
 
 export {
     upload,
@@ -11,4 +12,5 @@ export {
     isOwner,
     doesResourceExist,
     errorMiddleware,
+    validateUUID,
 };

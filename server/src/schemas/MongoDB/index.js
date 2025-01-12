@@ -7,6 +7,7 @@ import { Post, PostView } from './post.Schema.js';
 import { Chat } from './chat.Schema.js';
 import { Message } from './message.Schema.js';
 import { OnlineUser } from './onlineUser.Schema.js';
+import { Request } from './request.Schema.js';
 
 export {
     User,
@@ -22,4 +23,5 @@ export {
     Chat,
     Message,
     OnlineUser,
+    Request,
 };

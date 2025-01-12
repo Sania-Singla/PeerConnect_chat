@@ -1,6 +1,7 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { connection } from '../../server.js';
 import { getCurrentTimestamp } from '../../utils/index.js';
+import { v4 as uuid } from 'uuid';
 
 export class SQLposts extends Iposts {
     // pending search query
@@ -198,15 +199,9 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async createPost({
-        postId,
-        userId,
-        title,
-        content,
-        categoryId,
-        postImage,
-    }) {
+    async createPost({ userId, title, content, categoryId, postImage }) {
         try {
+            const postId = uuid();
             const q =
                 'INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_category, post_image) VALUES (?, ?, ?, ?, ?, ?)';
             await connection.query(q, [

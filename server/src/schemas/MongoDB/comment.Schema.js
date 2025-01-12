@@ -1,18 +1,20 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 const commentSchema = new Schema({
     comment_id: {
         type: String,
         unique: true,
         required: true,
+        default: uuid(),
     },
     user_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'User',
         required: true,
     },
     post_id: {
-        type: Types.UUID,
+        type: String,
         ref: 'Post',
         required: true,
         index: true,

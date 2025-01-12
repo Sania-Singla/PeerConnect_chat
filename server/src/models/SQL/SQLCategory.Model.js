@@ -1,5 +1,6 @@
 import { Icategories } from '../../interfaces/category.Interface.js';
 import { connection } from '../../server.js';
+import { v4 as uuid } from 'uuid';
 
 export class SQLcategories extends Icategories {
     async getCategories() {
@@ -22,8 +23,9 @@ export class SQLcategories extends Icategories {
         }
     }
 
-    async createCategory(categoryId, categoryName) {
+    async createCategory(categoryName) {
         try {
+            const categoryId = uuid();
             const q =
                 'INSERT INTO categories(category_id, category_name) VALUES (?, ?)';
             await connection.query(q, [categoryId, categoryName]);

@@ -32,14 +32,14 @@ async function getSocketIdByUserId(userId) {
 io.on('connection', async (socket) => {
     console.log('User connected:', socket.id);
 
-    const userId = socket.handshake.query.userId;
+    const userId = socket.handshake.query.userId; // todo: will setup a middleware for this
 
     if (!userId) {
         console.log('No userId provided. Disconnecting...');
         return socket.disconnect(true);
     }
 
-    // add user to Redis and mark online in MongoDB
+    // mark us online
     try {
         await redisClient.setEx(userId, 86400, socket.id); // 24hr exp
         await onlineUserObject.markUserOnline(userId, socket.id);
@@ -49,11 +49,11 @@ io.on('connection', async (socket) => {
     }
 
     try {
-        // get the chats of the connectec user
+        // get the chats of the current user
         const chats = await chatObject.getChats(userId);
         const onlineChatIds = [];
 
-        // Notify chats when the user goes online
+        // Notify these chats about we being online
         for (const chat of chats) {
             const participantSocketId = await getSocketIdByUserId(chat.user_id);
 
@@ -89,7 +89,7 @@ io.on('connection', async (socket) => {
     socket.on('disconnect', async () => {
         console.log('User disconnected:', socket.id);
 
-        // Remove the user from redis and make offline in db
+        // mark us offline
         try {
             await redisClient.del(userId);
             await onlineUserObject.markUserOffline(userId);
@@ -99,7 +99,7 @@ io.on('connection', async (socket) => {
         }
 
         try {
-            // Notify chats that the user is offline
+            // Notify these chats about we being offline
             const chats = await chatObject.getChats(userId);
 
             for (const chat of chats) {

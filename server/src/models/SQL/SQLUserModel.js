@@ -1,5 +1,6 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { connection } from '../../server.js';
+import { v4 as uuid } from 'uuid';
 
 export class SQLusers extends Iusers {
     async getUser(searchInput) {
@@ -22,7 +23,6 @@ export class SQLusers extends Iusers {
     }
 
     async createUser({
-        userId,
         userName,
         firstName,
         lastName,
@@ -32,6 +32,7 @@ export class SQLusers extends Iusers {
         password,
     }) {
         try {
+            const userId = uuid();
             const q =
                 'INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 

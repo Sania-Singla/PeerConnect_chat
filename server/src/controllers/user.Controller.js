@@ -1,17 +1,23 @@
 import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST, COOKIE_OPTIONS } from '../constants/errorCodes.js';
-import { v4 as uuid } from 'uuid';
+import {
+    OK,
+    BAD_REQUEST,
+    COOKIE_OPTIONS,
+    NOT_FOUND,
+} from '../constants/errorCodes.js';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
 import {
-    uploadOnCloudinary,
-    deleteFromCloudinary,
-    generateTokens,
     verifyExpression,
     verifyOrderBy,
     tryCatch,
     ErrorHandler,
 } from '../utils/index.js';
+import {
+    uploadOnCloudinary,
+    deleteFromCloudinary,
+    generateTokens,
+} from '../helpers/index.js';
 
 export const userObject = getServiceObject('users');
 
@@ -20,7 +26,6 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
     try {
         const { userName, email, firstName, lastName, password } = req.body;
         const data = {
-            userId: uuid(),
             userName,
             firstName,
             lastName,
@@ -191,16 +196,18 @@ const getCurrentUser = tryCatch('get Current user', (req, res) => {
     return res.status(OK).json(user);
 });
 
-const getChannelProfile = tryCatch('get channel profile', async (req, res) => {
-    const channelId = req.channel.user_id;
-    const userId = req.user?.user_id;
-
-    const channelProfile = await userObject.getChannelProfile(
-        channelId,
-        userId
-    );
-    return res.status(OK).json(channelProfile);
-});
+const getChannelProfile = tryCatch(
+    'get channel profile',
+    async (req, res, next) => {
+        const { channelId } = req.params;
+        const userId = req.user?.user_id;
+        const result = await userObject.getChannelProfile(channelId, userId);
+        if (!result) {
+            return next(new ErrorHandler('channel not found', NOT_FOUND));
+        }
+        return res.status(OK).json(result);
+    }
+);
 
 const updateAccountDetails = tryCatch(
     'update account details',
