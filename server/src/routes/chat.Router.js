@@ -1,5 +1,9 @@
 import express from 'express';
-import { verifyJwt, validateUUID, doesResourceExist } from '../middlewares/index.js';
+import {
+    verifyJwt,
+    validateUUID,
+    doesResourceExist,
+} from '../middlewares/index.js';
 import {
     sendRequest,
     acceptRequest,

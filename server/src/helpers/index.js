@@ -7,6 +7,7 @@ import {
     extractRefreshToken,
 } from './tokens.js';
 import { getPipeline1, getPipeline2 } from './pipelines.js';
+import { getSocketIds, getOtherMembers, getSocketId } from './sockets.js';
 
 export {
     uploadOnCloudinary,
@@ -18,4 +19,7 @@ export {
     extractRefreshToken,
     getPipeline1,
     getPipeline2,
+    getSocketIds,
+    getOtherMembers,
+    getSocketId,
 };

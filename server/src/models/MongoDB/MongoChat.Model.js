@@ -129,4 +129,46 @@ export class MongoChats extends Ichats {
             throw err;
         }
     }
+
+    async addMembers(chatId, newMembers) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async removeMember(chatId, memberId) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async renameGroup(chatId, newName) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getGroupDetails(chatId) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getMyGroups(myId) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getMyChats(myId) {
+        try {
+        } catch (err) {
+            throw err;
+        }
+    }
 }
