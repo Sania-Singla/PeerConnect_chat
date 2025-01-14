@@ -1,15 +1,9 @@
-import { app } from './app.js';
-import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { connectRedis } from './db/connectRedis.js';
+import { httpServer, redisClient } from './server.js';
 import { getSocketIds, getOtherMembers } from './helpers/index.js';
 import { chatObject } from './controllers/chat.Controller.js';
 import { onlineUserObject } from './controllers/onlineUser.Controller.js';
-
-// Connect to Redis
-const redisClient = await connectRedis();
-
-const httpServer = createServer(app);
+import { ErrorHandler } from './utils/errorHandler.js';
 
 const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
 
@@ -19,13 +13,18 @@ const io = new Server(httpServer, {
     },
 });
 
-io.on('connection', async (socket) => {
-    console.log('User connected:', socket.id);
-    const userId = socket.handshake.query.userId; // todo: will setup a middleware for this
+io.use((socket, next) => {
+    const userId = socket.handshake.query.userId;
     if (!userId) {
-        console.log('No userId provided. Disconnecting...');
-        return socket.disconnect(true);
+        return next(new ErrorHandler('Authentication error'));
     }
+    socket.userId = userId;
+    next();
+});
+
+io.on('connection', async (socket) => {
+    const userId = socket.userId;
+    console.log('User connected:', socket.id);
 
     // mark us online
     try {
@@ -61,9 +60,7 @@ io.on('connection', async (socket) => {
                 const socketIds = await getSocketIds(otherMembers);
                 return {
                     chatId: chat_id,
-                    onlineUsers: otherMembers.filter(
-                        (member, index) => socketIds[index]
-                    ),
+                    onlineUsers: otherMembers.filter((_, i) => socketIds[i]),
                 };
             })
         );
@@ -120,4 +117,4 @@ io.on('connection', async (socket) => {
     });
 });
 
-export { io, httpServer, redisClient };
+export { io };
