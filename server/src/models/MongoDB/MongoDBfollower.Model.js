@@ -1,7 +1,7 @@
 import { Ifollowers } from '../../interfaces/follower.Interface.js';
 import { Follower } from '../../schemas/MongoDB/index.js';
 
-export class MongoFollowers extends Ifollowers {
+export class MongoDBfollowers extends Ifollowers {
     async getFollowers(channelId) {
         try {
             const pipeline = [

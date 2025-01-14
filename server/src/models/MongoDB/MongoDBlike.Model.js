@@ -2,7 +2,7 @@ import { Ilikes } from '../../interfaces/like.Interface.js';
 import { CommentLike, PostLike } from '../../schemas/MongoDB/index.js';
 import { getPipeline2 } from '../../helpers/index.js';
 
-export class MongoLikes extends Ilikes {
+export class MongoDBlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
             const pipeline2 = getPipeline2(orderBy, 'likedAt');

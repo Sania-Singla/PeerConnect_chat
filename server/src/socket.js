@@ -12,6 +12,7 @@ const redisClient = await connectRedis();
 const httpServer = createServer(app);
 
 const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
+
 const io = new Server(httpServer, {
     cors: {
         origin: whitelist,

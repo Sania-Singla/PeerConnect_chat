@@ -1,7 +1,7 @@
 import { IonlineUsers } from '../../interfaces/onlineUser.Interface.js';
 import { OnlineUser } from '../../schemas/MongoDB/index.js';
 
-export class MongoOnlineUsers extends IonlineUsers {
+export class MongoDBonlineUsers extends IonlineUsers {
     async getOnlineUser(userId) {
         try {
             return await OnlineUser.findOne({

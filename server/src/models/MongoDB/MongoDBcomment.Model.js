@@ -1,7 +1,7 @@
 import { Icomments } from '../../interfaces/comment.Interface.js';
 import { Comment } from '../../schemas/MongoDB/index.js';
 
-export class MongoComments extends Icomments {
+export class MongoDBcomments extends Icomments {
     async getComments(postId, userId, orderBy) {
         try {
             const pipeline = [

@@ -6,6 +6,7 @@ import { likeRouter } from './like.Router.js';
 import { categoryRouter } from './category.Router.js';
 import { chatRouter } from './chat.Router.js';
 import { messageRouter } from './message.Router.js';
+import { requestRouter } from './request.Router.js';
 
 export {
     userRouter,
@@ -16,4 +17,5 @@ export {
     categoryRouter,
     chatRouter,
     messageRouter,
+    requestRouter,
 };

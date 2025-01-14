@@ -2,7 +2,7 @@ import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
 import { getPipeline2 } from '../../helpers/index.js';
 
-export class MongoUsers extends Iusers {
+export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
         try {
             if (typeof searchInput === 'object' && searchInput !== null) {

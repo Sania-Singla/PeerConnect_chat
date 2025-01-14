@@ -11,9 +11,7 @@ import {
     extractRefreshToken,
     generateAccessToken,
 } from '../helpers/index.js';
-import { getServiceObject } from '../db/serviceObjects.js';
-
-const userObject = getServiceObject('users');
+import { userObject } from '../controllers/user.Controller.js';
 
 /**
  * @param {Object} res - http response object

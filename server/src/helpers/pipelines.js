@@ -199,4 +199,63 @@ function getPipeline2(orderBy, sortBy) {
     ];
 }
 
-export { getPipeline1, getPipeline2 };
+function getPipeline3() {
+    return [
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'members.user_id',
+                foreignField: 'user_id',
+                as: 'populatedMembers',
+            },
+        },
+        // Replace the `members` array with populated details
+        {
+            $addFields: {
+                members: {
+                    $map: {
+                        input: '$populatedMembers',
+                        as: 'user',
+                        in: {
+                            user_id: '$$user.user_id',
+                            user_name: '$$user.user_name',
+                            user_firstName: '$$user.user_firstName',
+                            user_lastName: '$$user.user_lastName',
+                            user_avatar: '$$user.user_avatar',
+                            role: {
+                                $let: {
+                                    vars: {
+                                        memberData: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: '$members',
+                                                        as: 'originalMember',
+                                                        cond: {
+                                                            $eq: [
+                                                                '$$originalMember.user_id',
+                                                                '$$user.user_id',
+                                                            ],
+                                                        },
+                                                    },
+                                                },
+                                                0,
+                                            ],
+                                        },
+                                    },
+                                    in: '$$memberData.role',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        // Remove temporary `populatedMembers` field
+        {
+            $unset: 'populatedMembers',
+        },
+    ];
+}
+
+export { getPipeline1, getPipeline2, getPipeline3 };

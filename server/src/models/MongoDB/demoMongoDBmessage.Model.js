@@ -1,7 +1,7 @@
 import { Imessages } from '../../interfaces/message.Interface.js';
 import { Message } from '../../schemas/MongoDB/index.js';
 
-export class MongoMessages extends Imessages {
+export class MongoDBmessages extends Imessages {
     async sendMessage(messageId, chatId, myId, text, attachment, fileName) {
         try {
             const message = await Message.create({

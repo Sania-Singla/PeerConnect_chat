@@ -30,7 +30,6 @@ const chatSchema = new Schema({
             role: {
                 type: String,
                 enum: ['admin', 'member'],
-                default: 'member',
             },
         },
     ],

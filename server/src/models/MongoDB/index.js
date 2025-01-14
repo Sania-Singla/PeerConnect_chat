@@ -1,21 +1,23 @@
-import { MongoUsers } from './MongoUser.Model.js';
-import { MongoPosts } from './MongoPost.Model.js';
-import { MongoFollowers } from './MongoFollower.Model.js';
-import { MongoLikes } from './MongoLike.Model.js';
-import { MongoComments } from './MongoComment.Model.js';
-import { MongoCategories } from './MongoCategory.Model.js';
-import { MongoChats } from './MongoChat.Model.js';
-import { MongoMessages } from './MongoMessage.Model.js';
-import { MongoOnlineUsers } from './MongoOnlineUser.Model.js';
+import { MongoDBusers } from './MongoDBuser.Model.js';
+import { MongoDBposts } from './MongoDBpost.Model.js';
+import { MongoDBfollowers } from './MongoDBfollower.Model.js';
+import { MongoDBlikes } from './MongoDBlike.Model.js';
+import { MongoDBcomments } from './MongoDBcomment.Model.js';
+import { MongoDBcategories } from './MongoDBcategory.Model.js';
+import { MongoDBchats } from './MongoDBchat.Model.js';
+import { MongoDBmessages } from './MongoDBmessage.Model.js';
+import { MongoDBonlineUsers } from './MongoDBonlineUser.Model.js';
+import { MongoDBrequests } from './MongoDBrequest.Model.js';
 
 export {
-    MongoUsers,
-    MongoComments,
-    MongoFollowers,
-    MongoLikes,
-    MongoPosts,
-    MongoCategories,
-    MongoChats,
-    MongoMessages,
-    MongoOnlineUsers,
+    MongoDBusers,
+    MongoDBcomments,
+    MongoDBfollowers,
+    MongoDBlikes,
+    MongoDBposts,
+    MongoDBcategories,
+    MongoDBchats,
+    MongoDBmessages,
+    MongoDBrequests,
+    MongoDBonlineUsers,
 };

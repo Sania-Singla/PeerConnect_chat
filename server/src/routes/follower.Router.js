@@ -10,7 +10,7 @@ import {
 
 const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
 
-// followerRouter.use(doesChannelExist);  // causes error because the params might have not been set yet (waterfall effect)
+// followerRouter.use(doesChannelExist);  // causes error because this middleware needs the params
 
 followerRouter
     .route('/follows/:channelId')

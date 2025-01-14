@@ -2,7 +2,7 @@ import { Iposts } from '../../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
 import { getPipeline1, getPipeline2 } from '../../helpers/index.js';
 
-export class MongoPosts extends Iposts {
+export class MongoDBposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, categoryId) {
         try {

@@ -8,72 +8,59 @@ import {
 } from '../models/SQL/index.js';
 
 import {
-    MongoUsers,
-    MongoPosts,
-    MongoLikes,
-    MongoFollowers,
-    MongoComments,
-    MongoCategories,
-    MongoChats,
-    MongoMessages,
-    MongoOnlineUsers,
+    MongoDBusers,
+    MongoDBposts,
+    MongoDBlikes,
+    MongoDBfollowers,
+    MongoDBcomments,
+    MongoDBcategories,
+    MongoDBchats,
+    MongoDBmessages,
+    MongoDBonlineUsers,
+    MongoDBrequests,
 } from '../models/MongoDB/index.js';
+
+const serviceMap = {
+    MySQL: {
+        users: SQLusers,
+        posts: SQLposts,
+        likes: SQLlikes,
+        comments: SQLcomments,
+        followers: SQLfollowers,
+        categories: SQLcategories,
+    },
+    MongoDB: {
+        users: MongoDBusers,
+        posts: MongoDBposts,
+        likes: MongoDBlikes,
+        comments: MongoDBcomments,
+        followers: MongoDBfollowers,
+        categories: MongoDBcategories,
+        chats: MongoDBchats,
+        messages: MongoDBmessages,
+        onlineUsers: MongoDBonlineUsers,
+        requests: MongoDBrequests,
+    },
+};
 
 export function getServiceObject(serviceType) {
     try {
-        switch (process.env.DATABASE_TYPE) {
-            case 'MySQL': {
-                switch (serviceType) {
-                    case 'users':
-                        return new SQLusers();
-                    case 'posts':
-                        return new SQLposts();
-                    case 'likes':
-                        return new SQLlikes();
-                    case 'comments':
-                        return new SQLcomments();
-                    case 'followers':
-                        return new SQLfollowers();
-                    case 'categories':
-                        return new SQLcategories();
-                    default: {
-                        throw new Error('Unsupported service type');
-                    }
-                }
-            }
-            case 'MongoDB': {
-                switch (serviceType) {
-                    case 'users':
-                        return new MongoUsers();
-                    case 'posts':
-                        return new MongoPosts();
-                    case 'likes':
-                        return new MongoLikes();
-                    case 'comments':
-                        return new MongoComments();
-                    case 'followers':
-                        return new MongoFollowers();
-                    case 'categories':
-                        return new MongoCategories();
-                    case 'chats':
-                        return new MongoChats();
-                    case 'messages':
-                        return new MongoMessages();
-                    case 'onlineUsers':
-                        return new MongoOnlineUsers();
-                    default: {
-                        throw new Error('Unsupported service type');
-                    }
-                }
-            }
-            default: {
-                throw new Error('Unsupported DB Type');
-            }
+        const dbType = process.env.DATABASE_TYPE;
+        if (!serviceMap[dbType]) {
+            throw new Error('Unsupported DB Type');
         }
+
+        const ServiceClass = serviceMap[dbType][serviceType];
+        if (!ServiceClass) {
+            throw new Error('Unsupported service type');
+        }
+
+        return new ServiceClass();
     } catch (err) {
-        return console.log({
-            message: 'something went wrong while generating service object',
-            error: err.message,
+        console.log({
+            message: 'Something went wrong while generating service object',
+            error: err,
         });
+        process.exit(1);
     }
 }
