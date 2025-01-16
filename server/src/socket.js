@@ -1,29 +1,39 @@
+import { app } from './app.js';
 import { Server } from 'socket.io';
-import { httpServer, redisClient } from './server.js';
+import { createServer } from 'http';
+import cookieParser from 'cookie-parser';
+import { connectRedis } from './db/connectRedis.js';
 import { getSocketIds, getOtherMembers } from './helpers/index.js';
 import { chatObject } from './controllers/chat.Controller.js';
 import { onlineUserObject } from './controllers/onlineUser.Controller.js';
-import { ErrorHandler } from './utils/errorHandler.js';
+import { CORS_OPTIONS } from './constants/options.js';
+import { socketAuthenticator } from './middlewares/index.js';
 
-const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
+// Connect to Redis
+const redisClient = await connectRedis();
+
+const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
-    cors: {
-        origin: whitelist,
-    },
+    cors: CORS_OPTIONS,
 });
 
+// middleware for extracting user from socket
 io.use((socket, next) => {
-    const userId = socket.handshake.query.userId;
-    if (!userId) {
-        return next(new ErrorHandler('Authentication error'));
-    }
-    socket.userId = userId;
-    next();
+    const req = socket.request;
+    const res = {};
+
+    cookieParser()(
+        req,
+        res,
+        async (err) => await socketAuthenticator(req, err, socket, next)
+    );
 });
 
 io.on('connection', async (socket) => {
-    const userId = socket.userId;
+    const user = socket.user;
+    const userId = user.user_id;
+
     console.log('User connected:', socket.id);
 
     // mark us online
@@ -38,7 +48,7 @@ io.on('connection', async (socket) => {
     }
 
     // get user chats
-    const chats = await chatObject.getMyChats(userId);
+    const chats = await chatObject.getMyChats(userId); // todo: implement redis or updations as well
 
     // Join rooms for user's chats
     chats.forEach(({ chat_id }) => socket.join(`chat:${chat_id}`));
@@ -47,36 +57,66 @@ io.on('connection', async (socket) => {
     // Notify others in rooms about user being online
     chats.forEach(({ chat_id }) => {
         socket.to(`chat:${chat_id}`).emit('userStatusChange', {
-            userId,
+            userId: userId,
+            completeUser: user,
             isOnline: true,
         });
     });
 
     // initial online users fetch
-    socket.on('onlineUsers', async () => {
+    socket.on('onlineUsers', async (chats) => {
         const onlineUsers = await Promise.all(
             chats.map(async ({ members, chat_id }) => {
                 const otherMembers = getOtherMembers(members, userId);
-                const socketIds = await getSocketIds(otherMembers);
+                const otherMemberIds = otherMembers.map(
+                    ({ user_id }) => user_id
+                );
+                const socketIds = await getSocketIds(otherMemberIds);
                 return {
                     chatId: chat_id,
-                    onlineUsers: otherMembers.filter((_, i) => socketIds[i]),
+                    onlineUserIds: otherMemberIds.filter(
+                        (_, i) => socketIds[i]
+                    ),
                 };
             })
         );
-        socket.emit('onlineUsers', onlineUsers);
+
+        // add isOnline property for each member
+        const modifiedChats = chats.map((chat) => {
+            const onlineUserIds = onlineUsers.find(
+                (c) => c.chatId === chat.chat_id
+            )?.onlineUserIds;
+
+            return {
+                ...chat,
+                members: chat.members.map((m) => ({
+                    ...m,
+                    isOnline: onlineUserIds.includes(m.user_id),
+                })),
+            };
+        });
+
+        socket.emit('onlineUsers', modifiedChats);
     });
 
     // typing status
-    socket.on('typing', ({ chatId }) => {
-        socket.to(`chat:${chatId}`).emit('typing', { chatId, userId });
+    socket.on('typing', (chatId) => {
+        socket.to(`chat:${chatId}`).emit('typing', {
+            chatId,
+            userId: userId,
+            completeUser: user,
+        });
     });
 
-    socket.on('stoppedTyping', ({ chatId }) => {
-        socket.to(`chat:${chatId}`).emit('stoppedTyping', { chatId, userId });
+    socket.on('stoppedTyping', (chatId) => {
+        socket.to(`chat:${chatId}`).emit('stoppedTyping', {
+            chatId,
+            userId: userId,
+            completeUser: user,
+        });
     });
 
-    // leaving or joining a chat
+    // leaving or joining a chat (new chat creation/deletion/leaving etc.. controllers)
     socket.on('leaveChat', (chatId) => {
         socket.leave(`chat:${chatId}`);
         console.log(`User ${userId} left chat ${chatId}`);
@@ -110,11 +150,12 @@ io.on('connection', async (socket) => {
         // Notify others in rooms about user being offline
         chats.forEach(({ chat_id }) => {
             socket.to(`chat:${chat_id}`).emit('userStatusChange', {
-                userId,
+                userId: userId,
+                completeUser: user,
                 isOnline: false,
             });
         });
     });
 });
 
-export { io };
+export { io, redisClient, httpServer };

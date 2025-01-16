@@ -1,10 +1,6 @@
 import { getServiceObject } from '../db/serviceObjects.js';
-import {
-    OK,
-    BAD_REQUEST,
-    COOKIE_OPTIONS,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
+import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
+import { COOKIE_OPTIONS } from '../constants/options.js';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
 import {

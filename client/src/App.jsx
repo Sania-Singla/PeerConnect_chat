@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from './Components';
-import {
-    useSideBarContext,
-    useUserContext,
-    usePopupContext,
-    useSocketContext,
-} from './Context';
+import { useSideBarContext, useUserContext, usePopupContext } from './Context';
 import { authService } from './Services';
 import { icons } from './Assets/icons';
 
 export default function App() {
-    const { setUser, user } = useUserContext();
-    const { connectSocket, disconnectSocket } = useSocketContext();
+    const { setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-    const location = useLocation();
     const { setShowSideBar } = useSideBarContext();
     const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -27,13 +21,7 @@ export default function App() {
             try {
                 setLoading(true);
                 const data = await authService.getCurrentUser(signal);
-                if (data && !data.message) {
-                    setUser(data);
-                    // connectSocket();
-                } else {
-                    setUser(null);
-                    // disconnectSocket();
-                }
+                setUser(data && !data.message ? data : null);
             } catch (err) {
                 navigate('/server-error');
             } finally {
@@ -41,21 +29,12 @@ export default function App() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, []);
-
-    // socket setup
-    useEffect(() => {
-        user ? connectSocket() : disconnectSocket();
-    }, [user]);
 
     // Close sidebar
     useEffect(() => {
-        const handleResize = () => {
-            setShowSideBar(false);
-        };
+        const handleResize = () => setShowSideBar(false);
 
         // on window resize
         window.addEventListener('resize', handleResize);
@@ -65,10 +44,7 @@ export default function App() {
         setLoginPopupText('');
         setShowLoginPopup(false);
 
-        // cleanup
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
+        return () => window.removeEventListener('resize', handleResize);
     }, [location]);
 
     return (

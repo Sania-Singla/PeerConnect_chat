@@ -5,6 +5,7 @@ import { fileRestrictions } from '../../Utils';
 import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
+import { MAX_FILE_SIZE } from '../../Constants/constants';
 
 export default function UpdateCoverImage({
     className,
@@ -14,9 +15,7 @@ export default function UpdateCoverImage({
     const [coverImage, setCoverImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const [error, setError] = useState({
-        coverImage: '',
-    });
+    const [error, setError] = useState('');
     const [coverImagePreview, setCoverImagePreview] = useState(
         user.user_coverImage
     );
@@ -24,24 +23,24 @@ export default function UpdateCoverImage({
     const ref = useRef();
 
     async function handleChange(e) {
-        const { files, name } = e.target;
+        const { files } = e.target;
         if (files[0]) {
             const file = files[0];
             setCoverImage(file);
-            fileRestrictions(file, name, setError);
+            if (!fileRestrictions(file)) {
+                setError(
+                    `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`
+                );
+            } else {
+                setError('');
+            }
 
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                setCoverImagePreview(reader.result);
-            };
-
-            reader.readAsDataURL(file);
+            setCoverImagePreview(URL.createObjectURL(file));
         }
     }
 
     function onMouseOver() {
-        if (error.coverImage) {
+        if (error) {
             setDisabled(true);
         } else {
             setDisabled(false);
@@ -80,9 +79,7 @@ export default function UpdateCoverImage({
                         alt="preview"
                         src={coverImagePreview}
                         className={`object-cover h-full w-full ${
-                            error.coverImage
-                                ? 'border-red-500'
-                                : 'border-green-500'
+                            error ? 'border-red-500' : 'border-green-500'
                         } `}
                     />
                 }
@@ -101,9 +98,9 @@ export default function UpdateCoverImage({
                         ref={ref}
                     />
 
-                    {error.coverImage && (
+                    {error && (
                         <div className="w-full text-center text-sm text-red-500">
-                            {error.coverImage}
+                            {error}
                         </div>
                     )}
 

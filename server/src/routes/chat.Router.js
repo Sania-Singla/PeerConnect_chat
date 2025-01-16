@@ -1,9 +1,5 @@
 import express from 'express';
-import {
-    verifyJwt,
-    validateUUID,
-    doesResourceExist,
-} from '../middlewares/index.js';
+import { verifyJwt, doesResourceExist } from '../middlewares/index.js';
 import {
     createGroup,
     deleteChat,
@@ -45,7 +41,8 @@ chatRouter.route('/groups').get(getMyGroups);
 
 chatRouter
     .route('/:chatId')
-    .delete(doesChatExist, deleteChat)
-    .get(validateUUID('chatId'), getChatDetails);
+    .all(doesChatExist)
+    .delete(deleteChat)
+    .get(getChatDetails);
 
 chatRouter.route('/').get(getMyChats);

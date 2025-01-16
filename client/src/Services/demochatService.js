@@ -1,5 +1,5 @@
 class ChatService {
-    async getMyChats(signal) {
+    async getChats(signal) {
         try {
             const res = await fetch(`/api/chats`, {
                 method: 'GET',
@@ -24,7 +24,7 @@ class ChatService {
         }
     }
 
-    async getChatDetails(signal, chatId) {
+    async getChat(signal, chatId) {
         try {
             const res = await fetch(`/api/chats/${chatId}`, {
                 method: 'GET',
@@ -51,14 +51,11 @@ class ChatService {
 
     async getMessages(signal, chatId, page, limit) {
         try {
-            const res = await fetch(
-                `/api/messages/${chatId}?page=${page}&limit=${limit}`,
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    signal,
-                }
-            );
+            const res = await fetch(`/api/messages/${chatId}?page=${page}`, {
+                method: 'GET',
+                credentials: 'include',
+                signal,
+            });
 
             const data = await res.json();
             console.log(data);
@@ -79,7 +76,6 @@ class ChatService {
 
     async sendMessage(chatId, message) {
         try {
-            // TODO: NEED WORK
             let body, headers;
             if (message.attachment) {
                 const formData = new FormData();

@@ -5,6 +5,7 @@ import { Button, RTE } from '../Components';
 import { usePopupContext } from '../Context';
 import { postService } from '../Services';
 import { icons } from '../Assets/icons';
+import { MAX_FILE_SIZE } from '../Constants/constants';
 
 export default function AddPostPage() {
     const [inputs, setInputs] = useState({
@@ -30,18 +31,21 @@ export default function AddPostPage() {
     }
 
     function handleFileChange(e) {
-        const { files, name } = e.target;
-        if (files && files[0]) {
+        const { files } = e.target;
+        if (files?.length) {
             const file = files[0];
 
-            setInputs((prev) => ({ ...prev, [name]: file }));
-            fileRestrictions(file, name, setError);
+            setInputs((prev) => ({ ...prev, postImage: file }));
+            if (!fileRestrictions(file)) {
+                setError((prev) => ({
+                    ...prev,
+                    postImage: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
+                }));
+            } else {
+                setError((prev) => ({ ...prev, postImage: '' }));
+            }
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setThumbnailPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setThumbnailPreview(URL.createObjectURL(file));
         } else {
             setError((prevError) => ({
                 ...prevError,
@@ -61,7 +65,6 @@ export default function AddPostPage() {
         e.preventDefault();
         try {
             setLoading(true);
-            console.log(inputs);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
                 setPopupText('Post Created Successfully 🤗');

@@ -60,12 +60,12 @@ export default function Popup() {
                     initial="initial"
                     animate="final"
                     exit="exit"
-                    className="text-white text-lg fixed top-4 right-4 z-[100] py-4 px-6 bg-slate-800 shadow-lg rounded-lg"
+                    className="fixed top-4 right-4 z-[100] text-white overflow-hidden bg-[#2f3744] drop-shadow-md rounded-[5px]"
                 >
                     {/* cross btn */}
                     <Button
                         btnText={
-                            <div className="size-[20px] stroke-[#aeaeae]">
+                            <div className="size-[16px] stroke-[#aeaeae]">
                                 {icons.cross}
                             </div>
                         }
@@ -73,13 +73,13 @@ export default function Popup() {
                             setShowPopup(false);
                             setPopupText('');
                         }}
-                        className="absolute right-2 top-2"
+                        className="absolute right-[5px] top-[5px]"
                     />
 
-                    <div className="pt-4">
+                    <div className="">
                         {/* text */}
-                        <div className="flex items-center justify-start gap-2 w-full">
-                            <div className="size-[22px] fill-green-600">
+                        <div className="p-4 mr-8 flex items-center justify-start gap-2 w-full">
+                            <div className="size-[20px] fill-green-600">
                                 {icons.check}
                             </div>
                             <div className="text-lg">{popupText}</div>
@@ -88,7 +88,7 @@ export default function Popup() {
                         {/* Progress Bar */}
                         <motion.div
                             key={popupText}
-                            className="relative h-1 mt-3 bg-[#8871ee] rounded"
+                            className="h-[5px] bg-[#8871ee]"
                             variants={progressVariants}
                         />
                     </div>

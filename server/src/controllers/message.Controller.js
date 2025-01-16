@@ -9,7 +9,7 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
     const { chatId } = req.params;
     const { limit = 20, page = 1 } = req.query;
     const chat = req.chat;
-
+    console.log('iiiiiiddddd', chatId);
     if (!chat.members.find(({ user_id }) => user_id === req.user.user_id)) {
         return next(
             new ErrorHandler('you are not a member of this chat', BAD_REQUEST)
@@ -18,8 +18,17 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
 
     const messages = await messageObject.getMessages(chatId, limit, page);
 
-    if (messages.length) {
-        return res.status(OK).json(messages);
+    if (messages.docs.length) {
+        return res
+            .status(OK)
+            .json({
+                messages: messages.docs,
+                messagesInfo: {
+                    totalMessages: messages.totalDocs,
+                    hasPrevPage: messages.hasPrevPage,
+                    hasNextPage: messages.hasNextPage,
+                },
+            });
     } else {
         return res.status(OK).json({ message: 'No messages found' });
     }

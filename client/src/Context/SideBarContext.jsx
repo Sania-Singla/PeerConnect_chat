@@ -12,8 +12,6 @@ const SideBarContextProvider = ({ children }) => {
     );
 };
 
-function useSideBarContext() {
-    return useContext(SideBarContext);
-}
+const useSideBarContext = () => useContext(SideBarContext);
 
 export { useSideBarContext, SideBarContextProvider };

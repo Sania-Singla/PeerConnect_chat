@@ -1,5 +1,5 @@
 import express from 'express';
-import { doesResourceExist, verifyJwt } from '../middlewares/index.js';
+import { doesResourceExist, upload, verifyJwt } from '../middlewares/index.js';
 import {
     getMessages,
     sendMessage,
@@ -18,7 +18,7 @@ messageRouter
     .route('/:chatId')
     .all(doesChatExist)
     .get(getMessages)
-    .post(sendMessage);
+    .post(upload.array('attachments', 5), sendMessage);
 
 messageRouter
     .route('/:messageId')

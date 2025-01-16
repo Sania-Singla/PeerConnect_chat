@@ -4,6 +4,7 @@ import { isOwner } from './isOwner.Middleware.js';
 import { doesResourceExist } from './doesResourceExist.Middleware.js';
 import { errorMiddleware } from './error.Middleware.js';
 import { validateUUID } from './validator.Middleware.js';
+import { socketAuthenticator } from './socketAuth.Middleware.js';
 
 export {
     upload,
@@ -13,4 +14,5 @@ export {
     doesResourceExist,
     errorMiddleware,
     validateUUID,
+    socketAuthenticator,
 };

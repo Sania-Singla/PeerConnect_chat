@@ -1,5 +1,5 @@
 import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
+import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
 import { getOtherMembers } from '../helpers/index.js';
 import validator from 'validator';
@@ -339,11 +339,27 @@ const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
 
 const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
     const { chatId } = req.params;
-    const chat = await chatObject.getChatDetails(chatId);
-    if (!chat) {
-        return next(new ErrorHandler('chat not found', NOT_FOUND));
+    const myId = req.user.user_id;
+    const chat = req.chat;
+
+    if (!chat.members.find(({ user_id }) => user_id === req.user.user_id)) {
+        return next(
+            new ErrorHandler('You are not a member of this chat', BAD_REQUEST)
+        );
     }
-    return res.status(OK).json(chat);
+
+    const populatedChat = await chatObject.getChatDetails(chatId);
+    const otherMembers = getOtherMembers(populatedChat.members, myId);
+
+    const transformedChat = {
+        ...populatedChat,
+        avatar: populatedChat.isGroupChat
+            ? populatedChat.members
+                  .slice(0, 3)
+                  .map(({ user_avatar }) => user_avatar)
+            : otherMembers[0].user_avatar,
+    };
+    return res.status(OK).json(transformedChat);
 });
 
 const makeAdmin = tryCatch('make admin', async (req, res, next) => {

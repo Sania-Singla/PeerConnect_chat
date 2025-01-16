@@ -4,8 +4,10 @@ const ChatContext = createContext();
 
 const ChatContextProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
-    const [messages, setMessages] = useState([]); // can use [] instead of null
-    const [chats, setChats] = useState(null); // don't use []
+    const [messages, setMessages] = useState([]);
+    const [chats, setChats] = useState([]);
+    const [chatsLoaded, setChatsLoaded] = useState(false);
+    const [chatStatus, setChatStatus] = useState(null); // for online & typing members tracking
 
     return (
         <ChatContext.Provider
@@ -13,6 +15,10 @@ const ChatContextProvider = ({ children }) => {
                 selectedChat,
                 messages,
                 chats,
+                chatsLoaded,
+                chatStatus,
+                setChatStatus,
+                setChatsLoaded,
                 setChats,
                 setSelectedChat,
                 setMessages,
@@ -23,8 +29,6 @@ const ChatContextProvider = ({ children }) => {
     );
 };
 
-const useChatContext = () => {
-    return useContext(ChatContext);
-};
+const useChatContext = () => useContext(ChatContext);
 
 export { useChatContext, ChatContextProvider };

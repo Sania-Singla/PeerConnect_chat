@@ -1,11 +1,6 @@
 import jwt from 'jsonwebtoken';
-import {
-    BAD_REQUEST,
-    FORBIDDEN,
-    COOKIE_OPTIONS,
-    SERVER_ERROR,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
+import { BAD_REQUEST, FORBIDDEN } from '../constants/errorCodes.js';
+import { COOKIE_OPTIONS } from '../constants/options.js';
 import {
     extractAccessToken,
     extractRefreshToken,
@@ -26,15 +21,13 @@ export const refreshAccessToken = async (res, refreshToken) => {
         );
 
         if (!decodedToken) {
-            res.clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS);
-            return null;
+            throw new Error('missing or invalid refresh token');
         }
 
         const currentUser = await userObject.getUser(decodedToken.userId);
 
         if (!currentUser || currentUser.refresh_token !== refreshToken) {
-            res.clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS);
-            return null;
+            throw new Error('user with provided refresh token not found');
         } else {
             res.cookie(
                 'peerConnect_accessToken',
@@ -47,8 +40,7 @@ export const refreshAccessToken = async (res, refreshToken) => {
             return currentUser;
         }
     } catch (err) {
-        res.clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS);
-        throw err;
+        throw new Error('missing or invalid refresh token');
     }
 };
 
@@ -60,14 +52,8 @@ const verifyJwt = async (req, res, next) => {
         if (!accessToken) {
             if (refreshToken) {
                 const user = await refreshAccessToken(res, refreshToken);
-                if (!user) {
-                    return res
-                        .status(FORBIDDEN)
-                        .json({ message: 'missing or invalid refresh token' });
-                } else {
-                    req.user = user;
-                    return next(); // return is important
-                }
+                req.user = user;
+                return next(); // return is important
             } else {
                 return res
                     .status(BAD_REQUEST)
@@ -76,6 +62,7 @@ const verifyJwt = async (req, res, next) => {
         }
 
         const decodedToken = jwt.verify(
+            // throws error if forbidden tokens else if time expiration issue or something then sets decodedtoken = undefiend but doesn't throws error
             accessToken,
             process.env.ACCESS_TOKEN_SECRET
         );
@@ -83,41 +70,27 @@ const verifyJwt = async (req, res, next) => {
         if (!decodedToken) {
             if (refreshToken) {
                 const user = await refreshAccessToken(res, refreshToken);
-                if (!user) {
-                    return res
-                        .status(FORBIDDEN)
-                        .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-                        .json({ message: 'missing or invalid refresh token' });
-                } else {
-                    req.user = user;
-                    return next();
-                }
+                req.user = user;
+                return next();
             } else {
-                return res
-                    .status(FORBIDDEN)
-                    .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-                    .json({ message: 'invalid access token' });
+                throw new Error('invalid access token');
             }
         }
 
         const currentUser = await userObject.getUser(decodedToken.userId);
         if (!currentUser) {
-            return res
-                .status(NOT_FOUND)
-                .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-                .json({ message: 'user with provided access token not found' });
+            throw new Error('user with provided access token not found');
         }
 
         req.user = currentUser;
-        next();
+        return next();
     } catch (err) {
+        console.log(err);
         return res
-            .status(SERVER_ERROR)
+            .status(FORBIDDEN)
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-            .json({
-                message: 'something went wrong while verifying jwts',
-                err: err.message,
-            });
+            .clearCookie('peerConnect_refreshToken', COOKIE_OPTIONS)
+            .json({ message: 'expired or invalid jwt token' });
     }
 };
 
@@ -139,56 +112,32 @@ const optionalVerifyJwt = async (req, res, next) => {
             if (!decodedToken) {
                 if (refreshToken) {
                     const user = await refreshAccessToken(res, refreshToken);
-                    if (!user) {
-                        return res
-                            .status(FORBIDDEN)
-                            .clearCookie(
-                                'peerConnect_accessToken',
-                                COOKIE_OPTIONS
-                            )
-                            .json({
-                                message: 'missing or invalid refresh token',
-                            });
-                    } else {
-                        req.user = user;
-                        return next();
-                    }
+                    req.user = user;
+                    return next();
                 } else {
-                    return res
-                        .status(FORBIDDEN)
-                        .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-                        .json({ message: 'invalid access token' });
+                    throw new Error('invalid access token');
                 }
             }
 
             const currentUser = await userObject.getUser(decodedToken.userId);
             if (!currentUser) {
-                return res
-                    .status(NOT_FOUND)
-                    .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-                    .json({
-                        message: 'user with provided access token not found',
-                    });
+                throw new Error('user with provided access token not found');
             } else {
                 req.user = currentUser;
                 return next();
             }
         } else {
             const user = await refreshAccessToken(res, refreshToken);
-            if (!user) {
-                return res
-                    .status(FORBIDDEN)
-                    .json({ message: 'missing or invalid refresh token' });
-            } else {
-                req.user = user;
-                return next();
-            }
+            req.user = user;
+            return next();
         }
     } catch (err) {
+        console.log(err);
         return res
-            .status(SERVER_ERROR)
+            .status(FORBIDDEN)
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
-            .json({ message: 'expired access token', err: err.message });
+            .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
+            .json({ message: 'error validating jwts', err: err.message });
     }
 };
 

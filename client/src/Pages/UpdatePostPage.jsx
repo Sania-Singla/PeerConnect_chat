@@ -4,6 +4,7 @@ import { Button, RTE } from '../Components';
 import { verifyExpression, fileRestrictions } from '../Utils';
 import { postService } from '../Services';
 import { useUserContext, usePopupContext } from '../Context';
+import { MAX_FILE_SIZE } from '../Constants/constants';
 
 export default function UpdatePostPage() {
     const [inputs, setInputs] = useState({
@@ -69,13 +70,16 @@ export default function UpdatePostPage() {
             const file = files[0];
 
             setInputs((prev) => ({ ...prev, [name]: file }));
-            fileRestrictions(file, name, setError);
+            if (!fileRestrictions(file)) {
+                setError((prev) => ({
+                    ...prev,
+                    postImage: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
+                }));
+            } else {
+                setError((prev) => ({ ...prev, postImage: '' }));
+            }
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setThumbnailPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setThumbnailPreview(URL.createObjectURL(file));
         } else {
             setError((prevError) => ({
                 ...prevError,

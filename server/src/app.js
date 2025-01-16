@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
+import { CORS_OPTIONS } from './constants/options.js';
 export const app = express();
 
 // Configurations
@@ -9,22 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('../public'));
 app.use(cookieParser());
-const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (!origin || whitelist.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        credentials: true,
-        optionsSuccessStatus: 200,
-        allowedHeaders: ['Content-Type', 'authorization'],
-    })
-);
+app.use(cors(CORS_OPTIONS));
 
 // Deployment
 const dirname = path.resolve();

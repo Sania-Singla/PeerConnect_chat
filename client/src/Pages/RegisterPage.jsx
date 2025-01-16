@@ -4,7 +4,7 @@ import { useUserContext } from '../Context';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../Components';
 import { verifyExpression, fileRestrictions } from '../Utils';
-import { LOGO } from '../Constants/constants';
+import { LOGO, MAX_FILE_SIZE } from '../Constants/constants';
 import { motion } from 'framer-motion';
 import { icons } from '../Assets/icons';
 
@@ -43,15 +43,23 @@ export default function RegisterPage() {
     async function handleFileChange(e) {
         const { name, files } = e.target;
         if (files && files[0]) {
-            setInputs((prev) => ({ ...prev, [name]: files[0] }));
-            fileRestrictions(files[0], name, setError);
+            const file = files[0];
+            setInputs((prev) => ({ ...prev, [name]: file }));
+            if (!fileRestrictions(file)) {
+                setError((prev) => ({
+                    ...prev,
+                    [name]: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
+                }));
+            } else {
+                setError((prev) => ({ ...prev, [name]: '' }));
+            }
         } else {
             name === 'avatar'
                 ? setError((prevError) => ({
                       ...prevError,
                       avatar: 'avatar is required.',
                   }))
-                : setError((prevError) => ({ ...prevError, coverImage: '' }));
+                : setError((prevError) => ({ ...prevError, avatar: '' }));
         }
     }
 

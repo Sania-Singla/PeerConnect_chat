@@ -12,8 +12,6 @@ const SearchContextProvider = ({ children }) => {
     );
 };
 
-function useSearchContext() {
-    return useContext(SearchContext);
-}
+const useSearchContext = () => useContext(SearchContext);
 
 export { useSearchContext, SearchContextProvider };

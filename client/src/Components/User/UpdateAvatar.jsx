@@ -4,13 +4,12 @@ import { useUserContext } from '../../Context';
 import { fileRestrictions } from '../../Utils';
 import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
+import { MAX_FILE_SIZE } from '../../Constants/constants';
 import { Button } from '..';
 
 export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const { user, setUser } = useUserContext();
-    const [error, setError] = useState({
-        avatar: '', // have to take object due to regex util format
-    });
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(user.user_avatar);
     const [avatar, setAvatar] = useState(null);
@@ -19,24 +18,24 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const ref = useRef();
 
     async function handleChange(e) {
-        const { files, name } = e.target;
+        const { files } = e.target;
         if (files[0]) {
             const file = files[0];
             setAvatar(file);
-            fileRestrictions(file, name, setError);
+            if (!fileRestrictions(file)) {
+                setError(
+                    `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB`
+                );
+            } else {
+                setError('');
+            }
 
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                setAvatarPreview(reader.result);
-            };
-
-            reader.readAsDataURL(file);
+            setAvatarPreview(URL.createObjectURL(file));
         }
     }
 
     function onMouseOver() {
-        if (error.avatar) {
+        if (error) {
             setDisabled(true);
         } else {
             setDisabled(false);
@@ -76,10 +75,8 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                         <img
                             src={avatarPreview}
                             alt="preview"
-                            className={`size-[150px] rounded-full border-[0.2rem] ${
-                                error.avatar
-                                    ? 'border-red-500'
-                                    : 'border-green-500'
+                            className={`size-[150px] rounded-full border-[0.2rem] object-cover ${
+                                error ? 'border-red-500' : 'border-green-500'
                             }`}
                         />
                     }
@@ -99,9 +96,9 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                         ref={ref}
                     />
 
-                    {error.avatar && (
+                    {error && (
                         <div className="text-sm mt-4 px-2 text-red-500 w-full text-center">
-                            {error.avatar}
+                            {error}
                         </div>
                     )}
 

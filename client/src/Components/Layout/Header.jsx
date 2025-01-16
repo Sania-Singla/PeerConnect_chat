@@ -35,7 +35,7 @@ export default function Header() {
     ));
 
     return (
-        <header className="drop-shadow-md fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-3 font-medium flex items-center justify-between gap-2">
+        <header className="drop-shadow-md fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-3 font-medium flex items-center justify-between gap-4">
             <div className="flex items-center justify-center gap-4">
                 {/* hamburgur menu btn */}
                 <Button
@@ -141,9 +141,9 @@ export default function Header() {
                     />
                 )}
 
-                {/* collabs btn */}
+                {/* chats btn */}
                 <NavLink
-                    to={'/collabs'}
+                    to={'/chats'}
                     className={({ isActive }) => `${isActive && 'hidden'}`}
                 >
                     <Button

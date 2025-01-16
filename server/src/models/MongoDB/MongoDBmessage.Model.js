@@ -20,6 +20,28 @@ export class MongoDBmessages extends Imessages {
                     {
                         $sort: { message_createdAt: -1 }, // latest first
                     },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'sender_id',
+                            foreignField: 'user_id',
+                            as: 'sender',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        user_id: 1,
+                                        user_name: 1,
+                                        user_firstName: 1,
+                                        user_lastName: 1,
+                                        user_avatar: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $unwind: '$sender',
+                    }
                 ],
                 // options
                 { limit, page }

@@ -12,8 +12,6 @@ const UserContextProvider = ({ children }) => {
     );
 };
 
-function useUserContext() {
-    return useContext(UserContext);
-}
+const useUserContext = () => useContext(UserContext);
 
 export { useUserContext, UserContextProvider };

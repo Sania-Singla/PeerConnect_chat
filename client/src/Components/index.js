@@ -28,18 +28,16 @@ import ChannelPosts from './Channel/ChannelPosts';
 import Comments from './Comments/Comments';
 import Comment from './Comments/Comment';
 import Popup from './Popups/Popup';
-
-// collabs
-import ChatHeader from './Collabs/Layout/ChatHeader';
-import ChatSidebar from './Collabs/Layout/ChatSidebar';
-import ChatLayout from './Collabs/Layout/ChatLayout';
-import ChatInput from './Collabs/Layout/ChatInput';
-import Chat from './Collabs/Chat';
-import ProfilePopup from './Collabs/ProfilePopup';
-import User from './Collabs/User';
-import Message from './Collabs/Message';
-import FilePreview from './Collabs/FilePreview';
-import NoChatSelected from './Collabs/NoChatSelected';
+import ChatHeader from './Chats/ChatHeader';
+import ChatSidebar from './Chats/ChatSidebar';
+import ChatNavbar from './Chats/ChatNavbar';
+import ChatInput from './Chats/ChatInput';
+import Chat from './Chats/Chat';
+import ChatLayout from './Chats/ChatLayout';
+import Message from './Chats/Message';
+import FilePreview from './Chats/FilePreview';
+import InputFilePreview from './Chats/InputFilePreview';
+import NoChatSelected from './Chats/NoChatSelected';
 
 export {
     Header,
@@ -74,12 +72,12 @@ export {
     Popup,
     ChatHeader,
     ChatSidebar,
-    ChatLayout,
+    ChatNavbar,
     ChatInput,
     Chat,
-    ProfilePopup,
-    User,
+    ChatLayout,
     Message,
     FilePreview,
     NoChatSelected,
+    InputFilePreview,
 };

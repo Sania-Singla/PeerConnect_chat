@@ -32,7 +32,7 @@ import {
     AboutUsPage,
     ContactUsPage,
     FAQpage,
-    CollabsPage,
+    ChatsPage,
 } from './Pages';
 
 import {
@@ -52,7 +52,7 @@ import {
     UpdatePassword,
     ChannelAbout,
     ChannelPosts,
-    Chat,
+    ChatLayout,
     NoChatSelected,
 } from './Components';
 
@@ -87,9 +87,9 @@ const router = createBrowserRouter(
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
-            <Route path="collabs" element={<CollabsPage />}>
+            <Route path="chats" element={<ChatsPage />}>
                 <Route path="" element={<NoChatSelected />} />
-                <Route path="chat/:chatId" element={<Chat />} />
+                <Route path="chat/:chatId" element={<ChatLayout />} />
             </Route>
 
             {/* static pages */}

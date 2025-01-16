@@ -1,3 +1,1 @@
-export class Imessages {
-    
-}
+export class Imessages {}

@@ -1,3 +1,5 @@
+import { MAX_FILE_SIZE } from '../Constants/constants';
+
 /**
  * Utility to restric file sizes and allowed extensions
  * @param {File} file - File to validate.
@@ -5,19 +7,16 @@
  * @param {Function} setError - State function to set the corresponding error or an empty string "".
  */
 
-function fileRestrictions(file, name, setError) {
+function fileRestrictions(file) {
     if (file) {
         const extension = file.name.split('.').pop().toLowerCase();
         const fileSizeMB = file.size / (1024 * 1024);
         const maxSizeMB = 100;
         const allowedExtensions = ['png', 'jpg', 'jpeg'];
         if (!allowedExtensions.includes(extension) || fileSizeMB > maxSizeMB) {
-            return setError((prevError) => ({
-                ...prevError,
-                [name]: 'only png, jpg/jpeg files are allowed and File size should not exceed 100MB.',
-            }));
+            return false;
         }
-        setError((prevError) => ({ ...prevError, [name]: '' }));
+        return true;
     } else {
         return 'file is missing';
     }
@@ -30,30 +29,27 @@ function fileRestrictions(file, name, setError) {
  * @param {Function} setError - State function to set the corresponding error or an empty string "".
  */
 
-function fileSizeRestriction(file, name, setError) {
+function fileSizeRestriction(file) {
     if (file) {
         const fileSizeMB = file.size / (1024 * 1024);
-        const fileType = file.type.split('/')[0];
-        let maxSizeMB;
+        // const fileType = file.type.split('/')[0];
+        let maxSizeMB = MAX_FILE_SIZE;
 
-        switch (fileType) {
-            case 'video':
-            case 'image': {
-                maxSizeMB = 100;
-                break;
-            }
-            default: {
-                maxSizeMB = 10; // raw
-            }
-        }
+        // switch (fileType) {
+        //     case 'video':
+        //     case 'image': {
+        //         maxSizeMB = 100;
+        //         break;
+        //     }
+        //     default: {
+        //         maxSizeMB = 10; // raw
+        //     }
+        // }
 
         if (fileSizeMB > maxSizeMB) {
-            return setError((prevError) => ({
-                ...prevError,
-                [name]: `File size should not exceed ${maxSizeMB}MB.`,
-            }));
+            return false;
         }
-        setError((prevError) => ({ ...prevError, [name]: '' }));
+        return true;
     } else {
         return 'file is missing';
     }

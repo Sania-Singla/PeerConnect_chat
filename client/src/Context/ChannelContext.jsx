@@ -12,8 +12,6 @@ const ChannelContextProvider = ({ children }) => {
     );
 };
 
-function useChannelContext() {
-    return useContext(ChannelContext);
-}
+const useChannelContext = () => useContext(ChannelContext);
 
 export { useChannelContext, ChannelContextProvider };

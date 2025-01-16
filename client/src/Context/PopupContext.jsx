@@ -26,8 +26,6 @@ const PopupContextProvider = ({ children }) => {
     );
 };
 
-function usePopupContext() {
-    return useContext(PopupContext);
-}
+const usePopupContext = () => useContext(PopupContext);
 
 export { usePopupContext, PopupContextProvider };

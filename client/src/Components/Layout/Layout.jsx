@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Header, Footer, Sidebar, Popup, LoginPopup } from '..';
+import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {
     return (
@@ -13,6 +14,7 @@ export default function Layout() {
             <hr className="w-full" />
             <Footer />
             <Popup />
+            <Toaster />
             <LoginPopup />
         </div>
     );
