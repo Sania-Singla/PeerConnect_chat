@@ -8,7 +8,7 @@ const SocketContext = createContext();
 const SocketContextProvider = ({ children, navigate }) => {
     const [socket, setSocket] = useState(null);
     const { user } = useUserContext();
-    const { setChats, setChatStatus, setSelectedChat } = useChatContext();
+    const { setChats, setChatStatus, setMessages } = useChatContext();
 
     function connectSocket() {
         if (!user || socket) return;
@@ -42,43 +42,20 @@ const SocketContextProvider = ({ children, navigate }) => {
 
                 // for sidebar updations
                 setChats((prev) =>
-                    prev.map((c) => {
-                        if (
-                            c.members.find(({ user_id }) => user_id === userId)
-                        ) {
-                            return {
-                                ...c,
-                                members: c.members.map((m) => {
-                                    if (m.user_id === userId) {
-                                        return {
-                                            ...m,
-                                            isOnline,
-                                        };
-                                    }
-                                    return m;
-                                }),
-                            };
-                        }
-                        return c;
-                    })
+                    prev.map((c) => ({
+                        ...c,
+                        members: c.members.map((m) => {
+                            if (m.user_id === userId) {
+                                return {
+                                    ...m,
+                                    isOnline,
+                                    isTyping: isOnline ? m.isTyping : false,
+                                };
+                            }
+                            return m;
+                        }),
+                    }))
                 );
-
-                // although no need to update selectedstate because we have separate state for chatstatus but just to be consistent
-                setSelectedChat((prev) => {
-                    if (prev) {
-                        if (prev.members.some((m) => m.user_id === userId)) {
-                            return {
-                                ...prev,
-                                members: prev.members.map((m) =>
-                                    m.user_id === userId
-                                        ? { ...m, isOnline }
-                                        : m
-                                ),
-                            };
-                        }
-                        return prev;
-                    }
-                });
 
                 // for chat header updations
                 setChatStatus((prev) => {
@@ -88,7 +65,9 @@ const SocketContextProvider = ({ children, navigate }) => {
                         );
                         if (wasOnline && !isOnline) {
                             return {
-                                ...prev,
+                                membersTyping: prev.membersTyping.filter(
+                                    ({ user_id }) => user_id !== userId
+                                ),
                                 membersOnline: prev.membersOnline.filter(
                                     ({ user_id }) => user_id !== userId
                                 ),
@@ -98,7 +77,7 @@ const SocketContextProvider = ({ children, navigate }) => {
                                 ...prev,
                                 membersOnline: [
                                     ...prev.membersOnline,
-                                    { ...completeUser, isOnline },
+                                    completeUser,
                                 ],
                             };
                         } else {
@@ -142,16 +121,78 @@ const SocketContextProvider = ({ children, navigate }) => {
                 if (!alreadyPresent) {
                     return {
                         ...prev,
-                        membersTyping: [
-                            ...prev.membersTyping,
-                            { ...completeUser, isTyping: true },
-                        ],
+                        membersTyping: [...prev.membersTyping, completeUser],
                     };
                 } else {
                     return prev;
                 }
             });
         });
+
+        socketInstance.on('stoppedTyping', ({ userId, chatId }) => {
+            console.log('typing status change:', userId, chatId);
+
+            // for sidebar updations
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return {
+                            ...c,
+                            members: c.members.map((m) => {
+                                if (m.user_id === userId) {
+                                    return {
+                                        ...m,
+                                        isTyping: false,
+                                    };
+                                }
+                                return m;
+                            }),
+                        };
+                    }
+                    return c;
+                })
+            );
+
+            // for chat header updations
+            setChatStatus((prev) => ({
+                ...prev,
+                membersTyping: prev.membersTyping.filter(
+                    ({ user_id }) => user_id !== userId
+                ),
+            }));
+        });
+
+        socketInstance.on('newMessage', ({ chatId, message }) => {
+            console.log('new message', message);
+            // append message
+            setMessages((prev) => [...prev, message]);
+
+            // update chat's last message
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return {
+                            ...c,
+                            lastMessage: {
+                                message:
+                                    message.text ||
+                                    message.attachments.slice(-1)[0]?.name,
+                                time: message.message_createdAt,
+                            },
+                        };
+                    }
+                    return c;
+                })
+            );
+        });
+
+        socketInstance.on('editMessage', (message) => {});
+
+        socketInstance.on('deleteMessage', (message) => {});
+
+        socketInstance.on('newChat', () => {});
+
+        socketInstance.on('leaveGroup', () => {});
 
         return socketInstance; // optional
     }

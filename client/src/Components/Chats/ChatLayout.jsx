@@ -12,14 +12,15 @@ export default function ChatLayout() {
 
     useEffect(() => {
         setLoading(true);
-        if (chatsLoaded) {
+        if (chatsLoaded && chatId) {
             const chat = chats.find(({ chat_id }) => chat_id === chatId);
             if (chat) {
-                setSelectedChat(chat);
-                setChatStatus({
+                const { isOnline, ...rest } = chat; // because we have separate state for it as chatStatus
+                setSelectedChat(rest);
+                setChatStatus((prev) => ({
+                    ...prev,
                     membersOnline: chat.members.filter((m) => m.isOnline),
-                    membersTyping: chat.members.filter((m) => m.isTyping),
-                });
+                }));
             } else {
                 setSelectedChat(null);
                 navigate('/not-found');
@@ -29,7 +30,10 @@ export default function ChatLayout() {
 
         return () => {
             setSelectedChat(null);
-            setChatStatus(null);
+            setChatStatus({
+                membersTyping: [],
+                membersOnline: [],
+            });
         };
     }, [chatId, chatsLoaded]);
 

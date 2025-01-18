@@ -7,6 +7,7 @@ import { verifyExpression, fileRestrictions } from '../Utils';
 import { LOGO, MAX_FILE_SIZE } from '../Constants/constants';
 import { motion } from 'framer-motion';
 import { icons } from '../Assets/icons';
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({
@@ -44,15 +45,14 @@ export default function RegisterPage() {
         const { name, files } = e.target;
         if (files && files[0]) {
             const file = files[0];
-            setInputs((prev) => ({ ...prev, [name]: file }));
+
             if (!fileRestrictions(file)) {
-                setError((prev) => ({
-                    ...prev,
-                    [name]: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
-                }));
-            } else {
-                setError((prev) => ({ ...prev, [name]: '' }));
+                return toast.error(
+                    `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`
+                );
             }
+
+            setInputs((prev) => ({ ...prev, [name]: file }));
         } else {
             name === 'avatar'
                 ? setError((prevError) => ({
@@ -94,6 +94,7 @@ export default function RegisterPage() {
             const res = await authService.register(inputs);
             if (res && !res.message) {
                 setUser(res);
+                toast.success('Account created successfully');
                 navigate('/');
             } else {
                 setError((prev) => ({ ...prev, root: res.message }));
@@ -105,8 +106,6 @@ export default function RegisterPage() {
             setLoading(false);
         }
     }
-
-    /* creating the input fields */
 
     const inputFields = [
         {

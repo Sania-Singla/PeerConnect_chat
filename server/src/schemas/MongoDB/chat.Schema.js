@@ -6,7 +6,7 @@ const chatSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        default: uuid(),
+        default: () => uuid(),
     },
     isGroupChat: {
         type: Boolean,
@@ -34,8 +34,14 @@ const chatSchema = new Schema({
         },
     ],
     lastMessage: {
-        type: String,
-        default: '',
+        message: {
+            type: String,
+            default: '',
+        },
+        time: {
+            type: Date,
+            default: '',
+        },
     },
     chat_createdAt: {
         type: Date,

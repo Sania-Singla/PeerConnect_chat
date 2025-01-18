@@ -1,59 +1,75 @@
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
 import { useUserContext } from '../../Context';
+import { useNavigate } from 'react-router-dom';
+import { formatFileSize } from '../../Utils';
 
 export default function FilePreview({ attachment, senderId }) {
     const { user } = useUserContext();
-    const extension = attachment?.split('.').pop();
-    const fileType = attachment?.split('/')[4];
-    const fileName = attachment?.split('/').pop();
+    const { url, type, name, size } = attachment;
     const isSender = user.user_id === senderId;
+    const navigate = useNavigate();
 
-    const handleDownload = () => {
-        const anchor = document.createElement('a');
-        // anchor.href = attachment;
-        anchor.download = attachment;
-        anchor.click();
+    const handleDownload = async () => {
+        try {
+            // Fetch the file as a Blob
+            const response = await fetch(url, { method: 'GET' });
+            if (!response.ok) throw new Error('Failed to fetch the file');
+
+            const blob = await response.blob();
+            const blobURL = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = blobURL;
+            a.download = name;
+            a.click();
+
+            URL.revokeObjectURL(blobURL);
+            a.remove();
+        } catch (err) {
+            console.error('Error downloading the file:', err);
+            navigate('/server-error');
+        }
     };
 
     return (
         <div
-            className={`w-full overflow-hidden rounded-lg mb-2 ${
+            className={`overflow-hidden rounded-md mb-2 ${
                 isSender ? 'bg-blue-400' : 'bg-gray-300'
             }`}
         >
-            {fileType === 'video' ? (
+            {type.startsWith('video/') ? (
                 <video
-                    src={attachment}
+                    src={url}
                     controls
-                    className="w-full aspect-[1.618] h-full object-cover"
+                    className="w-[300px] object-cover aspect-auto"
                 />
-            ) : fileType === 'image' && extension !== 'pdf' ? (
+            ) : type.startsWith('image/') ? (
                 <img
-                    src={attachment}
+                    src={url}
                     alt="message attachment"
-                    className="object-cover w-full aspect-[1.618] h-full"
+                    className="object-cover w-[300px] aspect-auto"
                 />
             ) : (
                 <div
-                    className={`flex flex-col p-3 pt-2 ${
+                    className={`aspect-auto w-full flex flex-col p-2 ${
                         isSender ? 'bg-blue-400' : 'bg-gray-300'
                     }`}
                 >
-                    <div className="h-[35px] flex items-center gap-2">
-                        <div className="w-[25px] h-[25px] fill-current">
-                            {icons.doc}
+                    <div className="px-1 flex-1 flex items-center gap-2">
+                        <div className="pt-[5px]">
+                            <div className=" size-[22px] fill-current">
+                                {icons.doc}
+                            </div>
                         </div>
                         <div
-                            className={`w-[calc(100%-30px)] ${
+                            className={`overflow-hidden ${
                                 isSender ? 'text-white' : 'text-gray-800'
                             }`}
                         >
-                            <p className="line-clamp-1 text-sm leading-tight">
-                                {fileName}
-                            </p>
-                            <p className="line-clamp-1 text-xs leading-tight relative -top-[2px]">
-                                {'filesize'} &bull; {extension}
+                            <p className="truncate text-sm">{name}</p>
+                            <p className="text-[10px]">
+                                {formatFileSize(size)}
                             </p>
                         </div>
                     </div>
@@ -66,25 +82,23 @@ export default function FilePreview({ attachment, senderId }) {
                         }`}
                     />
 
-                    <div className="flex gap-3 h-[35px] w-full">
+                    <div className="flex gap-2">
                         <Button
                             btnText="Open"
                             title="Open"
-                            className={`rounded-md w-full h-full ${
+                            className={`rounded-[5px] w-full py-1 hover:scale-100 ${
                                 isSender
-                                    ? 'text-white bg-[#ffffff39] hover:bg-[#ffffff33]'
+                                    ? 'text-white bg-[#ffffff39] hover:bg-[#ffffff5b]'
                                     : 'text-gray-800 bg-[#34343425] hover:bg-[#29292924]'
                             }`}
-                            onClick={() => {
-                                window.open(attachment);
-                            }}
+                            onClick={() => window.open(url, '_blank')}
                         />
                         <Button
                             btnText="Save"
                             title="Download"
-                            className={`rounded-md w-full h-full ${
+                            className={`rounded-[5px] w-full py-1 hover:scale-100 ${
                                 isSender
-                                    ? 'text-white bg-[#ffffff39] hover:bg-[#ffffff33]'
+                                    ? 'text-white bg-[#ffffff39] hover:bg-[#ffffff5b]'
                                     : 'text-gray-800 bg-[#34343425] hover:bg-[#29292924]'
                             }`}
                             onClick={handleDownload}

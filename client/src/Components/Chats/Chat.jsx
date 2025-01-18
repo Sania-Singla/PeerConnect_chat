@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useChatContext } from '../../Context';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { chatService } from '../../Services';
 import { Message } from '..';
 
@@ -8,8 +8,11 @@ export default function Chat() {
     const { setMessages, messages, selectedChat } = useChatContext();
     const [messagesInfo, setMessagesInfo] = useState({});
     const { chatId } = useParams();
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
+    // TODO: implement infinite scroll 
     useEffect(() => {
         if (selectedChat) {
             const controller = new AbortController();
@@ -18,7 +21,12 @@ export default function Chat() {
             (async function getMessages() {
                 try {
                     setLoading(true);
-                    const data = await chatService.getMessages(signal, chatId);
+                    const data = await chatService.getMessages(
+                        signal,
+                        chatId,
+                        page,
+                        100
+                    );
                     if (data && !data.message) {
                         setMessages(data.messages);
                         setMessagesInfo(data.messagesInfo);
@@ -30,7 +38,10 @@ export default function Chat() {
                 }
             })();
 
-            return () => controller.abort();
+            return () => {
+                setMessages([]);
+                controller.abort();
+            };
         } else {
             setLoading(false);
         }

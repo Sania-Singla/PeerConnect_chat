@@ -3,7 +3,7 @@ import { icons } from '../../Assets/icons';
 import { formatDateExact, formatCount } from '../../Utils';
 import { postService } from '../../Services';
 import { Button } from '..';
-import { usePopupContext } from '../../Context';
+import toast from 'react-hot-toast';
 
 export default function AdminPostRow({ post, reference, setPosts }) {
     const {
@@ -20,7 +20,6 @@ export default function AdminPostRow({ post, reference, setPosts }) {
     } = post;
 
     const navigate = useNavigate();
-    const { setShowPopup, setPopupText } = usePopupContext();
 
     async function togglePostVisibility() {
         try {
@@ -46,8 +45,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
         try {
             const res = await postService.deletePost(post_id);
             if (res && res.message === 'post deleted successfully') {
-                setPopupText('Post Deleted Successfully 🙂');
-                setShowPopup(true);
+                toast.success('Post deleted successfully');
                 setPosts((prev) =>
                     prev.filter((post) => post.post_id !== post_id)
                 );

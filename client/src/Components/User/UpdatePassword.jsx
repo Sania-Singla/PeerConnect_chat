@@ -3,6 +3,7 @@ import { verifyExpression } from '../../Utils';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../Services';
 import { Button } from '..';
+import toast from 'react-hot-toast';
 
 export default function UpdatePassword() {
     const initialInputs = {
@@ -65,6 +66,7 @@ export default function UpdatePassword() {
                 );
                 if (res && res.message === 'password updated successfully') {
                     setInputs(initialInputs);
+                    toast.success('Password updated successfully');
                 } else {
                     setError((prev) => ({ ...prev, oldPassword: res.message }));
                 }

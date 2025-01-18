@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fileRestrictions, verifyExpression } from '../Utils';
 import { Button, RTE } from '../Components';
-import { usePopupContext } from '../Context';
 import { postService } from '../Services';
 import { icons } from '../Assets/icons';
 import { MAX_FILE_SIZE } from '../Constants/constants';
+import toast from 'react-hot-toast';
 
 export default function AddPostPage() {
     const [inputs, setInputs] = useState({
@@ -19,7 +19,6 @@ export default function AddPostPage() {
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
-    const { setShowPopup, setPopupText } = usePopupContext();
     const [error, setError] = useState({
         title: '',
         postImage: '',
@@ -32,19 +31,16 @@ export default function AddPostPage() {
 
     function handleFileChange(e) {
         const { files } = e.target;
-        if (files?.length) {
+        if (files?.[0]) {
             const file = files[0];
 
-            setInputs((prev) => ({ ...prev, postImage: file }));
             if (!fileRestrictions(file)) {
-                setError((prev) => ({
-                    ...prev,
-                    postImage: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
-                }));
-            } else {
-                setError((prev) => ({ ...prev, postImage: '' }));
+                return toast.error(
+                    `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`
+                );
             }
 
+            setInputs((prev) => ({ ...prev, postImage: file }));
             setThumbnailPreview(URL.createObjectURL(file));
         } else {
             setError((prevError) => ({
@@ -67,8 +63,7 @@ export default function AddPostPage() {
             setLoading(true);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
-                setPopupText('Post Created Successfully 🤗');
-                setShowPopup(true);
+                toast.success('Post Created Successfully 🤗');
                 navigate(`/post/${res.post_id}`);
             }
         } catch (err) {

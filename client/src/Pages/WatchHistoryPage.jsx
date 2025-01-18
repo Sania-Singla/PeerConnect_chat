@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from '../Services';
 import { paginate, formatDateRelative } from '../Utils';
 import { LIMIT } from '../Constants/constants';
-import { usePopupContext, useUserContext } from '../Context';
+import { useUserContext } from '../Context';
+import toast from 'react-hot-toast';
 
 export default function WatchHistoryPage() {
     const [posts, setPosts] = useState([]);
@@ -14,7 +15,6 @@ export default function WatchHistoryPage() {
     const [loading, setLoading] = useState(true);
     const { user } = useUserContext();
     const navigate = useNavigate();
-    const { setShowPopup, setPopupText } = usePopupContext();
 
     // pagination
     const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
@@ -53,8 +53,7 @@ export default function WatchHistoryPage() {
             if (res && res.message === 'watch history cleared successfully') {
                 setPosts([]);
                 setPostsInfo({});
-                setPopupText('Watch History Cleared 😏');
-                setShowPopup(true);
+                toast.success('Watch History Cleared 😏');
             }
         } catch (err) {
             navigate('/server-error');

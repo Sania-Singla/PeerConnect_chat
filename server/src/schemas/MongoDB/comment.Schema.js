@@ -6,7 +6,7 @@ const commentSchema = new Schema({
         type: String,
         unique: true,
         required: true,
-        default: uuid(),
+        default: () => uuid(),
     },
     user_id: {
         type: String,

@@ -25,11 +25,11 @@ export default function ChatNavbar() {
             key={title}
             title={title}
             btnText={
-                <div className="size-[20px] fill-[#434343] hover:fill-[#4977ec]">
+                <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
                     {icon}
                 </div>
             }
-            className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
+            className="bg-[#ffffff] p-[10px] group rounded-full group drop-shadow-md w-fit"
             onClick={onClick}
         />
     ));

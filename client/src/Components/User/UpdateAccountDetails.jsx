@@ -4,6 +4,7 @@ import { useUserContext } from '../../Context';
 import { verifyExpression } from '../../Utils';
 import { userService } from '../../Services';
 import { Button } from '..';
+import toast from 'react-hot-toast';
 
 export default function UpdateAccountDetails() {
     const { user, setUser } = useUserContext();
@@ -67,6 +68,7 @@ export default function UpdateAccountDetails() {
             if (res && !res.message) {
                 setUser(res);
                 setInputs((prev) => ({ ...prev, password: '' }));
+                toast.success('Account details updated successfully');
             } else {
                 setError((prev) => ({ ...prev, password: res.message }));
             }

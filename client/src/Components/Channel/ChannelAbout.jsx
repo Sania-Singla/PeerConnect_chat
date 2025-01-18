@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { useChannelContext, usePopupContext } from '../../Context';
+import { useChannelContext } from '../../Context';
 import { formatDateExact } from '../../Utils';
 import { icons } from '../../Assets/icons';
+import toast from 'react-hot-toast';
 
 export default function ChannelAbout() {
     const { channel } = useChannelContext();
-    const { setPopupText, setShowPopup } = usePopupContext();
     const {
         user_id,
         user_name,
@@ -21,8 +21,7 @@ export default function ChannelAbout() {
 
     function copyEmail() {
         window.navigator.clipboard.writeText(user_email);
-        setShowPopup(true);
-        setPopupText('Email Copied to Clipboard 🤗');
+        toast.success('Email copied to clipboard');
     }
 
     return (

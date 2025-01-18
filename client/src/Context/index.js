@@ -4,7 +4,7 @@ import { usePopupContext, PopupContextProvider } from './PopupContext';
 import { useSideBarContext, SideBarContextProvider } from './SideBarContext';
 import { useSearchContext, SearchContextProvider } from './SearchContext';
 import { ChatContextProvider, useChatContext } from './ChatContext';
-import { SocketContextProvider, useSocketContext } from './socketContext';
+import { SocketContextProvider, useSocketContext } from './SocketContext';
 export {
     useChannelContext,
     useUserContext,

@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 const userSchema = new Schema({
     user_id: {
         type: String,
-        default: uuid(),
+        default: () => uuid(),
         unique: true,
         required: true,
         index: true,

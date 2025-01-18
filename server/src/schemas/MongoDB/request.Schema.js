@@ -7,7 +7,7 @@ const requestSchema = new Schema({
         required: true,
         index: true,
         unique: true,
-        default: uuid(),
+        default: () => uuid(),
     },
     sender_id: {
         type: String,

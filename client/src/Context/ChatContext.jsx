@@ -7,7 +7,10 @@ const ChatContextProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
     const [chats, setChats] = useState([]);
     const [chatsLoaded, setChatsLoaded] = useState(false);
-    const [chatStatus, setChatStatus] = useState(null); // for online & typing members tracking
+    const [chatStatus, setChatStatus] = useState({
+        membersTyping: [],
+        membersOnline: [],
+    });
 
     return (
         <ChatContext.Provider

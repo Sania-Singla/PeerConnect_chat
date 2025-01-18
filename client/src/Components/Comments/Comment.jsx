@@ -5,6 +5,7 @@ import { commentService, likeService } from '../../Services';
 import { formatDateRelative, formatCount } from '../../Utils';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
+import toast from 'react-hot-toast';
 
 export default function Comment({ comment, setComments }) {
     const {
@@ -22,8 +23,7 @@ export default function Comment({ comment, setComments }) {
     } = comment;
     const navigate = useNavigate();
     const { user } = useUserContext();
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
-        usePopupContext();
+    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const [newContent, setNewContent] = useState(comment_content);
     const [isEditing, setIsEditing] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -124,8 +124,7 @@ export default function Comment({ comment, setComments }) {
                     })
                 );
                 setIsEditing(false);
-                setShowPopup(true);
-                setPopupText('Comment Edited Successfully 🙂');
+                toast.success('Comment Edited Successfully 🙂');
             }
         } catch (err) {
             navigate('/server-error');
@@ -141,8 +140,7 @@ export default function Comment({ comment, setComments }) {
                 setComments((prev) =>
                     prev.filter((item) => item.comment_id !== comment_id)
                 );
-                setShowPopup(true);
-                setPopupText('Comment Deleted Successfully 🙂');
+                toast.success('Comment Deleted Successfully 🙂');
             }
         } catch (err) {
             navigate('/server-error');

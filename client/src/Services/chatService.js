@@ -79,13 +79,15 @@ class ChatService {
 
     async sendMessage(chatId, message) {
         try {
-            // TODO: NEED WORK
             let body, headers;
-            if (message.attachment) {
+
+            if (message.attachments.length) {
                 const formData = new FormData();
-                formData.append('attachment', message.attachment);
+                message.attachments.forEach((file) => {
+                    formData.append(`attachments`, file); // Appending each file can't send array directly
+                });
                 formData.append('text', message.text);
-                body = formData;
+                body = formData; // FormData instance
             } else {
                 body = JSON.stringify({ text: message.text });
                 headers = { 'Content-Type': 'application/json' };
@@ -106,7 +108,7 @@ class ChatService {
             }
             return data;
         } catch (err) {
-            console.error(`error in sendMessage service: ${err}`);
+            console.error(`Error in sendMessage service: ${err}`);
             throw err;
         }
     }

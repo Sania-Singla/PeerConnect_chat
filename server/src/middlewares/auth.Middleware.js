@@ -85,7 +85,6 @@ const verifyJwt = async (req, res, next) => {
         req.user = currentUser;
         return next();
     } catch (err) {
-        console.log(err);
         return res
             .status(FORBIDDEN)
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)
@@ -132,7 +131,6 @@ const optionalVerifyJwt = async (req, res, next) => {
             return next();
         }
     } catch (err) {
-        console.log(err);
         return res
             .status(FORBIDDEN)
             .clearCookie('peerConnect_accessToken', COOKIE_OPTIONS)

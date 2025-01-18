@@ -39,7 +39,7 @@ io.on('connection', async (socket) => {
     // mark us online
     try {
         await Promise.all([
-            redisClient.setEx(userId, 86400, socket.id), // 24hr exp
+            redisClient.setEx(`user:${userId}`, 3600, socket.id), // 1hr exp
             onlineUserObject.markUserOnline(userId, socket.id),
         ]);
         console.log(`User ${userId} marked as online.`);
@@ -48,7 +48,7 @@ io.on('connection', async (socket) => {
     }
 
     // get user chats
-    const chats = await chatObject.getMyChats(userId); // todo: implement redis or updations as well
+    const chats = await chatObject.getMyChats(userId); // todo: take care of changes in chats (new chat, leaving chat, deleting chat)
 
     // Join rooms for user's chats
     chats.forEach(({ chat_id }) => socket.join(`chat:${chat_id}`));
@@ -116,7 +116,7 @@ io.on('connection', async (socket) => {
         });
     });
 
-    // leaving or joining a chat (new chat creation/deletion/leaving etc.. controllers)
+    // leaving or joining a chat (new chat creation/deletion/leaving)
     socket.on('leaveChat', (chatId) => {
         socket.leave(`chat:${chatId}`);
         console.log(`User ${userId} left chat ${chatId}`);
@@ -134,7 +134,7 @@ io.on('connection', async (socket) => {
         // mark us offline
         try {
             await Promise.all([
-                redisClient.del(userId),
+                redisClient.del(`user:${userId}`),
                 onlineUserObject.markUserOffline(userId),
             ]);
             console.log(`User ${userId} marked as offline`);

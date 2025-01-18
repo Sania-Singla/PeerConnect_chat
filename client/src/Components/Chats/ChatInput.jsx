@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button, InputFilePreview } from '..';
 import { useParams, useNavigate } from 'react-router-dom';
 import { icons } from '../../Assets/icons';
 import { fileSizeRestriction } from '../../Utils';
 import { chatService } from '../../Services';
-import { useChatContext, useSocketContext } from '../../Context';
+import { useSocketContext } from '../../Context';
 import toast from 'react-hot-toast';
 import { MAX_FILE_SIZE } from '../../Constants/constants';
 
@@ -14,35 +14,36 @@ export default function ChatInput() {
         text: '',
     });
     const { socket } = useSocketContext();
-    const { setMessages, setChats } = useChatContext();
     const { chatId } = useParams();
     const [typing, setTyping] = useState(false);
     const [loading, setLoading] = useState(false);
     const attachmentRef = useRef();
     const [attachmentPreviews, setAttachmentPreviews] = useState([]);
     const navigate = useNavigate();
+    const inputRef = useRef();
+
+    // auto focus input field
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [chatId]);
 
     async function handleSend(e) {
         e.preventDefault();
-        setLoading(true);
-        
+
+        if (!message.text.trim() && message.attachments.length === 0) {
+            return toast.error('Message cannot be empty');
+        }
+
         try {
+            setLoading(true);
             const res = await chatService.sendMessage(chatId, message);
             if (res && !res.message) {
-                setMessages((prev) => [...prev, res]);
-                setChats((prev) =>
-                    prev.map((c) => {
-                        if (c.chat_id === chatId) {
-                            return {
-                                ...c,
-                                lastMessage:
-                                    message.text ||
-                                    message.attachments.pop()?.name,
-                            };
-                        }
-                        return c;
-                    })
-                );
+                setTyping(false);
+                socket.emit('stoppedTyping', chatId);
+            } else {
+                toast.error(res.message || 'Failed to send message');
             }
         } catch (err) {
             navigate('/server-error');
@@ -54,11 +55,10 @@ export default function ChatInput() {
     }
 
     function handleChange(e) {
-        const { name, value, files, type } = e.target;
+        const { name, value, files = [], type } = e.target;
         if (type === 'file' && files.length) {
             if (message.attachments.length + files.length > 5) {
-                toast.error('Maximum 5 attachments are allowed');
-                return;
+                return toast.error('Maximum 5 attachments are allowed');
             }
 
             const newAttachments = [];
@@ -107,7 +107,7 @@ export default function ChatInput() {
         <div className="overflow-scroll">
             {/* Previews */}
             {attachmentPreviews.length > 0 && (
-                <div className="flex space-x-2 p-4 w-[calc(100%-300px)] overflow-x-scroll absolute bottom-[60px]">
+                <div className="flex space-x-4 items-center p-4 w-[calc(100%-300px)] overflow-x-scroll absolute bottom-[60px]">
                     {attachmentPreviews.map((file, i) => (
                         <InputFilePreview
                             file={message.attachments[i]}
@@ -162,7 +162,7 @@ export default function ChatInput() {
                 <div className="w-full">
                     <input
                         type="text"
-                        autoFocus
+                        ref={inputRef}
                         name="text"
                         value={message.text}
                         onChange={handleChange}
@@ -175,6 +175,7 @@ export default function ChatInput() {
                 <Button
                     title="send"
                     type="submit"
+                    disabled={loading}
                     className="group"
                     btnText={
                         loading ? (

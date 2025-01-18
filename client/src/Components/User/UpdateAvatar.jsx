@@ -6,6 +6,7 @@ import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
 import { MAX_FILE_SIZE } from '../../Constants/constants';
 import { Button } from '..';
+import toast from 'react-hot-toast';
 
 export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const { user, setUser } = useUserContext();
@@ -50,6 +51,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
             const res = await userService.updateAvatar(avatar);
             if (res && !res.message) {
                 setUser(res);
+                toast.success('Avatar updated successfully');
             }
         } catch (err) {
             navigate('/server-error');

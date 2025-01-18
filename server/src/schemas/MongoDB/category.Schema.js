@@ -6,7 +6,7 @@ const categorySchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        default: uuid(),
+        default: () => uuid(),
     },
     category_name: {
         type: String,

@@ -8,7 +8,7 @@ const postSchema = new Schema({
         unique: true,
         required: true,
         index: true,
-        default: uuid(),
+        default: () => uuid(),
     },
     post_image: {
         type: String,

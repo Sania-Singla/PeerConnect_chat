@@ -4,6 +4,7 @@ import { useUserContext, usePopupContext } from '../../Context';
 import { authService } from '../../Services';
 import { Button } from '..';
 import { icons } from '../../Assets/icons';
+import toast from 'react-hot-toast';
 
 export default function Login() {
     const [inputs, setInputs] = useState({
@@ -15,8 +16,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { setUser } = useUserContext();
-    const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } =
-        usePopupContext();
+    const { showLoginPopup, setShowLoginPopup } = usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -41,8 +41,7 @@ export default function Login() {
             const res = await authService.login(inputs, setLoading);
             if (res && !res.message) {
                 setUser(res);
-                setPopupText('Login Successfully 😉');
-                setShowPopup(true);
+                toast.success('Logges in Successfully 😉');
                 if (showLoginPopup) {
                     setShowLoginPopup(false);
                 } else {

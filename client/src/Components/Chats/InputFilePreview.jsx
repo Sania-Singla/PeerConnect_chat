@@ -1,5 +1,6 @@
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
+import { formatFileSize } from '../../Utils';
 
 export default function InputFilePreview({
     file,
@@ -7,63 +8,50 @@ export default function InputFilePreview({
     removeAttachment,
     index,
 }) {
-    if (file?.type?.startsWith('video/')) {
-        return (
-            <div className="relative group min-w-[150px] drop-shadow-md">
+    const { size, name, type } = file;
+
+    return (
+        <div className="relative group drop-shadow-md">
+            {type?.startsWith('video/') ? (
                 <video
                     src={previewURL}
                     controls
-                    className="w-full aspect-[1.618] rounded-lg object-cover"
+                    className="aspect-auto max-w-[150px] h-fit rounded-lg object-cover"
                 />
-                <Button
-                    btnText="&times;"
-                    onClick={() => removeAttachment(index)}
-                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full text-xs opacity-0 group-hover:opacity-100"
-                />
-            </div>
-        );
-    } else if (file?.type?.startsWith('image/')) {
-        return (
-            <div className="relative group min-w-[150px] drop-shadow-md">
+            ) : type?.startsWith('image/') ? (
                 <img
                     src={previewURL}
                     alt="attachment preview"
-                    className="w-full aspect-[1.618] rounded-lg object-cover"
+                    className="aspect-auto max-w-[150px] h-fit rounded-lg object-cover"
                 />
-                <Button
-                    btnText="&times;"
-                    onClick={() => removeAttachment(index)}
-                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full text-xs opacity-0 group-hover:opacity-100"
-                />
-            </div>
-        );
-    } else {
-        return (
-            <div className="relative aspect-[1.618] min-w-[150px] text-white rounded-lg p-2 bg-blue-500 drop-shadow-md">
-                <div className="h-full p-2 bg-[#ffffff42] rounded-lg flex flex-col items-center justify-center">
-                    <div className="w-full flex items-center justify-center gap-1">
-                        <div className="size-[25px] fill-[#f6f6f6]">
-                            {icons.doc}
+            ) : (
+                <div className="aspect-auto w-[150px] h-[95px] p-2 bg-blue-500 rounded-lg text-white drop-shadow-md">
+                    <div className="h-full w-full bg-[#ffffff42] p-2 rounded-lg flex items-center justify-center gap-x-2 overflow-hidden">
+                        <div>
+                            <div className="size-[20px] fill-[#f6f6f6]">
+                                {icons.doc}
+                            </div>
                         </div>
-                        <p className="text-sm max-w-[80px] truncate">
-                            {file?.name}
-                        </p>
-                    </div>
 
-                    <div className="w-full text-xs text-center text-gray-100">
-                        {(file?.size / (1024 * 1024)).toPrecision(2)} MB
+                        <div className="">
+                            <p className="text-xs truncate">{name}</p>
+                            <p className="text-[10px]">
+                                {formatFileSize(size)}
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <Button
-                    btnText={
-                        <div className="size-[14px] stroke-white">
-                            {icons.cross}
-                        </div>
-                    }
-                    onClick={() => removeAttachment(index)}
-                    className="absolute -top-1 -right-1 bg-[#000000ed] p-1 rounded-full"
-                />
-            </div>
-        );
-    }
+            )}
+
+            <Button
+                btnText={
+                    <div className="size-[14px] stroke-white">
+                        {icons.cross}
+                    </div>
+                }
+                onClick={() => removeAttachment(index)}
+                className="absolute -top-1 -right-1 bg-[#000000ed] p-1 rounded-full"
+            />
+        </div>
+    );
 }

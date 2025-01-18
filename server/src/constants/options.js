@@ -21,8 +21,4 @@ const CORS_OPTIONS = {
     allowedHeaders: ['Content-Type', 'authorization'],
 };
 
-export {
-    COOKIE_OPTIONS,
-    CORS_OPTIONS,
-    WHITELIST,
-}
+export { COOKIE_OPTIONS, CORS_OPTIONS, WHITELIST };

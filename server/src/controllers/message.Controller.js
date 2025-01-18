@@ -1,15 +1,16 @@
 import { ErrorHandler, tryCatch } from '../utils/index.js';
 import { getServiceObject } from '../db/serviceObjects.js';
 import { BAD_REQUEST, OK } from '../constants/errorCodes.js';
-import { uploadOnCloudinary } from '../helpers/cloudinary.js';
+import { uploadOnCloudinary } from '../helpers/index.js';
+import { io } from '../socket.js';
 
 export const messageObject = getServiceObject('messages');
 
 const getMessages = tryCatch('get messages', async (req, res, next) => {
     const { chatId } = req.params;
-    const { limit = 20, page = 1 } = req.query;
+    const { limit = 30, page = 1 } = req.query;
     const chat = req.chat;
-    console.log('iiiiiiddddd', chatId);
+
     if (!chat.members.find(({ user_id }) => user_id === req.user.user_id)) {
         return next(
             new ErrorHandler('you are not a member of this chat', BAD_REQUEST)
@@ -19,16 +20,14 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
     const messages = await messageObject.getMessages(chatId, limit, page);
 
     if (messages.docs.length) {
-        return res
-            .status(OK)
-            .json({
-                messages: messages.docs,
-                messagesInfo: {
-                    totalMessages: messages.totalDocs,
-                    hasPrevPage: messages.hasPrevPage,
-                    hasNextPage: messages.hasNextPage,
-                },
-            });
+        return res.status(OK).json({
+            messages: messages.docs,
+            messagesInfo: {
+                totalMessages: messages.totalDocs,
+                hasPrevPage: messages.hasPrevPage,
+                hasNextPage: messages.hasNextPage,
+            },
+        });
     } else {
         return res.status(OK).json({ message: 'No messages found' });
     }
@@ -37,11 +36,11 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
 const sendMessage = tryCatch('send message', async (req, res, next) => {
     const { chatId } = req.params;
     const { text = '' } = req.body;
-    const attachments = req.files;
+    const attachments = req.files || []; // undefined if no file
     const chat = req.chat;
-    const myId = req.user.user_id;
+    const me = req.user;
 
-    if (!chat.members.find(({ user_id }) => user_id === myId)) {
+    if (!chat.members.find(({ user_id }) => user_id === me.user_id)) {
         return next(
             new ErrorHandler('you are not a member of this chat', BAD_REQUEST)
         );
@@ -51,22 +50,45 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
         return next(new ErrorHandler('message can not be empty', BAD_REQUEST));
     }
 
-    // get just their urls from the respoonse of uploadoncloduinary
-    const attachmentURLs = await Promise.all(
-        attachments.map(async ({ path }) => {
-            const { secure_url } = await uploadOnCloudinary(path);
-            return secure_url;
+    const detailedAttachments = await Promise.all(
+        attachments.map(async ({ path, size, mimetype, originalname }) => {
+            const { public_id, secure_url } = await uploadOnCloudinary(path);
+            return {
+                publicId: public_id,
+                url: secure_url,
+                type: mimetype,
+                name: originalname,
+                size,
+            };
         })
     );
 
-    const message = await messageObject.sendMessage(chatId, myId, {
+    const message = await messageObject.sendMessage(
+        chatId,
+        me.user_id,
         text,
-        attachments: attachmentURLs,
+        detailedAttachments
+    );
+
+    const transformedMessage = {
+        ...message,
+        sender: {
+            user_id: me.user_id,
+            user_name: me.user_name,
+            user_firstName: me.user_firstName,
+            user_lastName: me.user_lastName,
+            user_avatar: me.user_avatar,
+        },
+        attachments: detailedAttachments,
+    };
+
+    // hmme(sender) ko bhi jayega because of "io"
+    io.to(`chat:${chatId}`).emit('newMessage', {
+        chatId,
+        message: transformedMessage,
     });
 
-    // todo: emit socket event
-
-    return res.status(OK).json(message);
+    return res.status(OK).json(transformedMessage);
 });
 
 const deleteMessage = tryCatch('delete message', async (req, res, next) => {

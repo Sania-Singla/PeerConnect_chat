@@ -5,9 +5,9 @@ import { v4 as uuid } from 'uuid';
 const messageSchema = new Schema({
     message_id: {
         type: String,
-        required: true,
         unique: true,
-        default: uuid(),
+        index: true,
+        default: () => uuid(),
     },
     chat_id: {
         type: String,
@@ -26,7 +26,8 @@ const messageSchema = new Schema({
     },
     attachments: [
         {
-            type: String,
+            type: String, // publicId
+            ref: 'Attachment',
         },
     ],
     message_createdAt: {
@@ -39,6 +40,23 @@ const messageSchema = new Schema({
     },
 });
 
+const attachmentSchema = new Schema({
+    publicId: {
+        type: String,
+        unique: true,
+        index: true,
+        required: true,
+    },
+    url: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+    size: { type: Number },
+    name: { type: String },
+    type: { type: String },
+});
+
 // a compound index
 messageSchema.index(
     { chat_id: 1, message_createdAt: -1 },
@@ -47,4 +65,7 @@ messageSchema.index(
 
 messageSchema.plugin(aggregatePaginate);
 
-export const Message = model('Message', messageSchema);
+const Message = model('Message', messageSchema);
+const Attachment = model('Attachment', attachmentSchema);
+
+export { Message, Attachment };

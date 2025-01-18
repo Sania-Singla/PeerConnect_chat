@@ -4,6 +4,7 @@ import { verifyExpression } from '../../Utils';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../Services';
 import { Button } from '..';
+import toast from 'react-hot-toast';
 
 export default function UpdateChannelDetails() {
     const { user, setUser } = useUserContext();
@@ -64,6 +65,7 @@ export default function UpdateChannelDetails() {
             if (res && !res.message) {
                 setUser(res);
                 setInputs((prev) => ({ ...prev, password: '' }));
+                toast.success('Channel details updated successfully');
             } else {
                 setError((prev) => ({ ...prev, password: res.message }));
             }

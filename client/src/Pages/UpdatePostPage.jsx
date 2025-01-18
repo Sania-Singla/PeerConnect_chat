@@ -3,8 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, RTE } from '../Components';
 import { verifyExpression, fileRestrictions } from '../Utils';
 import { postService } from '../Services';
-import { useUserContext, usePopupContext } from '../Context';
+import { useUserContext } from '../Context';
 import { MAX_FILE_SIZE } from '../Constants/constants';
+import toast from 'react-hot-toast';
 
 export default function UpdatePostPage() {
     const [inputs, setInputs] = useState({
@@ -23,7 +24,6 @@ export default function UpdatePostPage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const { setShowPopup, setPopupText } = usePopupContext();
     const [defaultRTEValue, setDefaultRTEValue] = useState('');
     const navigate = useNavigate();
     const { user } = useUserContext();
@@ -69,16 +69,13 @@ export default function UpdatePostPage() {
         if (files && files[0]) {
             const file = files[0];
 
-            setInputs((prev) => ({ ...prev, [name]: file }));
             if (!fileRestrictions(file)) {
-                setError((prev) => ({
-                    ...prev,
-                    postImage: `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`,
-                }));
-            } else {
-                setError((prev) => ({ ...prev, postImage: '' }));
+                return toast.error(
+                    `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`
+                );
             }
 
+            setInputs((prev) => ({ ...prev, [name]: file }));
             setThumbnailPreview(URL.createObjectURL(file));
         } else {
             setError((prevError) => ({
@@ -113,8 +110,7 @@ export default function UpdatePostPage() {
                 postId
             );
             if (res && res1 && !res.message && !res1.message) {
-                setPopupText('Post Updated Successfully 🤗');
-                setShowPopup(true);
+                toast.success('Post Updated Successfully 🤗');
                 navigate(`/post/${postId}`);
             }
         } catch (err) {

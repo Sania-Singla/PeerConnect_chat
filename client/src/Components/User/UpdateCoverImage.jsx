@@ -6,6 +6,7 @@ import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
 import { MAX_FILE_SIZE } from '../../Constants/constants';
+import toast from 'react-hot-toast';
 
 export default function UpdateCoverImage({
     className,
@@ -54,6 +55,7 @@ export default function UpdateCoverImage({
             const res = await userService.updateCoverImage(coverImage);
             if (res && !res.message) {
                 setUser(res);
+                toast.success('CoverImage updated successfully');
             }
         } catch (err) {
             navigate('/server-error');

@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom';
-import { usePopupContext } from '../Context';
 import { Button } from '../Components';
 import { useState } from 'react';
 import { icons } from '../Assets/icons';
 import { EMAIL, CONTACTNUMBER } from '../Constants/constants';
+import toast from 'react-hot-toast';
 
 export default function ContactUsPage() {
     const [inputs, setInputs] = useState({ email: '', feedback: '' });
-    const { setShowPopup, setPopupText } = usePopupContext();
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -17,14 +16,12 @@ export default function ContactUsPage() {
     function submitFeedback(e) {
         e.preventDefault();
         setInputs({ feedback: '', email: '' });
-        setShowPopup(true);
-        setPopupText('Feedback Submitted Successfully 🤗');
+        toast.success('Feedback Submitted Successfully 🤗');
     }
 
     function copyEmail() {
         window.navigator.clipboard.writeText(EMAIL);
-        setShowPopup(true);
-        setPopupText('Email Copied to Clipboard 🤗');
+        toast.success('Email Copied to Clipboard 🤗');
     }
 
     return (

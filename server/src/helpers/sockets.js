@@ -2,12 +2,12 @@ import { redisClient } from '../socket.js';
 import { onlineUserObject } from '../controllers/onlineUser.Controller.js';
 
 async function getSocketId(userId) {
-    let socketId = await redisClient.get(userId);
+    let socketId = await redisClient.get(`user:${userId}`);
     if (!socketId) {
         const user = await onlineUserObject.getOnlineUser(userId);
         if (user) {
             socketId = user.socket_id;
-            await redisClient.setEx(userId, 86400, socketId); // set in redis with 24hr exp.
+            await redisClient.setEx(userId, 3600, socketId); // set in redis with 1hr exp.
         }
     }
     return socketId;

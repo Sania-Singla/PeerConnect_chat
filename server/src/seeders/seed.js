@@ -46,7 +46,10 @@ export const seedDatabase = async () => {
                     role: 'member',
                 },
             ],
-            lastMessage: `Welcome to Group Chat ${i + 1}`,
+            lastMessage: {
+                message: 'Welcome to Group Chat ${i + 1}',
+                time: new Date(),
+            },
         }));
 
         const directChats = Array.from({ length: 5 }).map((_, i) => ({
@@ -89,6 +92,7 @@ const userIds = [
 export async function seedMessages() {
     try {
         Message.deleteMany({}); // Generate dummy messages
+
         const messages = [];
         for (let i = 0; i < 20; i++) {
             const randomChatId =

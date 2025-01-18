@@ -4,6 +4,7 @@ import { commentService } from '../../Services';
 import { formatCount } from '../../Utils';
 import { Comment, Button } from '..';
 import { usePopupContext, useUserContext } from '../../Context';
+import toast from 'react-hot-toast';
 
 export default function Comments({ postId }) {
     const navigate = useNavigate();
@@ -11,8 +12,7 @@ export default function Comments({ postId }) {
     const [loading, setLoading] = useState(true);
     const [addingComment, setAddingComment] = useState(false);
     const [input, setInput] = useState('');
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
-        usePopupContext();
+    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const { user } = useUserContext();
 
     useEffect(() => {
@@ -51,8 +51,7 @@ export default function Comments({ postId }) {
             const res = await commentService.addComment(postId, input);
             if (res && !res.message) {
                 setComments((prev) => [res, ...prev]);
-                setPopupText('Comment Added Successfully 🤗');
-                setShowPopup(true);
+                toast.success('Comment Added Successfully 🤗');
             }
         } catch (err) {
             navigate('/server-error');

@@ -1,5 +1,5 @@
 import { Imessages } from '../../interfaces/message.Interface.js';
-import { Message } from '../../schemas/MongoDB/index.js';
+import { Chat, Message, Attachment } from '../../schemas/MongoDB/index.js';
 
 export class MongoDBmessages extends Imessages {
     async messageExistance(messageId) {
@@ -12,13 +12,12 @@ export class MongoDBmessages extends Imessages {
 
     async getMessages(chatId, limit, page) {
         try {
-            // todo: populate the sender
             return await Message.aggregatePaginate(
                 // pipeline
                 [
                     { $match: { chat_id: chatId } },
                     {
-                        $sort: { message_createdAt: -1 }, // latest first
+                        $sort: { message_createdAt: 1 },
                     },
                     {
                         $lookup: {
@@ -41,7 +40,15 @@ export class MongoDBmessages extends Imessages {
                     },
                     {
                         $unwind: '$sender',
-                    }
+                    },
+                    {
+                        $lookup: {
+                            from: 'attachments',
+                            localField: 'attachments',
+                            foreignField: 'publicId',
+                            as: 'attachments',
+                        },
+                    },
                 ],
                 // options
                 { limit, page }
@@ -51,15 +58,42 @@ export class MongoDBmessages extends Imessages {
         }
     }
 
-    async sendMessage(chatId, myId, { text, attachments = [] }) {
+    async sendMessage(chatId, myId, text = '', attachments = []) {
         try {
-            const message = await Message.create({
-                chat_id: chatId,
-                sender_id: myId,
-                text,
-                attachments,
-            });
+            const publicIds = attachments.map(({ publicId }) => publicId);
+            const time = new Date();
+            const lastMessage = {
+                message: text || attachments.slice(-1)[0]?.name,
+                time,
+            };
+
+            const [message, attachmentRecords, updatedChat] = await Promise.all(
+                [
+                    Message.create({
+                        chat_id: chatId,
+                        sender_id: myId,
+                        text,
+                        attachments: publicIds,
+                        message_createdAt: time,
+                    }),
+                    Attachment.insertMany(attachments),
+                    this.updateLastMessage(lastMessage, chatId),
+                ]
+            );
+
             return message.toObject();
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async updateLastMessage(lastMessage, chatId) {
+        try {
+            return await Chat.findOneAndUpdate(
+                { chat_id: chatId },
+                { $set: { lastMessage } },
+                { new: true }
+            ).lean();
         } catch (err) {
             throw err;
         }
