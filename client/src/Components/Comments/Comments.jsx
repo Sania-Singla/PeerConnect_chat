@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { commentService } from '../../Services';
 import { formatCount } from '../../Utils';
 import { Comment, Button } from '..';
 import { usePopupContext, useUserContext } from '../../Context';
 import toast from 'react-hot-toast';
 
-export default function Comments({ postId }) {
+export default function Comments() {
     const navigate = useNavigate();
+    const { postId } = useParams();
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingComment, setAddingComment] = useState(false);
@@ -102,7 +103,7 @@ export default function Comments({ postId }) {
                 </div>
             </form>
 
-            {/* TODO: pagination */}
+            {/* // TODO: pagination */}
             {comments.length > 0 ? (
                 <div className="">
                     <div className="mt-4 text-black">

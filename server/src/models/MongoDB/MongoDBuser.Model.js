@@ -131,7 +131,7 @@ export class MongoDBusers extends Iusers {
                         as: 'followers',
                     },
                 },
-                // followings[]
+                // followings[]   // TODO: optimize into single join using filter after ward
                 {
                     $lookup: {
                         from: 'followers',

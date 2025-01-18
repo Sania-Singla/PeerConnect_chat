@@ -11,7 +11,6 @@ import {
     updateComment,
     deleteComment,
     getComments,
-    getComment,
 } from '../controllers/comment.Controller.js';
 
 const isCommentOwner = isOwner('comment', 'user_id');
@@ -22,11 +21,12 @@ commentRouter
     .route('/post/:postId')
     .get(doesPostExist, optionalVerifyJwt, getComments);
 
-commentRouter.route('/:postId').post(doesPostExist, verifyJwt, addComment);
+commentRouter.use(verifyJwt);
+
+commentRouter.route('/:postId').post(doesPostExist, addComment);
 
 commentRouter
     .route('/comment/:commentId')
-    .all(doesCommentExist)
-    .get(optionalVerifyJwt, getComment)
-    .patch(verifyJwt, isCommentOwner, updateComment)
-    .delete(verifyJwt, isCommentOwner, deleteComment);
+    .all(doesCommentExist, isCommentOwner)
+    .patch(updateComment)
+    .delete(deleteComment);

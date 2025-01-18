@@ -15,7 +15,7 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            console.error(`error in login service: ${err}`);
+            console.error('error in login service', err);
             throw err;
         }
     }
@@ -47,7 +47,7 @@ class AuthService {
                 return data1;
             }
         } catch (err) {
-            console.error(`error in register service: ${err}`);
+            console.error('error in register service', err);
             throw err;
         }
     }
@@ -67,7 +67,7 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            console.error(`error in logout service: ${err}`);
+            console.error('error in logout service', err);
             throw err;
         }
     }
@@ -89,7 +89,7 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            console.error(`error in deleteAccount service: ${err}`);
+            console.error('error in deleteAccount service', err);
             throw err;
         }
     }
@@ -113,7 +113,7 @@ class AuthService {
             if (err.name === 'AbortError') {
                 console.log('get current user request aborted.');
             } else {
-                console.error(`error in getCurrentUser service: ${err}`);
+                console.error('error in getCurrentUser service', err);
                 throw err;
             }
         }

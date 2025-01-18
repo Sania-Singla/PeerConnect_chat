@@ -26,15 +26,7 @@ export class SQLcomments extends Icomments {
 
     async getComment(commentId, userId) {
         try {
-            const q = `  
-                    SELECT 
-                        v.*,
-                        IFNULL(l.is_liked, -1) AS isLiked
-                    FROM comment_view v
-                    LEFT JOIN comment_likes l 
-                    ON v.comment_id = l.comment_id AND l.user_id = ? 
-                    WHERE v.comment_id = ?  
-                `;
+            const q = 'SELECT * FROM comments WHERE comment_id = ?';
             const [[comment]] = await connection.query(q, [userId, commentId]);
             if (!comment) {
                 return null;

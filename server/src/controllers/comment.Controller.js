@@ -25,14 +25,8 @@ const getComments = tryCatch('get comments', async (req, res, next) => {
     }
 });
 
-const getComment = tryCatch('get comment', async (req, res) => {
-    const { commentId } = req.params;
-    const comment = await commentObject.getComment(commentId);
-    return res.status(OK).json(comment);
-});
-
 const addComment = tryCatch('add comment', async (req, res, next) => {
-    const { user_id } = req.user;
+    const user = req.user;
     const { postId } = req.params;
     const { commentContent } = req.body;
 
@@ -41,11 +35,20 @@ const addComment = tryCatch('add comment', async (req, res, next) => {
     }
 
     const comment = await commentObject.createComment(
-        user_id,
+        user.user_id,
         postId,
         commentContent
     );
-    return res.status(OK).json(comment);
+
+    const modifiedComment = {
+        ...comment,
+        user_name: user.user_name,
+        user_firstName: user.user_firstName,
+        user_lastName: user.user_lastName,
+        user_avatar: user.user_avatar,
+    };
+
+    return res.status(OK).json(modifiedComment);
 });
 
 const deleteComment = tryCatch('delete comment', async (req, res) => {
@@ -69,4 +72,4 @@ const updateComment = tryCatch('update comment', async (req, res, next) => {
     return res.status(OK).json(updatedComment);
 });
 
-export { getComments, getComment, addComment, deleteComment, updateComment };
+export { getComments, addComment, deleteComment, updateComment };

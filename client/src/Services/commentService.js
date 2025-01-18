@@ -20,31 +20,7 @@ class CommentService {
             if (err.name === 'AbortError') {
                 console.log('get comments request aborted.');
             } else {
-                console.error(`error in getComments service: ${err}`);
-                throw err;
-            }
-        }
-    }
-
-    async getComment(signal, commentId) {
-        try {
-            const res = await fetch(`/api/comments/comment/${commentId}`, {
-                method: 'GET',
-                signal,
-            });
-
-            const data = await res.json();
-            console.log(data);
-
-            if (res.status === 500) {
-                throw new Error(data.message);
-            }
-            return data;
-        } catch (err) {
-            if (err.name === 'AbortError') {
-                console.log('get comment request aborted.');
-            } else {
-                console.error(`error in getComment service: ${err}`);
+                console.error('error in getComments service', err);
                 throw err;
             }
         }
@@ -67,7 +43,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in addComment service: ${err}`);
+            console.error('error in addComment service', err);
             throw err;
         }
     }
@@ -89,7 +65,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateComment service: ${err}`);
+            console.error('error in updateComment service', err);
             throw err;
         }
     }
@@ -109,7 +85,7 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            console.error(`error in deleteComment service: ${err}`);
+            console.error('error in deleteComment service', err);
             throw err;
         }
     }

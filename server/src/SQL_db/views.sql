@@ -25,11 +25,11 @@ SELECT
     c.category_name,
     (SELECT COUNT(*) FROM post_likes l WHERE p.post_id = l.post_id AND is_liked = 1) AS totalLikes,
     (SELECT COUNT(*) FROM post_likes l WHERE p.post_id = l.post_id AND is_liked = 0) AS totalDislikes,
-    (SELECT COUNT(*) FROM post_views v WHERE p.post_id = v.post_id) AS totalViews,
-    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.post_id) AS totalComments
+    (SELECT COUNT(*) FROM post_views v WHERE p.post_id = v.post_id) AS totalViews
 FROM posts p
 JOIN categories c
 ON c.category_id = p.post_category;
+
 
 
 -- comment view

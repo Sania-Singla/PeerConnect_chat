@@ -165,7 +165,6 @@ function getPipeline2(orderBy, sortBy) {
         {
             $unwind: '$post',
         },
-
         {
             $sort: {
                 [sortBy]: orderBy === 'DESC' ? -1 : 1,

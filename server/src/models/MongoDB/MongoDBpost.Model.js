@@ -79,17 +79,6 @@ export class MongoDBposts extends Iposts {
                         localField: 'post_ownerId',
                         foreignField: 'user_id',
                         as: 'post_owner',
-                        pipeline: [
-                            {
-                                $project: {
-                                    user_name: 1,
-                                    user_firstName: 1,
-                                    user_lastName: 1,
-                                    user_avatar: 1,
-                                    user_coverImage: 1,
-                                },
-                            },
-                        ],
                     },
                 },
                 {
@@ -146,16 +135,7 @@ export class MongoDBposts extends Iposts {
                         as: 'post_views',
                     },
                 },
-                // Step 6: Lookup post comments
-                {
-                    $lookup: {
-                        from: 'comments',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'post_comments',
-                    },
-                },
-                // Step 7: Lookup saved posts
+                // Step 6: Lookup saved posts
                 {
                     $lookup: userId
                         ? {
@@ -190,7 +170,7 @@ export class MongoDBposts extends Iposts {
                           }
                         : {},
                 },
-                // Step 8: Add conditional fields and computed fields
+                // Step 7: Add conditional fields and computed fields
                 {
                     $addFields: {
                         isFollowed: userId
@@ -236,9 +216,6 @@ export class MongoDBposts extends Iposts {
                         totalViews: {
                             $size: '$post_views',
                         },
-                        totalComments: {
-                            $size: '$post_comments',
-                        },
                         userName: '$post_owner.user_name',
                         firstName: '$post_owner.user_firstName',
                         lastName: '$post_owner.user_lastName',
@@ -246,14 +223,13 @@ export class MongoDBposts extends Iposts {
                         coverImage: '$post_owner.user_coverImage',
                     },
                 },
-                // Step 9: Project final fields
+                // Step 8: Project final fields
                 {
                     $project: {
                         post_owner: 0,
                         post_likes: 0,
                         post_dislikes: 0,
                         post_views: 0,
-                        post_comments: 0,
                         saved_posts: 0,
                     },
                 },

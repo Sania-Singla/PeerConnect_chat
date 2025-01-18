@@ -18,7 +18,7 @@ class ChatService {
             if (err.name === 'AbortError') {
                 console.log('get chats request aborted.');
             } else {
-                console.error(`error in getChats service: ${err}`);
+                console.error('error in getChats service', err);
                 throw err;
             }
         }
@@ -43,7 +43,7 @@ class ChatService {
             if (err.name === 'AbortError') {
                 console.log('get chat request aborted.');
             } else {
-                console.error(`error in getChat service: ${err}`);
+                console.error('error in getChat service', err);
                 throw err;
             }
         }
@@ -71,7 +71,7 @@ class ChatService {
             if (err.name === 'AbortError') {
                 console.log('get messages request aborted.');
             } else {
-                console.error(`error in getMessages service: ${err}`);
+                console.error('error in getMessages service', err);
                 throw err;
             }
         }
@@ -108,7 +108,7 @@ class ChatService {
             }
             return data;
         } catch (err) {
-            console.error(`Error in sendMessage service: ${err}`);
+            console.error('Error in sendMessage service', err);
             throw err;
         }
     }

@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { followerService, likeService, postService } from '../Services';
+import {
+    requestService,
+    followerService,
+    likeService,
+    postService,
+} from '../Services';
 import { Button, Comments, Recemendations } from '../Components';
 import { formatDateRelative, formatCount } from '../Utils';
 import { useUserContext, usePopupContext } from '../Context';
 import { icons } from '../Assets/icons';
 import parse from 'html-react-parser';
+import toast from 'react-hot-toast';
 
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
-        usePopupContext();
+    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const [post, setPost] = useState({});
+    const [colabRequestStatus, setColabRequestStatus] = useState('none');
     const { user } = useUserContext();
     const navigate = useNavigate();
 
@@ -23,6 +29,7 @@ export default function PostPage() {
         (async function getPost() {
             try {
                 setLoading(true);
+                // TODO: instead for pipeline use separate query for channel info and colab request info as well using promise.all
                 const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
@@ -135,15 +142,45 @@ export default function PostPage() {
             }
             const res = await postService.toggleSavePost(postId);
             if (res && res.message === 'post save toggled successfully') {
-                setPopupText(
+                toast.success(
                     `${
                         post.isSaved
                             ? 'Post Unsaved Successfully 🙂'
                             : 'Post Saved Successfully 🤗'
                     }`
                 );
-                setShowPopup(true);
                 setPost((prev) => ({ ...prev, isSaved: !prev.isSaved }));
+            }
+        } catch (err) {
+            navigate('/server-error');
+        }
+    }
+
+    async function handleCollab() {
+        try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText('Collab');
+                return;
+            }
+            if (colabRequestStatus === 'none') {
+                const res = await requestService.sendCollabRequest(
+                    post.post_ownerId
+                );
+                if (res && !res.message) {
+                    setColabRequestStatus('pending');
+                    toast.success('Collab Request Sent Successfully 🤝');
+                }
+            } else if (colabRequestStatus === 'rejected') {
+                const res = await requestService.sendCollabRequest(
+                    post.post_ownerId
+                );
+                if (res && res.message === 'collab request sent successfully') {
+                    setColabRequestStatus('pending');
+                    toast.succedd('Collab Request Sent Successfully 🤝');
+                }
+            } else if (colabRequestStatus === 'accepted') {
+                navigate(`/chat/${post.post_ownerId}`);
             }
         } catch (err) {
             navigate('/server-error');
@@ -260,7 +297,6 @@ export default function PostPage() {
                         </div>
                     </div>
 
-                    {/* owner info */}
                     <div className="drop-shadow-md bg-[#f9f9f9] p-4 rounded-xl w-full xl:w-[25%] flex flex-col xl:pl-8 xl:pr-1 xl:mt-0 mt-4">
                         {/* BIGGER SCREEN */}
                         <div className="hidden xl:flex items-center justify-between pr-4 w-full">
@@ -294,7 +330,7 @@ export default function PostPage() {
                             </div>
                         </div>
 
-                        {/* FOR BOTH SMALLER & BIGGER SCREEN */}
+                        {/* owner info: FOR BOTH SMALLER & BIGGER SCREENS */}
                         <div className="w-full flex xl:flex-col items-center justify-between gap-4 xl:mt-10">
                             <div className="flex gap-4 xl:flex-col items-center justify-start w-full">
                                 {/* avatar */}
@@ -344,21 +380,38 @@ export default function PostPage() {
                                 {user?.user_name === post.userName ? (
                                     <Button
                                         btnText="Edit"
+                                        title="Edit Post"
                                         onClick={() =>
                                             navigate(`/update/${post.post_id}`)
                                         }
                                         className="rounded-md text-white py-[4px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                                     />
                                 ) : (
-                                    <Button
-                                        btnText={
-                                            post.isFollowed
-                                                ? 'Unfollow'
-                                                : 'Follow'
-                                        }
-                                        onClick={toggleFollow}
-                                        className="rounded-md py-[5px] px-4 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
-                                    />
+                                    <div className="flex gap-2 sm:gap-4">
+                                        <Button
+                                            btnText={
+                                                post.isFollowed
+                                                    ? 'Unfollow'
+                                                    : 'Follow'
+                                            }
+                                            onClick={toggleFollow}
+                                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        />
+                                        <Button
+                                            btnText={
+                                                colabRequestStatus === 'none' ||
+                                                colabRequestStatus ===
+                                                    'rejected'
+                                                    ? 'Collab'
+                                                    : colabRequestStatus ===
+                                                        'accepted'
+                                                      ? 'Chat'
+                                                      : 'Request Sent'
+                                            }
+                                            onClick={handleCollab}
+                                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        />
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -395,7 +448,7 @@ export default function PostPage() {
                     Comments & Reviews
                 </h2>
                 <div className="w-full">
-                    <Comments postId={postId} />
+                    <Comments />
                 </div>
             </div>
         </div>

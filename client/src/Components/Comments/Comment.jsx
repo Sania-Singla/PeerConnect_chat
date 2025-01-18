@@ -124,7 +124,7 @@ export default function Comment({ comment, setComments }) {
                     })
                 );
                 setIsEditing(false);
-                toast.success('Comment Edited Successfully 🙂');
+                toast.success('Comment Edited Successfully');
             }
         } catch (err) {
             navigate('/server-error');
@@ -140,7 +140,7 @@ export default function Comment({ comment, setComments }) {
                 setComments((prev) =>
                     prev.filter((item) => item.comment_id !== comment_id)
                 );
-                toast.success('Comment Deleted Successfully 🙂');
+                toast.success('Comment Deleted Successfully');
             }
         } catch (err) {
             navigate('/server-error');
