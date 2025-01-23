@@ -1,6 +1,6 @@
 import { Iusers } from '../../interfaces/user.Interface.js';
 import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
-import { getPipeline2 } from '../../helpers/index.js';
+import { getPipeline1 } from '../../helpers/index.js';
 
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
@@ -117,12 +117,7 @@ export class MongoDBusers extends Iusers {
     async getChannelProfile(channelId, userId) {
         try {
             const pipeline = [
-                {
-                    $match: {
-                        user_id: channelId,
-                    },
-                },
-                // followers[]
+                { $match: { user_id: channelId } },
                 {
                     $lookup: {
                         from: 'followers',
@@ -131,16 +126,6 @@ export class MongoDBusers extends Iusers {
                         as: 'followers',
                     },
                 },
-                // followings[]   // TODO: optimize into single join using filter after ward
-                {
-                    $lookup: {
-                        from: 'followers',
-                        localField: 'user_id',
-                        foreignField: 'follower_id',
-                        as: 'followings',
-                    },
-                },
-                // posts[ { ..., post_likes:[], post_views:[] } ]
                 {
                     $lookup: {
                         from: 'posts',
@@ -150,25 +135,10 @@ export class MongoDBusers extends Iusers {
                         pipeline: [
                             {
                                 $lookup: {
-                                    from: 'postlikes',
-                                    localField: 'post_id',
-                                    foreignField: 'post_id',
-                                    as: 'post_likes',
-                                    pipeline: [
-                                        {
-                                            $match: {
-                                                is_liked: true,
-                                            },
-                                        },
-                                    ],
-                                },
-                            },
-                            {
-                                $lookup: {
                                     from: 'postviews',
                                     localField: 'post_id',
                                     foreignField: 'post_id',
-                                    as: 'post_views',
+                                    as: 'views',
                                 },
                             },
                         ],
@@ -193,26 +163,12 @@ export class MongoDBusers extends Iusers {
                                 : false,
                         totalPosts: { $size: '$posts' },
                         totalFollowers: { $size: '$followers' },
-                        totalFollowings: { $size: '$followings' },
-                        totalLikes: {
+                        totalViews: {
                             $sum: {
                                 $map: {
                                     input: '$posts',
                                     as: 'post',
-                                    in: {
-                                        $size: '$$post.post_likes',
-                                    },
-                                },
-                            },
-                        },
-                        totalChannelViews: {
-                            $sum: {
-                                $map: {
-                                    input: '$posts',
-                                    as: 'post',
-                                    in: {
-                                        $size: '$$post.post_views',
-                                    },
+                                    in: { $size: '$$post.views' },
                                 },
                             },
                         },
@@ -220,11 +176,9 @@ export class MongoDBusers extends Iusers {
                 },
                 {
                     $project: {
-                        // we can only mention 0's or 1's others will be opp. by default can't mix
                         user_password: 0,
                         refresh_token: 0,
                         followers: 0,
-                        followings: 0,
                         posts: 0,
                     },
                 },
@@ -341,15 +295,9 @@ export class MongoDBusers extends Iusers {
 
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
-            const pipeline2 = getPipeline2(orderBy, 'watchedAt');
-            const pipeline = [
-                {
-                    $match: {
-                        user_id: userId,
-                    },
-                },
-                ...pipeline2,
-            ];
+            const pipeline1 = getPipeline1(orderBy, 'watchedAt');
+            const pipeline = [{ $match: { user_id: userId } }, ...pipeline1];
+
             return await WatchHistory.aggregatePaginate(pipeline, {
                 page,
                 limit,
@@ -392,5 +340,170 @@ export class MongoDBusers extends Iusers {
         } catch (err) {
             throw err;
         }
+    }
+
+    async getAdminStats(userId) {
+        const pipeline = [
+            { $match: { user_id: userId } },
+            // followers[]
+            {
+                $lookup: {
+                    from: 'followers',
+                    localField: 'user_id',
+                    foreignField: 'following_id',
+                    as: 'followers',
+                },
+            },
+            // followings[]
+            {
+                $lookup: {
+                    from: 'followers',
+                    localField: 'user_id',
+                    foreignField: 'follower_id',
+                    as: 'followings',
+                },
+            },
+            // posts[ { post_views[], post_likes[] } ]
+            {
+                $lookup: {
+                    from: 'posts',
+                    localField: 'user_id',
+                    foreignField: 'post_ownerId',
+                    as: 'posts',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'postlikes',
+                                localField: 'post_id',
+                                foreignField: 'post_id',
+                                as: 'post_likes',
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: 'postviews',
+                                localField: 'post_id',
+                                foreignField: 'post_id',
+                                as: 'post_views',
+                            },
+                        },
+                        {
+                            $lookup: {
+                                from: 'comments',
+                                localField: 'post_id',
+                                foreignField: 'post_id',
+                                as: 'post_comments',
+                            },
+                        },
+                        {
+                            $addFields: {
+                                likes: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$post_likes',
+                                            as: 'like',
+                                            cond: '$$like.is_liked',
+                                        },
+                                    },
+                                },
+                                dislikes: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$post_likes',
+                                            as: 'like',
+                                            cond: { $not: '$$like.is_liked' },
+                                        },
+                                    },
+                                },
+                                views: { $size: '$post_views' },
+                                comments: { $size: '$post_comments' },
+                            },
+                        },
+                    ],
+                },
+            },
+            // comments[]
+            {
+                $lookup: {
+                    from: 'comments',
+                    pipeline: [
+                        { $match: { user_id: userId } },
+                        { $count: 'total' },
+                    ],
+                    as: 'comments',
+                },
+            },
+            {
+                $addFields: {
+                    comments: { $arrayElemAt: ['$comments.total', 0] },
+                    views: {
+                        $sum: {
+                            $map: {
+                                input: '$posts',
+                                as: 'post',
+                                in: { $size: '$$post.post_views' },
+                            },
+                        },
+                    },
+                    // count total likes from all posts (is_liked = true)
+                    likes: {
+                        $sum: {
+                            $map: {
+                                input: '$posts',
+                                as: 'post',
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$$post.post_likes',
+                                            as: 'like',
+                                            cond: '$$like.is_liked',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    // count total dislikes from all posts (is_liked = false)
+                    dislikes: {
+                        $sum: {
+                            $map: {
+                                input: '$posts',
+                                as: 'post',
+                                in: {
+                                    $size: {
+                                        $filter: {
+                                            input: '$$post.post_likes',
+                                            as: 'like',
+                                            cond: { $not: '$$like.is_liked' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            {
+                $unset: [
+                    'posts.post_likes',
+                    'posts.post_views',
+                    'posts.post_comments',
+                ],
+            },
+            {
+                $project: {
+                    posts: 1,
+                    followers: 1,
+                    followings: 1,
+                    likes: 1,
+                    dislikes: 1,
+                    comments: 1,
+                    views: 1,
+                },
+            },
+        ];
+
+        const [stats] = await User.aggregate(pipeline);
+        return stats;
     }
 }

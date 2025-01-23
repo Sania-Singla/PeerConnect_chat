@@ -21,6 +21,7 @@ import {
     getCurrentUser,
     getWatchHistory,
     clearWatchHistory,
+    getAdminStats,
 } from '../controllers/user.Controller.js';
 
 userRouter.route('/register').post(
@@ -50,6 +51,8 @@ userRouter.route('/logout').patch(logoutUser);
 userRouter.route('/delete').delete(deleteAccount);
 
 userRouter.route('/current').get(getCurrentUser);
+
+userRouter.route('/stats').get(getAdminStats);
 
 userRouter.route('/account').patch(updateAccountDetails);
 

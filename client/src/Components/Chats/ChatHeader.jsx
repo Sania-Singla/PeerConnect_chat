@@ -1,13 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from '..';
 import { icons } from '../../Assets/icons';
 import { useChatContext } from '../../Context';
 
 export default function ChatHeader() {
     const { selectedChat, chatStatus } = useChatContext();
+    const navigate = useNavigate();
 
     return (
         <div className="bg-[#f6f6f6] h-[60px] border-b-[0.01rem] border-b-[#e6e6e6] flex items-center justify-between px-4">
-            <div className="flex items-center w-fit">
+            <div
+                className="flex items-center w-fit cursor-pointer"
+                onClick={() => navigate('details')}
+            >
                 {/* Avatar */}
                 {selectedChat?.isGroupChat ? (
                     <div className="flex items-center -space-x-7">
@@ -106,6 +111,7 @@ export default function ChatHeader() {
                 <Button
                     className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                     title="Close Chat"
+                    onClick={() => navigate('/chats')}
                     btnText={
                         <div className="size-[20px] stroke-[#434343] group-hover:stroke-red-600">
                             {icons.cross}

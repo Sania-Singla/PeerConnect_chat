@@ -49,7 +49,7 @@ export default function LikedPostsPage() {
     const postElements = posts?.map((post, index) => (
         <LikedPostView
             key={post.post_id}
-            post={post}
+            likedPost={post}
             reference={
                 index + 1 === posts.length && postsInfo?.hasNextPage
                     ? paginateRef

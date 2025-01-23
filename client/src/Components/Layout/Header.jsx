@@ -143,7 +143,7 @@ export default function Header() {
 
                 {/* chats btn */}
                 <NavLink
-                    to={'/chats'}
+                    to={'/chat'}
                     className={({ isActive }) => `${isActive && 'hidden'}`}
                 >
                     <Button

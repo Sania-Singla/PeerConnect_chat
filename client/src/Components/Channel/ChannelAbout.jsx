@@ -14,7 +14,7 @@ export default function ChannelAbout() {
         user_bio,
         user_createdAt,
         user_email,
-        totalChannelViews,
+        totalViews,
         totalFollowers,
         totalPosts,
     } = channel;
@@ -86,7 +86,7 @@ export default function ChannelAbout() {
                     <div className="size-[20px] fill-[black] hover:fill-[#4977ec]">
                         {icons.eye}
                     </div>
-                    <div>{totalChannelViews} views</div>
+                    <div>{totalViews} views</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">

@@ -38,6 +38,10 @@ import Message from './Chats/Message';
 import FilePreview from './Chats/FilePreview';
 import InputFilePreview from './Chats/InputFilePreview';
 import NoChatSelected from './Chats/NoChatSelected';
+import Details from './Chats/Details';
+import Overview from './Chats/Overview';
+import Members from './Chats/Members';
+import Settings from './Chats/Settings';
 
 export {
     Header,
@@ -80,4 +84,8 @@ export {
     FilePreview,
     NoChatSelected,
     InputFilePreview,
+    Details,
+    Overview,
+    Members,
+    Settings,
 };

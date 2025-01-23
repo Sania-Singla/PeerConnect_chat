@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { postService } from '../../Services';
 import { paginate } from '../../Utils';
 import { icons } from '../../Assets/icons';
 import { LIMIT } from '../../Constants/constants';
 import { PostCardView } from '..';
 
-export default function Recemendations({ category, currentPostId }) {
+export default function Recemendations({ category }) {
+    const { postId } = useParams();
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export default function Recemendations({ category, currentPostId }) {
                 );
                 if (res && !res.message) {
                     const recemendations = res.posts.filter(
-                        (post) => post.post_id !== currentPostId
+                        (post) => post.post_id !== postId
                     );
                     setPosts((prev) => [...prev, ...recemendations]);
                     setPostsInfo(res.postsInfo);
@@ -40,9 +41,7 @@ export default function Recemendations({ category, currentPostId }) {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [category, page]);
 
     // pagination

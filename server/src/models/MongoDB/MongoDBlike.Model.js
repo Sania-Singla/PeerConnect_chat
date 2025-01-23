@@ -1,25 +1,17 @@
 import { Ilikes } from '../../interfaces/like.Interface.js';
 import { CommentLike, PostLike } from '../../schemas/MongoDB/index.js';
-import { getPipeline2 } from '../../helpers/index.js';
+import { getPipeline1 } from '../../helpers/index.js';
 
 export class MongoDBlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            const pipeline2 = getPipeline2(orderBy, 'likedAt');
+            const pipeline1 = getPipeline1(orderBy, 'likedAt');
             const pipeline = [
-                {
-                    $match: {
-                        user_id: userId,
-                        is_liked: true,
-                    },
-                },
-                ...pipeline2,
+                { $match: { user_id: userId, is_liked: true } },
+                ...pipeline1,
             ];
 
-            return await PostLike.aggregatePaginate(pipeline, {
-                page,
-                limit,
-            });
+            return await PostLike.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
             throw err;
         }

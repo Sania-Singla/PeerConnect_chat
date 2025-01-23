@@ -44,7 +44,7 @@ export default function ChannelPosts() {
         return () => {
             controller.abort();
         };
-    }, [channel.user_name, page]);
+    }, [channel.user_id, page]);
 
     // pagination
     const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);

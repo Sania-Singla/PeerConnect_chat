@@ -15,8 +15,8 @@ export default function Sidebar() {
         { show: true, path: '/saved', name: 'Saved Blogs', icon: icons.save },
         {
             show: user,
-            path: '/chats',
-            name: 'Chats',
+            path: '/chat',
+            name: 'Collaborations',
             icon: icons.chat,
         },
         {

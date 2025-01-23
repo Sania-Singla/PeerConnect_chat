@@ -53,7 +53,11 @@ import {
     ChannelAbout,
     ChannelPosts,
     ChatLayout,
+    Details,
     NoChatSelected,
+    Overview,
+    Members,
+    Settings,
 } from './Components';
 
 function Wrapper() {
@@ -87,9 +91,15 @@ const router = createBrowserRouter(
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
-            <Route path="chats" element={<ChatsPage />}>
+            <Route path="chat" element={<ChatsPage />}>
                 <Route path="" element={<NoChatSelected />} />
-                <Route path="chat/:chatId" element={<ChatLayout />} />
+                <Route path=":chatId" element={<ChatLayout />}>
+                    <Route path="details" element={<Details />}>
+                        <Route path="" element={<Overview />} />
+                        <Route path="members" element={<Members />} />
+                        <Route path="settings" element={<Settings />} />
+                    </Route>
+                </Route>
             </Route>
 
             {/* static pages */}
@@ -142,7 +152,7 @@ const router = createBrowserRouter(
 
             {/* channel page */}
             <Route
-                path="channel/:userName"
+                path="channel/:userId"
                 element={
                     <ChannelContextProvider>
                         <ChannelPage />

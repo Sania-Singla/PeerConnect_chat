@@ -6,7 +6,7 @@ import {
     extractAccessToken,
     extractRefreshToken,
 } from './tokens.js';
-import { getPipeline1, getPipeline2, getPipeline3 } from './pipelines.js';
+import { getPipeline1, getPipeline2 } from './pipelines.js';
 import { getSocketIds, getOtherMembers, getSocketId } from './sockets.js';
 
 export {
@@ -19,7 +19,6 @@ export {
     extractRefreshToken,
     getPipeline1,
     getPipeline2,
-    getPipeline3,
     getSocketIds,
     getOtherMembers,
     getSocketId,

@@ -112,6 +112,29 @@ class ChatService {
             throw err;
         }
     }
+
+    async removeMember(chatId, userId) {
+        try {
+            const res = await fetch(
+                `/api/chats/groups/members/remove/${chatId}/${userId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                }
+            );
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in removeMember service', err);
+            throw err;
+        }
+    }
 }
 
 export const chatService = new ChatService();

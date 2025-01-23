@@ -1,17 +1,61 @@
 import { Iposts } from '../../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
-import { getPipeline1, getPipeline2 } from '../../helpers/index.js';
+import { getPipeline1 } from '../../helpers/index.js';
 
 export class MongoDBposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, categoryId) {
         try {
-            const pipeline = getPipeline1(categoryId, orderBy, page, limit);
+            const pipeline = categoryId
+                ? [{ $match: { post_category: categoryId } }]
+                : [];
 
-            return await Post.aggregatePaginate(pipeline, {
-                page,
-                limit,
-            });
+            pipeline.push(
+                ...[
+                    {
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'post_category',
+                            foreignField: 'category_id',
+                            as: 'category',
+                        },
+                    },
+                    { $unwind: '$category' },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'post_ownerId',
+                            foreignField: 'user_id',
+                            as: 'owner',
+                            pipeline: [
+                                {
+                                    $project: {
+                                        user_id: 1,
+                                        user_name: 1,
+                                        user_avatar: 1,
+                                        user_lastName: 1,
+                                        user_firstName: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    { $unwind: '$owner' },
+                    {
+                        $lookup: {
+                            from: 'postviews',
+                            localField: 'post_id',
+                            foreignField: 'post_id',
+                            as: 'views',
+                        },
+                    },
+                    { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
+                    { $addFields: { totalViews: { $size: '$views' } } },
+                    { $project: { post_category: 0, views: 0 } },
+                ]
+            );
+
+            return await Post.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
             throw err;
         }
@@ -19,21 +63,44 @@ export class MongoDBposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, categoryId) {
         try {
-            const pipeline1 = getPipeline1(categoryId, orderBy);
+            const pipeline = categoryId
+                ? [
+                      {
+                          $match: {
+                              post_ownerId: channelId,
+                              post_category: categoryId,
+                          },
+                      },
+                  ]
+                : [{ $match: { post_ownerId: channelId } }];
 
-            const pipeline = [
-                {
-                    $match: {
-                        post_ownerId: channelId,
+            // concat() returns a modified new array
+            pipeline.push(
+                ...[
+                    {
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'post_category',
+                            foreignField: 'category_id',
+                            as: 'category',
+                        },
                     },
-                },
-                ...pipeline1,
-            ];
+                    { $unwind: '$category' },
+                    {
+                        $lookup: {
+                            from: 'postviews',
+                            localField: 'post_id',
+                            foreignField: 'post_id',
+                            as: 'views',
+                        },
+                    },
+                    { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
+                    { $addFields: { totalViews: { $size: '$views' } } },
+                    { $project: { post_category: 0, views: 0 } },
+                ]
+            );
 
-            return await Post.aggregatePaginate(pipeline, {
-                page,
-                limit,
-            });
+            return await Post.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
             throw err;
         }
@@ -50,190 +117,121 @@ export class MongoDBposts extends Iposts {
     async getPost(postId, userId) {
         try {
             const pipeline = [
-                // Step 1: Match post by postId
-                {
-                    $match: {
-                        post_id: postId,
-                    },
-                },
+                { $match: { post_id: postId } },
                 {
                     $lookup: {
                         from: 'categories',
                         localField: 'post_category',
                         foreignField: 'category_id',
-                        as: 'category_name',
+                        as: 'category',
                     },
                 },
-                {
-                    $unwind: '$category_name',
-                },
-                {
-                    $addFields: {
-                        category_name: '$category_name.category_name',
-                    },
-                },
-                // Step 2: Lookup post owner details
+                { $unwind: '$category' },
                 {
                     $lookup: {
                         from: 'users',
                         localField: 'post_ownerId',
                         foreignField: 'user_id',
-                        as: 'post_owner',
+                        as: 'owner',
                     },
                 },
-                {
-                    $unwind: '$post_owner',
-                },
-                // Step 3: Lookup post likes
+                { $unwind: '$owner' },
                 {
                     $lookup: {
                         from: 'postlikes',
                         localField: 'post_id',
                         foreignField: 'post_id',
-                        as: 'post_likes',
+                        as: 'likes',
                         pipeline: [
-                            {
-                                $match: {
-                                    is_liked: true,
-                                },
-                            },
-                            {
-                                $project: {
-                                    user_id: 1,
-                                },
-                            },
+                            { $match: { is_liked: true } },
+                            { $project: { user_id: 1 } },
                         ],
                     },
                 },
-                // Step 4: Lookup post dislikes
                 {
                     $lookup: {
                         from: 'postlikes',
                         localField: 'post_id',
                         foreignField: 'post_id',
-                        as: 'post_dislikes',
+                        as: 'dislikes',
                         pipeline: [
-                            {
-                                $match: {
-                                    is_liked: false,
-                                },
-                            },
-                            {
-                                $project: {
-                                    user_id: 1,
-                                },
-                            },
+                            { $match: { is_liked: false } },
+                            { $project: { user_id: 1 } },
                         ],
                     },
                 },
-                // Step 5: Lookup post views
                 {
                     $lookup: {
                         from: 'postviews',
                         localField: 'post_id',
                         foreignField: 'post_id',
-                        as: 'post_views',
+                        as: 'views',
                     },
                 },
-                // Step 6: Lookup saved posts
-                {
-                    $lookup: userId
-                        ? {
-                              from: 'savedposts',
-                              localField: 'post_id',
-                              foreignField: 'post_id',
-                              as: 'saved_posts',
-                              pipeline: [
-                                  {
-                                      $project: {
-                                          user_id: userId,
-                                      },
-                                  },
-                              ],
-                          }
-                        : {},
-                },
-                {
-                    $lookup: userId
-                        ? {
-                              from: 'followers',
-                              localField: 'post_ownerId',
-                              foreignField: 'following_id',
-                              as: 'followers',
-                              pipeline: [
-                                  {
-                                      $match: {
-                                          follower_id: userId,
-                                      },
-                                  },
-                              ],
-                          }
-                        : {},
-                },
-                // Step 7: Add conditional fields and computed fields
                 {
                     $addFields: {
-                        isFollowed: userId
-                            ? { $gt: [{ $size: '$followers' }, 0] }
-                            : false,
-                        isSaved: userId
-                            ? { $gt: [{ $size: '$saved_posts' }, 0] }
-                            : false,
-                        isLiked: userId
-                            ? {
-                                  $in: [
-                                      userId,
-                                      {
-                                          $map: {
-                                              input: '$post_likes',
-                                              as: 'like',
-                                              in: '$$like.user_id',
-                                          },
-                                      },
-                                  ],
-                              }
-                            : false,
-                        isDisliked: userId
-                            ? {
-                                  $in: [
-                                      userId,
-                                      {
-                                          $map: {
-                                              input: '$post_dislikes',
-                                              as: 'dislike',
-                                              in: '$$dislike.user_id',
-                                          },
-                                      },
-                                  ],
-                              }
-                            : false,
-                        totalLikes: {
-                            $size: '$post_likes',
-                        },
-                        totalDislikes: {
-                            $size: '$post_dislikes',
-                        },
-                        totalViews: {
-                            $size: '$post_views',
-                        },
-                        userName: '$post_owner.user_name',
-                        firstName: '$post_owner.user_firstName',
-                        lastName: '$post_owner.user_lastName',
-                        avatar: '$post_owner.user_avatar',
-                        coverImage: '$post_owner.user_coverImage',
-                    },
-                },
-                // Step 8: Project final fields
-                {
-                    $project: {
-                        post_owner: 0,
-                        post_likes: 0,
-                        post_dislikes: 0,
-                        post_views: 0,
-                        saved_posts: 0,
+                        totalLikes: { $size: '$likes' },
+                        totalDislikes: { $size: '$dislikes' },
+                        totalViews: { $size: '$views' },
                     },
                 },
             ];
+
+            // Conditionally add user-related stages
+            if (userId) {
+                pipeline.push(
+                    {
+                        $lookup: {
+                            from: 'savedposts',
+                            localField: 'post_id',
+                            foreignField: 'post_id',
+                            as: 'saved_posts',
+                            pipeline: [{ $match: { user_id: userId } }],
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'followers',
+                            localField: 'post_ownerId',
+                            foreignField: 'following_id',
+                            as: 'followers',
+                            pipeline: [{ $match: { follower_id: userId } }],
+                        },
+                    },
+                    {
+                        $addFields: {
+                            isFollowed: { $gt: [{ $size: '$followers' }, 0] },
+                            isSaved: { $gt: [{ $size: '$saved_posts' }, 0] },
+                            isLiked: {
+                                $in: [
+                                    userId,
+                                    {
+                                        $map: {
+                                            input: '$likes',
+                                            as: 'like',
+                                            in: '$$like.user_id',
+                                        },
+                                    },
+                                ],
+                            },
+                            isDisliked: {
+                                $in: [
+                                    userId,
+                                    {
+                                        $map: {
+                                            input: '$dislikes',
+                                            as: 'dislike',
+                                            in: '$$dislike.user_id',
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    }
+                );
+            }
+
+            pipeline.push({ $project: { likes: 0, dislikes: 0, views: 0 } });
 
             const [post] = await Post.aggregate(pipeline);
             return post;
@@ -267,7 +265,7 @@ export class MongoDBposts extends Iposts {
         }
     }
 
-    // Hook but working
+    // TODO: can use pre-hook
     async updatePostViews(postId, userIdentifier) {
         try {
             return await PostView.findOneAndUpdate(
@@ -361,20 +359,9 @@ export class MongoDBposts extends Iposts {
 
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
-            const pipeline2 = getPipeline2(orderBy, 'savedAt');
-            const pipeline = [
-                {
-                    $match: {
-                        user_id: userId,
-                    },
-                },
-                ...pipeline2,
-            ];
-
-            return await SavedPost.aggregatePaginate(pipeline, {
-                page,
-                limit,
-            });
+            const pipeline1 = getPipeline1(orderBy, 'savedAt');
+            const pipeline = [{ $match: { user_id: userId } }, ...pipeline1];
+            return await SavedPost.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
             throw err;
         }

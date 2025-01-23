@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { Chat, ChatHeader, ChatInput } from '..';
 import { useChatContext } from '../../Context';
 import { useEffect, useState } from 'react';
@@ -38,7 +38,6 @@ export default function ChatLayout() {
     }, [chatId, chatsLoaded]);
 
     if (loading) {
-        // TODO: skeleton
         return <div>loading...</div>;
     }
 
@@ -53,6 +52,7 @@ export default function ChatLayout() {
             <div className="h-[60px] bg-[#f6f6f6]">
                 <ChatInput />
             </div>
+            <Outlet />
         </div>
     );
 }

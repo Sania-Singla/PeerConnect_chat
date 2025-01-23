@@ -8,18 +8,17 @@ import { memo } from 'react';
 const PostListView = memo(({ post, reference, children }) => {
     const {
         post_id,
-        category_name,
+        category,
         post_content,
         post_image,
         totalViews,
         post_title,
         post_createdAt,
-        firstName,
-        lastName,
-        userName,
-        avatar,
-        post_ownerId,
+        owner,
     } = post;
+    const { category_name } = category;
+    const { user_id, user_name, user_avatar, user_firstName, user_lastName } =
+        owner;
 
     const navigate = useNavigate();
 
@@ -78,7 +77,7 @@ const PostListView = memo(({ post, reference, children }) => {
 
                     {/* user info */}
                     <Link
-                        to={`/channel/${post_ownerId}`}
+                        to={`/channel/${user_id}`}
                         onClick={(e) => e.stopPropagation()}
                         className="flex items-start justify-start gap-3 mt-6"
                     >
@@ -87,7 +86,7 @@ const PostListView = memo(({ post, reference, children }) => {
                             <div className="size-[50px]">
                                 <img
                                     alt="post owner avatar"
-                                    src={avatar}
+                                    src={user_avatar}
                                     className="size-full object-cover rounded-full hover:brightness-90"
                                 />
                             </div>
@@ -95,11 +94,11 @@ const PostListView = memo(({ post, reference, children }) => {
 
                         <div>
                             <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
-                                {firstName} {lastName}
+                                {user_firstName} {user_lastName}
                             </div>
 
                             <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
-                                @{userName}
+                                @{user_name}
                             </div>
                         </div>
                     </Link>

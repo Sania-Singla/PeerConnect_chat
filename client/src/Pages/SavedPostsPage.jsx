@@ -49,7 +49,7 @@ export default function SavedPostsPage() {
     const postElements = posts?.map((post, index) => (
         <SavedPostView
             key={post.post_id}
-            post={post}
+            savedPost={post}
             reference={
                 index + 1 === posts.length && postsInfo?.hasNextPage
                     ? paginateRef

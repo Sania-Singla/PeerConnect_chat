@@ -11,19 +11,15 @@ export default function PostCardView({
 }) {
     const {
         post_id,
-        category_name,
         post_image,
         post_content,
-        totalViews,
         post_title,
         post_createdAt,
-        userName,
-        firstName,
-        lastName,
-        post_ownerId,
-        avatar,
+        owner,
+        category,
+        totalViews,
     } = post;
-
+    const { category_name } = category;
     const navigate = useNavigate();
 
     return (
@@ -71,9 +67,9 @@ export default function PostCardView({
                 </div>
 
                 {/* show owner info if home page */}
-                {showOwnerInfo && (
+                {showOwnerInfo && owner && (
                     <Link
-                        to={`/channel/${post_ownerId}`}
+                        to={`/channel/${owner.user_id}`}
                         onClick={(e) => e.stopPropagation()}
                         className="flex items-start justify-start gap-3"
                     >
@@ -82,7 +78,7 @@ export default function PostCardView({
                             <div className="size-[50px]">
                                 <img
                                     alt="post owner avatar"
-                                    src={avatar}
+                                    src={owner.user_avatar}
                                     className="size-full object-cover rounded-full hover:brightness-90"
                                 />
                             </div>
@@ -91,11 +87,11 @@ export default function PostCardView({
                         {/* channel info */}
                         <div className="">
                             <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
-                                {firstName} {lastName}
+                                {owner.user_firstName} {owner.user_lastName}
                             </div>
 
                             <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
-                                @{userName}
+                                @{owner.user_name}
                             </div>
                         </div>
                     </Link>

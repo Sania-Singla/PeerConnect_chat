@@ -1,4 +1,4 @@
-import { getPipeline3 } from '../../helpers/index.js';
+import { getPipeline2 } from '../../helpers/index.js';
 import { Ichats } from '../../interfaces/chat.Interface.js';
 import { Chat } from '../../schemas/MongoDB/index.js';
 
@@ -116,12 +116,12 @@ export class MongoDBchats extends Ichats {
 
     async getChatDetails(chatId) {
         try {
-            const pipeline3 = getPipeline3();
+            const pipeline2 = getPipeline2();
             const pipeline = [
                 {
                     $match: { chat_id: chatId },
                 },
-                ...pipeline3,
+                ...pipeline2,
             ];
 
             const [chat] = await Chat.aggregate(pipeline);
@@ -133,12 +133,12 @@ export class MongoDBchats extends Ichats {
 
     async getMyGroups(myId) {
         try {
-            const pipeline3 = getPipeline3();
+            const pipeline2 = getPipeline2();
             const pipeline = [
                 {
                     $match: { 'members.user_id': myId, isGroupChat: true },
                 },
-                ...pipeline3,
+                ...pipeline2,
             ];
 
             return await Chat.aggregate(pipeline);
@@ -149,12 +149,12 @@ export class MongoDBchats extends Ichats {
 
     async getMyChats(myId) {
         try {
-            const pipeline3 = getPipeline3();
+            const pipeline2 = getPipeline2();
             const pipeline = [
                 {
                     $match: { 'members.user_id': myId },
                 },
-                ...pipeline3,
+                ...pipeline2,
             ];
 
             return await Chat.aggregate(pipeline);

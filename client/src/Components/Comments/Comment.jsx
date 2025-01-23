@@ -13,14 +13,12 @@ export default function Comment({ comment, setComments }) {
         comment_content,
         comment_createdAt,
         isLiked,
-        user_firstName,
-        user_lastName,
-        user_name,
-        user_avatar,
-        user_id,
+        owner,
         likes,
         dislikes,
     } = comment;
+    const { user_id, user_name, user_firstName, user_lastName, user_avatar } =
+        owner;
     const navigate = useNavigate();
     const { user } = useUserContext();
     const { setLoginPopupText, setShowLoginPopup } = usePopupContext();

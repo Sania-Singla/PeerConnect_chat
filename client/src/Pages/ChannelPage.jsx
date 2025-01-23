@@ -5,7 +5,7 @@ import { userService, followerService } from '../Services';
 import { useChannelContext, useUserContext, usePopupContext } from '../Context';
 
 export default function ChannelPage() {
-    const { userName } = useParams();
+    const { userId } = useParams();
     const navigate = useNavigate();
     const { channel, setChannel } = useChannelContext();
     const { user } = useUserContext();
@@ -19,10 +19,7 @@ export default function ChannelPage() {
         (async function getChannelProfile() {
             try {
                 setLoading(true);
-                const res = await userService.getChannelProfile(
-                    signal,
-                    userName
-                );
+                const res = await userService.getChannelProfile(signal, userId);
                 if (res && !res.message) {
                     setChannel(res);
                 } else {
@@ -35,10 +32,8 @@ export default function ChannelPage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
-    }, [userName, user]);
+        return () => controller.abort();
+    }, [userId, user]);
 
     async function toggleFollow() {
         try {
@@ -47,7 +42,7 @@ export default function ChannelPage() {
                 setLoginPopupText('Follow');
                 return;
             }
-            const res = await followerService.toggleFollow(channel.user_id);
+            const res = await followerService.toggleFollow(userId);
             if (res && res.message === 'follow toggled successfully') {
                 setChannel((prev) => ({
                     ...prev,
@@ -64,16 +59,16 @@ export default function ChannelPage() {
         { name: 'About', path: 'about' },
     ];
 
-    const tabElements = tabs?.map((tab) => (
+    const tabElements = tabs?.map(({ name, path }) => (
         <NavLink
-            key={tab.name}
-            to={tab.path}
+            key={name}
+            to={path}
             end
             className={({ isActive }) =>
                 `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-black bg-[#f9f9f9] text-black'} drop-shadow-md hover:backdrop-brightness-90 rounded-t-md p-[3px] border-b-[0.1rem] w-full text-center text-lg font-medium`
             }
         >
-            <div className="w-full text-center">{tab.name}</div>
+            <div className="w-full text-center">{name}</div>
         </NavLink>
     ));
 
@@ -114,8 +109,8 @@ export default function ChannelPage() {
                                 @{channel.user_name}
                             </div>
                             <div className="flex gap-1 items-center justify-start text-[#3f3f3f] text-[16px]">
-                                {channel.totalFollowers} followers &bull;{' '}
-                                {channel.totalFollowings} followings
+                                {channel.totalFollowers} followers &bull;
+                                {' ' + channel.totalViews} views
                             </div>
                         </div>
                     </div>
@@ -126,9 +121,7 @@ export default function ChannelPage() {
                     <div className="">
                         <Button
                             btnText="Edit"
-                            onClick={() => {
-                                navigate('/settings');
-                            }}
+                            onClick={() => navigate('/settings')}
                             className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>

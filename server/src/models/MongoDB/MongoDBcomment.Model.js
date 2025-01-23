@@ -5,20 +5,17 @@ export class MongoDBcomments extends Icomments {
     async getComments(postId, userId, orderBy) {
         try {
             const pipeline = [
-                {
-                    $match: {
-                        post_id: postId,
-                    },
-                },
+                { $match: { post_id: postId } },
                 {
                     $lookup: {
                         from: 'users',
                         localField: 'user_id',
                         foreignField: 'user_id',
-                        as: 'user',
+                        as: 'owner',
                         pipeline: [
                             {
                                 $project: {
+                                    user_id: 1,
                                     user_name: 1,
                                     user_firstName: 1,
                                     user_lastName: 1,
@@ -28,22 +25,14 @@ export class MongoDBcomments extends Icomments {
                         ],
                     },
                 },
-                {
-                    $unwind: '$user',
-                },
+                { $unwind: '$owner' },
                 {
                     $lookup: {
                         from: 'commentlikes',
                         localField: 'comment_id',
                         foreignField: 'comment_id',
-                        as: 'comment_likes',
-                        pipeline: [
-                            {
-                                $match: {
-                                    is_liked: true,
-                                },
-                            },
-                        ],
+                        as: 'likes',
+                        pipeline: [{ $match: { is_liked: true } }],
                     },
                 },
                 {
@@ -51,44 +40,25 @@ export class MongoDBcomments extends Icomments {
                         from: 'commentlikes',
                         localField: 'comment_id',
                         foreignField: 'comment_id',
-                        as: 'comment_dislikes',
-                        pipeline: [
-                            {
-                                $match: {
-                                    is_liked: false,
-                                },
-                            },
-                        ],
+                        as: 'dislikes',
+                        pipeline: [{ $match: { is_liked: false } }],
                     },
                 },
                 {
                     $addFields: {
-                        user_name: '$user.user_name',
-                        user_firstName: '$user.user_firstName',
-                        user_lastName: '$user.user_lastName',
-                        user_avatar: '$user.user_avatar',
-                        likes: {
-                            $size: '$comment_likes',
-                        },
-                        dislikes: {
-                            $size: '$comment_dislikes',
-                        },
+                        likes: { $size: '$likes' },
+                        dislikes: { $size: '$dislikes' },
                         isLiked: userId
                             ? {
                                   $cond: {
-                                      if: {
-                                          $in: [
-                                              userId,
-                                              '$comment_likes.user_id',
-                                          ],
-                                      },
+                                      if: { $in: [userId, '$likes.user_id'] },
                                       then: 1,
                                       else: {
                                           $cond: {
                                               if: {
                                                   $in: [
                                                       userId,
-                                                      '$comment_dislikes.user_id',
+                                                      '$dislikes.user_id',
                                                   ],
                                               },
                                               then: 0,
@@ -100,16 +70,7 @@ export class MongoDBcomments extends Icomments {
                             : -1,
                     },
                 },
-                {
-                    $project: {
-                        user: 0,
-                    },
-                },
-                {
-                    $sort: {
-                        comment_createdAt: orderBy === 'DESC' ? -1 : 1,
-                    },
-                },
+                { $sort: { comment_createdAt: orderBy === 'DESC' ? -1 : 1 } },
             ];
 
             return await Comment.aggregate(pipeline);

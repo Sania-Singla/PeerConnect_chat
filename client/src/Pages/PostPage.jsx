@@ -29,7 +29,6 @@ export default function PostPage() {
         (async function getPost() {
             try {
                 setLoading(true);
-                // TODO: instead for pipeline use separate query for channel info and colab request info as well using promise.all
                 const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
@@ -121,7 +120,7 @@ export default function PostPage() {
                 setLoginPopupText('Follow');
                 return;
             }
-            const res = await followerService.toggleFollow(post.post_ownerId);
+            const res = await followerService.toggleFollow(post.owner.user_id);
             if (res && res.message === 'follow toggled successfully') {
                 setPost((prev) => ({
                     ...prev,
@@ -165,7 +164,7 @@ export default function PostPage() {
             }
             if (colabRequestStatus === 'none') {
                 const res = await requestService.sendCollabRequest(
-                    post.post_ownerId
+                    post.owner.user_id
                 );
                 if (res && !res.message) {
                     setColabRequestStatus('pending');
@@ -173,14 +172,14 @@ export default function PostPage() {
                 }
             } else if (colabRequestStatus === 'rejected') {
                 const res = await requestService.sendCollabRequest(
-                    post.post_ownerId
+                    post.owner.user_id
                 );
                 if (res && res.message === 'collab request sent successfully') {
                     setColabRequestStatus('pending');
                     toast.succedd('Collab Request Sent Successfully 🤝');
                 }
             } else if (colabRequestStatus === 'accepted') {
-                navigate(`/chat/${post.post_ownerId}`);
+                navigate(`/chat/${post.owner.user_id}`);
             }
         } catch (err) {
             navigate('/server-error');
@@ -212,7 +211,7 @@ export default function PostPage() {
                                     {icons.dot}
                                 </div>
                                 <span className="text-[#2556d1] text-[16px]">
-                                    {post.category_name.toUpperCase()}
+                                    {post.category.category_name.toUpperCase()}
                                 </span>
                             </div>
 
@@ -306,7 +305,7 @@ export default function PostPage() {
                                     {icons.dot}
                                 </div>
                                 <span className="text-[#2556d1] text-[16px]">
-                                    {post.category_name.toUpperCase()}
+                                    {post.category.category_name.toUpperCase()}
                                 </span>
                             </div>
 
@@ -337,7 +336,7 @@ export default function PostPage() {
                                 <div
                                     onClick={(e) => {
                                         navigate(
-                                            `/channel/${post.post_ownerId}`
+                                            `/channel/${post.owner.user_id}`
                                         );
                                     }}
                                     className="w-fit cursor-pointer"
@@ -345,7 +344,7 @@ export default function PostPage() {
                                     <div className="size-[60px] xl:size-[160px]">
                                         <img
                                             alt="post owner avatar"
-                                            src={post.avatar}
+                                            src={post.owner.user_avatar}
                                             className="size-full object-cover rounded-full hover:brightness-90"
                                         />
                                     </div>
@@ -355,29 +354,30 @@ export default function PostPage() {
                                     <div
                                         onClick={(e) => {
                                             navigate(
-                                                `/channel/${post.post_ownerId}`
+                                                `/channel/${post.owner.user_id}`
                                             );
                                         }}
                                         className="w-fit cursor-pointer text-ellipsis line-clamp-1 text-lg xl:text-[21px] hover:text-[#5c5c5c] font-medium text-black"
                                     >
-                                        {post.firstName} {post.lastName}
+                                        {post.owner.user_firstName}{' '}
+                                        {post.owner.user_lastName}
                                     </div>
 
                                     <div
                                         onClick={(e) => {
                                             navigate(
-                                                `/channel/${post.post_ownerId}`
+                                                `/channel/${post.owner.user_id}`
                                             );
                                         }}
                                         className="w-fit cursor-pointer text-black hover:text-[#5c5c5c] text-lg"
                                     >
-                                        @{post.userName}
+                                        @{post.owner.user_name}
                                     </div>
                                 </div>
                             </div>
 
                             <div className="text-black text-lg">
-                                {user?.user_name === post.userName ? (
+                                {user?.user_name === post.owner.user_name ? (
                                     <Button
                                         btnText="Edit"
                                         title="Edit Post"
@@ -429,15 +429,11 @@ export default function PostPage() {
             {/* recemendations */}
             <div className="w-full">
                 <hr className="mt-0 mb-6 w-full" />
-
                 <h2 className="text-black underline underline-offset-4 mb-8">
                     Recommended Similar Posts
                 </h2>
                 <div className="w-full">
-                    <Recemendations
-                        category={post.category_name}
-                        currentPostId={post.post_id}
-                    />
+                    <Recemendations category={post.category.category_name} />
                 </div>
             </div>
 

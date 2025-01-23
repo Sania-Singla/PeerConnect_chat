@@ -60,22 +60,27 @@ export default function WatchHistoryPage() {
         }
     }
 
-    const postElements = posts?.map((post, index) => (
-        <PostListView
-            key={post.post_id}
-            post={post}
-            reference={
-                index + 1 === posts.length && postsInfo?.hasNextPage
-                    ? paginateRef
-                    : null
-            }
-        >
-            {/* children */}
-            <div className="sm:right-44 sm:bottom-8 sm:left-auto hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
-                watched {formatDateRelative(post.watchedAt)}
-            </div>
-        </PostListView>
-    ));
+    const postElements = posts?.map((watchedPost, index) => {
+        const { post, ...rest } = watchedPost;
+        const modifiedPost = { ...post, ...rest };
+
+        return (
+            <PostListView
+                key={modifiedPost.post_id}
+                post={modifiedPost}
+                reference={
+                    index + 1 === posts.length && postsInfo?.hasNextPage
+                        ? paginateRef
+                        : null
+                }
+            >
+                {/* children */}
+                <div className="sm:right-44 sm:bottom-8 sm:left-auto hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
+                    watched {formatDateRelative(modifiedPost.watchedAt)}
+                </div>
+            </PostListView>
+        );
+    });
 
     return !user ? (
         <div>Login to see history</div>

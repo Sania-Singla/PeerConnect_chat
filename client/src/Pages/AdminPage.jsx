@@ -68,9 +68,7 @@ export default function AdminPage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [page, user]);
 
     const stats = [

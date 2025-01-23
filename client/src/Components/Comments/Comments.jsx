@@ -34,9 +34,7 @@ export default function Comments() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [postId, user]);
 
     async function addComment(e) {

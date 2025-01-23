@@ -366,6 +366,12 @@ const clearWatchHistory = tryCatch('clear watch history', async (req, res) => {
         .json({ message: 'watch history cleared successfully' });
 });
 
+const getAdminStats = tryCatch('get admin stats', async (req, res, next) => {
+    const { user_id } = req.user;
+    const result = await userObject.getAdminStats(user_id);
+    return res.status(OK).json(result);
+});
+
 export {
     registerUser,
     loginUser,
@@ -380,4 +386,5 @@ export {
     getCurrentUser,
     getWatchHistory,
     clearWatchHistory,
+    getAdminStats,
 };

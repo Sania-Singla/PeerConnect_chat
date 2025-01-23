@@ -4,8 +4,8 @@ import { likeService } from '../../Services';
 import { Button, PostListView } from '..';
 import { icons } from '../../Assets/icons';
 
-export default function LikedPostView({ post, reference }) {
-    const { post_id } = post;
+export default function LikedPostView({ likedPost, reference }) {
+    const { post_id } = likedPost;
     const [isLiked, setIsLiked] = useState(true);
     const navigate = useNavigate();
 
@@ -20,8 +20,11 @@ export default function LikedPostView({ post, reference }) {
         }
     }
 
+    const { post, ...rest } = likedPost;
+    const modifiedPost = { ...rest, ...post };
+
     return (
-        <PostListView post={post} reference={reference}>
+        <PostListView post={modifiedPost} reference={reference}>
             {/* children */}
             <div
                 className="absolute top-2 right-2"
