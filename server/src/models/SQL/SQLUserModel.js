@@ -5,10 +5,8 @@ import { v4 as uuid } from 'uuid';
 export class SQLusers extends Iusers {
     async getUser(searchInput) {
         try {
-            const q = `
-                SELECT * FROM users 
-                WHERE user_id = ? OR user_name = ? OR user_email = ?
-            `;
+            const q =
+                'SELECT * FROM users WHERE user_id = ? OR user_name = ? OR user_email = ?';
 
             const [[user]] = await connection.query(q, [
                 searchInput,
@@ -183,25 +181,17 @@ export class SQLusers extends Iusers {
                     SELECT 
                         w.watchedAt,
                         w.post_id,
-                        p.post_title,
-                        p.post_image,
-                        p.post_ownerId,
-                        p.post_createdAt,
-                        p.post_content,
-                        p.totalViews,
-                        p.category_name,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName lastName,
-                        c.user_avatar AS avatar
+                        p.*,
+                        c.user_id,
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar
                     FROM watch_history w
-                    JOIN post_view p 
-                    ON w.post_id = p.post_id
-                    JOIN channel_view c 
-                    ON p.post_ownerId = c.user_id 
+                    JOIN post_view p ON w.post_id = p.post_id
+                    JOIN channel_view c ON p.post_ownerId = c.user_id 
                     WHERE w.user_id = ?
-                    ORDER BY w.watchedAt ${orderBy}
-                    LIMIT ? OFFSET ? 
+                    ORDER BY w.watchedAt ${orderBy} LIMIT ? OFFSET ? 
                 `;
 
             const countQ =

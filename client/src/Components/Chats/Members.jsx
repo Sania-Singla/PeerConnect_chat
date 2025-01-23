@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { useChatContext, useUserContext } from '../../Context';
 import { useState } from 'react';
 import { icons } from '../../Assets/icons';
@@ -66,9 +66,9 @@ export default function Members() {
                 user_lastName,
                 user_bio,
             }) => (
-                <div
+                <NavLink
                     key={user_id}
-                    onClick={() => navigate(`/channel/${user_id}`)}
+                    to={`/channel/${user_id}`}
                     className="cursor-pointer hover:backdrop-brightness-95 rounded-md px-3 py-2 flex justify-between gap-4"
                 >
                     <div className="flex items-center gap-4">
@@ -111,7 +111,7 @@ export default function Members() {
                             />
                         )}
                     </div>
-                </div>
+                </NavLink>
             )
         );
 

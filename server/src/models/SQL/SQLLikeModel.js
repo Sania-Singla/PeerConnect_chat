@@ -6,27 +6,17 @@ export class SQLlikes extends Ilikes {
         try {
             const q = `
                     SELECT
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName lastName,
-                        c.user_avatar AS avatar,
-                        p.post_id, 
-                        p.category_name,
-                        p.post_updatedAt,
-                        p.post_createdAt, 
-                        p.post_title, 
-                        p.post_ownerId,
-                        p.post_content, 
-                        p.totalViews,
-                        p.post_image
+                        p.*,
+                        c.user_id,
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar
                     FROM post_view p
-                    JOIN channel_view c
-                    ON p.post_ownerId = c.user_id 
-                    JOIN post_likes l
-                    ON p.post_id = l.post_id 
+                    JOIN channel_view c ON p.post_ownerId = c.user_id 
+                    JOIN post_likes l ON p.post_id = l.post_id 
                     WHERE l.user_id = ? AND l.is_liked = 1
-                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
-                    LIMIT ? OFFSET ?
+                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ?
                 `;
 
             const countQ =

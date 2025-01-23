@@ -31,7 +31,6 @@ JOIN categories c
 ON c.category_id = p.post_category;
 
 
-
 -- comment view
 CREATE VIEW comment_view AS 
 SELECT 

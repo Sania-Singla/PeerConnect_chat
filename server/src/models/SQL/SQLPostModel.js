@@ -10,14 +10,14 @@ export class SQLposts extends Iposts {
             let q = `
                     SELECT 
                         p.*,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName AS lastName,
-                        c.user_avatar AS avatar,
-                        c.user_coverImage AS coverImage 
+                        c.user_id,
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar,
+                        c.user_coverImage
                     FROM post_view p 
-                    JOIN channel_view c 
-                    ON p.post_ownerId = c.user_id 
+                    JOIN channel_view c ON p.post_ownerId = c.user_id 
                 `;
 
             let countQ = 'SELECT COUNT(*) AS totalPosts FROM post_view p ';
@@ -70,14 +70,13 @@ export class SQLposts extends Iposts {
             let q = `
                     SELECT 
                         p.*,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName AS lastName,
-                        c.user_avatar AS avatar,
-                        c.user_coverImage AS coverImage
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar,
+                        c.user_coverImage
                     FROM post_view p 
-                    JOIN channel_view c 
-                    ON p.post_ownerId = c.user_id
+                    JOIN channel_view c ON p.post_ownerId = c.user_id
                 `;
 
             let countQ = 'SELECT COUNT(*) AS totalPosts FROM post_view p';
@@ -133,14 +132,13 @@ export class SQLposts extends Iposts {
             const q = `
                     SELECT 
                         p.*,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName AS lastName,
-                        c.user_avatar AS avatar,
-                        c.user_coverImage AS coverImage
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar,
+                        c.user_coverImage
                     FROM post_view p 
-                    JOIN channel_view c 
-                    ON c.user_id = p.post_ownerId
+                    JOIN channel_view c ON c.user_id = p.post_ownerId
                     WHERE post_id = ?
                 `;
 
@@ -307,27 +305,16 @@ export class SQLposts extends Iposts {
             const q = `
                     SELECT
                     	c.user_id,
-                        c.user_name AS userName,
-                        c.user_firstName AS firstName,
-                        c.user_lastName lastName,
-                        c.user_avatar AS avatar,
-                        p.post_id, 
-                        p.category_name,
-                        p.post_updatedAt,
-                        p.post_createdAt, 
-                        p.post_title, 
-                        p.post_content, 
-                        p.totalViews,
-                        p.post_ownerId,
-                        p.post_image
+                        c.user_name,
+                        c.user_firstName,
+                        c.user_lastName,
+                        c.user_avatar,
+                        p.*
                     FROM post_view p
-                    JOIN channel_view c
-                    ON p.post_ownerId = c.user_id 
-                    JOIN saved_posts s
-                    ON p.post_id = s.post_id 
+                    JOIN channel_view c ON p.post_ownerId = c.user_id 
+                    JOIN saved_posts s ON p.post_id = s.post_id 
                     WHERE s.user_id = ?
-                    ORDER BY p.post_updatedAt ${orderBy} 
-                    LIMIT ? OFFSET ?
+                    ORDER BY p.post_updatedAt ${orderBy} LIMIT ? OFFSET ?
                 `;
 
             const offset = (page - 1) * limit;

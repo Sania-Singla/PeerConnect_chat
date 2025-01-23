@@ -10,8 +10,7 @@ export class SQLcomments extends Icomments {
                         v.*,
                         IFNULL(l.is_liked, -1) AS isLiked    -- -1 for no interaction
                     FROM comment_view v
-                    LEFT JOIN comment_likes l 
-                    ON v.comment_id = l.comment_id AND l.user_id = ?
+                    LEFT JOIN comment_likes l ON v.comment_id = l.comment_id AND l.user_id = ?
                     WHERE v.post_id = ? 
                     ORDER BY v.comment_createdAt ${orderBy.toUpperCase()}
                 `;
