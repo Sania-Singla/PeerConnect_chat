@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../Context';
+import { usePopupContext, useUserContext } from '../../Context';
 import { fileRestrictions } from '../../Utils';
 import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
@@ -8,15 +8,13 @@ import { Button } from '..';
 import { MAX_FILE_SIZE } from '../../Constants/constants';
 import toast from 'react-hot-toast';
 
-export default function UpdateCoverImage({
-    className,
-    setUpdateCoverImagePopup,
-}) {
+export default function UpdateCoverImage() {
     const { user, setUser } = useUserContext();
     const [coverImage, setCoverImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState('');
+    const { setShowPopup } = usePopupContext();
     const [coverImagePreview, setCoverImagePreview] = useState(
         user.user_coverImage
     );
@@ -28,24 +26,19 @@ export default function UpdateCoverImage({
         if (files[0]) {
             const file = files[0];
             setCoverImage(file);
+            setCoverImagePreview(URL.createObjectURL(file));
+
             if (!fileRestrictions(file)) {
                 setError(
                     `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB.`
                 );
-            } else {
-                setError('');
-            }
-
-            setCoverImagePreview(URL.createObjectURL(file));
+            } else setError('');
         }
     }
 
     function onMouseOver() {
-        if (error) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
+        if (error) setDisabled(true);
+        else setDisabled(false);
     }
     async function handleSubmit(e) {
         e.preventDefault();
@@ -62,14 +55,12 @@ export default function UpdateCoverImage({
         } finally {
             setLoading(false);
             setDisabled(false);
-            setUpdateCoverImagePopup(false);
+            setShowPopup(false);
         }
     }
 
     return (
-        <div
-            className={`relative bg-orange-200 rounded-xl w-[310px] sm:w-[350px] md:w-[440px] p-4 ${className}`}
-        >
+        <div className="relative bg-orange-200 rounded-xl w-[310px] sm:w-[350px] md:w-[440px] p-4">
             <div className="text-black text-xl w-full bg-red-400 text-center font-medium mb-4">
                 Update Cover Image
             </div>
@@ -127,9 +118,7 @@ export default function UpdateCoverImage({
                             {icons.cross}
                         </div>
                     }
-                    onClick={() => {
-                        setUpdateCoverImagePopup(false);
-                    }}
+                    onClick={() => setShowPopup(false)}
                     className="absolute top-1 right-1 bg-transparent"
                 />
             </div>

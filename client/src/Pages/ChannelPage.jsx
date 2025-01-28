@@ -10,7 +10,7 @@ export default function ChannelPage() {
     const { channel, setChannel } = useChannelContext();
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
-    const { setShowLoginPopup, setLoginPopupText } = usePopupContext();
+    const { setShowPopup, setPopupInfo } = usePopupContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -38,8 +38,8 @@ export default function ChannelPage() {
     async function toggleFollow() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Follow');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Follow' });
                 return;
             }
             const res = await followerService.toggleFollow(userId);

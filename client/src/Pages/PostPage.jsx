@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setPopupInfo, setShowPopup } = usePopupContext();
     const [post, setPost] = useState({});
     const [colabRequestStatus, setColabRequestStatus] = useState('none');
     const { user } = useUserContext();
@@ -48,8 +48,8 @@ export default function PostPage() {
     async function toggleLike() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Like');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Like' });
                 return;
             }
             const res = await likeService.togglePostLike(postId, true);
@@ -82,8 +82,8 @@ export default function PostPage() {
     async function toggleDislike() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Dislike');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Dislike' });
                 return;
             }
             const res = await likeService.togglePostLike(postId, false);
@@ -116,8 +116,8 @@ export default function PostPage() {
     async function toggleFollow() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Follow');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Follow' });
                 return;
             }
             const res = await followerService.toggleFollow(post.owner.user_id);
@@ -135,8 +135,8 @@ export default function PostPage() {
     async function toggleSave() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Save');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Save' });
                 return;
             }
             const res = await postService.toggleSavePost(postId);
@@ -158,8 +158,8 @@ export default function PostPage() {
     async function handleCollab() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Collab');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Collab' });
                 return;
             }
             if (colabRequestStatus === 'none') {

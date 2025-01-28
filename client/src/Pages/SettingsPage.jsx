@@ -1,31 +1,17 @@
 import { Outlet } from 'react-router-dom';
-import {
-    Button,
-    UpdateAvatarPopup,
-    UpdateCoverImagePopup,
-} from '../Components';
-import { useUserContext } from '../Context';
+import { Button } from '../Components';
+import { usePopupContext, useUserContext } from '../Context';
 import { icons } from '../Assets/icons';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 export default function SettingsPage() {
     const { user } = useUserContext();
-    const [updateAvatarPopup, setUpdateAvatarPopup] = useState(false);
-    const [updateCoverImagePopup, setUpdateCoverImagePopup] = useState(false);
+    const { setShowPopup, setPopupInfo } = usePopupContext();
+
     const tabOptions = [
-        {
-            name: 'Personal Information',
-            path: '',
-        },
-        {
-            name: 'Channel Information',
-            path: 'channel',
-        },
-        {
-            name: 'Change Password',
-            path: 'password',
-        },
+        { name: 'Personal Information', path: '' },
+        { name: 'Channel Information', path: 'channel' },
+        { name: 'Change Password', path: 'password' },
     ];
 
     const tabElements = tabOptions.map((option) => (
@@ -61,7 +47,10 @@ export default function SettingsPage() {
                                     {icons.upload}
                                 </div>
                             }
-                            onClick={() => setUpdateCoverImagePopup(true)}
+                            onClick={() => {
+                                setShowPopup(true);
+                                setPopupInfo({ type: 'updateCoverImage' });
+                            }}
                             className="drop-shadow-md absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-80 stroke-black fill-[#4d4d4d]"
                         />
                     </div>
@@ -85,7 +74,10 @@ export default function SettingsPage() {
                                         {icons.upload}
                                     </div>
                                 }
-                                onClick={() => setUpdateAvatarPopup(true)}
+                                onClick={() => {
+                                    setShowPopup(true);
+                                    setPopupInfo({ type: 'updateAvatar' });
+                                }}
                                 className="drop-shadow-md absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-80 stroke-black fill-[#4d4d4d]"
                             />
                         </div>
@@ -108,20 +100,6 @@ export default function SettingsPage() {
             </div>
 
             <hr className="mt-4 mb-2" />
-
-            {/* popups */}
-            <div>
-                {updateAvatarPopup && (
-                    <UpdateAvatarPopup
-                        setUpdateAvatarPopup={setUpdateAvatarPopup}
-                    />
-                )}
-                {updateCoverImagePopup && (
-                    <UpdateCoverImagePopup
-                        setUpdateCoverImagePopup={setUpdateCoverImagePopup}
-                    />
-                )}
-            </div>
 
             <Outlet />
         </div>

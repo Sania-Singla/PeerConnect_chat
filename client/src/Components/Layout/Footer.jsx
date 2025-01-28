@@ -3,11 +3,10 @@ import { icons } from '../../Assets/icons';
 import { Button } from '..';
 import { useState } from 'react';
 import { CONTRIBUTORS, LOGO } from '../../Constants/constants';
-import { usePopupContext } from '../../Context';
+import toast from 'react-hot-toast';
 
 export default function Footer() {
     const [feedback, setFeedback] = useState('');
-    const { setShowPopup, setPopupText } = usePopupContext();
 
     const socialElements = Object.entries(CONTRIBUTORS[0].socials).map(
         ([platform, url]) => (
@@ -42,8 +41,7 @@ export default function Footer() {
     function submitFeedback(e) {
         e.preventDefault();
         setFeedback('');
-        setShowPopup(true);
-        setPopupText('Feedback Submitted Successfully 🤗');
+        toast.success('Feedback Submitted Successfully 🤗');
     }
 
     return (

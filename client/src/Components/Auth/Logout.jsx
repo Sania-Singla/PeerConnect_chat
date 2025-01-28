@@ -17,7 +17,7 @@ export default function Logout() {
             const res = await authService.logout();
             if (res && res.message === 'user loggedout successfully') {
                 setUser(null);
-                toast.success('LogOut Successfull 🙂');
+                toast.success('Logged out Successfully 🙂');
             }
         } catch (err) {
             navigate('/servor-error');

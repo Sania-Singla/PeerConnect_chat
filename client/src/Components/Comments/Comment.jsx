@@ -21,7 +21,7 @@ export default function Comment({ comment, setComments }) {
         owner;
     const navigate = useNavigate();
     const { user } = useUserContext();
-    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setPopupInfo, setShowPopup } = usePopupContext();
     const [newContent, setNewContent] = useState(comment_content);
     const [isEditing, setIsEditing] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -29,8 +29,8 @@ export default function Comment({ comment, setComments }) {
     async function handleLike() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Follow');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Like' });
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, true);
@@ -67,8 +67,8 @@ export default function Comment({ comment, setComments }) {
     async function handleDislike() {
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Follow');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Dislike' });
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, false);

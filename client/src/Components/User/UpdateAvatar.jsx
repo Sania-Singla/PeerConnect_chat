@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../Context';
+import { usePopupContext, useUserContext } from '../../Context';
 import { fileRestrictions } from '../../Utils';
 import { userService } from '../../Services';
 import { icons } from '../../Assets/icons';
@@ -8,8 +8,9 @@ import { MAX_FILE_SIZE } from '../../Constants/constants';
 import { Button } from '..';
 import toast from 'react-hot-toast';
 
-export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
+export default function UpdateAvatar() {
     const { user, setUser } = useUserContext();
+    const { setShowPopup } = usePopupContext();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(user.user_avatar);
@@ -23,24 +24,19 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
         if (files[0]) {
             const file = files[0];
             setAvatar(file);
+            setAvatarPreview(URL.createObjectURL(file));
+
             if (!fileRestrictions(file)) {
                 setError(
                     `only png, jpg/jpeg files are allowed and File size should not exceed ${MAX_FILE_SIZE} MB`
                 );
-            } else {
-                setError('');
-            }
-
-            setAvatarPreview(URL.createObjectURL(file));
+            } else setError('');
         }
     }
 
     function onMouseOver() {
-        if (error) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
+        if (error) setDisabled(true);
+        else setDisabled(false);
     }
 
     async function handleSubmit(e) {
@@ -58,13 +54,13 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
         } finally {
             setLoading(false);
             setDisabled(false);
-            setUpdateAvatarPopup(false);
+            setShowPopup(false);
         }
     }
 
     return (
         <div
-            className={`relative w-[300px] bg-orange-200 p-4 rounded-xl ${className}`}
+            className="relative w-[300px] bg-orange-200 p-4 rounded-xl"
         >
             <div className="w-full text-center text-2xl font-semibold mb-4 text-black">
                 Update Avatar
@@ -124,9 +120,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                         {icons.cross}
                     </div>
                 }
-                onClick={() => {
-                    setUpdateAvatarPopup(false);
-                }}
+                onClick={() => setShowPopup(false)}
                 className="absolute top-1 right-1 bg-transparent"
             />
         </div>

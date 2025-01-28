@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useUserContext } from '../../Context';
+import { usePopupContext, useUserContext } from '../../Context';
 import { authService } from '../../Services';
 import { Button } from '..';
 import toast from 'react-hot-toast';
 
-export default function DeleteAccount({ className = '' }) {
+export default function DeleteAccount() {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
     const { setUser } = useUserContext();
+    const { setShowPopup } = usePopupContext();
     const navigate = useNavigate();
     const [check, setCheck] = useState(false);
     const [disabled, setDisabled] = useState(false);
@@ -23,36 +23,30 @@ export default function DeleteAccount({ className = '' }) {
                 setUser(null);
                 toast.success('Account Deleted Successfully 😕');
             } else {
-                setError(res?.message);
+                toast.error(res?.message);
             }
         } catch (err) {
             navigate('/servor-error');
         } finally {
             setDisabled(false);
             setLoading(false);
+            setShowPopup(false);
         }
     }
 
     function onMouseOver() {
-        if (!check || !password) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
+        if (!check || !password) setDisabled(true);
+        else setDisabled(false);
     }
 
     return (
-        <div className={className}>
-            {error && <div className="text-red-500">{error}</div>}
-
+        <div>
             <div>
                 <div>
                     <input
                         type="checkbox"
                         checked={check}
-                        onChange={(e) => {
-                            setCheck(e.target.checked);
-                        }}
+                        onChange={(e) => setCheck(e.target.checked)}
                         name="deleteCheckBox"
                         id="deleteCheckBox"
                     />
@@ -66,9 +60,7 @@ export default function DeleteAccount({ className = '' }) {
                     <input
                         type="password"
                         value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
+                        onChange={(e) => setPassword(e.target.value)}
                         name="password"
                         id="password"
                         placeholder="Enter your password to confirm delete"

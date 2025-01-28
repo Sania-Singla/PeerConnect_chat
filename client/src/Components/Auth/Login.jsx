@@ -7,16 +7,13 @@ import { icons } from '../../Assets/icons';
 import toast from 'react-hot-toast';
 
 export default function Login() {
-    const [inputs, setInputs] = useState({
-        loginInput: '',
-        password: '',
-    });
+    const [inputs, setInputs] = useState({ loginInput: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { setUser } = useUserContext();
-    const { showLoginPopup, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup, showPopup } = usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -25,11 +22,8 @@ export default function Login() {
     }
 
     function onMouseOver() {
-        if (!inputs.loginInput || !inputs.password) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
+        if (!inputs.loginInput || !inputs.password) setDisabled(true);
+        else setDisabled(false);
     }
 
     async function handleSubmit(e) {
@@ -42,11 +36,8 @@ export default function Login() {
             if (res && !res.message) {
                 setUser(res);
                 toast.success('Logges in Successfully 😉');
-                if (showLoginPopup) {
-                    setShowLoginPopup(false);
-                } else {
-                    navigate('/');
-                }
+                if (showPopup) setShowPopup(false);
+                else navigate('/');
             } else {
                 setUser(null);
                 setError(res.message);

@@ -9,7 +9,7 @@ export default function App() {
     const { setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
     const { setShowSideBar } = useSideBarContext();
-    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup } = usePopupContext();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -32,7 +32,7 @@ export default function App() {
         return () => controller.abort();
     }, []);
 
-    // Close sidebar
+    // Close sidebar & popups
     useEffect(() => {
         const handleResize = () => setShowSideBar(false);
 
@@ -41,8 +41,7 @@ export default function App() {
 
         // on location/route change
         setShowSideBar(false);
-        setLoginPopupText('');
-        setShowLoginPopup(false);
+        setShowPopup(false);
 
         return () => window.removeEventListener('resize', handleResize);
     }, [location]);

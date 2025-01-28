@@ -13,7 +13,7 @@ export default function Comments() {
     const [loading, setLoading] = useState(true);
     const [addingComment, setAddingComment] = useState(false);
     const [input, setInput] = useState('');
-    const { setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setPopupInfo, setShowPopup } = usePopupContext();
     const { user } = useUserContext();
 
     useEffect(() => {
@@ -41,8 +41,8 @@ export default function Comments() {
         e.preventDefault();
         try {
             if (!user) {
-                setShowLoginPopup(true);
-                setLoginPopupText('Comment');
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Comment' });
                 return;
             }
             if (!input) return;

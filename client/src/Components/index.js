@@ -5,6 +5,8 @@ import Layout from './Layout/Layout';
 import Button from './General/Button';
 import RTE from './General/RTE';
 import ContributorCard from './General/ContributorCard';
+import CustomToast from './Popups/CustomToast';
+import Popup from './Popups/Popup';
 import LoginPopup from './Popups/LoginPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
@@ -27,7 +29,6 @@ import ChannelAbout from './Channel/ChannelAbout';
 import ChannelPosts from './Channel/ChannelPosts';
 import Comments from './Comments/Comments';
 import Comment from './Comments/Comment';
-import Popup from './Popups/Popup';
 import ChatHeader from './Chats/ChatHeader';
 import ChatSidebar from './Chats/ChatSidebar';
 import ChatNavbar from './Chats/ChatNavbar';
@@ -74,6 +75,7 @@ export {
     LikedPostView,
     SavedPostView,
     Popup,
+    CustomToast,
     ChatHeader,
     ChatSidebar,
     ChatNavbar,

@@ -1,20 +1,13 @@
-import { useRef } from 'react';
 import { UpdateAvatar } from '..';
 
-export default function UpdateAvatarPopup({ setUpdateAvatarPopup }) {
-    const ref = useRef();
-    function handleClick(e) {
-        if (e.target === ref.current) {
-            setUpdateAvatarPopup(false);
-        }
-    }
+export default function UpdateAvatarPopup({ close, reference }) {
     return (
         <div
-            onClick={handleClick}
-            ref={ref}
+            onClick={close}
+            ref={reference}
             className="fixed inset-0 backdrop-blur-sm flex items-center justify-center"
         >
-            <UpdateAvatar setUpdateAvatarPopup={setUpdateAvatarPopup} />
+            <UpdateAvatar />
         </div>
     );
 }

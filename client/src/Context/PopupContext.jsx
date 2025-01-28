@@ -4,21 +4,21 @@ const PopupContext = createContext();
 
 const PopupContextProvider = ({ children }) => {
     const [showPopup, setShowPopup] = useState(false);
-    const [popupText, setPopupText] = useState('');
-    const [showLoginPopup, setShowLoginPopup] = useState(false);
-    const [loginPopupText, setLoginPopupText] = useState('');
+    const [popupInfo, setPopupInfo] = useState({ type: '', content: '' });
+    const [showToast, setShowToast] = useState(false);
+    const [toastContent, setToastContent] = useState('');
 
     return (
         <PopupContext.Provider
             value={{
                 showPopup,
-                popupText,
-                showLoginPopup,
-                loginPopupText,
+                popupInfo,
+                setPopupInfo,
                 setShowPopup,
-                setPopupText,
-                setShowLoginPopup,
-                setLoginPopupText,
+                showToast,
+                setShowToast,
+                toastContent,
+                setToastContent,
             }}
         >
             {children}
