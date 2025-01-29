@@ -9,6 +9,7 @@ import {
     removeMember,
     getMyChats,
     getMyGroups,
+    getMyFriends,
     getChatDetails,
     makeAdmin,
 } from '../controllers/chat.Controller.js';
@@ -38,6 +39,8 @@ chatRouter
     .patch(doesChatExist, makeAdmin);
 
 chatRouter.route('/groups').get(getMyGroups);
+
+chatRouter.route('/friends').get(getMyFriends);
 
 chatRouter
     .route('/:chatId')

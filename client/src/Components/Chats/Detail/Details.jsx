@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { icons } from '../../Assets/icons';
+import { icons } from '../../../Assets/icons';
 
 export default function Details() {
     const options = [
@@ -25,7 +25,7 @@ export default function Details() {
     ));
 
     return (
-        <div className="flex bg-[#f6f6f6] h-full fixed inset-0 z-1 ml-[300px] mt-[120px]">
+        <div className="flex">
             <section className="w-[200px] px-2 py-4 flex flex-col gap-1 border-r-[0.01rem]">
                 {optionElements}
             </section>

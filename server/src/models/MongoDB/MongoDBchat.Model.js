@@ -163,6 +163,39 @@ export class MongoDBchats extends Ichats {
         }
     }
 
+    async getMyFriends(myId) {
+        try {
+            const pipeline = [
+                { $match: { 'members.user_id': myId, isGroupChat: false } },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'members.user_id',
+                        foreignField: 'user_id',
+                        as: 'members',
+                    },
+                },
+                { $unwind: '$members' },
+                { $match: { 'members.user_id': { $ne: myId } } },
+                {
+                    $project: {
+                        user_id: '$members.user_id',
+                        user_firstName: '$members.user_firstName',
+                        user_lastName: '$members.user_lastName',
+                        user_name: '$members.user_name',
+                        user_avatar: '$members.user_avatar',
+                        lastMessage: 1,
+                    },
+                },
+                { $sort: { 'lastMessage.time': -1 } },
+            ];
+
+            return await Chat.aggregate(pipeline);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async makeAdmin(chatId, userId) {
         try {
             return await Chat.findOneAndUpdate(

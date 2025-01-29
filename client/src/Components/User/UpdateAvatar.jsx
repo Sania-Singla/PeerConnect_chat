@@ -59,9 +59,7 @@ export default function UpdateAvatar() {
     }
 
     return (
-        <div
-            className="relative w-[300px] bg-orange-200 p-4 rounded-xl"
-        >
+        <div className="relative w-[300px] bg-orange-200 p-4 rounded-xl">
             <div className="w-full text-center text-2xl font-semibold mb-4 text-black">
                 Update Avatar
             </div>

@@ -58,6 +58,7 @@ import {
     Overview,
     Members,
     Settings,
+    Chat,
 } from './Components';
 
 function Wrapper() {
@@ -94,6 +95,7 @@ const router = createBrowserRouter(
             <Route path="chat" element={<ChatsPage />}>
                 <Route path="" element={<NoChatSelected />} />
                 <Route path=":chatId" element={<ChatLayout />}>
+                    <Route path="" element={<Chat />} />
                     <Route path="details" element={<Details />}>
                         <Route path="" element={<Overview />} />
                         <Route path="members" element={<Members />} />

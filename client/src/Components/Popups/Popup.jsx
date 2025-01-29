@@ -4,6 +4,8 @@ import {
     LoginPopup,
     UpdateAvatarPopup,
     UpdateCoverImagePopup,
+    FriendsPopup,
+    RequestsPopup,
 } from '..';
 import { usePopupContext } from '../../Context';
 
@@ -15,18 +17,56 @@ export default function Popup() {
         if (e.target === ref.current) setShowPopup(false);
     }
 
-    if (showPopup) {
-        switch (popupInfo.type) {
-            case 'login':
-                return <LoginPopup close={close} reference={ref} />;
-            case 'deleteAccount':
-                return <DeleteAccount close={close} reference={ref} />;
-            case 'updateAvatar':
-                return <UpdateAvatarPopup close={close} />;
-            case 'updateCoverImage':
-                return <UpdateCoverImagePopup close={close} />;
-            default:
-                return null;
-        }
+    const Wrapper = ({ children }) => (
+        <div
+            className="fixed inset-0 z-[1000] backdrop-blur-sm flex items-center justify-center"
+            ref={ref}
+            onClick={close}
+        >
+            {children}
+        </div>
+    );
+
+    if (!showPopup) return null;
+
+    switch (popupInfo.type) {
+        case 'login':
+            return (
+                <Wrapper>
+                    <LoginPopup />
+                </Wrapper>
+            );
+        case 'deleteAccount':
+            return (
+                <Wrapper>
+                    <DeleteAccount />
+                </Wrapper>
+            );
+        case 'updateAvatar':
+            return (
+                <Wrapper>
+                    <UpdateAvatarPopup />
+                </Wrapper>
+            );
+        case 'updateCoverImage':
+            return (
+                <Wrapper>
+                    <UpdateCoverImagePopup />
+                </Wrapper>
+            );
+        case 'friends':
+            return (
+                <Wrapper>
+                    <FriendsPopup />
+                </Wrapper>
+            );
+        case 'requests':
+            return (
+                <Wrapper>
+                    <RequestsPopup />
+                </Wrapper>
+            );
+        default:
+            return null;
     }
 }

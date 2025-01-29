@@ -30,9 +30,8 @@ const getMyChats = tryCatch('get my chats', async (req, res) => {
 });
 
 // only group chats
-const getMyGroups = tryCatch('get my groups', async (req, res, next) => {
+const getMyGroups = tryCatch('get my groups', async (req, res) => {
     const myId = req.user.user_id;
-
     const chats = await chatObject.getMyGroups(myId);
 
     const transformedChats = chats.map((chat) => {
@@ -45,6 +44,12 @@ const getMyGroups = tryCatch('get my groups', async (req, res, next) => {
     });
 
     return res.status(OK).json(transformedChats);
+});
+
+const getMyFriends = tryCatch('get my friends', async (req, res) => {
+    const myId = req.user.user_id;
+    const friends = await chatObject.getMyFriends(myId);
+    return res.status(OK).json(friends);
 });
 
 const createGroup = tryCatch(
@@ -168,9 +173,11 @@ const leaveGroup = tryCatch('leave group', async (req, res, next) => {
     return res.status(OK).json(result);
 });
 
+// todo: populate the member before sending the response and update the chat avatar as well
 const addMembers = tryCatch('add members to group', async (req, res, next) => {
     const { chatId } = req.params;
-    const { newMembers = [] } = req.body;
+    console.log(req.body);
+    const { members = [] } = req.body;
     const chat = req.chat; // middleware
     const myId = req.user.user_id;
 
@@ -192,11 +199,11 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
         );
     }
 
-    if (!newMembers.length) {
+    if (!members.length) {
         return next(new ErrorHandler('No members selected', BAD_REQUEST));
     }
 
-    if (newMembers.some((userId) => !userId || !validator.isUUID(userId))) {
+    if (members.some((id) => !id || !validator.isUUID(id))) {
         return next(
             new ErrorHandler(
                 'missing or invalid userId of some member',
@@ -206,7 +213,7 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
     }
 
     const memberIds = chat.members.map(({ user_id }) => user_id);
-    const membersToAdd = newMembers.filter((id) => !memberIds.includes(id));
+    const membersToAdd = members.filter((id) => !memberIds.includes(id));
 
     if (!membersToAdd.length) {
         return next(
@@ -396,13 +403,14 @@ const makeAdmin = tryCatch('make admin', async (req, res, next) => {
     }
 
     const group = await chatObject.makeAdmin(chatId, userId);
-    console.log(group);
-    return res.status(OK).json(group);
+
+    return res.status(OK).json({ message: 'user is now an admin' });
 });
 
 export {
     getChatDetails,
     getMyChats,
+    getMyFriends,
     getMyGroups,
     addMembers,
     removeMember,

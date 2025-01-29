@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Outlet } from 'react-router-dom';
-import { Chat, ChatHeader, ChatInput } from '..';
-import { useChatContext } from '../../Context';
+import { Chat, ChatHeader, ChatInput } from '../..';
+import { useChatContext } from '../../../Context';
 import { useEffect, useState } from 'react';
 
 export default function ChatLayout() {
@@ -46,13 +46,12 @@ export default function ChatLayout() {
             <div className="bg-[#f6f6f6] h-[60px]">
                 <ChatHeader />
             </div>
-            <div className="bg-[#f6f6f6] h-[calc(100%-180px)] overflow-y-scroll p-6">
-                <Chat />
+            <div className="bg-[#f6f6f6] h-[calc(100%-180px)] overflow-y-scroll">
+                <Outlet />
             </div>
             <div className="h-[60px] bg-[#f6f6f6]">
                 <ChatInput />
             </div>
-            <Outlet />
         </div>
     );
 }

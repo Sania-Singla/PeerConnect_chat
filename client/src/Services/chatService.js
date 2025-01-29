@@ -23,6 +23,30 @@ class ChatService {
             }
         }
     }
+    async getMyFriends(signal) {
+        try {
+            const res = await fetch(`/api/chats/friends`, {
+                method: 'GET',
+                credentials: 'include',
+                signal,
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                console.log('get friends request aborted.');
+            } else {
+                console.error('error in getFriends service', err);
+                throw err;
+            }
+        }
+    }
 
     async getChatDetails(signal, chatId) {
         try {
@@ -132,6 +156,53 @@ class ChatService {
             return data;
         } catch (err) {
             console.error('Error in removeMember service', err);
+            throw err;
+        }
+    }
+
+    async addMembers(chatId, members) {
+        try {
+            const res = await fetch(`/api/chats/groups/members/add/${chatId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ members }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in addMembers service', err);
+            throw err;
+        }
+    }
+
+    async makeAdmin(chatId, userId) {
+        try {
+            const res = await fetch(
+                `/api/chats/groups/members/admin/${chatId}/${userId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                }
+            );
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in makeAdmin service', err);
             throw err;
         }
     }

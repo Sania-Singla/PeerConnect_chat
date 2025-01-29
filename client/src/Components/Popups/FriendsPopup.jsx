@@ -1,0 +1,160 @@
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useChatContext, usePopupContext } from '../../Context';
+import { chatService } from '../../Services';
+import { icons } from '../../Assets/icons';
+import toast from 'react-hot-toast';
+import { Button } from '..';
+import { formatTime } from '../../Utils';
+
+export default function FriendsPopup() {
+    const [friends, setFriends] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [adding, setAdding] = useState(false);
+    const [members, setMembers] = useState([]);
+    const [search, setSearch] = useState('');
+    const { chatId } = useParams();
+    const { setSelectedChat } = useChatContext();
+    const { setShowPopup } = usePopupContext();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        (async function getFriends() {
+            try {
+                setLoading(true);
+                const data = await chatService.getMyFriends(signal);
+                setFriends(data);
+            } catch (error) {
+                navigate('/server-error');
+            } finally {
+                setLoading(false);
+            }
+        })();
+
+        return () => controller.abort();
+    }, []);
+
+    const friendElements = friends
+        .filter(
+            ({ user_firstName, user_lastName, user_name }) =>
+                !search.trim() ||
+                user_firstName
+                    .toLowerCase()
+                    .includes(search.trim().toLowerCase()) ||
+                user_lastName
+                    .toLowerCase()
+                    .includes(search.trim().toLowerCase()) ||
+                user_name.toLowerCase().includes(search.trim().toLowerCase())
+        )
+        .map(
+            ({
+                user_avatar,
+                user_firstName,
+                user_lastName,
+                user_id,
+                lastMessage,
+            }) => (
+                <div
+                    key={user_id}
+                    className="flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
+                >
+                    <input
+                        type="checkbox"
+                        className="size-4"
+                        id="member"
+                        checked={members.includes(user_id)}
+                        onChange={(e) => {
+                            e.target.checked
+                                ? setMembers((prev) => [...prev, user_id])
+                                : setMembers((prev) =>
+                                      prev.filter((id) => id !== user_id)
+                                  );
+                        }}
+                    />
+                    <label htmlFor="member">
+                        <div className="flex gap-3 items-center cursor-pointer w-full">
+                            <div>
+                                <img
+                                    src={user_avatar}
+                                    alt="user avatar"
+                                    className="rounded-full size-[45px]"
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex items-center justify-between gap-4 overflow-hidden">
+                                    <p className="truncate font-medium text-gray-800">
+                                        {user_firstName} {user_lastName}
+                                    </p>
+                                    <p className="text-xs text-gray-700">
+                                        {formatTime(lastMessage.time)}
+                                    </p>
+                                </div>
+                                <p className="text-sm text-gray-700">
+                                    {lastMessage.message}
+                                </p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            )
+        );
+
+    async function addMembers() {
+        try {
+            setAdding(true);
+            const res = await chatService.addMembers(chatId, members);
+            if (res && !res.message) {
+                setSelectedChat((prev) => ({ ...prev, members: res.members }));
+                toast.success('Members added successfully');
+            } else {
+                toast.error(res.message);
+            }
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setAdding(false);
+            setShowPopup(false);
+            setMembers([]);
+        }
+    }
+
+    return (
+        <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">
+            {loading ? (
+                <p>loading...</p>
+            ) : (
+                <div>
+                    <div className="flex w-full gap-2 mb-6">
+                        {/* Search Bar */}
+                        <div className="relative flex-1">
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search or start new chat"
+                                className="placeholder:text-[14px] placeholder:text-[#8e8e8e] border border-b-[0.15rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
+                            />
+                            <div className="size-[15px] rotate-90 fill-[#bfbdcf9d] absolute left-3 top-[50%] transform translate-y-[-50%]">
+                                {icons.search}
+                            </div>
+                        </div>
+
+                        {members.length > 0 && (
+                            <Button
+                                btnText={adding ? 'Adding...' : 'Add'}
+                                className="bg-green-500 text-white rounded-md w-[80px]"
+                                onClick={addMembers}
+                                disabled={loading}
+                            />
+                        )}
+                    </div>
+
+                    {friendElements}
+                </div>
+            )}
+        </div>
+    );
+}

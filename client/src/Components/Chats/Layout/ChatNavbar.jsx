@@ -1,22 +1,33 @@
-import { Button } from '..';
-import { icons } from '../../Assets/icons';
-import { useSideBarContext } from '../../Context';
-import { LOGO } from '../../Constants/constants';
+import { Button } from '../..';
+import { icons } from '../../../Assets/icons';
+import { usePopupContext, useSideBarContext } from '../../../Context';
+import { LOGO } from '../../../Constants/constants';
 import { Link } from 'react-router-dom';
 
 export default function ChatNavbar() {
     const { setShowSideBar } = useSideBarContext();
+    const { setShowPopup, setPopupInfo } = usePopupContext();
 
     const navIcons = [
         {
             icon: icons.bell,
             title: 'Requests',
-            onClick: () => {},
+            onClick: () => {
+                setShowPopup(true);
+                setPopupInfo({
+                    type: 'requests',
+                });
+            },
         },
         {
             icon: icons.group,
             title: 'Groups',
-            onClick: () => {},
+            onClick: () => {
+                setShowPopup(true);
+                setPopupInfo({
+                    type: 'groups',
+                });
+            },
         },
     ];
 

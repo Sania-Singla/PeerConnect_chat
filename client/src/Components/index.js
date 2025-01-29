@@ -29,20 +29,22 @@ import ChannelAbout from './Channel/ChannelAbout';
 import ChannelPosts from './Channel/ChannelPosts';
 import Comments from './Comments/Comments';
 import Comment from './Comments/Comment';
-import ChatHeader from './Chats/ChatHeader';
-import ChatSidebar from './Chats/ChatSidebar';
-import ChatNavbar from './Chats/ChatNavbar';
-import ChatInput from './Chats/ChatInput';
+import ChatHeader from './Chats/Layout/ChatHeader';
+import ChatSidebar from './Chats/Layout/ChatSidebar';
+import ChatNavbar from './Chats/Layout/ChatNavbar';
+import ChatInput from './Chats/Layout/ChatInput';
+import ChatLayout from './Chats/Layout/ChatLayout';
+import Details from './Chats/Detail/Details';
+import Overview from './Chats/Detail/Overview';
+import Members from './Chats/Detail/Members';
+import Settings from './Chats/Detail/Settings';
 import Chat from './Chats/Chat';
-import ChatLayout from './Chats/ChatLayout';
 import Message from './Chats/Message';
 import FilePreview from './Chats/FilePreview';
 import InputFilePreview from './Chats/InputFilePreview';
 import NoChatSelected from './Chats/NoChatSelected';
-import Details from './Chats/Details';
-import Overview from './Chats/Overview';
-import Members from './Chats/Members';
-import Settings from './Chats/Settings';
+import FriendsPopup from './Popups/FriendsPopup';
+import RequestsPopup from './Popups/RequestsPopup';
 
 export {
     Header,
@@ -90,4 +92,6 @@ export {
     Overview,
     Members,
     Settings,
+    FriendsPopup,
+    RequestsPopup,
 };

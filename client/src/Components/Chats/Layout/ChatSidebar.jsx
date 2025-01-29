@@ -1,9 +1,9 @@
 import { useNavigate, NavLink } from 'react-router-dom';
-import { icons } from '../../Assets/icons';
-import { useChatContext, useSocketContext } from '../../Context';
-import { chatService } from '../../Services';
+import { icons } from '../../../Assets/icons';
+import { useChatContext, useSocketContext } from '../../../Context';
+import { chatService } from '../../../Services';
 import { useEffect, useState } from 'react';
-import { formatTime } from '../../Utils';
+import { formatTime } from '../../../Utils';
 
 export default function ChatSidebar() {
     const { setChats, chats, setChatsLoaded, chatsLoaded } = useChatContext();
@@ -39,14 +39,11 @@ export default function ChatSidebar() {
     }, []);
 
     const chatElements = chats
-        .filter((chat) => {
-            if (
+        .filter(
+            ({ chat_name }) =>
                 !search.trim() ||
-                chat.chat_name.toLowerCase().includes(search.toLowerCase())
-            ) {
-                return chat;
-            }
-        })
+                chat_name.toLowerCase().includes(search.toLowerCase())
+        )
         .map(
             ({
                 chat_id,

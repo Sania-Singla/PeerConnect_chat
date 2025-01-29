@@ -1,13 +1,18 @@
-import { useNavigate, useParams, NavLink } from 'react-router-dom';
-import { useChatContext, useUserContext } from '../../Context';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+    useChatContext,
+    usePopupContext,
+    useUserContext,
+} from '../../../Context';
 import { useState } from 'react';
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
-import { chatService } from '../../Services';
+import { icons } from '../../../Assets/icons';
+import { Button } from '../..';
+import { chatService } from '../../../Services';
 import toast from 'react-hot-toast';
 
 export default function Members() {
     const { selectedChat, setSelectedChat } = useChatContext();
+    const { setShowPopup, setPopupInfo } = usePopupContext();
     const navigate = useNavigate();
     const { chatId } = useParams();
     const { user } = useUserContext();
@@ -15,16 +20,6 @@ export default function Members() {
     const myRole = selectedChat.members.find(
         (m) => m.user_id === user.user_id
     ).role;
-
-    async function addMembers() {
-        try {
-            // select members
-            // call service
-            // append in selected chat's members
-        } catch (err) {
-            navigate('/server-error');
-        }
-    }
 
     async function handleRemove(userId) {
         try {
@@ -43,20 +38,41 @@ export default function Members() {
         }
     }
 
+    async function handleMakeAdmin(userId) {
+        try {
+            const res = await chatService.makeAdmin(chatId, userId);
+            if (res && res.message === 'user is now an admin') {
+                setSelectedChat((prev) => ({
+                    ...prev,
+                    members: prev.members.map((m) => {
+                        if (m.user_id === userId) {
+                            return {
+                                ...m,
+                                role: 'admin',
+                            };
+                        } else return m;
+                    }),
+                }));
+                toast.success('Member removed successfully');
+            } else {
+                toast.error(res.message);
+            }
+        } catch (err) {
+            navigate('/server-error');
+        }
+    }
+
     const memberElements = selectedChat?.members
-        .filter((m) => {
-            if (
+        .filter(
+            ({ user_firstName, user_lastName }) =>
                 !search.trim() ||
-                m.user_firstName
+                user_firstName
                     .toLowerCase()
                     .includes(search.trim().toLowerCase()) ||
-                m.user_lastName
+                user_lastName
                     .toLowerCase()
                     .includes(search.trim().toLowerCase())
-            ) {
-                return m;
-            }
-        })
+        )
         .map(
             ({
                 user_id,
@@ -66,9 +82,9 @@ export default function Members() {
                 user_lastName,
                 user_bio,
             }) => (
-                <NavLink
+                <div
                     key={user_id}
-                    to={`/channel/${user_id}`}
+                    onClick={() => navigate(`/channel/${user_id}`)}
                     className="cursor-pointer hover:backdrop-brightness-95 rounded-md px-3 py-2 flex justify-between gap-4"
                 >
                     <div className="flex items-center gap-4">
@@ -100,18 +116,29 @@ export default function Members() {
                             </p>
                         )}
                         {role !== 'admin' && myRole === 'admin' && (
-                            <Button
-                                title="remove"
-                                btnText="Remove"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove(user_id);
-                                }}
-                                className="text-red-600 rounded-md px-2 text-[15px] py-[3px] bg-[#ff00001d]"
-                            />
+                            <div className="space-x-2">
+                                <Button
+                                    title="remove"
+                                    btnText="Remove"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemove(user_id);
+                                    }}
+                                    className="text-red-600 rounded-md px-2 text-[15px] py-[3px] bg-[#ff000012]"
+                                />
+                                <Button
+                                    title="make admin"
+                                    btnText="make Admin"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleMakeAdmin(user_id);
+                                    }}
+                                    className="text-green-600 rounded-md px-2 text-[15px] py-[3px] bg-[#00ff1517]"
+                                />
+                            </div>
                         )}
                     </div>
-                </NavLink>
+                </div>
             )
         );
 
@@ -133,17 +160,22 @@ export default function Members() {
 
             <div>
                 {myRole === 'admin' && (
-                    <div className="px-3 py-2 rounded-md cursor-pointer flex hover:backdrop-brightness-95 items-center gap-4">
+                    <div
+                        onClick={() => {
+                            setShowPopup(true);
+                            setPopupInfo({ type: 'friends' });
+                        }}
+                        className="px-3 py-2 rounded-md cursor-pointer flex hover:backdrop-brightness-95 items-center gap-4"
+                    >
                         <div className="p-2 size-[45px] bg-[#d5d5d5] border-[0.01rem] border-gray-400 rounded-full">
                             <div className="ml-[4px] mt-[3px] size-[22px] fill-[#2d2d2d]">
                                 {icons.memberAdd}
                             </div>
                         </div>
-                        <div onClick={addMembers}>
+                        <div>
                             <p className="text-sm font-medium text-gray-900">
                                 Add members
                             </p>
-
                             <p className="text-xs text-gray-800">
                                 maximum size is 100
                             </p>

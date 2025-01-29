@@ -41,7 +41,7 @@ const rejectRequest = tryCatch('reject request', async (req, res, next) => {
     }
 
     await requestObject.rejectRequest(requestId);
-    return res.status(OK).json({ message: 'request has been rejected' });
+    return res.status(OK).json({ message: 'request rejected successfully' });
 });
 
 // could remove the request as well for cleanup if dont want to show on frontend
@@ -77,13 +77,8 @@ const acceptRequest = tryCatch('accept request', async (req, res, next) => {
 const getMyRequests = tryCatch('get my requests', async (req, res) => {
     const myId = req.user.user_id;
     const { status = '' } = req.query;
-
     const requests = await requestObject.getMyRequests(myId, status);
-    if (requests.length) {
-        return res.status(OK).json(requests);
-    } else {
-        return res.status(OK).json({ message: 'no requests found' });
-    }
+    return res.status(OK).json(requests);
 });
 
 export { sendRequest, acceptRequest, rejectRequest, getMyRequests };

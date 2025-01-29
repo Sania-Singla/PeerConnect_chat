@@ -52,7 +52,7 @@ export default function Chat() {
     ));
 
     return (
-        <div>
+        <div className="p-6">
             {loading ? (
                 <div>loading...</div>
             ) : messages.length > 0 ? (
