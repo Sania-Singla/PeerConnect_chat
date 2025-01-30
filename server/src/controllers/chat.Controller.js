@@ -176,7 +176,6 @@ const leaveGroup = tryCatch('leave group', async (req, res, next) => {
 // todo: populate the member before sending the response and update the chat avatar as well
 const addMembers = tryCatch('add members to group', async (req, res, next) => {
     const { chatId } = req.params;
-    console.log(req.body);
     const { members = [] } = req.body;
     const chat = req.chat; // middleware
     const myId = req.user.user_id;

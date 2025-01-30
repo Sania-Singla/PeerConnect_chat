@@ -9,6 +9,7 @@ import {
     acceptRequest,
     rejectRequest,
     getMyRequests,
+    getRequest,
 } from '../controllers/request.Controller.js';
 
 export const requestRouter = express.Router();
@@ -26,5 +27,7 @@ requestRouter
 requestRouter
     .route('/reject/:requestId')
     .patch(doesRequestExist, rejectRequest);
+
+requestRouter.route('/:userId').get(getRequest);
 
 requestRouter.route('/').get(getMyRequests);

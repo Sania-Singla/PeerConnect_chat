@@ -35,7 +35,10 @@ export default function ChatSidebar() {
             }
         })();
 
-        return () => controller.abort();
+        return () => {
+            setChats([]);
+            controller.abort();
+        };
     }, []);
 
     const chatElements = chats

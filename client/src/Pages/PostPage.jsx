@@ -18,7 +18,7 @@ export default function PostPage() {
     const [loading, setLoading] = useState(true);
     const { setPopupInfo, setShowPopup } = usePopupContext();
     const [post, setPost] = useState({});
-    const [colabRequestStatus, setColabRequestStatus] = useState('none');
+    const [requestStatus, setRequestStatus] = useState('');
     const { user } = useUserContext();
     const navigate = useNavigate();
 
@@ -32,6 +32,15 @@ export default function PostPage() {
                 const res = await postService.getPost(signal, postId);
                 if (res && !res.message) {
                     setPost(res);
+                    if (user) {
+                        const request = await requestService.getRequest(
+                            res.owner.user_id,
+                            signal
+                        );
+                        if (request && !request.message) {
+                            setRequestStatus(request.status);
+                        }
+                    }
                 }
             } catch (err) {
                 navigate('/server-error');
@@ -40,9 +49,7 @@ export default function PostPage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [postId, user]);
 
     async function toggleLike() {
@@ -162,24 +169,18 @@ export default function PostPage() {
                 setPopupInfo({ type: 'login', content: 'Collab' });
                 return;
             }
-            if (colabRequestStatus === 'none') {
-                const res = await requestService.sendCollabRequest(
+            if (!requestStatus || requestStatus === 'rejected') {
+                const res = await requestService.sendRequest(
                     post.owner.user_id
                 );
                 if (res && !res.message) {
-                    setColabRequestStatus('pending');
+                    setRequestStatus('pending');
                     toast.success('Collab Request Sent Successfully 🤝');
                 }
-            } else if (colabRequestStatus === 'rejected') {
-                const res = await requestService.sendCollabRequest(
-                    post.owner.user_id
-                );
-                if (res && res.message === 'collab request sent successfully') {
-                    setColabRequestStatus('pending');
-                    toast.succedd('Collab Request Sent Successfully 🤝');
-                }
-            } else if (colabRequestStatus === 'accepted') {
+            } else if (requestStatus === 'accepted') {
                 navigate(`/chat/${post.owner.user_id}`);
+            } else {
+                toast.error('Collab Request Already Sent');
             }
         } catch (err) {
             navigate('/server-error');
@@ -399,11 +400,10 @@ export default function PostPage() {
                                         />
                                         <Button
                                             btnText={
-                                                colabRequestStatus === 'none' ||
-                                                colabRequestStatus ===
-                                                    'rejected'
+                                                !requestStatus ||
+                                                requestStatus === 'rejected'
                                                     ? 'Collab'
-                                                    : colabRequestStatus ===
+                                                    : requestStatus ===
                                                         'accepted'
                                                       ? 'Chat'
                                                       : 'Request Sent'

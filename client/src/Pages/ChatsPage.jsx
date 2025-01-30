@@ -1,6 +1,7 @@
 import { useUserContext, useSocketContext } from '../Context';
 import { ChatNavbar, ChatSidebar } from '../Components';
 import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function ChatsPage() {
     const { user } = useUserContext();

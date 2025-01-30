@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import {
     useChatContext,
     usePopupContext,
     useUserContext,
 } from '../../../Context';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { icons } from '../../../Assets/icons';
 import { Button } from '../..';
 import { chatService } from '../../../Services';
@@ -15,6 +15,8 @@ export default function Members() {
     const { setShowPopup, setPopupInfo } = usePopupContext();
     const navigate = useNavigate();
     const { chatId } = useParams();
+    const [removing, setRemoving] = useState(false);
+    const [promoting, setPromoting] = useState(false);
     const { user } = useUserContext();
     const [search, setSearch] = useState('');
     const myRole = selectedChat.members.find(
@@ -23,6 +25,7 @@ export default function Members() {
 
     async function handleRemove(userId) {
         try {
+            setRemoving(true);
             const res = await chatService.removeMember(chatId, userId);
             if (res && !res.message) {
                 setSelectedChat((prev) => ({
@@ -35,11 +38,14 @@ export default function Members() {
             }
         } catch (err) {
             navigate('/server-error');
+        } finally {
+            setRemoving(false);
         }
     }
 
     async function handleMakeAdmin(userId) {
         try {
+            setPromoting(true);
             const res = await chatService.makeAdmin(chatId, userId);
             if (res && res.message === 'user is now an admin') {
                 setSelectedChat((prev) => ({
@@ -59,6 +65,8 @@ export default function Members() {
             }
         } catch (err) {
             navigate('/server-error');
+        } finally {
+            setPromoting(false);
         }
     }
 
@@ -119,7 +127,17 @@ export default function Members() {
                             <div className="space-x-2">
                                 <Button
                                     title="remove"
-                                    btnText="Remove"
+                                    btnText={
+                                        removing ? (
+                                            <div className="flex items-center justify-center">
+                                                <div className="size-[20px] fill-red-600 dark:text-[#ececec]">
+                                                    {icons.loading}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            'Remove'
+                                        )
+                                    }
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleRemove(user_id);
@@ -128,7 +146,17 @@ export default function Members() {
                                 />
                                 <Button
                                     title="make admin"
-                                    btnText="make Admin"
+                                    btnText={
+                                        promoting ? (
+                                            <div className="flex items-center justify-center">
+                                                <div className="size-[20px] fill-green-600 dark:text-[#ececec]">
+                                                    {icons.loading}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            'make Admin'
+                                        )
+                                    }
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleMakeAdmin(user_id);
@@ -142,7 +170,7 @@ export default function Members() {
             )
         );
 
-    return (
+    return selectedChat.isGroupChat ? (
         <div className="px-3">
             {/* Search Bar */}
             <div className="relative my-3">
@@ -185,5 +213,7 @@ export default function Members() {
                 {memberElements}
             </div>
         </div>
+    ) : (
+        <Navigate to="/not-found" />
     );
 }

@@ -76,8 +76,37 @@ class RequestService {
 
             return data;
         } catch (error) {
-            console.error('error in getMyRequests service', err);
-            throw err;
+            if (err.name === 'AbortError') {
+                console.log('get my requests request aborted.');
+            } else {
+                console.error('error in getMyRequests service', err);
+                throw err;
+            }
+        }
+    }
+
+    async getRequest(userId, signal) {
+        try {
+            const res = await fetch(`/api/requests/${userId}`, {
+                signal,
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                console.log('get request request aborted.');
+            } else {
+                console.error('error in getRequest service', err);
+                throw err;
+            }
         }
     }
 }

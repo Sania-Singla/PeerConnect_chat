@@ -12,10 +12,12 @@ const requestSchema = new Schema({
     sender_id: {
         type: String,
         ref: 'User',
+        index: true,
     },
     receiver_id: {
         type: String,
         ref: 'User',
+        index: true,
     },
     status: {
         type: String,

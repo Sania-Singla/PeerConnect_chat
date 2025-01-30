@@ -111,7 +111,7 @@ export default function ChatHeader() {
                 <Button
                     className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                     title="Close Chat"
-                    onClick={() => navigate('/chats')}
+                    onClick={() => navigate('/chat')}
                     btnText={
                         <div className="size-[20px] stroke-[#434343] group-hover:stroke-red-600">
                             {icons.cross}

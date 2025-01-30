@@ -16,6 +16,18 @@ export class MongoDBrequests extends Irequests {
         }
     }
 
+    async getRequest(userId, myId) {
+        try {
+            return await Request.findOne({
+                sender_id: myId,
+                receiver_id: userId,
+            }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // ! not in use right now
     // Instead of importing chatObject directly at the top, import it only when needed to avoid circular dep. error
     async areWeFriends(myId, userIds = []) {
         const { chatObject } = await import(
@@ -25,26 +37,36 @@ export class MongoDBrequests extends Irequests {
     }
 
     async sendRequest(myId, userId) {
-        const [request, areFriends] = await Promise.all([
-            Request.findOne({
-                $or: [
-                    { sender_id: myId, receiver_id: userId },
-                    { sender_id: userId, receiver_id: myId },
-                ],
-                status: 'pending',
-            }),
-            this.areWeFriends(myId, [userId]),
-        ]);
+        const request = await Request.findOne({
+            $or: [
+                { sender_id: myId, receiver_id: userId },
+                { sender_id: userId, receiver_id: myId },
+            ],
+        });
 
         if (request) {
-            if (request.sender_id === myId) {
-                return 'you have already sent a collaboration request to this user';
+            switch (request.status) {
+                case 'pending': {
+                    if (request.sender_id === myId) {
+                        return 'you have already sent a collaboration request to this user';
+                    }
+                    return 'you already have a collaboration request from this user';
+                }
+                case 'accepted': {
+                    return 'you have already collaborated with this user';
+                }
+                case 'rejected': {
+                    await request.remove();
+                    const newRequest = await Request.create({
+                        sender_id: myId,
+                        receiver_id: userId,
+                    });
+                    return newRequest.toObject();
+                }
+                default: {
+                    break;
+                }
             }
-            return 'you already have a collaboration request from this user';
-        }
-
-        if (areFriends) {
-            return 'you have already collaborated with this user';
         }
 
         const newRequest = await Request.create({

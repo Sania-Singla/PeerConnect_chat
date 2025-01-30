@@ -81,4 +81,17 @@ const getMyRequests = tryCatch('get my requests', async (req, res) => {
     return res.status(OK).json(requests);
 });
 
-export { sendRequest, acceptRequest, rejectRequest, getMyRequests };
+const getRequest = tryCatch('get request', async (req, res) => {
+    const myId = req.user.user_id;
+    const { userId } = req.params;
+
+    const request = await requestObject.getRequest(userId, myId);
+
+    if (request) {
+        return res.status(OK).json(request);
+    } else {
+        return res.status(OK).json({ message: 'no request found' });
+    }
+});
+
+export { sendRequest, acceptRequest, rejectRequest, getMyRequests, getRequest };

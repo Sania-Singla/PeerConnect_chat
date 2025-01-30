@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { Button } from '../Components';
-import { userService, followerService } from '../Services';
+import { userService, followerService, requestService } from '../Services';
 import { useChannelContext, useUserContext, usePopupContext } from '../Context';
+import toast from 'react-hot-toast';
 
 export default function ChannelPage() {
     const { userId } = useParams();
@@ -11,6 +12,7 @@ export default function ChannelPage() {
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
     const { setShowPopup, setPopupInfo } = usePopupContext();
+    const [requestStatus, setRequestStatus] = useState('');
 
     useEffect(() => {
         const controller = new AbortController();
@@ -19,12 +21,17 @@ export default function ChannelPage() {
         (async function getChannelProfile() {
             try {
                 setLoading(true);
-                const res = await userService.getChannelProfile(signal, userId);
+                const [res, request] = await Promise.all([
+                    userService.getChannelProfile(signal, userId),
+                    user ? requestService.getRequest(userId, signal) : null,
+                ]);
+
                 if (res && !res.message) {
                     setChannel(res);
-                } else {
-                    setChannel(null);
-                }
+                    if (request && !request.message) {
+                        setRequestStatus(request.status);
+                    }
+                } else setChannel(null);
             } catch (err) {
                 navigate('/server-error');
             } finally {
@@ -48,6 +55,30 @@ export default function ChannelPage() {
                     ...prev,
                     isFollowed: !prev.isFollowed,
                 }));
+            }
+        } catch (err) {
+            navigate('/server-error');
+        }
+    }
+
+    async function handleCollab() {
+        try {
+            if (!user) {
+                setShowPopup(true);
+                setPopupInfo({ type: 'login', content: 'Collab' });
+                return;
+            }
+            if (!requestStatus || requestStatus === 'rejected') {
+                const res = await requestService.sendRequest(userId);
+                if (res && !res.message) {
+                    setRequestStatus('pending');
+                    toast.success('Collab Request Sent Successfully 🤝');
+                }
+            } else if (requestStatus === 'accepted') {
+                // TODO: navigate specifically to /chat/chatId
+                navigate(`/chat`);
+            } else {
+                toast.error('Collab Request Already Sent');
             }
         } catch (err) {
             navigate('/server-error');
@@ -126,11 +157,22 @@ export default function ChannelPage() {
                         />
                     </div>
                 ) : (
-                    <div className="">
+                    <div className="flex gap-2 sm:gap-4">
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
                             className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
+                        />
+                        <Button
+                            btnText={
+                                !requestStatus || requestStatus === 'rejected'
+                                    ? 'Collab'
+                                    : requestStatus === 'accepted'
+                                      ? 'Chat'
+                                      : 'Request Sent'
+                            }
+                            onClick={handleCollab}
+                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 )}

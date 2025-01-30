@@ -184,10 +184,9 @@ export class MongoDBchats extends Ichats {
                         user_lastName: '$members.user_lastName',
                         user_name: '$members.user_name',
                         user_avatar: '$members.user_avatar',
-                        lastMessage: 1,
+                        user_bio: '$members.user_bio',
                     },
                 },
-                { $sort: { 'lastMessage.time': -1 } },
             ];
 
             return await Chat.aggregate(pipeline);

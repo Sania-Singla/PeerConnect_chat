@@ -14,7 +14,7 @@ export default function FriendsPopup() {
     const [members, setMembers] = useState([]);
     const [search, setSearch] = useState('');
     const { chatId } = useParams();
-    const { setSelectedChat } = useChatContext();
+    const { setSelectedChat, selectedChat } = useChatContext();
     const { setShowPopup } = usePopupContext();
     const navigate = useNavigate();
 
@@ -26,7 +26,20 @@ export default function FriendsPopup() {
             try {
                 setLoading(true);
                 const data = await chatService.getMyFriends(signal);
-                setFriends(data);
+                setFriends(
+                    data.map((friend) => {
+                        if (
+                            selectedChat.members.some(
+                                (m) => m.user_id === friend.user_id
+                            )
+                        ) {
+                            friend.alreadyPresent = true;
+                        } else {
+                            friend.alreadyPresent = false;
+                        }
+                        return friend;
+                    })
+                );
             } catch (error) {
                 navigate('/server-error');
             } finally {
@@ -55,25 +68,33 @@ export default function FriendsPopup() {
                 user_firstName,
                 user_lastName,
                 user_id,
-                lastMessage,
+                user_bio,
+                alreadyPresent,
             }) => (
                 <div
                     key={user_id}
-                    className="flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
+                    className="cursor-pointer flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
                 >
-                    <input
-                        type="checkbox"
-                        className="size-4"
-                        id="member"
-                        checked={members.includes(user_id)}
-                        onChange={(e) => {
-                            e.target.checked
-                                ? setMembers((prev) => [...prev, user_id])
-                                : setMembers((prev) =>
-                                      prev.filter((id) => id !== user_id)
-                                  );
-                        }}
-                    />
+                    {alreadyPresent ? (
+                        <div className="size-5 fill-green-500">
+                            {icons.check}
+                        </div>
+                    ) : (
+                        <input
+                            type="checkbox"
+                            className="size-4"
+                            id="member"
+                            disabled={alreadyPresent}
+                            checked={members.includes(user_id)}
+                            onChange={(e) => {
+                                e.target.checked
+                                    ? setMembers((prev) => [...prev, user_id])
+                                    : setMembers((prev) =>
+                                          prev.filter((id) => id !== user_id)
+                                      );
+                            }}
+                        />
+                    )}
                     <label htmlFor="member">
                         <div className="flex gap-3 items-center cursor-pointer w-full">
                             <div>
@@ -84,16 +105,15 @@ export default function FriendsPopup() {
                                 />
                             </div>
                             <div className="flex-1">
-                                <div className="flex items-center justify-between gap-4 overflow-hidden">
-                                    <p className="truncate font-medium text-gray-800">
-                                        {user_firstName} {user_lastName}
-                                    </p>
-                                    <p className="text-xs text-gray-700">
-                                        {formatTime(lastMessage.time)}
-                                    </p>
-                                </div>
+                                <p className="truncate font-medium text-gray-800">
+                                    {user_firstName} {user_lastName}
+                                </p>
                                 <p className="text-sm text-gray-700">
-                                    {lastMessage.message}
+                                    {alreadyPresent ? (
+                                        <i>Already added to the group</i>
+                                    ) : (
+                                        user_bio
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -124,7 +144,11 @@ export default function FriendsPopup() {
     return (
         <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">
             {loading ? (
-                <p>loading...</p>
+                <div className="flex items-center justify-center">
+                    <div className="size-[22px] fill-[#4977ec] dark:text-[#ececec]">
+                        {icons.loading}
+                    </div>
+                </div>
             ) : (
                 <div>
                     <div className="flex w-full gap-2 mb-6">
