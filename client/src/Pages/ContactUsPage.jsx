@@ -26,7 +26,7 @@ export default function ContactUsPage() {
 
     return (
         <div className="w-full h-full flex items-start justify-center">
-            <div className="w-[90%] h-full flex flex-col items-start justify-start gap-8">
+            <div className="w-[90%] h-full flex flex-col items-start justify-start gap-4">
                 <section className="w-full">
                     <h1 className="w-full font-semibold text-center mb-6">
                         Contact Us
@@ -42,7 +42,7 @@ export default function ContactUsPage() {
                 <hr className="w-full" />
 
                 <div className="flex flex-col lg:flex-row items-start justify-between lg:gap-24 gap-14 w-full h-full">
-                    <div className="flex flex-col w-full items-start justify-start gap-8">
+                    <div className="flex flex-col w-full items-start justify-start gap-4">
                         <section className=" w-full">
                             <h2 className="mb-4 text-md">
                                 👥 Technical Support

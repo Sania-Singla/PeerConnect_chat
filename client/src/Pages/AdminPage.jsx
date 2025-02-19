@@ -39,9 +39,7 @@ export default function AdminPage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {

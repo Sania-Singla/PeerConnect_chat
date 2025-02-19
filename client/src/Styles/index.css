@@ -6,7 +6,7 @@
     display: none;
 }
 
-/* h1 {
+h1 {
     @apply text-4xl font-bold leading-tight;
 }
 
@@ -52,9 +52,9 @@ blockquote {
 
 code {
     @apply block w-[100%]  bg-[#343434] p-2 backdrop-brightness-75 text-[#aac1fd] font-normal text-[16px];
-} */
+}
 
-/* table {
+table {
     @apply table-auto border-collapse w-full my-4;
 }
 
@@ -64,16 +64,16 @@ th {
 
 td {
     @apply border px-4 py-2 text-center;
-} 
+}
 
 hr {
     @apply border-t-2 border-gray-300 my-4;
-} */
+}
 
-/* figure {
+figure {
     @apply my-4;
 }
 
 figcaption {
     @apply text-sm text-center text-gray-500;
-} */
+}

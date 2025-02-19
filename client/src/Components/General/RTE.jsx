@@ -15,7 +15,7 @@ export default function RTE({
         <div className="relative w-full h-full drop-shadow-md border-[0.01rem] border-[#e3e3e3] rounded-xl overflow-hidden">
             {loading && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                    <div className="size-7 fill-[#2556d1] dark:text-[#b5b4b4]">
                         {icons.loading}
                     </div>
                 </div>
