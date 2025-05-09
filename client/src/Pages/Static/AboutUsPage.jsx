@@ -1,4 +1,4 @@
-import { CONTRIBUTORS } from '../Constants/constants';
+import { CONTRIBUTORS } from '../../Constants/constants';
 import { Link } from 'react-router-dom';
 
 export default function AboutUsPage() {

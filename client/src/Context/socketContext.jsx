@@ -5,7 +5,7 @@ import { useChatContext } from './ChatContext';
 
 const SocketContext = createContext();
 
-const SocketContextProvider = ({ children, navigate }) => {
+const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const { user } = useUserContext();
     const { setChats, setSelectedChat, setMessages, setRequests } =
@@ -26,12 +26,10 @@ const SocketContextProvider = ({ children, navigate }) => {
         // Error Handling
         socketInstance.on('connect_error', (err) => {
             console.error('Socket connection error:', err);
-            navigate('/server-error');
         });
 
         socketInstance.on('error', (err) => {
             console.error('Socket error:', err);
-            navigate('/server-error');
         });
 
         socketInstance.on(

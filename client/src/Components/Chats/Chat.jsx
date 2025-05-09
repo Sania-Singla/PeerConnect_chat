@@ -13,7 +13,7 @@ export default function Chat() {
     const navigate = useNavigate();
 
     // TODO: implement infinite scroll
-    
+
     useEffect(() => {
         if (selectedChat) {
             const controller = new AbortController();

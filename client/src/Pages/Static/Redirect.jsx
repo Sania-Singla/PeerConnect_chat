@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useUserContext } from '../Context';
+import { useUserContext } from '../../Context';
 
 export default function Redirect({ children, path = '/login' }) {
     const { user } = useUserContext();

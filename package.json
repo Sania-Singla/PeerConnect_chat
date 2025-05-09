@@ -1,20 +1,19 @@
 {
-  "name": "peer-connect",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "client": "cd client && npm run dev",
-    "server": "cd server && npm run dev",
-    "dev": "concurrently \"npm run client\" \"npm run server\"",
-    "build": "npm i --production=false && npm i --production=false --prefix client && npm i --production=false --prefix server && npm run build --prefix client",
-    "start": "npm start --prefix server"
-  },
-  "keywords": [],
-  "author": "Sania",
-  "license": "ISC",
-  "description": "This is Peer Connect",
-  "devDependencies": {
-    "concurrently": "^9.1.0",
-    "nodemon": "^3.1.7"
-  }
+    "name": "peer-connect",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "client": "cd client && npm run dev",
+        "server": "cd server && npm run dev",
+        "dev": "concurrently \"npm run client\" \"npm run server\"",
+        "build": "npm i && npm i --prefix client && npm i --prefix server"
+    },
+    "keywords": [],
+    "author": "Sania",
+    "license": "ISC",
+    "description": "This is Peer Connect",
+    "devDependencies": {
+        "concurrently": "^9.1.0",
+        "nodemon": "^3.1.7"
+    }
 }

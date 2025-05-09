@@ -1,7 +1,6 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import path from 'path';
 import { CORS_OPTIONS } from './constants/options.js';
 export const app = express();
 
@@ -11,19 +10,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('../public'));
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
-
-// Deployment
-const dirname = path.resolve();
-
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(dirname, '../client/dist')));
-
-    app.get('*', (req, res) => {
-        res.sendFile(
-            path.resolve(dirname, '..', 'client', 'dist', 'index.html')
-        );
-    });
-}
 
 // Routes
 import {

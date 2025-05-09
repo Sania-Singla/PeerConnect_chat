@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Button } from '../Components';
+import { Button } from '../../Components';
 import { useState } from 'react';
-import { icons } from '../Assets/icons';
-import { EMAIL, CONTACTNUMBER } from '../Constants/constants';
+import { icons } from '../../Assets/icons';
+import { EMAIL, CONTACTNUMBER } from '../../Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function ContactUsPage() {

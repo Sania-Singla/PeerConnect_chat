@@ -1,6 +1,6 @@
-import { icons } from '../Assets/icons';
-import { CONTRIBUTORS } from '../Constants/constants';
-import { ContributorCard } from '../Components';
+import { icons } from '../../Assets/icons';
+import { CONTRIBUTORS } from '../../Constants/constants';
+import { ContributorCard } from '../../Components';
 
 export default function SupportPage() {
     const contributorElements = CONTRIBUTORS?.map((contributor) => (
