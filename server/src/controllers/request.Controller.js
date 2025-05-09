@@ -1,23 +1,38 @@
 import { getServiceObject } from '../db/serviceObjects.js';
 import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
+import { io, redisClient } from '../socket.js';
+import { userObject } from './user.Controller.js';
 
 export const requestObject = getServiceObject('requests');
 
 const sendRequest = tryCatch('send request', async (req, res, next) => {
     const { userId } = req.params;
-    const myId = req.user.user_id;
+    const { user_id, user_firstName, user_avatar, user_lastName, user_name } =
+        req.user;
 
-    const result = await requestObject.sendRequest(myId, userId);
+    const result = await requestObject.sendRequest(user_id, userId);
 
     if (typeof result === 'string') {
         return next(new ErrorHandler(result, BAD_REQUEST));
     } else {
-        return res.status(OK).json(result);
+        // emit event
+        const request = {
+            ...result,
+            sender: {
+                user_id,
+                user_name,
+                user_lastName,
+                user_firstName,
+                user_avatar,
+            },
+        };
+        const socketId = await redisClient.get(`user:${userId}`);
+        io.to(socketId).emit('newRequest', request);
+        return res.status(OK).json(request);
     }
 });
 
-// could remove the request as well for cleanup
 const rejectRequest = tryCatch('reject request', async (req, res, next) => {
     const { requestId } = req.params;
     const request = req.request; // resource exist middleware
@@ -31,20 +46,15 @@ const rejectRequest = tryCatch('reject request', async (req, res, next) => {
         );
     }
 
-    if (request.status !== 'pending') {
-        return next(
-            new ErrorHandler(
-                "you've already responded to the request",
-                BAD_REQUEST
-            )
-        );
-    }
-
     await requestObject.rejectRequest(requestId);
+
+    // emit event
+    const socketId = redisClient.get(`user:${request.sender_id}`);
+    io.to(socketId).emit('requestRejected', request);
+
     return res.status(OK).json({ message: 'request rejected successfully' });
 });
 
-// could remove the request as well for cleanup if dont want to show on frontend
 const acceptRequest = tryCatch('accept request', async (req, res, next) => {
     const { requestId } = req.params;
     const request = req.request; // middleware
@@ -58,26 +68,31 @@ const acceptRequest = tryCatch('accept request', async (req, res, next) => {
         );
     }
 
-    if (request.status !== 'pending') {
-        return next(
-            new ErrorHandler(
-                "you've already responded to the request",
-                BAD_REQUEST
-            )
-        );
-    }
-
     const newChat = await requestObject.acceptRequest(requestId);
+    const otherMemberId = newChat.members.find(
+        (m) => m.user_id !== req.user.user_id
+    )?.user_id;
 
-    // todo: emit event to refetch chats because new 1-1 chat has been created
+    const otherMember = await userObject.getUser(otherMemberId);
+    const chat = { ...newChat, avatar: otherMember.user_avatar };
 
-    return res.status(OK).json(newChat);
+    // emit event
+    const theirSocketId = await redisClient.get(`user:${request.sender_id}`);
+    const ourSocketId = await redisClient.get(`user:${req.user.user_id}`);
+    const modifiedChat = {
+        ...chat,
+        members: chat.members.map((m) => {
+            if (m.user_id === otherMemberId && theirSocketId) {
+                return { ...m, isOnline: true };
+            } else return m;
+        }),
+    };
+    io.to(theirSocketId).to(ourSocketId).emit('requestAccepted', modifiedChat);
+    return res.status(OK).json(modifiedChat);
 });
 
 const getMyRequests = tryCatch('get my requests', async (req, res) => {
-    const myId = req.user.user_id;
-    const { status = '' } = req.query;
-    const requests = await requestObject.getMyRequests(myId, status);
+    const requests = await requestObject.getMyRequests(req.user.user_id);
     return res.status(OK).json(requests);
 });
 
@@ -90,7 +105,7 @@ const getRequest = tryCatch('get request', async (req, res) => {
     if (request) {
         return res.status(OK).json(request);
     } else {
-        return res.status(OK).json({ message: 'no request found' });
+        return res.status(OK).json({ message: 'no request or chat found' });
     }
 });
 

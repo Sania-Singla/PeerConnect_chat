@@ -51,7 +51,7 @@ export default function PostCardView({
 
                     {/* statistics */}
                     <div className="hover:cursor-text text-wrap text-[15px] text-[#5a5a5a] text-end">
-                        {formatCount(totalViews)} views &bull; posted
+                        {formatCount(totalViews)} views &bull;
                         {' ' + formatDateRelative(post_createdAt)}
                     </div>
                 </div>

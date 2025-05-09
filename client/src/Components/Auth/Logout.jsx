@@ -20,7 +20,7 @@ export default function Logout() {
                 toast.success('Logged out Successfully 🙂');
             }
         } catch (err) {
-            navigate('/servor-error');
+            navigate('/server-error');
         } finally {
             setLoading(false);
         }

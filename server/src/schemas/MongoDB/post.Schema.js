@@ -63,7 +63,7 @@ const postViewSchema = new Schema({
 
 postSchema.plugin(aggregatePaginate);
 
-const Post = model('Post', postSchema);
-const PostView = model('PostView', postViewSchema);
+const Post = new model('Post', postSchema);
+const PostView = new model('PostView', postViewSchema);
 
 export { Post, PostView };

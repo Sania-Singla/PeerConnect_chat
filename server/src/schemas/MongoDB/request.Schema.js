@@ -28,4 +28,4 @@ const requestSchema = new Schema({
 
 // TODO: can set a TTL
 
-export const Request = model('Request', requestSchema);
+export const Request = new model('Request', requestSchema);

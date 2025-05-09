@@ -8,7 +8,7 @@ import {
 } from '../Services';
 import { Button, Comments, Recemendations } from '../Components';
 import { formatDateRelative, formatCount } from '../Utils';
-import { useUserContext, usePopupContext } from '../Context';
+import { useUserContext, usePopupContext, useSocketContext } from '../Context';
 import { icons } from '../Assets/icons';
 import parse from 'html-react-parser';
 import toast from 'react-hot-toast';
@@ -17,10 +17,12 @@ export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
     const { setPopupInfo, setShowPopup } = usePopupContext();
-    const [post, setPost] = useState({});
-    const [requestStatus, setRequestStatus] = useState('');
+    const [post, setPost] = useState(null);
+    const [request, setRequest] = useState(null);
+    const [chat, setChat] = useState(null);
     const { user } = useUserContext();
     const navigate = useNavigate();
+    const { socket } = useSocketContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -34,11 +36,15 @@ export default function PostPage() {
                     setPost(res);
                     if (user) {
                         const request = await requestService.getRequest(
-                            res.owner.user_id,
+                            res.post_ownerId,
                             signal
                         );
                         if (request && !request.message) {
-                            setRequestStatus(request.status);
+                            if (request.isRequest) {
+                                setRequest(request);
+                            } else {
+                                setChat(request);
+                            }
                         }
                     }
                 }
@@ -169,18 +175,32 @@ export default function PostPage() {
                 setPopupInfo({ type: 'login', content: 'Collab' });
                 return;
             }
-            if (!requestStatus || requestStatus === 'rejected') {
-                const res = await requestService.sendRequest(
-                    post.owner.user_id
-                );
-                if (res && !res.message) {
-                    setRequestStatus('pending');
-                    toast.success('Collab Request Sent Successfully 🤝');
+            if (request) {
+                if (request.sender_id === user.user_id) {
+                    toast.error('Collab Request Already Sent');
+                    return;
+                } else {
+                    const res = await requestService.acceptRequest(
+                        request.request_id
+                    );
+                    if (res && !res.message) {
+                        toast.success(
+                            'Collab Request Accepted Successfully 🤝'
+                        );
+                        socket.emit('requestAccepted', res);
+                        setChat(res);
+                        setRequest(null);
+                    }
                 }
-            } else if (requestStatus === 'accepted') {
-                navigate(`/chat/${post.owner.user_id}`);
+            } else if (chat) {
+                navigate(`/chat/${post.post_ownerId}`);
             } else {
-                toast.error('Collab Request Already Sent');
+                const res = await requestService.sendRequest(post.post_ownerId);
+                if (res && !res.message) {
+                    socket.emit('newRequest', res);
+                    setRequest(res);
+                    toast.success('Request Sent Successfully 🤝');
+                }
             }
         } catch (err) {
             navigate('/server-error');
@@ -189,7 +209,7 @@ export default function PostPage() {
 
     return loading ? (
         <div>loading...</div>
-    ) : Object.keys(post).length === 0 ? (
+    ) : !post ? (
         <div>Post Not Found !!</div>
     ) : (
         <div className="relative w-full h-full flex flex-col items-start justify-start gap-y-6 overflow-y-scroll">
@@ -400,13 +420,15 @@ export default function PostPage() {
                                         />
                                         <Button
                                             btnText={
-                                                !requestStatus ||
-                                                requestStatus === 'rejected'
-                                                    ? 'Collab'
-                                                    : requestStatus ===
-                                                        'accepted'
-                                                      ? 'Chat'
-                                                      : 'Request Sent'
+                                                chat
+                                                    ? 'Chat'
+                                                    : request?.sender_id ===
+                                                        user.user_id
+                                                      ? 'Request Sent'
+                                                      : request?.receiver_id ===
+                                                          user.user_id
+                                                        ? 'Accept'
+                                                        : 'Connect'
                                             }
                                             onClick={handleCollab}
                                             className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"

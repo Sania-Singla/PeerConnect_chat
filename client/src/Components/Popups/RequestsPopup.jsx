@@ -2,20 +2,18 @@ import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { requestService } from '../../Services';
-import { useChatContext, usePopupContext } from '../../Context';
 import { Button } from '..';
 import { icons } from '../../Assets/icons';
+import { useChatContext } from '../../Context';
 
 export default function RequestsPopup() {
     const [targetRequest, setTargetRequest] = useState({
         requestId: '',
-        status: '', // accepting, rejecting
+        status: '',
     });
     const [loading, setLoading] = useState(true);
-    const [requests, setRequests] = useState([]);
-    const { setChats } = useChatContext();
+    const { requests, setRequests } = useChatContext();
     const navigate = useNavigate();
-    const { setShowPopup } = usePopupContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -24,10 +22,7 @@ export default function RequestsPopup() {
         (async function getRequests() {
             try {
                 setLoading(true);
-                const data = await requestService.getMyRequests(
-                    'pending',
-                    signal
-                );
+                const data = await requestService.getMyRequests(signal);
                 setRequests(data);
             } catch (err) {
                 navigate('/server-error');
@@ -47,20 +42,8 @@ export default function RequestsPopup() {
                 setRequests((prev) =>
                     prev.filter((r) => r.request_id !== requestId)
                 );
-                const sender = requests.find(
-                    (r) => r.request_id === requestId
-                ).sender;
 
-                const newChat = {
-                    ...res,
-                    avatar: sender.user_avatar,
-                    chat_name: `${sender.user_firstName} ${sender.user_lastName}`,
-                };
-                setChats((prev) => [...prev, newChat]);
                 toast.success('Request accepted successfully');
-                if (!requests.length) {
-                    setShowPopup(false);
-                }
             } else toast.error(res.message);
         } catch (err) {
             navigate('/server-error');
@@ -78,9 +61,6 @@ export default function RequestsPopup() {
                     prev.filter((r) => r.request_id !== requestId)
                 );
                 toast.success('Request rejected successfully');
-                if (!requests.length) {
-                    setShowPopup(false);
-                }
             } else toast.error(res.message);
         } catch (err) {
             navigate('/server-error');
@@ -118,7 +98,6 @@ export default function RequestsPopup() {
                     <div className="overflow-hidden flex-1">
                         <p className="truncate">
                             {user_firstName} {user_lastName}
-                            loremloreivkwbfjvjvfh
                         </p>
                         <p className="text-sm">@{user_name}</p>
                     </div>

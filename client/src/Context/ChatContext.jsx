@@ -6,11 +6,7 @@ const ChatContextProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [chats, setChats] = useState([]);
-    const [chatsLoaded, setChatsLoaded] = useState(false);
-    const [chatStatus, setChatStatus] = useState({
-        membersTyping: [],
-        membersOnline: [],
-    });
+    const [requests, setRequests] = useState([]);
 
     return (
         <ChatContext.Provider
@@ -18,13 +14,11 @@ const ChatContextProvider = ({ children }) => {
                 selectedChat,
                 messages,
                 chats,
-                chatsLoaded,
-                chatStatus,
-                setChatStatus,
-                setChatsLoaded,
                 setChats,
                 setSelectedChat,
                 setMessages,
+                setRequests,
+                requests,
             }}
         >
             {children}

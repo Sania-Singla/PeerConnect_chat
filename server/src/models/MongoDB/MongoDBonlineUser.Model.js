@@ -16,9 +16,7 @@ export class MongoDBonlineUsers extends IonlineUsers {
     async markUserOnline(userId, socketId) {
         try {
             return await OnlineUser.findOneAndUpdate(
-                {
-                    user_id: userId,
-                },
+                { user_id: userId },
                 {
                     $set: {
                         socket_id: socketId,
@@ -36,9 +34,7 @@ export class MongoDBonlineUsers extends IonlineUsers {
     async markUserOffline(userId) {
         try {
             return await OnlineUser.findOneAndUpdate(
-                {
-                    user_id: userId,
-                },
+                { user_id: userId },
                 {
                     $set: {
                         socket_id: '',

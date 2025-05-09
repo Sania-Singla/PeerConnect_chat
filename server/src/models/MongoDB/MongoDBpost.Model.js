@@ -257,9 +257,7 @@ export class MongoDBposts extends Iposts {
 
     async deletePost(postId) {
         try {
-            return await Post.findOneAndDelete({
-                post_id: postId,
-            }).lean();
+            return await Post.findOneAndDelete({ post_id: postId }).lean();
         } catch (err) {
             throw err;
         }
@@ -269,19 +267,14 @@ export class MongoDBposts extends Iposts {
     async updatePostViews(postId, userIdentifier) {
         try {
             return await PostView.findOneAndUpdate(
-                {
-                    post_id: postId,
-                    user_identifier: userIdentifier,
-                },
+                { post_id: postId, user_identifier: userIdentifier },
                 {
                     $setOnInsert: {
                         post_id: postId,
                         user_identifier: userIdentifier,
                     },
                 },
-                {
-                    upsert: true,
-                }
+                { upsert: true }
             ).lean();
         } catch (err) {
             throw err;

@@ -1,5 +1,5 @@
 import { Irequests } from '../../interfaces/request.Interface.js';
-import { Chat, Request } from '../../schemas/MongoDB/index.js';
+import { Chat, Request, User } from '../../schemas/MongoDB/index.js';
 /* import { chatObject } from '../../controllers/chat.Controller.js'; 
    - causes circular dependency ERROR
     getServiceObject --imports-> models --imports-> controller 
@@ -18,10 +18,31 @@ export class MongoDBrequests extends Irequests {
 
     async getRequest(userId, myId) {
         try {
-            return await Request.findOne({
-                sender_id: myId,
-                receiver_id: userId,
-            }).lean();
+            const [request, chat] = await Promise.all([
+                Request.findOne({
+                    $or: [
+                        { sender_id: myId, receiver_id: userId },
+                        { sender_id: userId, receiver_id: myId },
+                    ],
+                }),
+                Chat.findOne({
+                    members: {
+                        $elemMatch: { user_id: myId, role: 'member' },
+                    },
+                    members: {
+                        $elemMatch: { user_id: userId, role: 'member' },
+                    },
+                    isGroupChat: false,
+                }),
+            ]);
+
+            if (request) {
+                return { ...request.toObject(), isRequest: true };
+            }
+            if (chat) {
+                return { ...chat.toObject(), isRequest: false };
+            }
+            return null; // No request or chat found
         } catch (err) {
             throw err;
         }
@@ -37,36 +58,39 @@ export class MongoDBrequests extends Irequests {
     }
 
     async sendRequest(myId, userId) {
-        const request = await Request.findOne({
-            $or: [
-                { sender_id: myId, receiver_id: userId },
-                { sender_id: userId, receiver_id: myId },
-            ],
-        });
+        const [request, chat] = await Promise.all([
+            Request.findOne({
+                $or: [
+                    { sender_id: myId, receiver_id: userId },
+                    { sender_id: userId, receiver_id: myId },
+                ],
+            }),
+            Chat.findOne({
+                members: {
+                    $elemMatch: { user_id: myId, role: 'member' },
+                },
+                members: {
+                    $elemMatch: { user_id: userId, role: 'member' },
+                },
+                isGroupChat: false,
+            }),
+        ]);
 
         if (request) {
-            switch (request.status) {
-                case 'pending': {
-                    if (request.sender_id === myId) {
-                        return 'you have already sent a collaboration request to this user';
-                    }
-                    return 'you already have a collaboration request from this user';
-                }
-                case 'accepted': {
-                    return 'you have already collaborated with this user';
-                }
-                case 'rejected': {
-                    await request.remove();
-                    const newRequest = await Request.create({
-                        sender_id: myId,
-                        receiver_id: userId,
-                    });
-                    return newRequest.toObject();
-                }
-                default: {
-                    break;
-                }
+            if (request.receiverId === myId) {
+                // accept request
+                Chat.create({
+                    members: [
+                        { user_id: myId, role: 'member' },
+                        { user_id: userId, role: 'member' },
+                    ],
+                });
+                return chat.toObject();
             }
+            return 'Collaboration request already sent';
+        }
+        if (chat) {
+            return 'You are already friends with this user';
         }
 
         const newRequest = await Request.create({
@@ -79,11 +103,9 @@ export class MongoDBrequests extends Irequests {
 
     async rejectRequest(requestId) {
         try {
-            return await Request.findOneAndUpdate(
-                { request_id: requestId },
-                { $set: { status: 'rejected' } },
-                { new: true }
-            ).lean();
+            return await Request.findOneAndDelete({
+                request_id: requestId,
+            }).lean();
         } catch (err) {
             throw err;
         }
@@ -91,14 +113,15 @@ export class MongoDBrequests extends Irequests {
 
     async acceptRequest(requestId) {
         try {
-            const request = await Request.findOneAndUpdate(
-                { request_id: requestId },
-                { $set: { status: 'accepted' } },
-                { new: true }
-            ).lean();
-
+            const request = await Request.findOneAndDelete({
+                request_id: requestId,
+            }).lean();
+            const sender = await User.findOne({
+                user_id: request.sender_id,
+            });
             const chat = await Chat.create({
                 creator: request.sender_id,
+                chat_name: `${sender.user_name} ${sender.user_lastName}`,
                 members: [
                     { user_id: request.sender_id, role: 'member' },
                     { user_id: request.receiver_id, role: 'member' },
@@ -110,15 +133,10 @@ export class MongoDBrequests extends Irequests {
         }
     }
 
-    async getMyRequests(myId, status) {
+    async getMyRequests(myId) {
         try {
             return await Request.aggregate([
-                {
-                    $match: {
-                        receiver_id: myId,
-                    },
-                },
-                { $match: status ? { status } : {} },
+                { $match: { receiver_id: myId } },
                 {
                     $lookup: {
                         from: 'users',
@@ -137,15 +155,7 @@ export class MongoDBrequests extends Irequests {
                         ],
                     },
                 },
-                {
-                    $unwind: '$sender',
-                },
-                {
-                    $project: {
-                        receiver_id: 0,
-                        sender_id: 0,
-                    },
-                },
+                { $unwind: '$sender' },
             ]);
         } catch (err) {
             throw err;

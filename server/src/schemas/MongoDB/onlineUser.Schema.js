@@ -21,4 +21,4 @@ const onlineUserSchema = new Schema({
     },
 });
 
-export const OnlineUser = model('OnlineUser', onlineUserSchema);
+export const OnlineUser = new model('OnlineUser', onlineUserSchema);

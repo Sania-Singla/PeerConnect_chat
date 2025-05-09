@@ -4,15 +4,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { icons } from '../../../Assets/icons';
 import { fileSizeRestriction } from '../../../Utils';
 import { chatService } from '../../../Services';
-import { useSocketContext } from '../../../Context';
+import { useSocketContext, useUserContext } from '../../../Context';
 import toast from 'react-hot-toast';
 import { MAX_FILE_SIZE } from '../../../Constants/constants';
 
 export default function ChatInput() {
-    const [message, setMessage] = useState({
-        attachments: [],
-        text: '',
-    });
+    const [message, setMessage] = useState({ attachments: [], text: '' });
     const { socket } = useSocketContext();
     const { chatId } = useParams();
     const [typing, setTyping] = useState(false);
@@ -20,20 +17,18 @@ export default function ChatInput() {
     const attachmentRef = useRef();
     const [attachmentPreviews, setAttachmentPreviews] = useState([]);
     const navigate = useNavigate();
+    const { user } = useUserContext();
     const inputRef = useRef();
 
     // auto focus input field
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [chatId]);
+    useEffect(() => inputRef.current?.focus(), [chatId]);
 
     async function handleSend(e) {
         e.preventDefault();
 
         if (!message.text.trim() && message.attachments.length === 0) {
-            return toast.error('Message cannot be empty');
+            toast.error('Message cannot be empty');
+            return;
         }
 
         try {
@@ -42,9 +37,7 @@ export default function ChatInput() {
             if (res && !res.message) {
                 setTyping(false);
                 socket.emit('stoppedTyping', chatId);
-            } else {
-                toast.error(res.message || 'Failed to send message');
-            }
+            } else toast.error(res.message || 'Failed to send message');
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -55,7 +48,7 @@ export default function ChatInput() {
     }
 
     function handleChange(e) {
-        const { name, value, files = [], type } = e.target;
+        const { value, files = [], type } = e.target;
         if (type === 'file' && files.length) {
             if (message.attachments.length + files.length > 5) {
                 return toast.error('Maximum 5 attachments are allowed');
@@ -82,7 +75,7 @@ export default function ChatInput() {
             }));
             setAttachmentPreviews((prev) => [...prev, ...newPreviews]);
         } else {
-            setMessage((prev) => ({ ...prev, [name]: value }));
+            setMessage((prev) => ({ ...prev, text: value }));
 
             // Emit typing event
             if (value.trim() && !typing) {

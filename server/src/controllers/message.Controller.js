@@ -33,6 +33,31 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
     }
 });
 
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+
 const sendMessage = tryCatch('send message', async (req, res, next) => {
     const { chatId } = req.params;
     const { text = '' } = req.body;
@@ -82,7 +107,6 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
         attachments: detailedAttachments,
     };
 
-    // hmme(sender) ko bhi jayega because of "io"
     io.to(`chat:${chatId}`).emit('newMessage', {
         chatId,
         message: transformedMessage,

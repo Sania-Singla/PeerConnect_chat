@@ -61,7 +61,7 @@ const PostListView = memo(({ post, reference, children }) => {
 
                         {/* statistics */}
                         <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
-                            {formatCount(totalViews)} views &bull; posted
+                            {formatCount(totalViews)} views &bull;
                             {' ' + formatDateRelative(post_createdAt)}
                         </div>
                     </div>

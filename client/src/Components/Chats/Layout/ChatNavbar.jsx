@@ -14,9 +14,7 @@ export default function ChatNavbar() {
             title: 'Requests',
             onClick: () => {
                 setShowPopup(true);
-                setPopupInfo({
-                    type: 'requests',
-                });
+                setPopupInfo({ type: 'requests' });
             },
         },
         {
@@ -24,9 +22,7 @@ export default function ChatNavbar() {
             title: 'Groups',
             onClick: () => {
                 setShowPopup(true);
-                setPopupInfo({
-                    type: 'groups',
-                });
+                setPopupInfo({ type: 'groups' });
             },
         },
     ];

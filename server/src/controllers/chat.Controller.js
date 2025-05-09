@@ -6,10 +6,9 @@ import validator from 'validator';
 
 export const chatObject = getServiceObject('chats');
 
-// all chats
+// groups also
 const getMyChats = tryCatch('get my chats', async (req, res) => {
     const myId = req.user.user_id;
-
     const chats = await chatObject.getMyChats(myId);
 
     const transformedChats = chats.map((chat) => {
@@ -17,9 +16,6 @@ const getMyChats = tryCatch('get my chats', async (req, res) => {
 
         return {
             ...chat,
-            chat_name: chat.isGroupChat
-                ? chat.chat_name
-                : `${otherMembers[0].user_firstName} ${otherMembers[0].user_lastName}`,
             avatar: chat.isGroupChat
                 ? chat.members.slice(0, 3).map(({ user_avatar }) => user_avatar)
                 : otherMembers[0].user_avatar,
@@ -29,7 +25,56 @@ const getMyChats = tryCatch('get my chats', async (req, res) => {
     return res.status(OK).json(transformedChats);
 });
 
-// only group chats
+const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
+    const { chatId } = req.params;
+    const myId = req.user.user_id;
+    const chat = req.chat;
+
+    if (!chat.members.find(({ user_id }) => user_id === req.user.user_id)) {
+        return next(
+            new ErrorHandler('You are not a member of this chat', BAD_REQUEST)
+        );
+    }
+
+    const populatedChat = await chatObject.getChatDetails(chatId);
+    const otherMembers = getOtherMembers(populatedChat.members, myId);
+
+    const transformedChat = {
+        ...populatedChat,
+        avatar: populatedChat.isGroupChat
+            ? populatedChat.members
+                  .slice(0, 3)
+                  .map(({ user_avatar }) => user_avatar)
+            : otherMembers[0].user_avatar,
+    };
+    return res.status(OK).json(transformedChat);
+});
+
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
+
 const getMyGroups = tryCatch('get my groups', async (req, res) => {
     const myId = req.user.user_id;
     const chats = await chatObject.getMyGroups(myId);
@@ -45,7 +90,6 @@ const getMyGroups = tryCatch('get my groups', async (req, res) => {
 
     return res.status(OK).json(transformedChats);
 });
-
 const getMyFriends = tryCatch('get my friends', async (req, res) => {
     const myId = req.user.user_id;
     const friends = await chatObject.getMyFriends(myId);
@@ -96,6 +140,7 @@ const createGroup = tryCatch(
             );
         }
 
+        // you need to be friends with all the members to create a group
         const areFriends = await chatObject.areWeFriends(myId, members);
         if (!areFriends) {
             return next(
@@ -122,6 +167,8 @@ const createGroup = tryCatch(
         return res.status(OK).json(chat);
     }
 );
+
+// ****PENDING************************************************************
 
 // todo: delete all its messages along with attachments
 const deleteChat = tryCatch('delete chat', async (req, res, next) => {
@@ -341,31 +388,6 @@ const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
 
     // TODO: Emit socket event to notify members about the group name change
     return res.status(OK).json(result);
-});
-
-const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
-    const { chatId } = req.params;
-    const myId = req.user.user_id;
-    const chat = req.chat;
-
-    if (!chat.members.find(({ user_id }) => user_id === req.user.user_id)) {
-        return next(
-            new ErrorHandler('You are not a member of this chat', BAD_REQUEST)
-        );
-    }
-
-    const populatedChat = await chatObject.getChatDetails(chatId);
-    const otherMembers = getOtherMembers(populatedChat.members, myId);
-
-    const transformedChat = {
-        ...populatedChat,
-        avatar: populatedChat.isGroupChat
-            ? populatedChat.members
-                  .slice(0, 3)
-                  .map(({ user_avatar }) => user_avatar)
-            : otherMembers[0].user_avatar,
-    };
-    return res.status(OK).json(transformedChat);
 });
 
 const makeAdmin = tryCatch('make admin', async (req, res, next) => {

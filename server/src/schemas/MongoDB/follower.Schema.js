@@ -13,4 +13,4 @@ const followerSchema = new Schema({
     },
 });
 
-export const Follower = model('Follower', followerSchema);
+export const Follower = new model('Follower', followerSchema);

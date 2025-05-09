@@ -4,7 +4,7 @@ import { icons } from '../../../Assets/icons';
 import { useChatContext } from '../../../Context';
 
 export default function ChatHeader() {
-    const { selectedChat, chatStatus } = useChatContext();
+    const { selectedChat } = useChatContext();
     const navigate = useNavigate();
 
     return (
@@ -14,14 +14,15 @@ export default function ChatHeader() {
                 onClick={() => navigate('details')}
             >
                 {/* Avatar */}
-                {selectedChat?.isGroupChat ? (
+                {selectedChat?.chat?.isGroupChat ? (
                     <div className="flex items-center -space-x-7">
-                        {selectedChat?.avatar.map((url, i) => (
+                        {selectedChat?.chat?.avatar.map((url, i) => (
                             <div
                                 key={i}
-                                className="size-[45px] border border-[#434343] rounded-full overflow-hidden"
+                                className="size-[40px] border border-[#434343] rounded-full overflow-hidden"
                                 style={{
-                                    zIndex: selectedChat?.avatar.length - i,
+                                    zIndex:
+                                        selectedChat?.chat?.avatar.length - i,
                                 }}
                             >
                                 <img
@@ -34,9 +35,9 @@ export default function ChatHeader() {
                     </div>
                 ) : (
                     <div>
-                        <div className="size-[45px] border border-[#434343] rounded-full overflow-hidden">
+                        <div className="size-[40px] border border-[#434343] rounded-full overflow-hidden">
                             <img
-                                src={selectedChat?.avatar}
+                                src={selectedChat?.chat?.avatar}
                                 alt="User Avatar"
                                 className="object-cover size-full rounded-full"
                             />
@@ -46,15 +47,15 @@ export default function ChatHeader() {
 
                 <div className="ml-3">
                     <h4 className="text-base line-clamp-1 font-semibold text-gray-800">
-                        {selectedChat?.chat_name}
+                        {selectedChat?.chat?.chat_name}
                     </h4>
 
                     <div className="font-medium text-[12px]">
-                        {selectedChat?.isGroupChat ? (
-                            chatStatus.membersTyping.length > 0 ? (
+                        {selectedChat?.chat?.isGroupChat ? (
+                            selectedChat?.membersTyping?.length > 0 ? (
                                 <span className="text-green-500 line-clamp-1">
-                                    {chatStatus?.membersTyping
-                                        .slice(0, 3)
+                                    {selectedChat?.membersTyping
+                                        ?.slice(0, 3)
                                         .map(({ user_firstName, user_id }) => (
                                             <span key={user_id}>
                                                 {user_firstName},{' '}
@@ -62,10 +63,10 @@ export default function ChatHeader() {
                                         ))}{' '}
                                     are typing
                                 </span>
-                            ) : chatStatus.membersOnline.length > 0 ? (
+                            ) : selectedChat?.membersOnline?.length > 0 ? (
                                 <span className="text-green-500 line-clamp-1">
-                                    {chatStatus.membersOnline
-                                        .slice(0, 3)
+                                    {selectedChat?.membersOnline
+                                        ?.slice(0, 3)
                                         .map(({ user_firstName, user_id }) => (
                                             <span key={user_id}>
                                                 {user_firstName},{' '}
@@ -78,17 +79,17 @@ export default function ChatHeader() {
                                     All are offline
                                 </span>
                             )
-                        ) : chatStatus?.membersTyping.length > 0 ? (
+                        ) : selectedChat?.membersTyping?.length > 0 ? (
                             <span className="text-green-500">typing...</span>
                         ) : (
                             <span
                                 className={`${
-                                    chatStatus?.membersOnline.length > 0
+                                    selectedChat?.membersOnline?.length > 0
                                         ? 'text-green-500'
                                         : 'text-red-400'
                                 }`}
                             >
-                                {chatStatus?.membersOnline.length > 0
+                                {selectedChat?.membersOnline?.length > 0
                                     ? 'Online'
                                     : 'Offline'}
                             </span>
@@ -99,21 +100,21 @@ export default function ChatHeader() {
 
             <div className="flex items-center gap-x-4">
                 <Button
-                    className="bg-[#ffffff] p-[6px] group rounded-full drop-shadow-md"
+                    className="bg-[#ffffff] pt-2 pb-[5px] px-[7px] items-center flex justify-center group rounded-full drop-shadow-md"
                     title="Start Video Call"
                     btnText={
-                        <div className="size-[23px] fill-none stroke-[#434343] group-hover:stroke-[#4977ec]">
+                        <div className="size-[18px] fill-[#1a1a1a] group-hover:fill-[#4977ec]">
                             {icons.video}
                         </div>
                     }
                 />
 
                 <Button
-                    className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-[6px] group rounded-full drop-shadow-md w-fit"
                     title="Close Chat"
                     onClick={() => navigate('/chat')}
                     btnText={
-                        <div className="size-[20px] stroke-[#434343] group-hover:stroke-red-600">
+                        <div className="size-[19px] stroke-[#434343] group-hover:stroke-red-600">
                             {icons.cross}
                         </div>
                     }

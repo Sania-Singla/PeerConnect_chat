@@ -48,7 +48,7 @@ const commentLikeSchema = new Schema({
 
 postLikeSchema.plugin(aggregatePaginate);
 
-const PostLike = model('PostLike', postLikeSchema);
-const CommentLike = model('CommentLike', commentLikeSchema);
+const PostLike = new model('PostLike', postLikeSchema);
+const CommentLike = new model('CommentLike', commentLikeSchema);
 
 export { PostLike, CommentLike };

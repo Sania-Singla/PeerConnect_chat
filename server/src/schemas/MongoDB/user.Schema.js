@@ -93,8 +93,8 @@ userSchema.plugin(aggregatePaginate);
 savedPostSchema.plugin(aggregatePaginate);
 watchHistorySchema.plugin(aggregatePaginate);
 
-const User = model('User', userSchema);
-const SavedPost = model('SavedPost', savedPostSchema);
-const WatchHistory = model('WatchHistory', watchHistorySchema);
+const User = new model('User', userSchema);
+const SavedPost = new model('SavedPost', savedPostSchema);
+const WatchHistory = new model('WatchHistory', watchHistorySchema);
 
 export { User, SavedPost, WatchHistory };

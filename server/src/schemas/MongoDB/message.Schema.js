@@ -65,7 +65,7 @@ messageSchema.index(
 
 messageSchema.plugin(aggregatePaginate);
 
-const Message = model('Message', messageSchema);
-const Attachment = model('Attachment', attachmentSchema);
+const Message = new model('Message', messageSchema);
+const Attachment = new model('Attachment', attachmentSchema);
 
 export { Message, Attachment };

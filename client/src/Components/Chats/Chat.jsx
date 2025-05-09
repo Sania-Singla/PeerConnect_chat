@@ -13,6 +13,7 @@ export default function Chat() {
     const navigate = useNavigate();
 
     // TODO: implement infinite scroll
+    
     useEffect(() => {
         if (selectedChat) {
             const controller = new AbortController();
@@ -45,7 +46,7 @@ export default function Chat() {
         } else {
             setLoading(false);
         }
-    }, [chatId]);
+    }, [chatId, page]);
 
     const messageElements = messages.map((message) => (
         <Message message={message} key={message.message_id} />

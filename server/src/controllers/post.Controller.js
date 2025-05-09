@@ -94,7 +94,7 @@ const getPosts = tryCatch('get posts', async (req, res, next) => {
     if (result.docs.length) {
         const data = {
             posts: result.docs,
-            postaInfo: {
+            postsInfo: {
                 hasNextPage: result.hasNextPage,
                 hasPrevPage: result.hasPrevPage,
                 totalPosts: result.totalDocs,

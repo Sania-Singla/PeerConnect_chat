@@ -14,12 +14,11 @@ const chatSchema = new Schema({
     },
     chat_name: {
         type: String,
-        default: '', // only exists if group chat
     },
     creator: {
         type: String,
         ref: 'User',
-        default: '',
+        default: null,
     },
     members: [
         {
@@ -30,6 +29,7 @@ const chatSchema = new Schema({
             role: {
                 type: String,
                 enum: ['admin', 'member'],
+                default: 'member',
             },
         },
     ],
@@ -49,4 +49,4 @@ const chatSchema = new Schema({
     },
 });
 
-export const Chat = model('Chat', chatSchema);
+export const Chat = new model('Chat', chatSchema);

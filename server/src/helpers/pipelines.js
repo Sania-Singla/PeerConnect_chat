@@ -109,9 +109,7 @@ function getPipeline2() {
             },
         },
         // Remove temporary `populatedMembers` field
-        {
-            $unset: 'populatedMembers',
-        },
+        { $unset: 'populatedMembers' },
     ];
 }
 

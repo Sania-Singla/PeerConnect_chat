@@ -41,9 +41,7 @@ export default function LikedPostsPage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [page, user]);
 
     const postElements = posts?.map((post, index) => (

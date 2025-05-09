@@ -19,17 +19,7 @@ export default function RegisterPage() {
         avatar: null,
         coverImage: null,
     });
-
-    const [error, setError] = useState({
-        root: '',
-        firstName: '',
-        lastName: '',
-        userName: '',
-        email: '',
-        password: '',
-        avatar: '',
-        coverImage: '',
-    });
+    const [error, setError] = useState({});
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -65,9 +55,7 @@ export default function RegisterPage() {
 
     const handleBlur = (e) => {
         let { name, value } = e.target;
-        if (value) {
-            verifyExpression(name, value, setError);
-        }
+        if (value) verifyExpression(name, value, setError);
     };
 
     function onMouseOver() {
@@ -81,14 +69,13 @@ export default function RegisterPage() {
             )
         ) {
             setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
+        } else setDisabled(false);
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
+        setError((prev) => ({ ...prev, root: '' }));
         setDisabled(true);
         try {
             const res = await authService.register(inputs);
@@ -96,9 +83,7 @@ export default function RegisterPage() {
                 setUser(res);
                 toast.success('Account created successfully');
                 navigate('/');
-            } else {
-                setError((prev) => ({ ...prev, root: res.message }));
-            }
+            } else setError((prev) => ({ ...prev, root: res.message }));
         } catch (err) {
             navigate('/server-error');
         } finally {

@@ -8,7 +8,8 @@ const SocketContext = createContext();
 const SocketContextProvider = ({ children, navigate }) => {
     const [socket, setSocket] = useState(null);
     const { user } = useUserContext();
-    const { setChats, setChatStatus, setMessages } = useChatContext();
+    const { setChats, setSelectedChat, setMessages, setRequests } =
+        useChatContext();
 
     function connectSocket() {
         if (!user || socket) return;
@@ -35,62 +36,48 @@ const SocketContextProvider = ({ children, navigate }) => {
 
         socketInstance.on(
             'userStatusChange',
-            ({ userId, completeUser, isOnline }) => {
-                console.log('User status change:', userId, isOnline);
-
-                // * console.log('what dowe have', chats, selectedChat); // * can't do it because at the time the socket event listeners are defined they uses state at that time so you'll see value in "prev" but not in "chats" or "selectedChat"
-
+            ({ userId, targetUser, isOnline }) => {
                 // for sidebar updations
                 setChats((prev) =>
                     prev.map((c) => ({
                         ...c,
                         members: c.members.map((m) => {
                             if (m.user_id === userId) {
-                                return {
-                                    ...m,
-                                    isOnline,
-                                    isTyping: isOnline ? m.isTyping : false,
-                                };
-                            }
-                            return m;
+                                return { ...m, isOnline, isTyping: false };
+                            } else return m;
                         }),
                     }))
                 );
 
                 // for chat header updations
-                setChatStatus((prev) => {
+                setSelectedChat((prev) => {
                     if (prev) {
-                        const wasOnline = prev.membersOnline.find(
+                        const wasOnline = prev?.membersOnline.find(
                             (m) => m.user_id === userId
                         );
                         if (wasOnline && !isOnline) {
                             return {
-                                membersTyping: prev.membersTyping.filter(
+                                ...prev,
+                                membersTyping: prev?.membersTyping.filter(
                                     ({ user_id }) => user_id !== userId
                                 ),
-                                membersOnline: prev.membersOnline.filter(
+                                membersOnline: prev?.membersOnline.filter(
                                     ({ user_id }) => user_id !== userId
                                 ),
                             };
                         } else if (!wasOnline && isOnline) {
                             return {
                                 ...prev,
-                                membersOnline: [
-                                    ...prev.membersOnline,
-                                    completeUser,
-                                ],
+                                membersOnline:
+                                    prev?.membersOnline.concat(targetUser),
                             };
-                        } else {
-                            return prev;
-                        }
+                        } else return prev;
                     }
                 });
             }
         );
 
-        socketInstance.on('typing', ({ userId, completeUser, chatId }) => {
-            console.log('typing status change:', userId, chatId);
-
+        socketInstance.on('typing', ({ targetUser, chatId }) => {
             // for sidebar updations
             setChats((prev) =>
                 prev.map((c) => {
@@ -98,40 +85,31 @@ const SocketContextProvider = ({ children, navigate }) => {
                         return {
                             ...c,
                             members: c.members.map((m) => {
-                                if (m.user_id === userId) {
-                                    return {
-                                        ...m,
-                                        isTyping: true,
-                                    };
-                                }
-                                return m;
+                                if (m.user_id === targetUser.user_id) {
+                                    return { ...m, isTyping: true };
+                                } else return m;
                             }),
                         };
-                    }
-                    return c;
+                    } else return c;
                 })
             );
 
             // for chat header updations
-            setChatStatus((prev) => {
-                const alreadyPresent = prev.membersTyping.find(
-                    ({ user_id }) => user_id === userId
+            setSelectedChat((prev) => {
+                const alreadyPresent = prev?.membersTyping.find(
+                    ({ user_id }) => user_id === targetUser.user_id
                 );
 
                 if (!alreadyPresent) {
                     return {
                         ...prev,
-                        membersTyping: [...prev.membersTyping, completeUser],
+                        membersTyping: prev?.membersTyping.concat(targetUser),
                     };
-                } else {
-                    return prev;
-                }
+                } else return prev;
             });
         });
 
-        socketInstance.on('stoppedTyping', ({ userId, chatId }) => {
-            console.log('typing status change:', userId, chatId);
-
+        socketInstance.on('stoppedTyping', ({ chatId, targetUser }) => {
             // for sidebar updations
             setChats((prev) =>
                 prev.map((c) => {
@@ -139,33 +117,36 @@ const SocketContextProvider = ({ children, navigate }) => {
                         return {
                             ...c,
                             members: c.members.map((m) => {
-                                if (m.user_id === userId) {
-                                    return {
-                                        ...m,
-                                        isTyping: false,
-                                    };
-                                }
-                                return m;
+                                if (m.user_id === targetUser.user_id) {
+                                    return { ...m, isTyping: false };
+                                } else return m;
                             }),
                         };
-                    }
-                    return c;
+                    } else return c;
                 })
             );
 
             // for chat header updations
-            setChatStatus((prev) => ({
-                ...prev,
-                membersTyping: prev.membersTyping.filter(
-                    ({ user_id }) => user_id !== userId
-                ),
-            }));
+            setSelectedChat((prev) => {
+                return {
+                    ...prev,
+                    membersTyping: prev.membersTyping.filter(
+                        ({ user_id }) => user_id !== targetUser.user_id
+                    ),
+                };
+            });
+        });
+
+        socketInstance.on('requestAccepted', (newChat) => {
+            setChats((prev) => prev.concat(newChat));
+        });
+
+        socketInstance.on('newRequest', (request) => {
+            setRequests((prev) => prev.concat(request));
         });
 
         socketInstance.on('newMessage', ({ chatId, message }) => {
-            console.log('new message', message);
-            // append message
-            setMessages((prev) => [...prev, message]);
+            setMessages((prev) => prev.concat(message));
 
             // update chat's last message
             setChats((prev) =>
@@ -180,8 +161,7 @@ const SocketContextProvider = ({ children, navigate }) => {
                                 time: message.message_createdAt,
                             },
                         };
-                    }
-                    return c;
+                    } else return c;
                 })
             );
         });
@@ -190,7 +170,7 @@ const SocketContextProvider = ({ children, navigate }) => {
 
         socketInstance.on('deleteMessage', (message) => {});
 
-        socketInstance.on('newChat', () => {});
+        socketInstance.on('joinGroup', () => {});
 
         socketInstance.on('leaveGroup', () => {});
 

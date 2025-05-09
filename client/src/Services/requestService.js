@@ -59,9 +59,9 @@ class RequestService {
             throw err;
         }
     }
-    async getMyRequests(status, signal) {
+    async getMyRequests(signal) {
         try {
-            const res = await fetch(`/api/requests?status=${status}`, {
+            const res = await fetch(`/api/requests`, {
                 signal,
                 method: 'GET',
                 credentials: 'include',

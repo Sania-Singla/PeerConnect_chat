@@ -1,15 +1,15 @@
 import { useNavigate, NavLink } from 'react-router-dom';
 import { icons } from '../../../Assets/icons';
-import { useChatContext, useSocketContext } from '../../../Context';
+import { useChatContext } from '../../../Context';
 import { chatService } from '../../../Services';
 import { useEffect, useState } from 'react';
 import { formatTime } from '../../../Utils';
 
 export default function ChatSidebar() {
-    const { setChats, chats, setChatsLoaded, chatsLoaded } = useChatContext();
-    const { socket } = useSocketContext();
+    const { setChats, chats } = useChatContext();
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -18,20 +18,11 @@ export default function ChatSidebar() {
         (async function getChats() {
             try {
                 const data = await chatService.getMyChats(signal);
-
-                if (data && !data.message) {
-                    socket.emit('onlineUsers', data);
-
-                    socket.on('onlineUsers', (modifiedChats) => {
-                        setChats(modifiedChats); // having isOnline Porperty
-                        setChatsLoaded(true);
-                    });
-                } else {
-                    setChats([]);
-                    setChatsLoaded(true);
-                }
+                if (data && !data.message) setChats(data);
             } catch (err) {
                 navigate('/server-error');
+            } finally {
+                setLoading(false);
             }
         })();
 
@@ -144,13 +135,13 @@ export default function ChatSidebar() {
 
             {/* Chats */}
             <div className="flex-1 overflow-y-scroll flex flex-col gap-[3px]">
-                {!chatsLoaded ? (
+                {loading ? (
                     <div className="text-center">loading ...</div>
                 ) : chats.length > 0 ? (
                     chatElements
                 ) : (
                     <p className="text-sm text-gray-500 text-center">
-                        No Collaborations yet.
+                        No Connections yet.
                     </p>
                 )}
             </div>
