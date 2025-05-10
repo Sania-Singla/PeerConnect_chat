@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { formatTime } from '../../../Utils';
 
 export default function ChatSidebar() {
-    const { setChats, chats } = useChatContext();
+    const { setChats, chats, setShowSidebar } = useChatContext();
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -51,6 +51,9 @@ export default function ChatSidebar() {
                 <NavLink
                     key={chat_id}
                     to={chat_id}
+                    onClick={() => {
+                        setShowSidebar(false);
+                    }}
                     className={({ isActive }) =>
                         `cursor-pointer flex items-center gap-3 py-2 px-3 rounded-md transition-all duration-200 
                     hover:backdrop-brightness-95 ${isActive && 'backdrop-brightness-95'} w-full text-left`
@@ -125,7 +128,7 @@ export default function ChatSidebar() {
         );
 
     return (
-        <div className="w-[300px] border-r-[0.01rem] border-r-[#e6e6e6] h-full px-2 bg-[#f6f6f6] flex flex-col">
+        <div className="w-full border-r-[0.01rem] border-r-[#e6e6e6] h-full px-2 bg-[#f6f6f6] flex flex-col">
             {/* Search Bar */}
             <div className="relative my-3">
                 <input

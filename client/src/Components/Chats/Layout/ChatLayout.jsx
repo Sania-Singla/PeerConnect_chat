@@ -27,7 +27,6 @@ export default function ChatLayout() {
                     }));
                 } else navigate('/not-found');
             } catch (err) {
-                console.log(err);
                 navigate('/server-error');
             } finally {
                 setLoading(false);
@@ -43,7 +42,7 @@ export default function ChatLayout() {
     if (loading) return <div>loading...</div>;
 
     return (
-        <div className="flex flex-col h-full w-[calc(100vw-300px)]">
+        <div className="h-full w-full">
             <div className="h-[60px] bg-[#f6f6f6]">
                 <ChatHeader />
             </div>

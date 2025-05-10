@@ -7,6 +7,7 @@ const ChatContextProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
     const [chats, setChats] = useState([]);
     const [requests, setRequests] = useState([]);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     return (
         <ChatContext.Provider
@@ -19,6 +20,8 @@ const ChatContextProvider = ({ children }) => {
                 setMessages,
                 setRequests,
                 requests,
+                showSidebar,
+                setShowSidebar,
             }}
         >
             {children}

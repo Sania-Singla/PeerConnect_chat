@@ -31,7 +31,7 @@ export default function Chat() {
                     if (data && !data.message) {
                         setMessages(data.messages);
                         setMessagesInfo(data.messagesInfo);
-                    } 
+                    }
                 } catch (err) {
                     navigate('/server-error');
                 } finally {
@@ -51,7 +51,7 @@ export default function Chat() {
     ));
 
     return (
-        <div className="px-3 py-6">
+        <div className="px-3 py-6 w-full">
             {loading ? (
                 <div>loading...</div>
             ) : messages.length > 0 ? (
