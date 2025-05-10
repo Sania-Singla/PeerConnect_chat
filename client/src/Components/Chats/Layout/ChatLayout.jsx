@@ -18,7 +18,7 @@ export default function ChatLayout() {
         (async function getChat() {
             try {
                 const chat = await chatService.getChatDetails(signal, chatId);
-                if (chat) {
+                if (chat && !chat.message) {
                     setSelectedChat((prev) => ({
                         ...prev,
                         chat,
@@ -27,6 +27,7 @@ export default function ChatLayout() {
                     }));
                 } else navigate('/not-found');
             } catch (err) {
+                console.log(err);
                 navigate('/server-error');
             } finally {
                 setLoading(false);

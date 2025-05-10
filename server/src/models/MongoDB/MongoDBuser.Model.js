@@ -5,23 +5,13 @@ import { getPipeline1 } from '../../helpers/index.js';
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
         try {
-            let user = await User.findOne({
+            return await User.findOne({
                 $or: [
                     { user_id: searchInput },
                     { user_name: searchInput },
                     { user_email: searchInput },
                 ],
             }).lean();
-
-            if (!user) {
-                user = await User.findOne({
-                    $or: [
-                        { user_name: searchInput?.userName },
-                        { user_email: searchInput?.email },
-                    ],
-                }).lean();
-            }
-            return user;
         } catch (err) {
             throw err;
         }

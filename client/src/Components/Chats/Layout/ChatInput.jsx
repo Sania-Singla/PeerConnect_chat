@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { icons } from '../../../Assets/icons';
 import { fileSizeRestriction } from '../../../Utils';
 import { chatService } from '../../../Services';
-import { useSocketContext, useUserContext } from '../../../Context';
+import { useSocketContext } from '../../../Context';
 import toast from 'react-hot-toast';
 import { MAX_FILE_SIZE } from '../../../Constants/constants';
 
@@ -17,7 +17,6 @@ export default function ChatInput() {
     const attachmentRef = useRef();
     const [attachmentPreviews, setAttachmentPreviews] = useState([]);
     const navigate = useNavigate();
-    const { user } = useUserContext();
     const inputRef = useRef();
 
     // auto focus input field

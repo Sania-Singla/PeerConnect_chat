@@ -14,7 +14,7 @@ export default function ChatsPage() {
         <div className="fixed z-[100] inset-0 bg-white">
             <ChatNavbar />
             <div className="flex h-full w-full">
-                <div className="w-[300px]">
+                <div className="w-[300px] h-[calc(100%-60px)]">
                     <ChatSidebar />
                 </div>
                 <div className="flex-1">

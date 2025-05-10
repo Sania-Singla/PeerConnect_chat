@@ -25,20 +25,14 @@ export default function InputFilePreview({
                     className="aspect-auto max-w-[150px] h-fit rounded-lg object-cover"
                 />
             ) : (
-                <div className="aspect-auto w-[150px] h-[95px] p-2 bg-blue-500 rounded-lg text-white drop-shadow-md">
-                    <div className="h-full w-full bg-[#ffffff42] p-2 rounded-lg flex items-center justify-center gap-x-2 overflow-hidden">
-                        <div>
-                            <div className="size-[20px] fill-[#f6f6f6]">
-                                {icons.doc}
-                            </div>
+                <div className="aspect-auto w-[150px] h-[100px] p-2 bg-blue-500 rounded-lg text-white drop-shadow-md">
+                    <div className="h-full w-full overflow-hidden bg-[#ffffff42] p-2 rounded-lg flex flex-col items-center justify-between">
+                        <div className="size-[20px] fill-[#f6f6f6]">
+                            {icons.doc}
                         </div>
 
-                        <div className="">
-                            <p className="text-xs truncate">{name}</p>
-                            <p className="text-[10px]">
-                                {formatFileSize(size)}
-                            </p>
-                        </div>
+                        <p className="text-xs w-full truncate">{name} </p>
+                        <p className="text-[9px]">{formatFileSize(size)}</p>
                     </div>
                 </div>
             )}

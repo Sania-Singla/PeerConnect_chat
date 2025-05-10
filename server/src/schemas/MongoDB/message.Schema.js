@@ -67,5 +67,5 @@ messageSchema.plugin(aggregatePaginate);
 
 const Message = new model('Message', messageSchema);
 const Attachment = new model('Attachment', attachmentSchema);
-
+    
 export { Message, Attachment };

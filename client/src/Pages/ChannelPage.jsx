@@ -12,7 +12,8 @@ export default function ChannelPage() {
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
     const { setShowPopup, setPopupInfo } = usePopupContext();
-    const [requestStatus, setRequestStatus] = useState('');
+    const [request, setRequest] = useState(null);
+    const [chat, setChat] = useState(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -29,7 +30,8 @@ export default function ChannelPage() {
                 if (res && !res.message) {
                     setChannel(res);
                     if (request && !request.message) {
-                        setRequestStatus(request.status);
+                        if (request.isRequest) setRequest(request);
+                        else setChat(request);
                     }
                 } else setChannel(null);
             } catch (err) {
@@ -68,17 +70,32 @@ export default function ChannelPage() {
                 setPopupInfo({ type: 'login', content: 'Collab' });
                 return;
             }
-            if (!requestStatus || requestStatus === 'rejected') {
+            if (request) {
+                if (request.sender_id === user.user_id) {
+                    toast.error('Collab Request Already Sent');
+                    return;
+                } else {
+                    const res = await requestService.acceptRequest(
+                        request.request_id
+                    );
+                    if (res && !res.message) {
+                        toast.success(
+                            'Collab Request Accepted Successfully 🤝'
+                        );
+                        socket.emit('requestAccepted', res);
+                        setChat(res);
+                        setRequest(null);
+                    }
+                }
+            } else if (chat) {
+                navigate(`/chat/${userId}`);
+            } else {
                 const res = await requestService.sendRequest(userId);
                 if (res && !res.message) {
-                    setRequestStatus('pending');
-                    toast.success('Collab Request Sent Successfully 🤝');
+                    socket.emit('newRequest', res);
+                    setRequest(res);
+                    toast.success('Request Sent Successfully 🤝');
                 }
-            } else if (requestStatus === 'accepted') {
-                // TODO: navigate specifically to /chat/chatId
-                navigate(`/chat`);
-            } else {
-                toast.error('Collab Request Already Sent');
             }
         } catch (err) {
             navigate('/server-error');
@@ -165,11 +182,13 @@ export default function ChannelPage() {
                         />
                         <Button
                             btnText={
-                                !requestStatus || requestStatus === 'rejected'
-                                    ? 'Collab'
-                                    : requestStatus === 'accepted'
-                                      ? 'Chat'
-                                      : 'Request Sent'
+                                chat
+                                    ? 'Chat'
+                                    : request?.sender_id === user.user_id
+                                      ? 'Request Sent'
+                                      : request?.receiver_id === user.user_id
+                                        ? 'Accept'
+                                        : 'Connect'
                             }
                             onClick={handleCollab}
                             className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"

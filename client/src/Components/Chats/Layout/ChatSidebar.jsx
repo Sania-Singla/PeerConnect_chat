@@ -1,6 +1,6 @@
 import { useNavigate, NavLink } from 'react-router-dom';
 import { icons } from '../../../Assets/icons';
-import { useChatContext } from '../../../Context';
+import { useChatContext, useUserContext } from '../../../Context';
 import { chatService } from '../../../Services';
 import { useEffect, useState } from 'react';
 import { formatTime } from '../../../Utils';
@@ -10,6 +10,7 @@ export default function ChatSidebar() {
     const [search, setSearch] = useState('');
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const { user } = useUserContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -83,16 +84,18 @@ export default function ChatSidebar() {
                             </div>
 
                             {/* Online Indicator */}
-                            {members.some((m) => m.isOnline) && (
+                            {members.some(
+                                (m) => m.isOnline && m.user_id !== user.user_id
+                            ) && (
                                 <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-white rounded-full"></span>
                             )}
                         </div>
                     )}
 
                     {/* User Info */}
-                    <div className="overflow-hidden flex-1 pb-2 space-y-[2px]">
+                    <div className="overflow-hidden pb-3 flex-1 space-y-[1px]">
                         <div className="flex items-center justify-between gap-4">
-                            <p className="text-sm font-semibold text-gray-900 truncate">
+                            <p className="text-[15px] font-semibold text-gray-900 truncate">
                                 {chat_name}
                             </p>
                             {lastMessage.time && (
@@ -104,7 +107,11 @@ export default function ChatSidebar() {
 
                         {/* Message Preview */}
                         {members.some((m) => m.isTyping) ? (
-                            <p className="text-xs text-green-500">typing...</p>
+                            <p className="text-xs text-green-500">
+                                {isGroupChat
+                                    ? 'someone is typing...'
+                                    : 'typing...'}
+                            </p>
                         ) : (
                             <p className="truncate text-xs text-[#414141] ">
                                 {lastMessage.message
@@ -134,7 +141,7 @@ export default function ChatSidebar() {
             </div>
 
             {/* Chats */}
-            <div className="flex-1 overflow-y-scroll flex flex-col gap-[3px]">
+            <div className="space-y-2 overflow-y-scroll pb-2">
                 {loading ? (
                     <div className="text-center">loading ...</div>
                 ) : chats.length > 0 ? (

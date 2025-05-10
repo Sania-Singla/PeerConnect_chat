@@ -137,6 +137,28 @@ class ChatService {
         }
     }
 
+    async createGroup(chatName, members) {
+        try {
+            const res = await fetch('/api/chats/groups/new', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chatName, members }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in createGroup service', err);
+            throw err;
+        }
+    }
+
     async removeMember(chatId, userId) {
         try {
             const res = await fetch(
@@ -160,30 +182,6 @@ class ChatService {
         }
     }
 
-    async addMembers(chatId, members) {
-        try {
-            const res = await fetch(`/api/chats/groups/members/add/${chatId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ members }),
-            });
-
-            const data = await res.json();
-            console.log(data);
-
-            if (res.status === 500) {
-                throw new Error(data.message);
-            }
-            return data;
-        } catch (err) {
-            console.error('Error in addMembers service', err);
-            throw err;
-        }
-    }
-
     async makeAdmin(chatId, userId) {
         try {
             const res = await fetch(
@@ -203,6 +201,90 @@ class ChatService {
             return data;
         } catch (err) {
             console.error('Error in makeAdmin service', err);
+            throw err;
+        }
+    }
+
+    async renameGroup(chatId, newName) {
+        try {
+            const res = await fetch(`/api/chats/groups/rename/${chatId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ newName }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in renameGroup service', err);
+            throw err;
+        }
+    }
+
+    async leaveGroup(chatId) {
+        try {
+            const res = await fetch(`/api/chats/groups/leave/${chatId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in leaveGroup service', err);
+            throw err;
+        }
+    }
+
+    async deleteChat(chatId) {
+        try {
+            const res = await fetch(`/api/chats/${chatId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in deleteChat service', err);
+            throw err;
+        }
+    }
+
+    async addMembers(chatId, members) {
+        try {
+            const res = await fetch(`/api/chats/groups/members/add/${chatId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ members }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('Error in addMembers service', err);
             throw err;
         }
     }

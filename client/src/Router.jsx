@@ -40,7 +40,8 @@ import {
     ChatLayout,
     Details,
     NoChatSelected,
-    Overview,
+    ChatSettings,
+    GroupSettings,
     Members,
     Settings,
     Chat,
@@ -64,9 +65,8 @@ export const router = createBrowserRouter(
                 <Route path=":chatId" element={<ChatLayout />}>
                     <Route path="" element={<Chat />} />
                     <Route path="details" element={<Details />}>
-                        <Route path="" element={<Overview />} />
+                        <Route path="" element={<Settings />} />
                         <Route path="members" element={<Members />} />
-                        <Route path="settings" element={<Settings />} />
                     </Route>
                 </Route>
             </Route>

@@ -3,16 +3,13 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import cookieParser from 'cookie-parser';
 import { connectRedis } from './db/connectRedis.js';
-import { getSocketIds, getOtherMembers } from './helpers/index.js';
 import { chatObject } from './controllers/chat.Controller.js';
 import { onlineUserObject } from './controllers/onlineUser.Controller.js';
 import { CORS_OPTIONS } from './constants/options.js';
 import { socketAuthenticator } from './middlewares/index.js';
 
 const redisClient = await connectRedis();
-
 const httpServer = createServer(app);
-
 const io = new Server(httpServer, { cors: CORS_OPTIONS });
 
 // middleware for extracting user from socket
@@ -54,36 +51,23 @@ io.on('connection', async (socket) => {
     console.log(`User ${userId} joined rooms for his/her chats.`);
 
     // Notify in rooms now
-    chats.forEach(({ chat_id }) => {
+    chats.forEach(({ chat_id }) =>
         socket.to(`chat:${chat_id}`).emit('userStatusChange', {
             userId,
             targetUser: user,
             isOnline: true,
-        });
-    });
+        })
+    );
 
-    socket.on('typing', (chatId) => {
+    socket.on('typing', (chatId) =>
+        socket.to(`chat:${chatId}`).emit('typing', { chatId, targetUser: user })
+    );
+
+    socket.on('stoppedTyping', (chatId) =>
         socket
             .to(`chat:${chatId}`)
-            .emit('typing', { chatId, targetUser: user });
-    });
-
-    socket.on('stoppedTyping', (chatId) => {
-        socket
-            .to(`chat:${chatId}`)
-            .emit('stoppedTyping', { chatId, targetUser: user });
-    });
-
-    // leaving or joining a chat (new chat creation/deletion/leaving)
-    // socket.on('leaveGroup', (chatId) => {
-    //     socket.leave(`chat:${chatId}`);
-    //     console.log(`User ${userId} left group ${chatId}`);
-    // });
-
-    // socket.on('joinGroup', (chatId) => {
-    //     socket.join(`chat:${chatId}`);
-    //     console.log(`User ${userId} joined group ${chatId}`);
-    // });
+            .emit('stoppedTyping', { chatId, targetUser: user })
+    );
 
     // disconnection
     socket.on('disconnect', async () => {
@@ -100,17 +84,19 @@ io.on('connection', async (socket) => {
             return console.error('Error marking user offline:', err);
         }
 
+        const chats = await chatObject.getMyChats(userId);
+
         // Although when a user disconnects, he automatically leave all the rooms he were part of
-        chats.forEach(({ chat_id }) => {
-            socket.leave(`chat:${chat_id}`);
-        });
+        chats.forEach(({ chat_id }) => socket.leave(`chat:${chat_id}`));
 
         // Notify others in rooms about us being offline
-        chats.forEach(({ chat_id }) => {
-            socket
-                .to(`chat:${chat_id}`)
-                .emit('userStatusChange', { userId, user, isOnline: false });
-        });
+        chats.forEach(({ chat_id }) =>
+            socket.to(`chat:${chat_id}`).emit('userStatusChange', {
+                userId,
+                targetUser: user,
+                isOnline: false,
+            })
+        );
     });
 });
 

@@ -71,24 +71,37 @@ const acceptRequest = tryCatch('accept request', async (req, res, next) => {
     const newChat = await requestObject.acceptRequest(requestId);
     const otherMemberId = newChat.members.find(
         (m) => m.user_id !== req.user.user_id
-    )?.user_id;
+    ).user_id;
 
     const otherMember = await userObject.getUser(otherMemberId);
-    const chat = { ...newChat, avatar: otherMember.user_avatar };
 
     // emit event
     const theirSocketId = await redisClient.get(`user:${request.sender_id}`);
     const ourSocketId = await redisClient.get(`user:${req.user.user_id}`);
-    const modifiedChat = {
-        ...chat,
-        members: chat.members.map((m) => {
-            if (m.user_id === otherMemberId && theirSocketId) {
-                return { ...m, isOnline: true };
-            } else return m;
-        }),
+    const chat = {
+        ...newChat,
+        members: newChat.members.map((m) => ({
+            ...m,
+            isOnline:
+                m.user_id === req.user.user_id ||
+                (m.user_id === otherMemberId && theirSocketId),
+        })),
     };
-    io.to(theirSocketId).to(ourSocketId).emit('requestAccepted', modifiedChat);
-    return res.status(OK).json(modifiedChat);
+
+    theirSocketId.join(`chat:${chat.chat_id}`);
+    ourSocketId.join(`chat:${chat.chat_id}`);
+    
+    io.to(ourSocketId).emit('requestAccepted', {
+        ...chat,
+        avatar: otherMember.user_avatar,
+        chat_name: `${otherMember.user_firstName} ${otherMember.user_lastName}`,
+    });
+    io.to(theirSocketId).emit('requestAccepted', {
+        ...chat,
+        avatar: req.user.user_avatar,
+        chat_name: `${req.user.user_firstName} ${req.user.user_lastName}`,
+    });
+    return res.status(OK).json(chat);
 });
 
 const getMyRequests = tryCatch('get my requests', async (req, res) => {

@@ -16,9 +16,7 @@ export class MongoDBmessages extends Imessages {
                 // pipeline
                 [
                     { $match: { chat_id: chatId } },
-                    {
-                        $sort: { message_createdAt: 1 },
-                    },
+                    { $sort: { message_createdAt: 1 } },
                     {
                         $lookup: {
                             from: 'users',
@@ -38,9 +36,7 @@ export class MongoDBmessages extends Imessages {
                             ],
                         },
                     },
-                    {
-                        $unwind: '$sender',
-                    },
+                    { $unwind: '$sender' },
                     {
                         $lookup: {
                             from: 'attachments',
@@ -50,7 +46,6 @@ export class MongoDBmessages extends Imessages {
                         },
                     },
                 ],
-                // options
                 { limit, page }
             );
         } catch (err) {

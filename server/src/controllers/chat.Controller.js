@@ -1,8 +1,13 @@
 import { getServiceObject } from '../db/serviceObjects.js';
 import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
-import { getOtherMembers } from '../helpers/index.js';
+import {
+    getOtherMembers,
+    getSocketId,
+    getSocketIds,
+} from '../helpers/index.js';
 import validator from 'validator';
+import { io } from '../socket.js';
 
 export const chatObject = getServiceObject('chats');
 
@@ -16,6 +21,9 @@ const getMyChats = tryCatch('get my chats', async (req, res) => {
 
         return {
             ...chat,
+            chat_name: chat.isGroupChat
+                ? chat.chat_name
+                : `${otherMembers[0].user_firstName} ${otherMembers[0].user_lastName}`,
             avatar: chat.isGroupChat
                 ? chat.members.slice(0, 3).map(({ user_avatar }) => user_avatar)
                 : otherMembers[0].user_avatar,
@@ -41,6 +49,9 @@ const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
 
     const transformedChat = {
         ...populatedChat,
+        chat_name: populatedChat.isGroupChat
+            ? populatedChat.chat_name
+            : `${otherMembers[0].user_firstName} ${otherMembers[0].user_lastName}`,
         avatar: populatedChat.isGroupChat
             ? populatedChat.members
                   .slice(0, 3)
@@ -50,49 +61,8 @@ const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
     return res.status(OK).json(transformedChat);
 });
 
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-
-const getMyGroups = tryCatch('get my groups', async (req, res) => {
-    const myId = req.user.user_id;
-    const chats = await chatObject.getMyGroups(myId);
-
-    const transformedChats = chats.map((chat) => {
-        return {
-            ...chat,
-            avatar: chat.members
-                .slice(0, 3)
-                .map(({ user_avatar }) => user_avatar),
-        };
-    });
-
-    return res.status(OK).json(transformedChats);
-});
 const getMyFriends = tryCatch('get my friends', async (req, res) => {
-    const myId = req.user.user_id;
-    const friends = await chatObject.getMyFriends(myId);
+    const friends = await chatObject.getMyFriends(req.user.user_id);
     return res.status(OK).json(friends);
 });
 
@@ -101,8 +71,6 @@ const createGroup = tryCatch(
     async (req, res, next) => {
         const { chatName = '', members = [] } = req.body; // members excluding me
         const myId = req.user.user_id;
-
-        // todo: check if chat between these members already exists
 
         if (!chatName) {
             return next(
@@ -156,38 +124,187 @@ const createGroup = tryCatch(
             role: userId === myId ? 'admin' : 'member',
         }));
 
-        const chat = await chatObject.createGroup(
+        let chat = await chatObject.createGroup(
             transformedMembers,
             myId, // creator
             chatName
         );
 
-        // todo: Socket.io event to update chats on sidebar
+        chat = await chatObject.getChatDetails(chat.chat_id);
 
-        return res.status(OK).json(chat);
+        const transformedChat = {
+            ...chat,
+            avatar: chat.members
+                .slice(0, 3)
+                .map(({ user_avatar }) => user_avatar),
+        };
+
+        const memberIds = transformedMembers.map((m) => m.user_id);
+        const socketIds = await getSocketIds(memberIds);
+
+        const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
+
+        socketIds.forEach((socketId) => {
+            const socket = sockets.get(socketId);
+            if (socket) {
+                socket.join(`chat:${chat.chat_id}`);
+                io.to(socketId).emit('newChat', transformedChat);
+            }
+        });
+
+        return res.status(OK).json(transformedChat);
     }
 );
 
-// ****PENDING************************************************************
+const getMyGroups = tryCatch('get my groups', async (req, res) => {
+    const myId = req.user.user_id;
+    const chats = await chatObject.getMyGroups(myId);
 
-// todo: delete all its messages along with attachments
-const deleteChat = tryCatch('delete chat', async (req, res, next) => {
-    const { chatId } = req.params;
-    const chat = req.chat; // resource exists middleware
+    const transformedChats = chats.map((chat) => {
+        return {
+            ...chat,
+            avatar: chat.members
+                .slice(0, 3)
+                .map(({ user_avatar }) => user_avatar),
+        };
+    });
 
-    if (chat.isGroupChat && chat.creator !== req.user.user_id) {
+    return res.status(OK).json(transformedChats);
+});
+
+const removeMember = tryCatch(
+    'removing a member from group',
+    async (req, res, next) => {
+        const { chatId, userId } = req.params;
+        const chat = req.chat; // middleware
+        const myId = req.user.user_id;
+
+        if (!chat.isGroupChat) {
+            return next(
+                new ErrorHandler(
+                    'Cannot remove members from a non-group chat',
+                    BAD_REQUEST
+                )
+            );
+        }
+
+        const me = chat.members.find(({ user_id }) => user_id === myId);
+        if (!me || me.role !== 'admin') {
+            return next(
+                new ErrorHandler(
+                    'Only admin can remove members from a group',
+                    BAD_REQUEST
+                )
+            );
+        }
+
+        const member = chat.members.find(({ user_id }) => user_id === userId);
+        if (!member) {
+            return next(
+                new ErrorHandler(
+                    'The user is not a member of this group',
+                    BAD_REQUEST
+                )
+            );
+        }
+
+        const result = await chatObject.removeMember(chatId, userId);
+
+        const memberIds = chat.members
+            .map((m) => m.user_id)
+            .filter((id) => id !== userId);
+        const socketIds = await getSocketIds(memberIds);
+
+        const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
+
+        const socketId = await getSocketId(userId);
+        const socket = sockets.get(socketId);
+        if (socket) socket.leave(`chat:${chatId}`);
+
+        socketIds.forEach((socketId) => {
+            if (socketId) {
+                io.to(socketId).emit('memberRemoved', { chatId, userId });
+            }
+        });
+
+        return res.status(OK).json(result);
+    }
+);
+
+const makeAdmin = tryCatch('make admin', async (req, res, next) => {
+    const { chatId, userId } = req.params;
+    const myId = req.user.user_id;
+    const chat = req.chat;
+
+    if (!chat.isGroupChat) {
         return next(
             new ErrorHandler(
-                'only the creator can delete the group',
+                'Cannot remove members from a non-group chat',
                 BAD_REQUEST
             )
         );
     }
 
-    await chatObject.deleteChat(chatId);
+    const me = chat.members.find(({ user_id }) => user_id === myId);
+    if (!me || me.role !== 'admin') {
+        return next(
+            new ErrorHandler(
+                'Only an admin can promote someone to admin of the group',
+                BAD_REQUEST
+            )
+        );
+    }
 
-    // todo: emit event to refetch chats
-    return res.status(OK).json({ message: 'chat has been deleted' });
+    const group = await chatObject.makeAdmin(chatId, userId);
+
+    const memberIds = group.members.map((m) => m.user_id);
+    const socketIds = await getSocketIds(memberIds);
+
+    socketIds.forEach((socketId) => {
+        if (socketId) {
+            io.to(socketId).emit('memberPromoted', { chatId, userId });
+        }
+    });
+
+    return res.status(OK).json({ message: 'user is now an admin' });
+});
+
+const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
+    const { chatId } = req.params;
+    const { newName } = req.body;
+    const chat = req.chat; // middleware
+
+    if (!chat.isGroupChat) {
+        return next(
+            new ErrorHandler('Cannot rename a non-group chat', BAD_REQUEST)
+        );
+    }
+
+    const me = chat.members.find(({ user_id }) => user_id === req.user.user_id);
+    if (!me || me.role !== 'admin') {
+        return next(
+            new ErrorHandler('Only admin can rename the group', BAD_REQUEST)
+        );
+    }
+
+    if (!newName || !newName.trim()) {
+        return next(
+            new ErrorHandler('New group name cannot be empty', BAD_REQUEST)
+        );
+    }
+
+    const result = await chatObject.renameGroup(chatId, newName);
+
+    const memberIds = result.members.map((m) => m.user_id);
+    const socketIds = await getSocketIds(memberIds);
+
+    socketIds.forEach((socketId) => {
+        if (socketId) {
+            io.to(socketId).emit('groupRenamed', { chatId, newName });
+        }
+    });
+
+    return res.status(OK).json(result);
 });
 
 const leaveGroup = tryCatch('leave group', async (req, res, next) => {
@@ -209,18 +326,64 @@ const leaveGroup = tryCatch('leave group', async (req, res, next) => {
     }
 
     if (chat.members.length === 1) {
-        await chatObject.deleteChat(chatId);
+        const result = await chatObject.deleteChat(chatId);
+        const memberIds = result.members.map((m) => m.user_id);
+        const socketIds = await getSocketIds(memberIds);
+
+        socketIds.forEach((socketId) => {
+            if (socketId) io.to(socketId).emit('chatDeleted', chatId);
+        });
+
         return res.status(OK).json({ message: 'group no longer exists' });
     }
 
     const result = await chatObject.leaveGroup(chatId, memberLeaving);
+    const memberIds = result.members.map((m) => m.user_id);
+    const socketIds = await getSocketIds(memberIds.concat(memberLeaving));
 
-    // todo: socket emit inform other about what user left the group
+    const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
+
+    const socketId = await getSocketId(memberLeaving);
+    const socket = sockets.get(socketId);
+    if (socket) socket.leave(`chat:${chatId}`);
+
+    socketIds.forEach((socketId) => {
+        if (socketId) {
+            io.to(socketId).emit('memberRemoved', {
+                chatId,
+                userId: memberLeaving,
+            });
+        }
+    });
 
     return res.status(OK).json(result);
 });
 
-// todo: populate the member before sending the response and update the chat avatar as well
+const deleteChat = tryCatch('delete chat', async (req, res, next) => {
+    const { chatId } = req.params;
+    const chat = req.chat; // resource exists middleware
+
+    if (chat.isGroupChat && chat.creator !== req.user.user_id) {
+        return next(
+            new ErrorHandler(
+                'only the creator can delete the group',
+                BAD_REQUEST
+            )
+        );
+    }
+
+    await chatObject.deleteChat(chatId);
+
+    const memberIds = chat.members.map((m) => m.user_id);
+    const socketIds = await getSocketIds(memberIds);
+
+    socketIds.forEach((socketId) => {
+        if (socketId) io.to(socketId).emit('chatDeleted', chatId);
+    });
+
+    return res.status(OK).json(chat);
+});
+
 const addMembers = tryCatch('add members to group', async (req, res, next) => {
     const { chatId } = req.params;
     const { members = [] } = req.body;
@@ -236,10 +399,11 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
         );
     }
 
-    if (chat.creator !== myId) {
+    const me = chat.members.find(({ user_id }) => user_id === myId);
+    if (!me || me.role !== 'admin') {
         return next(
             new ErrorHandler(
-                'Only the creator can add members to the group',
+                'Only admin can add members to a group',
                 BAD_REQUEST
             )
         );
@@ -294,138 +458,35 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
         role: 'member',
     }));
 
-    const result = await chatObject.addMembers(chatId, transformedMembersToAdd);
+    let result = await chatObject.addMembers(chatId, transformedMembersToAdd);
+    result = await chatObject.getChatDetails(chatId); // populate the members
 
-    // TODO: Emit socket event to notify members of the updated group (refetch chats maybe for them)
+    const oldMemberIds = chat.members.map((m) => m.user_id);
+    const newSocketIds = await getSocketIds(membersToAdd);
+    const oldSocketIds = await getSocketIds(oldMemberIds);
 
+    const sockets = io.sockets.sockets;
+
+    console.log('oldSocketIds', oldSocketIds);
+    console.log('newSocketIds', newSocketIds);
+
+    oldSocketIds.forEach((socketId) => {
+        if (socketId) {
+            io.to(socketId).emit('membersAdded', {
+                chatId,
+                members: result.members,
+            });
+        }
+    });
+
+    newSocketIds.forEach((socketId) => {
+        const socket = sockets.get(socketId);
+        if (socket) {
+            socket.join(`chat:${chatId}`);
+            io.to(socketId).emit('newChat', result);
+        }
+    });
     return res.status(OK).json(result);
-});
-
-// can use array to remove multiple members in a single go
-const removeMember = tryCatch(
-    'removing a member from group',
-    async (req, res, next) => {
-        const { chatId, userId } = req.params;
-        const chat = req.chat; // middleware
-        const myId = req.user.user_id;
-
-        if (!chat.isGroupChat) {
-            return next(
-                new ErrorHandler(
-                    'Cannot remove members from a non-group chat',
-                    BAD_REQUEST
-                )
-            );
-        }
-
-        const me = chat.members.find(({ user_id }) => user_id === myId);
-        if (!me) {
-            return next(
-                new ErrorHandler(
-                    'You are not the member of this group',
-                    BAD_REQUEST
-                )
-            );
-        }
-
-        if (me.role !== 'admin') {
-            return next(
-                new ErrorHandler(
-                    'Only an admin can remove members from the group',
-                    BAD_REQUEST
-                )
-            );
-        }
-
-        const member = chat.members.find(({ user_id }) => user_id === userId);
-        if (!member) {
-            return next(
-                new ErrorHandler(
-                    'The user is not a member of this group',
-                    BAD_REQUEST
-                )
-            );
-        }
-
-        const result = await chatObject.removeMember(chatId, userId);
-
-        // TODO: Emit socket event to notify remaining members about the removal
-        return res.status(OK).json(result);
-    }
-);
-
-const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
-    const { chatId } = req.params;
-    const { newName } = req.body;
-    const chat = req.chat; // middleware
-
-    if (!chat.isGroupChat) {
-        return next(
-            new ErrorHandler('Cannot rename a non-group chat', BAD_REQUEST)
-        );
-    }
-
-    const me = chat.members.find(({ user_id }) => user_id === req.user.user_id);
-    if (!me) {
-        return next(
-            new ErrorHandler('You are not a member of this group', BAD_REQUEST)
-        );
-    }
-
-    if (me.role !== 'admin') {
-        return next(
-            new ErrorHandler('Only an admin can rename the group', BAD_REQUEST)
-        );
-    }
-
-    if (!newName || !newName.trim()) {
-        return next(
-            new ErrorHandler('New group name cannot be empty', BAD_REQUEST)
-        );
-    }
-
-    const result = await chatObject.renameGroup(chatId, newName);
-
-    // TODO: Emit socket event to notify members about the group name change
-    return res.status(OK).json(result);
-});
-
-const makeAdmin = tryCatch('make admin', async (req, res, next) => {
-    const { chatId, userId } = req.params;
-    const myId = req.user.user_id;
-    const chat = req.chat;
-
-    if (!chat.isGroupChat) {
-        return next(
-            new ErrorHandler(
-                'Cannot remove members from a non-group chat',
-                BAD_REQUEST
-            )
-        );
-    }
-
-    const me = chat.members.find(({ user_id }) => user_id === myId);
-    if (!me) {
-        return next(
-            new ErrorHandler(
-                'You are not the member of this group',
-                BAD_REQUEST
-            )
-        );
-    }
-
-    if (me.role !== 'admin') {
-        return next(
-            new ErrorHandler(
-                'Only an admin can promote someone to admin of the group',
-                BAD_REQUEST
-            )
-        );
-    }
-
-    const group = await chatObject.makeAdmin(chatId, userId);
-
-    return res.status(OK).json({ message: 'user is now an admin' });
 });
 
 export {

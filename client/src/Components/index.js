@@ -35,7 +35,8 @@ import ChatNavbar from './Chats/Layout/ChatNavbar';
 import ChatInput from './Chats/Layout/ChatInput';
 import ChatLayout from './Chats/Layout/ChatLayout';
 import Details from './Chats/Detail/Details';
-import Overview from './Chats/Detail/Overview';
+import ChatSettings from './Chats/Detail/ChatSettings';
+import GroupSettings from './Chats/Detail/GroupSettings';
 import Members from './Chats/Detail/Members';
 import Settings from './Chats/Detail/Settings';
 import Chat from './Chats/Chat';
@@ -45,6 +46,7 @@ import InputFilePreview from './Chats/InputFilePreview';
 import NoChatSelected from './Chats/NoChatSelected';
 import FriendsPopup from './Popups/FriendsPopup';
 import RequestsPopup from './Popups/RequestsPopup';
+import AddMembersPopup from './Popups/AddMembersPopup';
 
 export {
     Header,
@@ -77,6 +79,7 @@ export {
     LikedPostView,
     SavedPostView,
     Popup,
+    AddMembersPopup,
     CustomToast,
     ChatHeader,
     ChatSidebar,
@@ -89,7 +92,8 @@ export {
     NoChatSelected,
     InputFilePreview,
     Details,
-    Overview,
+    ChatSettings,
+    GroupSettings,
     Members,
     Settings,
     FriendsPopup,

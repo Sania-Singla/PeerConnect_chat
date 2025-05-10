@@ -6,6 +6,7 @@ import {
     UpdateCoverImagePopup,
     FriendsPopup,
     RequestsPopup,
+    AddMembersPopup,
 } from '..';
 import { usePopupContext } from '../../Context';
 
@@ -58,6 +59,12 @@ export default function Popup() {
             return (
                 <Wrapper>
                     <FriendsPopup />
+                </Wrapper>
+            );
+        case 'addMembers':
+            return (
+                <Wrapper>
+                    <AddMembersPopup />
                 </Wrapper>
             );
         case 'requests':

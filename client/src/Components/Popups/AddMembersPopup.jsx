@@ -12,9 +12,10 @@ export default function FriendsPopup() {
     const [adding, setAdding] = useState(false);
     const [members, setMembers] = useState([]);
     const [search, setSearch] = useState('');
+    const { chatId } = useParams();
+    const { selectedChat } = useChatContext();
     const { setShowPopup } = usePopupContext();
     const navigate = useNavigate();
-    const [chatName, setChatName] = useState('');
 
     useEffect(() => {
         const controller = new AbortController();
@@ -24,7 +25,20 @@ export default function FriendsPopup() {
             try {
                 setLoading(true);
                 const data = await chatService.getMyFriends(signal);
-                setFriends(data);
+                setFriends(
+                    data.map((f) => {
+                        if (
+                            selectedChat.chat.isGroupChat &&
+                            selectedChat.chat.members.some(
+                                (m) => m.user_id === f.user_id
+                            )
+                        ) {
+                            f.alreadyPresent = true;
+                        } else f.alreadyPresent = false;
+
+                        return f;
+                    })
+                );
             } catch (error) {
                 navigate('/server-error');
             } finally {
@@ -34,26 +48,6 @@ export default function FriendsPopup() {
 
         return () => controller.abort();
     }, []);
-
-    async function createGroup() {
-        if (!chatName.trim()) {
-            toast.error('Please enter a group name');
-            return;
-        }
-        try {
-            setAdding(true);
-            const res = await chatService.createGroup(chatName, members);
-            if (res && !res.message) {
-                toast.success('Group Created successfully');
-            } else toast.error(res.message);
-        } catch (err) {
-            navigate('/server-error');
-        } finally {
-            setAdding(false);
-            setShowPopup(false);
-            setMembers([]);
-        }
-    }
 
     const friendElements = friends
         .filter(
@@ -74,46 +68,73 @@ export default function FriendsPopup() {
                 user_lastName,
                 user_id,
                 user_bio,
+                alreadyPresent,
             }) => (
                 <label
                     htmlFor={user_id}
                     key={user_id}
                     className="cursor-pointer flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
                 >
-                    <input
-                        type="checkbox"
-                        className="size-4"
-                        id={user_id}
-                        checked={members.includes(user_id)}
-                        onChange={(e) => {
-                            e.target.checked
-                                ? setMembers((prev) => prev.concat(user_id))
-                                : setMembers((prev) =>
-                                      prev.filter((id) => id !== user_id)
-                                  );
-                        }}
-                    />
-
+                    {alreadyPresent ? (
+                        <div className="size-5 fill-green-500">
+                            {icons.check}
+                        </div>
+                    ) : (
+                        <input
+                            type="checkbox"
+                            className="size-4"
+                            id={user_id}
+                            disabled={alreadyPresent}
+                            checked={members.includes(user_id)}
+                            onChange={(e) => {
+                                e.target.checked
+                                    ? setMembers((prev) => [...prev, user_id])
+                                    : setMembers((prev) =>
+                                          prev.filter((id) => id !== user_id)
+                                      );
+                            }}
+                        />
+                    )}
                     <div className="flex gap-3 items-center cursor-pointer w-full">
                         <div>
                             <img
                                 src={user_avatar}
                                 alt="user avatar"
-                                className="rounded-full size-[40px] border object-cover"
+                                className="object-cover rounded-full size-[45px]"
                             />
                         </div>
                         <div className="flex-1">
-                            <p className="truncate font-medium leading-tight text-gray-800">
+                            <p className="truncate font-medium text-gray-800">
                                 {user_firstName} {user_lastName}
                             </p>
-                            <p className="text-xs leading-tight text-gray-700">
-                                {user_bio}
+                            <p className="text-sm text-gray-700">
+                                {alreadyPresent ? (
+                                    <i>Already in the group</i>
+                                ) : (
+                                    user_bio
+                                )}
                             </p>
                         </div>
                     </div>
                 </label>
             )
         );
+
+    async function addMembers() {
+        try {
+            setAdding(true);
+            const res = await chatService.addMembers(chatId, members);
+            if (res && !res.message) {
+                toast.success('Members added successfully');
+            } else toast.error(res.message);
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setAdding(false);
+            setShowPopup(false);
+            setMembers([]);
+        }
+    }
 
     return (
         <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">
@@ -125,14 +146,14 @@ export default function FriendsPopup() {
                 </div>
             ) : (
                 <div>
-                    <div className="w-full gap-2">
+                    <div className="flex w-full gap-2 mb-6">
                         {/* Search Bar */}
-                        <div className="relative mb-4">
+                        <div className="relative flex-1">
                             <input
                                 type="text"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search here"
+                                placeholder="Search or start new chat"
                                 className="placeholder:text-[14px] placeholder:text-[#8e8e8e] border border-b-[0.15rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
                             />
                             <div className="size-[15px] rotate-90 fill-[#bfbdcf9d] absolute left-3 top-[50%] transform translate-y-[-50%]">
@@ -140,33 +161,14 @@ export default function FriendsPopup() {
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
-                            {members.length > 0 && (
-                                <div className="relative mb-4 flex-1">
-                                    <input
-                                        type="text"
-                                        value={chatName}
-                                        onChange={(e) =>
-                                            setChatName(e.target.value)
-                                        }
-                                        placeholder="Enter group name"
-                                        className="placeholder:text-[14px] placeholder:text-[#8e8e8e] border border-b-[0.15rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
-                                    />
-                                    <div className="size-[15px] fill-[#aeadb69d] absolute left-3 top-[50%] transform translate-y-[-50%]">
-                                        {icons.group}
-                                    </div>
-                                </div>
-                            )}
-
-                            {members.length > 0 && (
-                                <Button
-                                    btnText={adding ? 'Adding...' : 'Add'}
-                                    className="bg-green-500 mb-4 text-white rounded-md w-[80px]"
-                                    onClick={createGroup}
-                                    disabled={loading}
-                                />
-                            )}
-                        </div>
+                        {members.length > 0 && (
+                            <Button
+                                btnText={adding ? 'Adding...' : 'Add'}
+                                className="bg-green-500 text-white rounded-md w-[80px]"
+                                onClick={addMembers}
+                                disabled={loading}
+                            />
+                        )}
                     </div>
 
                     {friendElements}

@@ -40,11 +40,8 @@ export default function PostPage() {
                             signal
                         );
                         if (request && !request.message) {
-                            if (request.isRequest) {
-                                setRequest(request);
-                            } else {
-                                setChat(request);
-                            }
+                            if (request.isRequest) setRequest(request);
+                            else setChat(request);
                         }
                     }
                 }

@@ -26,23 +26,22 @@ const Message = memo(({ message }) => {
 
     return (
         <div
-            // ref={reference}
             className={`flex w-full ${
                 isSender ? 'justify-end pl-8' : 'justify-start pr-8'
             }`}
         >
             {/* Message Bubble */}
             <div
-                className={`w-fit max-w-[600px] p-2 rounded-lg ${
+                className={`w-fit max-w-[600px] p-2 pb-[3px] flex flex-col gap-1 rounded-lg ${
                     isSender
                         ? 'bg-blue-500 text-white self-end'
                         : 'bg-gray-200 text-gray-800 self-start'
                 }`}
             >
                 {/* sender name */}
-                {selectedChat.isGroupChat && !isSender && (
+                {selectedChat.chat.isGroupChat && !isSender && (
                     <div
-                        className={`${getRandomColor()} font-medium text-[15px] mb-2`}
+                        className={`${getRandomColor()} font-medium text-sm`}
                     >{`${sender?.user_firstName} ${sender?.user_lastName}`}</div>
                 )}
 
@@ -78,21 +77,20 @@ const Message = memo(({ message }) => {
                 )}
 
                 {/* // todo: can add read more expansion */}
-                {/* Text Section */}
-                <p
-                    className={`text-sm leading-tight ${isSender ? 'text-white' : 'text-gray-800'}`}
-                >
-                    {text}
-                </p>
-
-                {/* Timestamp */}
-                <p
-                    className={`text-end text-[10px] ${
-                        isSender ? 'text-[#ffffffbf]' : 'text-[#0000007f]'
-                    }`}
-                >
-                    {formatTime(message_createdAt)}
-                </p>
+                <div className="flex justify-between gap-3">
+                    <p
+                        className={`text-sm leading-tight pb-[3px] ${isSender ? 'text-white' : 'text-gray-800'}`}
+                    >
+                        {text}
+                    </p>
+                    <p
+                        className={`text-end text-[9px] ${
+                            text && 'relative top-[7px]'
+                        } ${isSender ? 'text-[#ffffffce]' : 'text-[#0000007f]'}`}
+                    >
+                        {formatTime(message_createdAt)}
+                    </p>
+                </div>
             </div>
         </div>
     );

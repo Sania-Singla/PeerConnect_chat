@@ -4,14 +4,14 @@ import {
     usePopupContext,
     useUserContext,
 } from '../../../Context';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { icons } from '../../../Assets/icons';
 import { Button } from '../..';
 import { chatService } from '../../../Services';
 import toast from 'react-hot-toast';
 
 export default function Members() {
-    const { selectedChat, setSelectedChat } = useChatContext();
+    const { selectedChat } = useChatContext();
     const { setShowPopup, setPopupInfo } = usePopupContext();
     const navigate = useNavigate();
     const { chatId } = useParams();
@@ -19,23 +19,17 @@ export default function Members() {
     const [promoting, setPromoting] = useState(false);
     const { user } = useUserContext();
     const [search, setSearch] = useState('');
-    const myRole = selectedChat.members.find(
+    const myRole = selectedChat.chat.members.find(
         (m) => m.user_id === user.user_id
-    ).role;
+    )?.role;
 
     async function handleRemove(userId) {
         try {
             setRemoving(true);
             const res = await chatService.removeMember(chatId, userId);
             if (res && !res.message) {
-                setSelectedChat((prev) => ({
-                    ...prev,
-                    members: prev.members.filter((m) => m.user_id !== userId),
-                }));
                 toast.success('Member removed successfully');
-            } else {
-                toast.error(res.message);
-            }
+            } else toast.error(res.message);
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -48,21 +42,8 @@ export default function Members() {
             setPromoting(true);
             const res = await chatService.makeAdmin(chatId, userId);
             if (res && res.message === 'user is now an admin') {
-                setSelectedChat((prev) => ({
-                    ...prev,
-                    members: prev.members.map((m) => {
-                        if (m.user_id === userId) {
-                            return {
-                                ...m,
-                                role: 'admin',
-                            };
-                        } else return m;
-                    }),
-                }));
-                toast.success('Member removed successfully');
-            } else {
-                toast.error(res.message);
-            }
+                toast.success('Member Promoted successfully');
+            } else toast.error(res.message);
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -70,7 +51,7 @@ export default function Members() {
         }
     }
 
-    const memberElements = selectedChat?.members
+    const memberElements = selectedChat?.chat.members
         .filter(
             ({ user_firstName, user_lastName }) =>
                 !search.trim() ||
@@ -89,6 +70,7 @@ export default function Members() {
                 user_firstName,
                 user_lastName,
                 user_bio,
+                isOnline,
             }) => (
                 <div
                     key={user_id}
@@ -96,11 +78,11 @@ export default function Members() {
                     className="cursor-pointer hover:backdrop-brightness-95 rounded-md px-3 py-2 flex justify-between gap-4"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="size-[45px] rounded-full overflow-hidden">
+                        <div className="size-[40px] rounded-full overflow-hidden">
                             <img
                                 src={user_avatar}
                                 alt="member avatar"
-                                className="object-cover size-full rounded-full"
+                                className="border object-cover size-full rounded-full"
                             />
                         </div>
                         <div className="space-y-1">
@@ -116,15 +98,21 @@ export default function Members() {
                                 </p>
                             </div>
                         </div>
+
+                        {isOnline && (
+                            <div className="text-green-600 mb-2 font-medium rounded-full px-2 text-xs py-[2px] bg-[#00ff1517]">
+                                Online
+                            </div>
+                        )}
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="">
                         {role === 'admin' && (
                             <p className="text-sm text-end text-gray-900">
                                 Admin
                             </p>
                         )}
                         {role !== 'admin' && myRole === 'admin' && (
-                            <div className="space-x-2">
+                            <div className="flex items-center gap-2">
                                 <Button
                                     title="remove"
                                     btnText={
@@ -170,7 +158,7 @@ export default function Members() {
             )
         );
 
-    return selectedChat.isGroupChat ? (
+    return selectedChat.chat.isGroupChat ? (
         <div className="px-3">
             {/* Search Bar */}
             <div className="relative my-3">
@@ -191,20 +179,20 @@ export default function Members() {
                     <div
                         onClick={() => {
                             setShowPopup(true);
-                            setPopupInfo({ type: 'friends' });
+                            setPopupInfo({ type: 'addMembers' });
                         }}
                         className="px-3 py-2 rounded-md cursor-pointer flex hover:backdrop-brightness-95 items-center gap-4"
                     >
-                        <div className="p-2 size-[45px] bg-[#d5d5d5] border-[0.01rem] border-gray-400 rounded-full">
-                            <div className="ml-[4px] mt-[3px] size-[22px] fill-[#2d2d2d]">
+                        <div className="p-2 size-[40px] flex items-center justify-center bg-[#d5d5d5] border-[0.01rem] border-gray-400 rounded-full">
+                            <div className="size-[22px] fill-[#2d2d2d]">
                                 {icons.memberAdd}
                             </div>
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm leading-tight font-medium text-gray-900">
                                 Add members
                             </p>
-                            <p className="text-xs text-gray-800">
+                            <p className="text-xs italic leading-tight text-gray-800">
                                 maximum size is 100
                             </p>
                         </div>

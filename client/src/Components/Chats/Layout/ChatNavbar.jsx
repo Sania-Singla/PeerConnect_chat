@@ -19,10 +19,10 @@ export default function ChatNavbar() {
         },
         {
             icon: icons.group,
-            title: 'Groups',
+            title: 'Friends',
             onClick: () => {
                 setShowPopup(true);
-                setPopupInfo({ type: 'groups' });
+                setPopupInfo({ type: 'friends' });
             },
         },
     ];
@@ -32,11 +32,11 @@ export default function ChatNavbar() {
             key={title}
             title={title}
             btnText={
-                <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                <div className="size-[18px] fill-[#434343] group-hover:fill-[#4977ec]">
                     {icon}
                 </div>
             }
-            className="bg-[#ffffff] p-[10px] group rounded-full group drop-shadow-md w-fit"
+            className="bg-[#ffffff] p-2 group rounded-full group drop-shadow-md w-fit"
             onClick={onClick}
         />
     ));
@@ -47,7 +47,7 @@ export default function ChatNavbar() {
                 {/* hamburgur menu btn */}
                 <Button
                     btnText={
-                        <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                        <div className="size-[18px] fill-[#434343] group-hover:fill-[#4977ec]">
                             {icons.hamburgur}
                         </div>
                     }
@@ -55,7 +55,7 @@ export default function ChatNavbar() {
                     onClick={() => {
                         setShowSideBar((prev) => !prev);
                     }}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                 />
 
                 {/* logo */}
@@ -63,7 +63,7 @@ export default function ChatNavbar() {
                     to={'/'}
                     className="flex items-center gap-3 text-nowrap font-medium text-xl"
                 >
-                    <div className="overflow-hidden rounded-full size-[40px] drop-shadow-md hover:scale-110 transition-all duration-300">
+                    <div className="overflow-hidden rounded-full size-[34px] drop-shadow-md hover:scale-110 transition-all duration-300">
                         <img
                             src={LOGO}
                             alt="peer connect logo"

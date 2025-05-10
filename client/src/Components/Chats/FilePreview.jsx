@@ -34,7 +34,7 @@ export default function FilePreview({ attachment, senderId }) {
 
     return (
         <div
-            className={`overflow-hidden rounded-md mb-2 ${
+            className={`max-w-[400px] overflow-hidden rounded-md ${
                 isSender ? 'bg-blue-400' : 'bg-gray-300'
             }`}
         >
@@ -58,7 +58,7 @@ export default function FilePreview({ attachment, senderId }) {
                 >
                     <div className="px-1 flex-1 flex items-center gap-2">
                         <div className="pt-[5px]">
-                            <div className=" size-[22px] fill-current">
+                            <div className=" size-[24px] fill-current">
                                 {icons.doc}
                             </div>
                         </div>
@@ -67,8 +67,10 @@ export default function FilePreview({ attachment, senderId }) {
                                 isSender ? 'text-white' : 'text-gray-800'
                             }`}
                         >
-                            <p className="truncate text-sm">{name}</p>
-                            <p className="text-[10px]">
+                            <p className="truncate text-[13px] leading-tight">
+                                {name}
+                            </p>
+                            <p className="text-[9px] leading-tight">
                                 {formatFileSize(size)}
                             </p>
                         </div>

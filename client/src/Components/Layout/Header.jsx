@@ -40,7 +40,7 @@ export default function Header() {
                 {/* hamburgur menu btn */}
                 <Button
                     btnText={
-                        <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                        <div className="size-[18px] fill-[#434343] group-hover:fill-[#4977ec]">
                             {icons.hamburgur}
                         </div>
                     }
@@ -48,7 +48,7 @@ export default function Header() {
                     onClick={() => {
                         setShowSideBar((prev) => !prev);
                     }}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                 />
 
                 {/* logo */}
@@ -56,7 +56,7 @@ export default function Header() {
                     to={'/'}
                     className="flex items-center justify-center gap-3 text-nowrap font-medium text-xl"
                 >
-                    <div className="overflow-hidden rounded-full size-[40px] drop-shadow-md hover:scale-110 transition-all duration-300">
+                    <div className="overflow-hidden rounded-full size-[34px] drop-shadow-md hover:scale-110 transition-all duration-300">
                         <img
                             src={LOGO}
                             alt="peer connect logo"
@@ -129,7 +129,7 @@ export default function Header() {
                 {!showSearchBar && (
                     <Button
                         btnText={
-                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                            <div className="size-[18px] group-hover:fill-[#4977ec] fill-[#434343]">
                                 {icons.search}
                             </div>
                         }
@@ -137,7 +137,7 @@ export default function Header() {
                         onClick={() => {
                             setShowSearchBar((prev) => !prev);
                         }}
-                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 )}
 
@@ -148,12 +148,12 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                            <div className="size-[18px] group-hover:fill-[#4977ec] fill-[#434343]">
                                 {icons.chat}
                             </div>
                         }
                         title="Collaborations"
-                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 </NavLink>
 
@@ -164,12 +164,12 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                            <div className="size-[18px] group-hover:fill-[#4977ec] fill-[#434343]">
                                 {icons.plus}
                             </div>
                         }
                         title="Add Post"
-                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                     />
                 </NavLink>
 

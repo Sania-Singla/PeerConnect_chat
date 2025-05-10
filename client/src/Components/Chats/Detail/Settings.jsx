@@ -1,3 +1,16 @@
+import { useChatContext } from '../../../Context';
+import { ChatSettings, GroupSettings } from '../..';
+
 export default function Settings() {
-    return <div>Settings</div>;
+    const { selectedChat } = useChatContext();
+
+    return (
+        <div className="p-4 w-full">
+            {selectedChat.chat.isGroupChat ? (
+                <GroupSettings />
+            ) : (
+                <ChatSettings />
+            )}
+        </div>
+    );
 }

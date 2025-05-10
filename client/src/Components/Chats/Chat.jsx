@@ -31,7 +31,7 @@ export default function Chat() {
                     if (data && !data.message) {
                         setMessages(data.messages);
                         setMessagesInfo(data.messagesInfo);
-                    }
+                    } 
                 } catch (err) {
                     navigate('/server-error');
                 } finally {
@@ -43,9 +43,7 @@ export default function Chat() {
                 setMessages([]);
                 controller.abort();
             };
-        } else {
-            setLoading(false);
-        }
+        } else setLoading(false);
     }, [chatId, page]);
 
     const messageElements = messages.map((message) => (
@@ -53,7 +51,7 @@ export default function Chat() {
     ));
 
     return (
-        <div className="p-6">
+        <div className="px-3 py-6">
             {loading ? (
                 <div>loading...</div>
             ) : messages.length > 0 ? (

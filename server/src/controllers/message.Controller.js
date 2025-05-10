@@ -33,31 +33,6 @@ const getMessages = tryCatch('get messages', async (req, res, next) => {
     }
 });
 
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-//! *********************************PENDING
-
 const sendMessage = tryCatch('send message', async (req, res, next) => {
     const { chatId } = req.params;
     const { text = '' } = req.body;
@@ -114,6 +89,10 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
 
     return res.status(OK).json(transformedMessage);
 });
+
+//! *********************************PENDING
+//! *********************************PENDING
+//! *********************************PENDING
 
 const deleteMessage = tryCatch('delete message', async (req, res, next) => {
     const { messageId } = req.params;

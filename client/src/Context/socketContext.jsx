@@ -135,8 +135,21 @@ const SocketContextProvider = ({ children }) => {
             });
         });
 
-        socketInstance.on('requestAccepted', (newChat) => {
-            setChats((prev) => prev.concat(newChat));
+        socketInstance.on('requestAccepted', (chat) => {
+            setChats((prev) => prev.concat(chat));
+        });
+
+        socketInstance.on('newChat', (chat) => {
+            setChats((prev) =>
+                prev.concat({
+                    ...chat,
+                    avatar: chat.isGroupChat
+                        ? chat.members
+                              .slice(0, 3)
+                              .map(({ user_avatar }) => user_avatar)
+                        : chat.avatar,
+                })
+            );
         });
 
         socketInstance.on('newRequest', (request) => {
@@ -164,13 +177,129 @@ const SocketContextProvider = ({ children }) => {
             );
         });
 
+        socketInstance.on('memberRemoved', ({ chatId, userId }) => {
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return {
+                            ...c,
+                            avatar: c.members
+                                .filter(({ user_id }) => user_id !== userId)
+                                .slice(0, 3)
+                                .map(({ user_avatar }) => user_avatar),
+                            members: c.members.filter(
+                                ({ user_id }) => user_id !== userId
+                            ),
+                        };
+                    } else return c;
+                })
+            );
+
+            // update selected chat
+            setSelectedChat((prev) => {
+                if (prev?.chat.chat_id === chatId) {
+                    return {
+                        membersTyping: prev.membersTyping.filter(
+                            ({ user_id }) => user_id !== userId
+                        ),
+                        membersOnline: prev.membersOnline.filter(
+                            ({ user_id }) => user_id !== userId
+                        ),
+                        chat: {
+                            ...prev.chat,
+                            members: prev.chat.members.filter(
+                                ({ user_id }) => user_id !== userId
+                            ),
+                        },
+                    };
+                } else return prev;
+            });
+        });
+
+        socketInstance.on('membersAdded', ({ chatId, members }) => {
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return {
+                            ...c,
+                            avatar: members
+                                .slice(0, 3)
+                                .map(({ user_avatar }) => user_avatar),
+                            members,
+                        };
+                    } else return c;
+                })
+            );
+
+            // update selected chat
+            setSelectedChat((prev) => {
+                if (prev?.chat.chat_id === chatId) {
+                    return { ...prev, chat: { ...prev.chat, members } };
+                } else return prev;
+            });
+        });
+
+        socketInstance.on('memberPromoted', ({ chatId, userId }) => {
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return {
+                            ...c,
+                            members: c.members.map((m) => {
+                                if (m.user_id === userId) {
+                                    return { ...m, role: 'admin' };
+                                } else return m;
+                            }),
+                        };
+                    } else return c;
+                })
+            );
+
+            setSelectedChat((prev) => {
+                if (prev?.chat.chat_id === chatId) {
+                    return {
+                        ...prev,
+                        chat: {
+                            ...prev.chat,
+                            members: prev.chat.members.map((m) => {
+                                if (m.user_id === userId) {
+                                    return { ...m, role: 'admin' };
+                                } else return m;
+                            }),
+                        },
+                    };
+                } else return prev;
+            });
+        });
+
+        socketInstance.on('groupRenamed', ({ chatId, newName }) => {
+            setChats((prev) =>
+                prev.map((c) => {
+                    if (c.chat_id === chatId) {
+                        return { ...c, chat_name: newName };
+                    } else return c;
+                })
+            );
+
+            setSelectedChat((prev) => {
+                if (prev?.chat.chat_id === chatId) {
+                    return {
+                        ...prev,
+                        chat: { ...prev.chat, chat_name: newName },
+                    };
+                } else return prev;
+            });
+        });
+
+        socketInstance.on('chatDeleted', (chatId) => {
+            setChats((prev) =>
+                prev.filter(({ chat_id }) => chat_id !== chatId)
+            );
+        });
+
         socketInstance.on('editMessage', (message) => {});
 
         socketInstance.on('deleteMessage', (message) => {});
-
-        socketInstance.on('joinGroup', () => {});
-
-        socketInstance.on('leaveGroup', () => {});
 
         return socketInstance; // optional
     }

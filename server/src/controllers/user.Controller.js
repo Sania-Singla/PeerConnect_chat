@@ -35,32 +35,16 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
         const allowedEmptyFields = ['lastName', 'coverImage'];
 
         for (const [key, value] of Object.entries(data)) {
-            if (!value && !allowedEmptyFields.includes(key)) {
-                // Remove uploaded files if any
-                if (data.avatar) {
-                    fs.unlinkSync(data.avatar);
-                }
-                if (data.coverImage) {
-                    fs.unlinkSync(data.coverImage);
-                }
-
-                return next(new ErrorHandler('missing fields', BAD_REQUEST));
-            }
-
-            if (value && key !== 'userId') {
-                const isValid =
-                    key === 'avatar' || key === 'coverImage'
-                        ? verifyExpression('file', value)
-                        : verifyExpression(key, value);
+            if (value) {
+                const isValid = verifyExpression(
+                    key === 'avatar' || key === 'coverImage' ? 'file' : key,
+                    value
+                );
 
                 if (!isValid) {
                     // Remove uploaded files if any
-                    if (data.avatar) {
-                        fs.unlinkSync(data.avatar);
-                    }
-                    if (data.coverImage) {
-                        fs.unlinkSync(data.coverImage);
-                    }
+                    if (data.avatar) fs.unlinkSync(data.avatar);
+                    if (data.coverImage) fs.unlinkSync(data.coverImage);
 
                     return next(
                         new ErrorHandler(
@@ -71,23 +55,21 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
                         )
                     );
                 }
+            } else if (!allowedEmptyFields.includes(key)) {
+                if (data.avatar) fs.unlinkSync(data.avatar);
+                if (data.coverImage) fs.unlinkSync(data.coverImage);
+                return next(new ErrorHandler('missing fields', BAD_REQUEST));
             }
         }
 
-        const existingUser = await userObject.getUser({
-            email: data.email,
-            userName: data.userName,
-        });
+        let existingUser = await userObject.getUser(data.email);
+        if (!existingUser) {
+            existingUser = await userObject.getUser(data.userName);
+        }
 
         if (existingUser) {
-            // Remove uploaded files if any
-            if (data.avatar) {
-                fs.unlinkSync(data.avatar);
-            }
-            if (data.coverImage) {
-                fs.unlinkSync(data.coverImage);
-            }
-
+            if (data.avatar) fs.unlinkSync(data.avatar);
+            if (data.coverImage) fs.unlinkSync(data.coverImage);
             return next(new ErrorHandler('user already exists', BAD_REQUEST));
         }
 
@@ -107,12 +89,9 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
 
         return res.status(OK).json(user);
     } catch (err) {
-        if (avatarURL) {
-            await deleteFromCloudinary(avatarURL);
-        }
-        if (coverImageURL) {
-            await deleteFromCloudinary(coverImageURL);
-        }
+        if (avatarURL) await deleteFromCloudinary(avatarURL);
+        if (coverImageURL) await deleteFromCloudinary(coverImageURL);
+
         throw err;
     }
 });

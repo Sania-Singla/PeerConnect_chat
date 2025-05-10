@@ -60,6 +60,26 @@ function getPipeline2() {
         {
             $lookup: {
                 from: 'users',
+                localField: 'creator',
+                foreignField: 'user_id',
+                as: 'creator',
+                pipeline: [
+                    {
+                        $project: {
+                            user_id: 1,
+                            user_name: 1,
+                            user_avatar: 1,
+                            user_lastName: 1,
+                            user_firstName: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        { $unwind: '$creator' },
+        {
+            $lookup: {
+                from: 'users',
                 localField: 'members.user_id',
                 foreignField: 'user_id',
                 as: 'populatedMembers',

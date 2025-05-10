@@ -1,5 +1,5 @@
 import { Irequests } from '../../interfaces/request.Interface.js';
-import { Chat, Request, User } from '../../schemas/MongoDB/index.js';
+import { Chat, Request } from '../../schemas/MongoDB/index.js';
 /* import { chatObject } from '../../controllers/chat.Controller.js'; 
    - causes circular dependency ERROR
     getServiceObject --imports-> models --imports-> controller 
@@ -27,21 +27,18 @@ export class MongoDBrequests extends Irequests {
                 }),
                 Chat.findOne({
                     members: {
-                        $elemMatch: { user_id: myId, role: 'member' },
-                    },
-                    members: {
-                        $elemMatch: { user_id: userId, role: 'member' },
+                        $all: [
+                            { $elemMatch: { user_id: myId } },
+                            { $elemMatch: { user_id: userId } },
+                        ],
                     },
                     isGroupChat: false,
                 }),
             ]);
 
-            if (request) {
-                return { ...request.toObject(), isRequest: true };
-            }
-            if (chat) {
-                return { ...chat.toObject(), isRequest: false };
-            }
+            if (request) return { ...request.toObject(), isRequest: true };
+            if (chat) return { ...chat.toObject(), isRequest: false };
+
             return null; // No request or chat found
         } catch (err) {
             throw err;
@@ -67,10 +64,10 @@ export class MongoDBrequests extends Irequests {
             }),
             Chat.findOne({
                 members: {
-                    $elemMatch: { user_id: myId, role: 'member' },
-                },
-                members: {
-                    $elemMatch: { user_id: userId, role: 'member' },
+                    $all: [
+                        { $elemMatch: { user_id: myId } },
+                        { $elemMatch: { user_id: userId } },
+                    ],
                 },
                 isGroupChat: false,
             }),
@@ -116,12 +113,9 @@ export class MongoDBrequests extends Irequests {
             const request = await Request.findOneAndDelete({
                 request_id: requestId,
             }).lean();
-            const sender = await User.findOne({
-                user_id: request.sender_id,
-            });
+
             const chat = await Chat.create({
                 creator: request.sender_id,
-                chat_name: `${sender.user_name} ${sender.user_lastName}`,
                 members: [
                     { user_id: request.sender_id, role: 'member' },
                     { user_id: request.receiver_id, role: 'member' },
