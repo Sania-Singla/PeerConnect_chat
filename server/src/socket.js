@@ -9,8 +9,8 @@ import { CORS_OPTIONS } from './constants/options.js';
 import { socketAuthenticator } from './middlewares/index.js';
 
 const redisClient = await connectRedis();
-const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: CORS_OPTIONS });
+const http = createServer(app);
+const io = new Server(http, { cors: CORS_OPTIONS });
 
 // middleware for extracting user from socket
 io.use((socket, next) => {
@@ -100,4 +100,4 @@ io.on('connection', async (socket) => {
     });
 });
 
-export { io, redisClient, httpServer };
+export { io, redisClient, http };

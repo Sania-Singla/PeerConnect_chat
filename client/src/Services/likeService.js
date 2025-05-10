@@ -5,10 +5,7 @@ class LikeService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/likes/toggle-post-like/${postId}?likedStatus=${likedStatus}`,
-                {
-                    method: 'PATCH',
-                    credentials: 'include',
-                }
+                { method: 'PATCH', credentials: 'include' }
             );
 
             const data = await res.json();
@@ -28,10 +25,7 @@ class LikeService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/likes/toggle-comment-like/${commentId}?likedStatus=${likedStatus}`,
-                {
-                    method: 'PATCH',
-                    credentials: 'include',
-                }
+                { method: 'PATCH', credentials: 'include' }
             );
 
             const data = await res.json();
@@ -51,11 +45,7 @@ class LikeService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
-                {
-                    method: 'GET',
-                    signal,
-                    credentials: 'include',
-                }
+                { method: 'GET', signal, credentials: 'include' }
             );
 
             const data = await res.json();

@@ -11,10 +11,7 @@ class PostService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
-                {
-                    method: 'GET',
-                    signal,
-                }
+                { method: 'GET', signal }
             );
 
             const data = await res.json();

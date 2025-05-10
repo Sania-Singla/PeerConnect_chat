@@ -11,14 +11,12 @@ const CORS_OPTIONS = {
     origin: function (origin, callback) {
         if (!origin || WHITELIST.includes(origin)) {
             callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
+        } else callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     optionsSuccessStatus: 200,
-    allowedHeaders: ['Content-Type', 'authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 export { COOKIE_OPTIONS, CORS_OPTIONS, WHITELIST };

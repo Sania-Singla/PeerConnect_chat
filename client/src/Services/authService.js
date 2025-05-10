@@ -9,6 +9,7 @@ class AuthService {
         try {
             const res = await fetch(`${BASE_BACKEND_URL}/users/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
             });

@@ -5,10 +5,7 @@ class FollowerService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/followers/${channelId}`,
-                {
-                    method: 'GET',
-                    signal,
-                }
+                { method: 'GET', signal }
             );
 
             const data = await res.json();
@@ -32,10 +29,7 @@ class FollowerService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/followers/follows/${channelId}`,
-                {
-                    method: 'GET',
-                    signal,
-                }
+                { method: 'GET', signal }
             );
 
             const data = await res.json();
@@ -59,10 +53,7 @@ class FollowerService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/followers/toggle/${channelId}`,
-                {
-                    method: 'POST',
-                    credentials: 'include',
-                }
+                { method: 'POST', credentials: 'include' }
             );
 
             const data = await res.json();

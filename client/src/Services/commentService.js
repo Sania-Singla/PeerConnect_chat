@@ -79,10 +79,7 @@ class CommentService {
         try {
             const res = await fetch(
                 `${BASE_BACKEND_URL}/comments/comment/${commentId}`,
-                {
-                    method: 'DELETE',
-                    credentials: 'include',
-                }
+                { method: 'DELETE', credentials: 'include' }
             );
 
             const data = await res.json();
