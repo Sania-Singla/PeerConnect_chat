@@ -1,7 +1,9 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class ChatService {
     async getMyChats(signal) {
         try {
-            const res = await fetch(`/api/chats`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/chats`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -10,7 +12,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -25,7 +27,7 @@ class ChatService {
     }
     async getMyFriends(signal) {
         try {
-            const res = await fetch(`/api/chats/friends`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/chats/friends`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -34,7 +36,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -50,7 +52,7 @@ class ChatService {
 
     async getChatDetails(signal, chatId) {
         try {
-            const res = await fetch(`/api/chats/${chatId}`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/chats/${chatId}`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -59,7 +61,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -76,7 +78,7 @@ class ChatService {
     async getMessages(signal, chatId, page, limit) {
         try {
             const res = await fetch(
-                `/api/messages/${chatId}?page=${page}&limit=${limit}`,
+                `${BASE_BACKEND_URL}/messages/${chatId}?page=${page}&limit=${limit}`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -87,7 +89,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -117,7 +119,7 @@ class ChatService {
                 headers = { 'Content-Type': 'application/json' };
             }
 
-            const res = await fetch(`/api/messages/${chatId}`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/messages/${chatId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers,
@@ -127,7 +129,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -139,7 +141,7 @@ class ChatService {
 
     async createGroup(chatName, members) {
         try {
-            const res = await fetch('/api/chats/groups/new', {
+            const res = await fetch(`${BASE_BACKEND_URL}/chats/groups/new`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -149,7 +151,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -162,7 +164,7 @@ class ChatService {
     async removeMember(chatId, userId) {
         try {
             const res = await fetch(
-                `/api/chats/groups/members/remove/${chatId}/${userId}`,
+                `${BASE_BACKEND_URL}/chats/groups/members/remove/${chatId}/${userId}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -172,7 +174,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -185,7 +187,7 @@ class ChatService {
     async makeAdmin(chatId, userId) {
         try {
             const res = await fetch(
-                `/api/chats/groups/members/admin/${chatId}/${userId}`,
+                `${BASE_BACKEND_URL}/chats/groups/members/admin/${chatId}/${userId}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -195,7 +197,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -207,17 +209,20 @@ class ChatService {
 
     async renameGroup(chatId, newName) {
         try {
-            const res = await fetch(`/api/chats/groups/rename/${chatId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ newName }),
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/chats/groups/rename/${chatId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newName }),
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -229,15 +234,18 @@ class ChatService {
 
     async leaveGroup(chatId) {
         try {
-            const res = await fetch(`/api/chats/groups/leave/${chatId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/chats/groups/leave/${chatId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -249,7 +257,7 @@ class ChatService {
 
     async deleteChat(chatId) {
         try {
-            const res = await fetch(`/api/chats/${chatId}`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/chats/${chatId}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -257,7 +265,7 @@ class ChatService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -269,17 +277,20 @@ class ChatService {
 
     async addMembers(chatId, members) {
         try {
-            const res = await fetch(`/api/chats/groups/members/add/${chatId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ members }),
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/chats/groups/members/add/${chatId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members }),
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

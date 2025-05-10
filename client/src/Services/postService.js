@@ -1,3 +1,5 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class PostService {
     async getRandomPosts(
         signal,
@@ -8,7 +10,7 @@ class PostService {
     ) {
         try {
             const res = await fetch(
-                `/api/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
+                `${BASE_BACKEND_URL}/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
                 {
                     method: 'GET',
                     signal,
@@ -18,7 +20,7 @@ class PostService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
 
@@ -36,14 +38,14 @@ class PostService {
     async getPosts(signal, channelId, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
+                `${BASE_BACKEND_URL}/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
                 { signal, method: 'GET' }
             );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -59,16 +61,19 @@ class PostService {
 
     async getPost(signal, postId) {
         try {
-            const res = await fetch(`/api/posts/post/${postId}`, {
-                method: 'GET',
-                credentials: 'include',
-                signal,
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/post/${postId}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    signal,
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -84,17 +89,20 @@ class PostService {
 
     async updatePostDetails(inputs, postId) {
         try {
-            const res = await fetch(`/api/posts/details/${postId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(inputs), // title, content & category
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/details/${postId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inputs), // title, content & category
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -109,16 +117,19 @@ class PostService {
             const formData = new FormData();
             formData.append('postImage', postImage);
 
-            const res = await fetch(`/api/posts/image/${postId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                body: formData,
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/image/${postId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    body: formData,
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -130,15 +141,18 @@ class PostService {
 
     async deletePost(postId) {
         try {
-            const res = await fetch(`/api/posts/delete/${postId}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/delete/${postId}`,
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -155,7 +169,7 @@ class PostService {
                 formData.append(key, value);
             });
 
-            const res = await fetch('/api/posts/add', {
+            const res = await fetch(`${BASE_BACKEND_URL}/posts/add`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData,
@@ -164,7 +178,7 @@ class PostService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -176,15 +190,18 @@ class PostService {
 
     async togglePostVisibility(postId) {
         try {
-            const res = await fetch(`/api/posts/visibility/${postId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/visibility/${postId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -197,7 +214,7 @@ class PostService {
     async getSavedPosts(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                `${BASE_BACKEND_URL}/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -208,7 +225,7 @@ class PostService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -224,15 +241,18 @@ class PostService {
 
     async toggleSavePost(postId) {
         try {
-            const res = await fetch(`/api/posts/toggle-save/${postId}`, {
-                method: 'POST',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/posts/toggle-save/${postId}`,
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

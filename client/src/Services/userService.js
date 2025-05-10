@@ -1,16 +1,21 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class UserService {
     async getChannelProfile(signal, userId) {
         try {
-            const res = await fetch(`/api/users/channel/${userId}`, {
-                method: 'GET',
-                credentials: 'include',
-                signal,
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/users/channel/${userId}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    signal,
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -26,7 +31,7 @@ class UserService {
 
     async updateAccountDetails(inputs) {
         try {
-            const res = await fetch('/api/users/account', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/account`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -36,7 +41,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -48,7 +53,7 @@ class UserService {
 
     async updateChannelDetails(inputs) {
         try {
-            const res = await fetch('/api/users/channel', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/channel`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -58,7 +63,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -73,7 +78,7 @@ class UserService {
             const formData = new FormData();
             formData.append('avatar', avatar);
 
-            const res = await fetch('/api/users/avatar', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/avatar`, {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -82,7 +87,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -97,7 +102,7 @@ class UserService {
             const formData = new FormData();
             formData.append('coverImage', coverImage);
 
-            const res = await fetch('/api/users/coverImage', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/coverImage`, {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
@@ -106,7 +111,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -118,7 +123,7 @@ class UserService {
 
     async updatePassword(newPassword, oldPassword) {
         try {
-            const res = await fetch('/api/users/password', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/password`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -131,7 +136,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -144,7 +149,7 @@ class UserService {
     async getWatchHistory(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                `${BASE_BACKEND_URL}/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
                     method: 'GET',
                     signal,
@@ -155,7 +160,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -171,7 +176,7 @@ class UserService {
 
     async clearWatchHistory() {
         try {
-            const res = await fetch('/api/users/history', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/history`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -179,7 +184,7 @@ class UserService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

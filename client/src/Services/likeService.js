@@ -1,8 +1,10 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class LikeService {
     async togglePostLike(postId, likedStatus) {
         try {
             const res = await fetch(
-                `/api/likes/toggle-post-like/${postId}?likedStatus=${likedStatus}`,
+                `${BASE_BACKEND_URL}/likes/toggle-post-like/${postId}?likedStatus=${likedStatus}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -12,7 +14,7 @@ class LikeService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -25,7 +27,7 @@ class LikeService {
     async toggleCommentLike(commentId, likedStatus) {
         try {
             const res = await fetch(
-                `/api/likes/toggle-comment-like/${commentId}?likedStatus=${likedStatus}`,
+                `${BASE_BACKEND_URL}/likes/toggle-comment-like/${commentId}?likedStatus=${likedStatus}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -35,7 +37,7 @@ class LikeService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -48,7 +50,7 @@ class LikeService {
     async getLikedPosts(signal, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
+                `${BASE_BACKEND_URL}/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
                 {
                     method: 'GET',
                     signal,
@@ -59,7 +61,7 @@ class LikeService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

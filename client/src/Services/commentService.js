@@ -1,8 +1,10 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class CommentService {
     async getComments(signal, postId, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `/api/comments/post/${postId}?orderBy=${orderBy}`,
+                `${BASE_BACKEND_URL}/comments/post/${postId}?orderBy=${orderBy}`,
                 {
                     method: 'GET',
                     signal,
@@ -12,7 +14,7 @@ class CommentService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -28,7 +30,7 @@ class CommentService {
 
     async addComment(postId, content) {
         try {
-            const res = await fetch(`/api/comments/${postId}`, {
+            const res = await fetch(`${BASE_BACKEND_URL}/comments/${postId}`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -38,7 +40,7 @@ class CommentService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -50,17 +52,20 @@ class CommentService {
 
     async updateComment(commentId, content) {
         try {
-            const res = await fetch(`/api/comments/comment/${commentId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ commentContent: content }),
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/comments/comment/${commentId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ commentContent: content }),
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -72,15 +77,18 @@ class CommentService {
 
     async deleteComment(commentId) {
         try {
-            const res = await fetch(`/api/comments/comment/${commentId}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/comments/comment/${commentId}`,
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

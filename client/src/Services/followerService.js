@@ -1,15 +1,20 @@
+import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+
 class FollowerService {
     async getFollowers(signal, channelId) {
         try {
-            const res = await fetch(`/api/followers/${channelId}`, {
-                method: 'GET',
-                signal,
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/followers/${channelId}`,
+                {
+                    method: 'GET',
+                    signal,
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -25,15 +30,18 @@ class FollowerService {
 
     async getFollowings(signal, channelId) {
         try {
-            const res = await fetch(`/api/followers/follows/${channelId}`, {
-                method: 'GET',
-                signal,
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/followers/follows/${channelId}`,
+                {
+                    method: 'GET',
+                    signal,
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -49,15 +57,18 @@ class FollowerService {
 
     async toggleFollow(channelId) {
         try {
-            const res = await fetch(`/api/followers/toggle/${channelId}`, {
-                method: 'POST',
-                credentials: 'include',
-            });
+            const res = await fetch(
+                `${BASE_BACKEND_URL}/followers/toggle/${channelId}`,
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

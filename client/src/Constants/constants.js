@@ -7,6 +7,10 @@ const EMAIL = 'peerconnect@gmail.com';
 const CONTACTNUMBER = 'xxxxxxxxxx';
 const MAX_FILE_SIZE = 5;
 
+const BASE_BACKEND_URL = import.meta.env.VITE_BACKEND_BASE_URL + '/api';
+const SERVER_ERROR = 500;
+const BAD_REQUEST = 400;
+
 const TAILWIND_COLORS = [
     'text-blue-500',
     'text-teal-500',
@@ -51,8 +55,11 @@ const CONTRIBUTORS = [
 
 export {
     LIMIT,
+    BASE_BACKEND_URL,
     DEFAULT_RTE_TEXT,
     LOGO,
+    SERVER_ERROR,
+    BAD_REQUEST,
     MAX_FILE_SIZE,
     CONTRIBUTORS,
     EMAIL,

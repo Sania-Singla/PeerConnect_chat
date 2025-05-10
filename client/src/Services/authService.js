@@ -1,7 +1,13 @@
+import {
+    SERVER_ERROR,
+    BAD_REQUEST,
+    BASE_BACKEND_URL,
+} from '../Constants/constants';
+
 class AuthService {
     async login(inputs) {
         try {
-            const res = await fetch('/api/users/login', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
@@ -10,7 +16,7 @@ class AuthService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -27,7 +33,7 @@ class AuthService {
                 formData.append(key, value);
             });
 
-            const res = await fetch('/api/users/register', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/register`, {
                 method: 'POST',
                 body: formData,
             });
@@ -35,9 +41,9 @@ class AuthService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
-            } else if (res.status === 400) {
+            } else if (res.status === BAD_REQUEST) {
                 return data;
             } else {
                 const data1 = await this.login({
@@ -54,7 +60,7 @@ class AuthService {
 
     async logout() {
         try {
-            const res = await fetch('/api/users/logout', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/logout`, {
                 method: 'PATCH',
                 credentials: 'include',
             });
@@ -62,7 +68,7 @@ class AuthService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -74,7 +80,7 @@ class AuthService {
 
     async deleteAccount(password) {
         try {
-            const res = await fetch('/api/users/delete', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/delete`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -84,7 +90,7 @@ class AuthService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;
@@ -96,7 +102,7 @@ class AuthService {
 
     async getCurrentUser(signal) {
         try {
-            const res = await fetch('/api/users/current', {
+            const res = await fetch(`${BASE_BACKEND_URL}/users/current`, {
                 method: 'GET',
                 credentials: 'include',
                 signal,
@@ -105,7 +111,7 @@ class AuthService {
             const data = await res.json();
             console.log(data);
 
-            if (res.status === 500) {
+            if (res.status === SERVER_ERROR) {
                 throw new Error(data.message);
             }
             return data;

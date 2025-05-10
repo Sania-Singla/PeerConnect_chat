@@ -6,9 +6,10 @@ dotenv.config({ path: './src/config/.env' }); // no need if in root dir
 
 export default defineConfig({
     plugins: [react()],
-    server: {
-        proxy: {
-            '/api': 'http://localhost:3000',
-        },
-    },
+    // proxy doesn't work in deployment
+    // server: {
+    //     proxy: {
+    //         '/api': 'http://localhost:3000',
+    //     },
+    // },
 });
