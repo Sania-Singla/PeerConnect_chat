@@ -14,10 +14,7 @@ export default function UpdatePostPage() {
         content: '',
         categoryId: '',
     });
-    const [error, setError] = useState({
-        title: '',
-        postImage: '',
-    });
+    const [error, setError] = useState({});
     const { postId } = useParams();
     const [post, setPost] = useState({});
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
@@ -166,8 +163,8 @@ export default function UpdatePostPage() {
 
     return loading ? (
         <div>loading...</div>
-    ) : user.user_name === post.userName ? (
-        <div className="w-full h-full overflow-scroll px-10">
+    ) : user.user_name === post.owner.user_name ? (
+        <div className="w-full h-full overflow-scroll">
             <h2 className="text-[#252525] w-full text-center mb-8 underline underline-offset-2">
                 Update a Post
             </h2>

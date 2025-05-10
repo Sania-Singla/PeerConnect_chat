@@ -19,10 +19,7 @@ export default function AddPostPage() {
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
-    const [error, setError] = useState({
-        title: '',
-        postImage: '',
-    });
+    const [error, setError] = useState({});
 
     function handleChange(e) {
         const { name, value } = e.target;
