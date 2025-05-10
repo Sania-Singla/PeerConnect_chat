@@ -242,7 +242,7 @@ export default function RegisterPage() {
                 </p>
             </div>
 
-            <div className="w-[400px] flex flex-col items-center justify-center gap-3">
+            <div className="px-8 w-[400px] flex flex-col items-center justify-center gap-3">
                 {error.root && (
                     <div className="text-red-500 w-full text-center">
                         {error.root}

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
     return (
-        <div className="text-black flex flex-col items-center justify-center gap-5 fixed z-[1] bg-white inset-0">
+        <div className="text-black flex flex-col items-center justify-center gap-5 fixed z-[1] bg-white inset-0 px-8">
             <Link
                 to={'/'}
                 className="w-fit flex items-center justify-center hover:brightness-95"

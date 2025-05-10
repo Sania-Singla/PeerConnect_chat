@@ -88,7 +88,7 @@ export default function ChannelPage() {
                     }
                 }
             } else if (chat) {
-                navigate(`/chat/${userId}`);
+                navigate(`/chat/${chat.chat_id}`);
             } else {
                 const res = await requestService.sendRequest(userId);
                 if (res && !res.message) {
@@ -134,7 +134,7 @@ export default function ChannelPage() {
             </div>
 
             {/* owner info */}
-            <div className="flex items-center justify-between w-full pr-8 relative ">
+            <div className="flex items-center justify-between w-full pr-0 sm:pr-8 relative">
                 <div className="flex items-center justify-start gap-4">
                     {/* owner avatar */}
                     <div className="relative -top-8 flex gap-2 items-center justify-start">
@@ -174,7 +174,7 @@ export default function ChannelPage() {
                         />
                     </div>
                 ) : (
-                    <div className="flex gap-2 sm:gap-4">
+                    <div className="flex flex-col pb-14 sm:flex-row gap-2 sm:gap-4">
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
@@ -182,13 +182,16 @@ export default function ChannelPage() {
                         />
                         <Button
                             btnText={
-                                chat
-                                    ? 'Chat'
-                                    : request?.sender_id === user.user_id
-                                      ? 'Request Sent'
-                                      : request?.receiver_id === user.user_id
-                                        ? 'Accept'
-                                        : 'Connect'
+                                user
+                                    ? chat
+                                        ? 'Chat'
+                                        : request?.sender_id === user.user_id
+                                          ? 'Request Sent'
+                                          : request?.receiver_id ===
+                                              user.user_id
+                                            ? 'Accept'
+                                            : 'Connect'
+                                    : 'Connect'
                             }
                             onClick={handleCollab}
                             className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"

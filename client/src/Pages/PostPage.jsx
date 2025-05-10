@@ -190,7 +190,7 @@ export default function PostPage() {
                     }
                 }
             } else if (chat) {
-                navigate(`/chat/${post.post_ownerId}`);
+                navigate(`/chat/${chat.chat_id}`);
             } else {
                 const res = await requestService.sendRequest(post.post_ownerId);
                 if (res && !res.message) {
@@ -267,7 +267,7 @@ export default function PostPage() {
                             </div>
 
                             {/* like/dislike btn */}
-                            <div className="bg-[#f0efef] rounded-full overflow-hidden drop-shadow-md hover:bg-[#ebeaea]">
+                            <div className="bg-[#f0efef] rounded-full flex overflow-hidden drop-shadow-md hover:bg-[#ebeaea]">
                                 <Button
                                     btnText={
                                         <div className="flex items-center justify-center gap-2">
@@ -276,7 +276,7 @@ export default function PostPage() {
                                                     post.isLiked
                                                         ? 'fill-[#4977ec] stroke-[#4977ec]'
                                                         : 'fill-none stroke-black'
-                                                } size-[20px]`}
+                                                } size-[18px]`}
                                             >
                                                 {icons.like}
                                             </div>
@@ -296,7 +296,7 @@ export default function PostPage() {
                                                     post.isDisliked
                                                         ? 'fill-[#4977ec] stroke-[#4977ec]'
                                                         : 'fill-none stroke-black'
-                                                } size-[20px]`}
+                                                } size-[18px]`}
                                             >
                                                 {icons.dislike}
                                             </div>
@@ -402,7 +402,7 @@ export default function PostPage() {
                                         onClick={() =>
                                             navigate(`/update/${post.post_id}`)
                                         }
-                                        className="rounded-md text-white py-[4px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        className="rounded-md text-white py-[4px] px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
                                     />
                                 ) : (
                                     <div className="flex gap-2 sm:gap-4">
@@ -413,22 +413,24 @@ export default function PostPage() {
                                                     : 'Follow'
                                             }
                                             onClick={toggleFollow}
-                                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            className="rounded-md py-[5px] px-3 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
                                         />
                                         <Button
                                             btnText={
-                                                chat
-                                                    ? 'Chat'
-                                                    : request?.sender_id ===
-                                                        user.user_id
-                                                      ? 'Request Sent'
-                                                      : request?.receiver_id ===
-                                                          user.user_id
-                                                        ? 'Accept'
-                                                        : 'Connect'
+                                                user
+                                                    ? chat
+                                                        ? 'Chat'
+                                                        : request?.sender_id ===
+                                                            user.user_id
+                                                          ? 'Request Sent'
+                                                          : request?.receiver_id ===
+                                                              user.user_id
+                                                            ? 'Accept'
+                                                            : 'Connect'
+                                                    : 'Connect'
                                             }
                                             onClick={handleCollab}
-                                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            className="rounded-md py-[5px] px-3 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
                                         />
                                     </div>
                                 )}

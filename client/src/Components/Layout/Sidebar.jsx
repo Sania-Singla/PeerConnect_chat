@@ -194,7 +194,7 @@ export default function Sidebar() {
                                                 navigate('/register')
                                             }
                                             btnText="Sign Up"
-                                            className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            className="text-white rounded-md py-[5px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
                                         />
 
                                         <div className="h-full border-r-[0.01rem] border-[#c8c8c8]" />
@@ -202,7 +202,7 @@ export default function Sidebar() {
                                         <Button
                                             onClick={() => navigate('/login')}
                                             btnText="Login"
-                                            className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            className="text-white rounded-md py-[5px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
                                         />
                                     </div>
                                 )}
