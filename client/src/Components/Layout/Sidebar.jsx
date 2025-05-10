@@ -178,11 +178,11 @@ export default function Sidebar() {
                                             to={`/channel/${user?.user_id}`}
                                             className="hover:scale-110 transition-all duration-300"
                                         >
-                                            <div className="size-[34px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
+                                            <div className="size-[34px] rounded-full overflow-hidden drop-shadow-sm hover:brightness-90">
                                                 <img
                                                     src={user?.user_avatar}
                                                     alt="user avatar"
-                                                    className="size-full object-cover"
+                                                    className="size-full object-cover border rounded-full"
                                                 />
                                             </div>
                                         </Link>

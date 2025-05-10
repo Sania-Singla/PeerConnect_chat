@@ -22,7 +22,7 @@ export default function ChatsPage() {
                     <ChatSidebar />
                 </div>
                 <div
-                    className={`${chatId && !showSidebar ? 'flex-1' : 'hidden sm:flex sm:flex-1'}`}
+                    className={`${chatId && !showSidebar ? 'flex-1 w-full' : 'hidden sm:block sm:flex-1'}`}
                 >
                     <Outlet />
                 </div>
