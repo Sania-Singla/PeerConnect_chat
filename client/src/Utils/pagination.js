@@ -12,7 +12,7 @@ export default function paginate(hasNextPage, loading, setPage) {
     let observer;
     return useCallback(
         (node) => {
-            if (loading) return;
+            if (loading || !hasNextPage) return;
             if (observer) observer.disconnect();
             observer = new IntersectionObserver((entries) => {
                 const lastElement = entries[0];
@@ -22,6 +22,6 @@ export default function paginate(hasNextPage, loading, setPage) {
             });
             if (node) observer.observe(node);
         },
-        [hasNextPage]
+        [loading, hasNextPage]
     );
 }

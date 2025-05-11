@@ -7,6 +7,7 @@ import { chatService } from '../../../Services';
 import { useSocketContext } from '../../../Context';
 import toast from 'react-hot-toast';
 import { MAX_FILE_SIZE } from '../../../Constants/constants';
+import EmojiPicker from 'emoji-picker-react';
 
 export default function ChatInput() {
     const [message, setMessage] = useState({ attachments: [], text: '' });
@@ -16,11 +17,37 @@ export default function ChatInput() {
     const [loading, setLoading] = useState(false);
     const attachmentRef = useRef();
     const [attachmentPreviews, setAttachmentPreviews] = useState([]);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const navigate = useNavigate();
     const inputRef = useRef();
+    const emojiPickerRef = useRef();
+    const emojiButtonRef = useRef();
 
     // auto focus input field
     useEffect(() => inputRef.current?.focus(), [chatId]);
+
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (
+                emojiPickerRef.current &&
+                !emojiPickerRef.current.contains(e.target) &&
+                emojiButtonRef.current &&
+                !emojiButtonRef.current.contains(e.target)
+            ) {
+                setShowEmojiPicker(false);
+            }
+        }
+
+        if (showEmojiPicker) {
+            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('touchstart', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
+        };
+    }, [showEmojiPicker]);
 
     async function handleSend(e) {
         e.preventDefault();
@@ -95,8 +122,28 @@ export default function ChatInput() {
         setAttachmentPreviews((prev) => prev.filter((_, i) => i !== index));
     }
 
+    function handleEmojiClick(emojiData) {
+        setMessage((prev) => ({ ...prev, text: prev.text + emojiData.emoji }));
+        inputRef.current.focus();
+    }
+
     return (
-        <div className="overflow-scroll">
+        <div className="overflow-visible relative">
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+                <div
+                    ref={emojiPickerRef}
+                    className="absolute bottom-[70px] left-6 z-10"
+                >
+                    <EmojiPicker
+                        onEmojiClick={handleEmojiClick}
+                        width={300}
+                        height={350}
+                        theme="auto"
+                    />
+                </div>
+            )}
+
             {/* Previews */}
             {attachmentPreviews.length > 0 && (
                 <div className="flex space-x-4 items-center p-4 w-[calc(100%-300px)] overflow-x-scroll absolute bottom-[60px]">
@@ -115,14 +162,19 @@ export default function ChatInput() {
             {/* form */}
             <form
                 onSubmit={handleSend}
-                className="w-full px-6 h-[60px] border-t border-gray-200 flex items-center space-x-6"
+                className="w-full px-6 h-[60px] border-t border-gray-300 flex items-center space-x-6"
             >
                 {/* emoji Icon */}
                 <Button
                     className="group"
                     title="emoji"
+                    type="button"
+                    onClick={() => setShowEmojiPicker((prev) => !prev)}
                     btnText={
-                        <div className="size-6 fill-none stroke-[#434343] hover:stroke-[#4977ec]">
+                        <div
+                            ref={emojiButtonRef}
+                            className="size-6 fill-none stroke-[#434343] hover:stroke-[#4977ec]"
+                        >
                             {icons.emoji}
                         </div>
                     }

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { TAILWIND_COLORS } from '../../Constants/constants';
 import { formatTime } from '../../Utils';
 
-const Message = memo(({ message }) => {
+const Message = memo(({ message, reference }) => {
     const { user } = useUserContext();
     const { selectedChat } = useChatContext();
     const {
@@ -26,6 +26,7 @@ const Message = memo(({ message }) => {
 
     return (
         <div
+            ref={reference}
             className={`flex w-full ${
                 isSender ? 'justify-end pl-8' : 'justify-start pr-8'
             }`}

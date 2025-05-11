@@ -13,10 +13,9 @@ export class MongoDBmessages extends Imessages {
     async getMessages(chatId, limit, page) {
         try {
             return await Message.aggregatePaginate(
-                // pipeline
                 [
                     { $match: { chat_id: chatId } },
-                    { $sort: { message_createdAt: 1 } },
+                    { $sort: { message_createdAt: -1 } },
                     {
                         $lookup: {
                             from: 'users',

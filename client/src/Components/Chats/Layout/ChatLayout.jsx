@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
+import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { ChatHeader, ChatInput } from '../..';
 import { useChatContext } from '../../../Context';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ export default function ChatLayout() {
     const { setSelectedChat } = useChatContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { pathname } = useLocation();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -46,10 +47,14 @@ export default function ChatLayout() {
             <div className="h-[60px] bg-[#f6f6f6]">
                 <ChatHeader />
             </div>
-            <div className="bg-[#f6f6f6] h-[calc(100%-180px)] overflow-y-scroll">
+            <div
+                className={`bg-[#f6f6f6] ${pathname.includes('/details') ? 'h-[calc(100%-120px)]' : 'h-[calc(100%-180px)]'} overflow-y-scroll`}
+            >
                 <Outlet />
             </div>
-            <div className="h-[60px] bg-[#f6f6f6]">
+            <div
+                className={`${pathname.includes('/details') ? 'hidden' : 'block'} h-[60px] bg-[#f6f6f6]`}
+            >
                 <ChatInput />
             </div>
         </div>

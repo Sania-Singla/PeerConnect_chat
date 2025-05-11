@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, useEffect } from 'react';
+import { useContext, createContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useUserContext } from './UserContext';
 import { useChatContext } from './ChatContext';
@@ -8,8 +8,19 @@ const SocketContext = createContext();
 const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const { user } = useUserContext();
-    const { setChats, setSelectedChat, setMessages, setRequests } =
-        useChatContext();
+    const {
+        setChats,
+        setSelectedChat,
+        selectedChat,
+        setMessages,
+        setRequests,
+    } = useChatContext();
+
+    const selectedChatRef = useRef();
+
+    useEffect(() => {
+        selectedChatRef.current = selectedChat;
+    }, [selectedChat]);
 
     function connectSocket() {
         if (!user || socket) return;
@@ -157,7 +168,11 @@ const SocketContextProvider = ({ children }) => {
         });
 
         socketInstance.on('newMessage', ({ chatId, message }) => {
-            setMessages((prev) => prev.concat(message));
+            setMessages((prev) => {
+                if (selectedChatRef.current?.chat.chat_id === chatId) {
+                    return [message, ...prev];
+                } else return prev;
+            });
 
             // update chat's last message
             setChats((prev) =>
