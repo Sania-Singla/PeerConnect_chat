@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
-import { Button, InputFilePreview } from '../..';
+import { Button, InputFilePreview } from '@/Components';
 import { useParams, useNavigate } from 'react-router-dom';
-import { icons } from '../../../Assets/icons';
-import { fileSizeRestriction } from '../../../Utils';
-import { chatService } from '../../../Services';
-import { useSocketContext } from '../../../Context';
+import { icons } from '@/Assets/icons';
+import { fileSizeRestriction } from '@/Utils';
+import { chatService } from '@/Services';
+import { useSocketContext } from '@/Context';
 import toast from 'react-hot-toast';
-import { MAX_FILE_SIZE } from '../../../Constants/constants';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
 import EmojiPicker from 'emoji-picker-react';
 
 export default function ChatInput() {

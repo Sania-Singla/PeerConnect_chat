@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { verifyExpression } from '../../Utils';
+import { verifyExpression } from '@/Utils';
 import { useNavigate } from 'react-router-dom';
-import { userService } from '../../Services';
-import { Button } from '..';
+import { userService } from '@/Services';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function UpdatePassword() {
@@ -11,13 +11,8 @@ export default function UpdatePassword() {
         newPassword: '',
         confirmPassword: '',
     };
-    const nullErrors = {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-    };
     const [inputs, setInputs] = useState(initialInputs);
-    const [error, setError] = useState(nullErrors);
+    const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
@@ -46,7 +41,7 @@ export default function UpdatePassword() {
         e.preventDefault();
         setLoading(true);
         setDisabled(true);
-        setError(nullErrors);
+        setError({});
         try {
             if (inputs.newPassword !== inputs.confirmPassword) {
                 setError((prevError) => ({

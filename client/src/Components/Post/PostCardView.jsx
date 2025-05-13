@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { formatCount, formatDateRelative } from '../../Utils';
-import { Button } from '..';
-import { icons } from '../../Assets/icons';
+import { formatCount, formatDateRelative } from '@/Utils';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
 
 export default function PostCardView({
     post,

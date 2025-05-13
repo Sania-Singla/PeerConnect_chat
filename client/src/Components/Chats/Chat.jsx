@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useChatContext } from '../../Context';
+import { useChatContext } from '@/Context';
 import { useNavigate, useParams } from 'react-router-dom';
-import { chatService } from '../../Services';
-import { Message } from '..';
-import { paginate } from '../../Utils';
-import { icons } from '../../Assets/icons';
+import { chatService } from '@/Services';
+import { Message } from '@/Components';
+import { paginate } from '@/Utils';
+import { icons } from '@/Assets/icons';
 
 export default function Chat() {
     const { setMessages, messages, selectedChat } = useChatContext();
@@ -16,10 +16,8 @@ export default function Chat() {
     const chatContainerRef = useRef(null);
     const isInitialLoad = useRef(true);
 
-    // Clear messages when chatId changes
     useEffect(() => {
         setMessages([]);
-        setPage(1);
         isInitialLoad.current = true;
     }, [chatId]);
 

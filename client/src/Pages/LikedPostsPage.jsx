@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LikedPostView } from '../Components';
-import { likeService } from '../Services';
-import { paginate } from '../Utils';
-import { icons } from '../Assets/icons';
-import { LIMIT } from '../Constants/constants';
-import { useUserContext } from '../Context';
+import { LikedPostView } from '@/Components';
+import { likeService } from '@/Services';
+import { paginate } from '@/Utils';
+import { icons } from '@/Assets/icons';
+import { LIMIT } from '@/Constants/constants';
+import { useUserContext } from '@/Context';
 
 export default function LikedPostsPage() {
     const [posts, setPosts] = useState([]);

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../Context';
-import { authService } from '../../Services';
-import { Button } from '..';
-import { icons } from '../../Assets/icons';
+import { useUserContext } from '@/Context';
+import { authService } from '@/Services';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
 
 export default function Logout() {

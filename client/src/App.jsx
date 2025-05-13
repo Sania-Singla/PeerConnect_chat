@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Layout } from './Components';
-import { useSideBarContext, useUserContext, usePopupContext } from './Context';
-import { authService } from './Services';
-import { icons } from './Assets/icons';
+import { Layout } from '@/Components';
+import { useSideBarContext, useUserContext, usePopupContext } from '@/Context';
+import { authService } from '@/Services';
+import { icons } from '@/Assets/icons';
 
 export default function App() {
     const { setUser } = useUserContext();

@@ -1,5 +1,5 @@
-import { IonlineUsers } from '../../interfaces/onlineUser.Interface.js';
-import { OnlineUser } from '../../schemas/MongoDB/index.js';
+import { IonlineUsers } from '../interfaces/onlineUser.Interface.js';
+import { OnlineUser } from '../schemas/MongoDB/index.js';
 
 export class MongoDBonlineUsers extends IonlineUsers {
     async getOnlineUser(userId) {

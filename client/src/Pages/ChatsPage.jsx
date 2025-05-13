@@ -1,14 +1,11 @@
-import { useUserContext, useSocketContext, useChatContext } from '../Context';
-import { ChatNavbar, ChatSidebar } from '../Components';
+import { useSocketContext, useChatContext } from '@/Context';
+import { ChatNavbar, ChatSidebar } from '@/Components';
 import { Outlet, useParams } from 'react-router-dom';
 
 export default function ChatsPage() {
-    const { user } = useUserContext();
     const { socket } = useSocketContext();
     const { chatId } = useParams();
     const { showSidebar } = useChatContext();
-
-    if (!user) return <div>Login to Collaborate with others</div>;
 
     if (!socket) return <div>loading...</div>;
 

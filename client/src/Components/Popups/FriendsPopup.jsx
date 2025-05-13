@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useChatContext, usePopupContext } from '../../Context';
-import { chatService } from '../../Services';
-import { icons } from '../../Assets/icons';
+import { useNavigate } from 'react-router-dom';
+import { usePopupContext } from '@/Context';
+import { chatService } from '@/Services';
+import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
-import { Button } from '..';
+import { Button } from '@/Components';
 
 export default function FriendsPopup() {
     const [friends, setFriends] = useState([]);

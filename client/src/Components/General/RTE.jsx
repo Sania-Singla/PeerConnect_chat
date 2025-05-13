@@ -1,7 +1,7 @@
 import { Editor } from '@tinymce/tinymce-react';
-import { DEFAULT_RTE_TEXT } from '../../Constants/constants';
+import { DEFAULT_RTE_TEXT } from '@/Constants/constants';
 import { useState } from 'react';
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 
 export default function RTE({
     defaultValue = DEFAULT_RTE_TEXT,

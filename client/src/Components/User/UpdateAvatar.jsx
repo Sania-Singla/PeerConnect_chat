@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePopupContext, useUserContext } from '../../Context';
-import { fileRestrictions } from '../../Utils';
-import { userService } from '../../Services';
-import { icons } from '../../Assets/icons';
-import { MAX_FILE_SIZE } from '../../Constants/constants';
-import { Button } from '..';
+import { usePopupContext, useUserContext } from '@/Context';
+import { fileRestrictions } from '@/Utils';
+import { userService } from '@/Services';
+import { icons } from '@/Assets/icons';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function UpdateAvatar() {

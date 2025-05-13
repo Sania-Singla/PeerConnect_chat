@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../Context';
-import { verifyExpression } from '../../Utils';
-import { userService } from '../../Services';
-import { Button } from '..';
+import { useUserContext } from '@/Context';
+import { verifyExpression } from '@/Utils';
+import { userService } from '@/Services';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function UpdateAccountDetails() {

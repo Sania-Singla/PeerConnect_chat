@@ -1,9 +1,9 @@
 import { useNavigate, NavLink } from 'react-router-dom';
-import { icons } from '../../../Assets/icons';
-import { useChatContext, useUserContext } from '../../../Context';
-import { chatService } from '../../../Services';
+import { icons } from '@/Assets/icons';
+import { useChatContext, useUserContext } from '@/Context';
+import { chatService } from '@/Services';
 import { useEffect, useState } from 'react';
-import { formatTime } from '../../../Utils';
+import { formatTime } from '@/Utils';
 
 export default function ChatSidebar() {
     const { setChats, chats, setShowSidebar } = useChatContext();

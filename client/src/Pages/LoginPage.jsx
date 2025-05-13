@@ -1,5 +1,5 @@
-import { Login } from '../Components';
-import { LOGO } from '../Constants/constants';
+import { Login } from '@/Components';
+import { LOGO } from '@/Constants/constants';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 

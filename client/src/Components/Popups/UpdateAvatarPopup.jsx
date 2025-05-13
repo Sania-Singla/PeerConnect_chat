@@ -1,4 +1,4 @@
-import { UpdateAvatar } from '..';
+import { UpdateAvatar } from '@/Components';
 
 export default function UpdateAvatarPopup() {
     return <UpdateAvatar />;

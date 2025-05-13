@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
 import { useState } from 'react';
-import { CONTRIBUTORS, LOGO } from '../../Constants/constants';
+import { CONTRIBUTORS, LOGO } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function Footer() {

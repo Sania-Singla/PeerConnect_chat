@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AdminPostRow, Button } from '../Components';
-import { userService, postService } from '../Services';
-import { useUserContext } from '../Context';
-import { paginate, formatCount } from '../Utils';
-import { LIMIT } from '../Constants/constants';
-import { icons } from '../Assets/icons';
+import { AdminPostRow, Button } from '@/Components';
+import { userService, postService } from '@/Services';
+import { useUserContext } from '@/Context';
+import { paginate, formatCount } from '@/Utils';
+import { LIMIT } from '@/Constants/constants';
+import { icons } from '@/Assets/icons';
 
 export default function AdminPage() {
     const { user } = useUserContext();

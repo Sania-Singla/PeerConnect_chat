@@ -1,6 +1,6 @@
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
-import { formatFileSize } from '../../Utils';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
+import { formatFileSize } from '@/Utils';
 
 export default function InputFilePreview({
     file,

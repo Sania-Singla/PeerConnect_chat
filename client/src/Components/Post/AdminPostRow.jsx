@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { icons } from '../../Assets/icons';
-import { formatDateExact, formatCount } from '../../Utils';
-import { postService } from '../../Services';
-import { Button } from '..';
+import { icons } from '@/Assets/icons';
+import { formatDateExact, formatCount } from '@/Utils';
+import { postService } from '@/Services';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function AdminPostRow({ post, reference, setPosts }) {

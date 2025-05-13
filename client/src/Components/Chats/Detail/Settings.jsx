@@ -1,5 +1,5 @@
-import { useChatContext } from '../../../Context';
-import { ChatSettings, GroupSettings } from '../..';
+import { useChatContext } from '@/Context';
+import { ChatSettings, GroupSettings } from '@/Components';
 
 export default function Settings() {
     const { selectedChat } = useChatContext();

@@ -1,8 +1,8 @@
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
-import { useUserContext } from '../../Context';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
+import { useUserContext } from '@/Context';
 import { useNavigate } from 'react-router-dom';
-import { formatFileSize } from '../../Utils';
+import { formatFileSize } from '@/Utils';
 
 export default function FilePreview({ attachment, senderId }) {
     const { user } = useUserContext();

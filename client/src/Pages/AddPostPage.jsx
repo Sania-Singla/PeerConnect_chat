@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fileRestrictions, verifyExpression } from '../Utils';
-import { Button, RTE } from '../Components';
-import { postService } from '../Services';
-import { icons } from '../Assets/icons';
-import { MAX_FILE_SIZE } from '../Constants/constants';
+import { fileRestrictions, verifyExpression } from '@/Utils';
+import { Button, RTE } from '@/Components';
+import { postService } from '@/Services';
+import { icons } from '@/Assets/icons';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function AddPostPage() {

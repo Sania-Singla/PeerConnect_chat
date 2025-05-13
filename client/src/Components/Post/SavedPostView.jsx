@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postService } from '../../Services';
-import { Button, PostListView } from '..';
-import { icons } from '../../Assets/icons';
+import { postService } from '@/Services';
+import { Button, PostListView } from '@/Components';
+import { icons } from '@/Assets/icons';
 
 export default function SavedPostView({ savedPost, reference }) {
     const { post_id } = savedPost;

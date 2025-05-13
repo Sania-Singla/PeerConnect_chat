@@ -10,9 +10,9 @@ import {
     SearchContextProvider,
     SocketContextProvider,
     ChatContextProvider,
-} from './Context';
+} from '@/Context';
 
-import { router } from './Router';
+import { router } from '@/Router';
 
 function Wrapper() {
     return (

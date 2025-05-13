@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useChannelContext, useUserContext } from '../../Context';
-import { postService } from '../../Services';
-import { icons } from '../../Assets/icons';
+import { useChannelContext, useUserContext } from '@/Context';
+import { postService } from '@/Services';
+import { icons } from '@/Assets/icons';
 import { PostCardView, Button } from '..';
-import { paginate } from '../../Utils';
-import { LIMIT } from '../../Constants/constants';
+import { paginate } from '@/Utils';
+import { LIMIT } from '@/Constants/constants';
 
 export default function ChannelPosts() {
     const { channel } = useChannelContext();

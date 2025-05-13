@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
-import { useChatContext } from '../../../Context';
+import { useChatContext } from '@/Context';
 import { useState } from 'react';
-import { Button } from '../..';
-import { icons } from '../../../Assets/icons';
-import { chatService } from '../../../Services';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { chatService } from '@/Services';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { formatDateRelative } from '../../../Utils';
+import { formatDateRelative } from '@/Utils';
 
 export default function ChatSettings() {
     const { selectedChat } = useChatContext();

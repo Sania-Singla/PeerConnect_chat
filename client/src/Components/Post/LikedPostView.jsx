@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { likeService } from '../../Services';
-import { Button, PostListView } from '..';
-import { icons } from '../../Assets/icons';
+import { likeService } from '@/Services';
+import { Button, PostListView } from '@/Components';
+import { icons } from '@/Assets/icons';
 
 export default function LikedPostView({ likedPost, reference }) {
     const { post_id } = likedPost;

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../..';
-import { icons } from '../../../Assets/icons';
-import { useChatContext, useUserContext } from '../../../Context';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { useChatContext, useUserContext } from '@/Context';
 
 export default function ChatHeader() {
     const { selectedChat, setShowSidebar } = useChatContext();

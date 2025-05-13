@@ -1,6 +1,6 @@
-import { DeleteAccount, Button } from '..';
-import { icons } from '../../Assets/icons';
-import { usePopupContext } from '../../Context';
+import { DeleteAccount, Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { usePopupContext } from '@/Context';
 
 export default function DeleteAccountPopup() {
     const { setShowPopup } = usePopupContext();

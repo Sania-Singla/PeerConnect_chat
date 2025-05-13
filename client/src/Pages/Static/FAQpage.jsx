@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 
 export default function FAQpage() {
     const [expanded, setExpanded] = useState(null);

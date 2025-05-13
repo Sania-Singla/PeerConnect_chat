@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { ChatHeader, ChatInput } from '../..';
-import { useChatContext } from '../../../Context';
+import { ChatHeader, ChatInput } from '@/Components';
+import { useChatContext } from '@/Context';
 import { useEffect, useState } from 'react';
-import { chatService } from '../../../Services';
+import { chatService } from '@/Services';
 
 export default function ChatLayout() {
     const { chatId } = useParams();

@@ -1,7 +1,7 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { useSideBarContext, useUserContext } from '../../Context';
-import { icons } from '../../Assets/icons';
-import { Button, Logout } from '..';
+import { useSideBarContext, useUserContext } from '@/Context';
+import { icons } from '@/Assets/icons';
+import { Button, Logout } from '@/Components';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef } from 'react';
 

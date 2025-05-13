@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { usePopupContext } from '../../Context';
+import { usePopupContext } from '@/Context';
 import { AnimatePresence, motion } from 'framer-motion';
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
 
 export default function CustomToast() {
     const { showToast, setShowToast, toastContent } = usePopupContext();

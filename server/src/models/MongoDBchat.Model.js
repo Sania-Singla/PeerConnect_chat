@@ -2,9 +2,9 @@ import {
     deleteFromCloudinary,
     getPipeline2,
     getSocketIds,
-} from '../../helpers/index.js';
-import { Ichats } from '../../interfaces/chat.Interface.js';
-import { Attachment, Chat, Message } from '../../schemas/MongoDB/index.js';
+} from '../helpers/index.js';
+import { Ichats } from '../interfaces/chat.Interface.js';
+import { Attachment, Chat, Message } from '../schemas/MongoDB/index.js';
 
 export class MongoDBchats extends Ichats {
     async chatExistance(chatId) {

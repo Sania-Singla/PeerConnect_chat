@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postService } from '../../Services';
-import { paginate } from '../../Utils';
-import { icons } from '../../Assets/icons';
-import { LIMIT } from '../../Constants/constants';
-import { PostCardView } from '..';
+import { postService } from '@/Services';
+import { paginate } from '@/Utils';
+import { icons } from '@/Assets/icons';
+import { LIMIT } from '@/Constants/constants';
+import { PostCardView } from '@/Components';
 
 export default function Recemendations({ category }) {
     const { postId } = useParams();

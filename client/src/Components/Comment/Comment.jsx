@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { usePopupContext, useUserContext } from '../../Context';
-import { commentService, likeService } from '../../Services';
-import { formatDateRelative, formatCount } from '../../Utils';
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
+import { usePopupContext, useUserContext } from '@/Context';
+import { commentService, likeService } from '@/Services';
+import { formatDateRelative, formatCount } from '@/Utils';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function Comment({ comment, setComments }) {

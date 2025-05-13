@@ -1,6 +1,6 @@
-import { Iusers } from '../../interfaces/user.Interface.js';
-import { User, WatchHistory } from '../../schemas/MongoDB/index.js';
-import { getPipeline1 } from '../../helpers/index.js';
+import { Iusers } from '../interfaces/user.Interface.js';
+import { User, WatchHistory } from '../schemas/MongoDB/index.js';
+import { getPipeline1 } from '../helpers/index.js';
 
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {

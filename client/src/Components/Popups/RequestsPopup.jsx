@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { requestService } from '../../Services';
-import { Button } from '..';
-import { icons } from '../../Assets/icons';
-import { useChatContext } from '../../Context';
+import { requestService } from '@/Services';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { useChatContext } from '@/Context';
 
 export default function RequestsPopup() {
     const [targetRequest, setTargetRequest] = useState({

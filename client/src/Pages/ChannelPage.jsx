@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink, Outlet } from 'react-router-dom';
-import { Button } from '../Components';
-import { userService, followerService, requestService } from '../Services';
-import { useChannelContext, useUserContext, usePopupContext } from '../Context';
+import { Button } from '@/Components';
+import { userService, followerService, requestService } from '@/Services';
+import { useChannelContext, useUserContext, usePopupContext } from '@/Context';
 import toast from 'react-hot-toast';
 
 export default function ChannelPage() {

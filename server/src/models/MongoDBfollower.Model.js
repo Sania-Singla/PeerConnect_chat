@@ -1,5 +1,5 @@
-import { Ifollowers } from '../../interfaces/follower.Interface.js';
-import { Follower } from '../../schemas/MongoDB/index.js';
+import { Ifollowers } from '../interfaces/follower.Interface.js';
+import { Follower } from '../schemas/MongoDB/index.js';
 
 export class MongoDBfollowers extends Ifollowers {
     async getFollowers(channelId) {

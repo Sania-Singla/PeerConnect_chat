@@ -4,7 +4,7 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 
-import App from './App';
+import App from '@/App';
 
 import {
     LoginPage,
@@ -28,7 +28,7 @@ import {
     ContactUsPage,
     FAQpage,
     ChatsPage,
-} from './Pages';
+} from '@/Pages';
 
 import {
     DeleteAccount,
@@ -40,14 +40,12 @@ import {
     ChatLayout,
     Details,
     NoChatSelected,
-    ChatSettings,
-    GroupSettings,
     Members,
     Settings,
     Chat,
-} from './Components';
+} from '@/Components';
 
-import { ChannelContextProvider } from './Context/ChannelContext';
+import { ChannelContextProvider } from '@/Context/ChannelContext';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -60,33 +58,6 @@ export const router = createBrowserRouter(
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
-            <Route path="chat" element={<ChatsPage />}>
-                <Route path="" element={<NoChatSelected />} />
-                <Route path=":chatId" element={<ChatLayout />}>
-                    <Route path="" element={<Chat />} />
-                    <Route path="details" element={<Details />}>
-                        <Route path="" element={<Settings />} />
-                        <Route path="members" element={<Members />} />
-                    </Route>
-                </Route>
-            </Route>
-
-            {/* settings page */}
-            <Route
-                path="settings/"
-                element={
-                    <Redirect path="/login">
-                        <SettingsPage />
-                    </Redirect>
-                }
-            >
-                <Route path="" element={<UpdateAccountDetails />} />
-                <Route path="channel" element={<UpdateChannelDetails />} />
-                <Route path="password" element={<UpdatePassword />} />
-                <Route path="delete-account" element={<DeleteAccount />} />
-            </Route>
-
-            {/* channel page */}
             <Route
                 path="channel/:userId"
                 element={
@@ -100,30 +71,27 @@ export const router = createBrowserRouter(
             </Route>
 
             {/* protected routes */}
-            <Route
-                path="add"
-                element={
-                    <Redirect path="/login">
-                        <AddPostPage />
-                    </Redirect>
-                }
-            />
-            <Route
-                path="update/:postId"
-                element={
-                    <Redirect path="/login">
-                        <UpdatePostPage />
-                    </Redirect>
-                }
-            />
-            <Route
-                path="admin"
-                element={
-                    <Redirect path="/login">
-                        <AdminPage />
-                    </Redirect>
-                }
-            />
+            <Route element={<Redirect path="/login" />}>
+                <Route path="add" element={<AddPostPage />} />
+                <Route path="update/:postId" element={<UpdatePostPage />} />
+                <Route path="admin" element={<AdminPage />} />
+                <Route path="settings/" element={<SettingsPage />}>
+                    <Route path="" element={<UpdateAccountDetails />} />
+                    <Route path="channel" element={<UpdateChannelDetails />} />
+                    <Route path="password" element={<UpdatePassword />} />
+                    <Route path="delete-account" element={<DeleteAccount />} />
+                </Route>
+                <Route path="chat" element={<ChatsPage />}>
+                    <Route path="" element={<NoChatSelected />} />
+                    <Route path=":chatId" element={<ChatLayout />}>
+                        <Route path="" element={<Chat />} />
+                        <Route path="details" element={<Details />}>
+                            <Route path="" element={<Settings />} />
+                            <Route path="members" element={<Members />} />
+                        </Route>
+                    </Route>
+                </Route>
+            </Route>
 
             {/* static pages */}
             <Route path="support" element={<SupportPage />} />

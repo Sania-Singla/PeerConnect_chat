@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Header, Footer, Sidebar, Popup, CustomToast } from '..';
+import { Header, Footer, Sidebar, Popup, CustomToast } from '@/Components';
 import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {

@@ -7,8 +7,8 @@ import {
     FriendsPopup,
     RequestsPopup,
     AddMembersPopup,
-} from '..';
-import { usePopupContext } from '../../Context';
+} from '@/Components';
+import { usePopupContext } from '@/Context';
 
 export default function Popup() {
     const { popupInfo, setShowPopup, showPopup } = usePopupContext();

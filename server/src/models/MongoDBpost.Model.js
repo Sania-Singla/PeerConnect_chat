@@ -1,6 +1,6 @@
-import { Iposts } from '../../interfaces/post.Interface.js';
-import { Post, PostView, SavedPost } from '../../schemas/MongoDB/index.js';
-import { getPipeline1 } from '../../helpers/index.js';
+import { Iposts } from '../interfaces/post.Interface.js';
+import { Post, PostView, SavedPost } from '../schemas/MongoDB/index.js';
+import { getPipeline1 } from '../helpers/index.js';
 
 export class MongoDBposts extends Iposts {
     // pending search query

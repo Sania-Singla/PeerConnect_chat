@@ -1,13 +1,9 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { Button, Logout } from '..';
-import {
-    useUserContext,
-    useSideBarContext,
-    useSearchContext,
-} from '../../Context';
-import { LOGO } from '../../Constants/constants';
+import { Button, Logout } from '@/Components';
+import { useUserContext, useSideBarContext, useSearchContext } from '@/Context';
+import { LOGO } from '@/Constants/constants';
 import { useState } from 'react';
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 import { motion } from 'framer-motion';
 
 export default function Header() {

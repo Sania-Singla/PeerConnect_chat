@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PostListView } from '../Components';
-import { postService } from '../Services';
-import { paginate } from '../Utils';
-import { icons } from '../Assets/icons';
-import { LIMIT } from '../Constants/constants';
-import { useSearchContext } from '../Context';
+import { PostListView } from '@/Components';
+import { postService } from '@/Services';
+import { paginate } from '@/Utils';
+import { icons } from '@/Assets/icons';
+import { LIMIT } from '@/Constants/constants';
+import { useSearchContext } from '@/Context';
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);

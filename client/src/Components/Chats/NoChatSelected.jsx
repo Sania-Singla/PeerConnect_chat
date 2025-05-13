@@ -1,4 +1,4 @@
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 
 export default function NoChatSelected() {
     return (

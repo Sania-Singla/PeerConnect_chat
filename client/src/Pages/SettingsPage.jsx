@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import { Button } from '../Components';
-import { usePopupContext, useUserContext } from '../Context';
-import { icons } from '../Assets/icons';
+import { Button } from '@/Components';
+import { usePopupContext, useUserContext } from '@/Context';
+import { icons } from '@/Assets/icons';
 import { NavLink } from 'react-router-dom';
 
 export default function SettingsPage() {

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { formatCount, formatDateRelative } from '../../Utils';
-import { Button, PostCardView } from '..';
-import { icons } from '../../Assets/icons';
+import { formatCount, formatDateRelative } from '@/Utils';
+import { Button, PostCardView } from '@/Components';
+import { icons } from '@/Assets/icons';
 import parse from 'html-react-parser';
 import { memo } from 'react';
 

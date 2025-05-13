@@ -1,4 +1,4 @@
-import { SERVER_ERROR, BASE_BACKEND_URL } from '../Constants/constants';
+import { SERVER_ERROR, BASE_BACKEND_URL } from '@/Constants/constants';
 
 class LikeService {
     async togglePostLike(postId, likedStatus) {

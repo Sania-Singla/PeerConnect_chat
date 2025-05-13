@@ -1,5 +1,5 @@
-import { Irequests } from '../../interfaces/request.Interface.js';
-import { Chat, Request } from '../../schemas/MongoDB/index.js';
+import { Irequests } from '../interfaces/request.Interface.js';
+import { Chat, Request } from '../schemas/MongoDB/index.js';
 /* import { chatObject } from '../../controllers/chat.Controller.js'; 
    - causes circular dependency ERROR
     getServiceObject --imports-> models --imports-> controller 
@@ -49,7 +49,7 @@ export class MongoDBrequests extends Irequests {
     // Instead of importing chatObject directly at the top, import it only when needed to avoid circular dep. error
     async areWeFriends(myId, userIds = []) {
         const { chatObject } = await import(
-            '../../controllers/chat.Controller.js'
+            '../controllers/chat.Controller.js'
         ); // Lazy import
         return chatObject.areWeFriends(myId, userIds);
     }

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useUserContext } from '../../Context';
-import { verifyExpression } from '../../Utils';
+import { useUserContext } from '@/Context';
+import { verifyExpression } from '@/Utils';
 import { useNavigate } from 'react-router-dom';
-import { userService } from '../../Services';
-import { Button } from '..';
+import { userService } from '@/Services';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function UpdateChannelDetails() {
@@ -13,13 +13,8 @@ export default function UpdateChannelDetails() {
         bio: user?.user_bio,
         password: '',
     };
-    const nullErrors = {
-        userName: '',
-        bio: '', //100 characters
-        password: '',
-    };
     const [inputs, setInputs] = useState(initialInputs);
-    const [error, setError] = useState(nullErrors);
+    const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
@@ -59,7 +54,7 @@ export default function UpdateChannelDetails() {
         e.preventDefault();
         setLoading(true);
         setDisabled(true);
-        setError(nullErrors);
+        setError({});
         try {
             const res = await userService.updateChannelDetails(inputs);
             if (res && !res.message) {

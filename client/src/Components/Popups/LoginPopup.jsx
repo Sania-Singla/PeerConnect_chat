@@ -1,7 +1,7 @@
-import { Login, Button } from '..';
-import { usePopupContext } from '../../Context';
+import { Login, Button } from '@/Components';
+import { usePopupContext } from '@/Context';
 import { motion } from 'framer-motion';
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 
 export default function LoginPopup() {
     const { popupInfo, setShowPopup } = usePopupContext();

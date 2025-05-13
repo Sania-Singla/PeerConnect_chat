@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { commentService } from '../../Services';
-import { formatCount } from '../../Utils';
-import { Comment, Button } from '..';
-import { usePopupContext, useUserContext } from '../../Context';
+import { commentService } from '@/Services';
+import { formatCount } from '@/Utils';
+import { Comment, Button } from '@/Components';
+import { usePopupContext, useUserContext } from '@/Context';
 import toast from 'react-hot-toast';
 
 export default function Comments() {

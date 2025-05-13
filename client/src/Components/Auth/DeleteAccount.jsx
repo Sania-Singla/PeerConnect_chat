@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { usePopupContext, useUserContext } from '../../Context';
-import { authService } from '../../Services';
-import { Button } from '..';
+import { usePopupContext, useUserContext } from '@/Context';
+import { authService } from '@/Services';
+import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 
 export default function DeleteAccount() {

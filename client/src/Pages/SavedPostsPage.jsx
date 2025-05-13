@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Button, SavedPostView } from '../Components';
-import { postService } from '../Services';
+import { Button, SavedPostView } from '@/Components';
+import { postService } from '@/Services';
 import { useNavigate } from 'react-router-dom';
-import { icons } from '../Assets/icons';
-import { paginate } from '../Utils';
-import { LIMIT } from '../Constants/constants';
-import { useUserContext } from '../Context';
+import { icons } from '@/Assets/icons';
+import { paginate } from '@/Utils';
+import { LIMIT } from '@/Constants/constants';
+import { useUserContext } from '@/Context';
 
 export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -15,7 +15,6 @@ export default function SavedPostsPage() {
     const { user } = useUserContext();
     const navigate = useNavigate();
 
-    // pagination
     const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     useEffect(() => {

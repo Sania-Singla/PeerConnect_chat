@@ -1,13 +1,9 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import {
-    useChatContext,
-    usePopupContext,
-    useUserContext,
-} from '../../../Context';
+import { useChatContext, usePopupContext, useUserContext } from '@/Context';
 import { useState } from 'react';
-import { icons } from '../../../Assets/icons';
-import { Button } from '../..';
-import { chatService } from '../../../Services';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
+import { chatService } from '@/Services';
 import toast from 'react-hot-toast';
 
 export default function Members() {

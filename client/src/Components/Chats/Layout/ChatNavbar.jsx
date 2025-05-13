@@ -1,7 +1,7 @@
-import { Button } from '../..';
-import { icons } from '../../../Assets/icons';
-import { usePopupContext, useSideBarContext } from '../../../Context';
-import { LOGO } from '../../../Constants/constants';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { usePopupContext, useSideBarContext } from '@/Context';
+import { LOGO } from '@/Constants/constants';
 import { Link } from 'react-router-dom';
 
 export default function ChatNavbar() {

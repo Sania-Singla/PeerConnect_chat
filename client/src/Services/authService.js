@@ -2,7 +2,7 @@ import {
     SERVER_ERROR,
     BAD_REQUEST,
     BASE_BACKEND_URL,
-} from '../Constants/constants';
+} from '@/Constants/constants';
 
 class AuthService {
     async login(inputs) {

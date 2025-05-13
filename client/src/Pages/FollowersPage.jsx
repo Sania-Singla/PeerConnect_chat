@@ -1,3 +1,3 @@
 export default function FollowersPage() {
-    return <div>FollowersPage under construction</div>;
+    return <div>Followers Page under construction</div>;
 }

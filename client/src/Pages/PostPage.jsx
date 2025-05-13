@@ -5,11 +5,11 @@ import {
     followerService,
     likeService,
     postService,
-} from '../Services';
-import { Button, Comments, Recemendations } from '../Components';
-import { formatDateRelative, formatCount } from '../Utils';
-import { useUserContext, usePopupContext, useSocketContext } from '../Context';
-import { icons } from '../Assets/icons';
+} from '@/Services';
+import { Button, Comments, Recemendations } from '@/Components';
+import { formatDateRelative, formatCount } from '@/Utils';
+import { useUserContext, usePopupContext, useSocketContext } from '@/Context';
+import { icons } from '@/Assets/icons';
 import parse from 'html-react-parser';
 import toast from 'react-hot-toast';
 

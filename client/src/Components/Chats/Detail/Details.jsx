@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useParams } from 'react-router-dom';
-import { icons } from '../../../Assets/icons';
-import { useChatContext } from '../../../Context';
+import { icons } from '@/Assets/icons';
+import { useChatContext } from '@/Context';
 
 export default function Details() {
     const { selectedChat } = useChatContext();

@@ -1,8 +1,8 @@
-import { useUserContext, useChatContext } from '../../Context';
-import { FilePreview, Button } from '..';
+import { useUserContext, useChatContext } from '@/Context';
+import { FilePreview, Button } from '@/Components';
 import { memo } from 'react';
-import { TAILWIND_COLORS } from '../../Constants/constants';
-import { formatTime } from '../../Utils';
+import { TAILWIND_COLORS } from '@/Constants/constants';
+import { formatTime } from '@/Utils';
 
 const Message = memo(({ message, reference }) => {
     const { user } = useUserContext();

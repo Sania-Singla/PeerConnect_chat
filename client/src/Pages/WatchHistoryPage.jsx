@@ -1,11 +1,11 @@
-import { icons } from '../Assets/icons';
-import { Button, PostListView } from '../Components';
+import { icons } from '@/Assets/icons';
+import { Button, PostListView } from '@/Components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userService } from '../Services';
-import { paginate, formatDateRelative } from '../Utils';
-import { LIMIT } from '../Constants/constants';
-import { useUserContext } from '../Context';
+import { userService } from '@/Services';
+import { paginate, formatDateRelative } from '@/Utils';
+import { LIMIT } from '@/Constants/constants';
+import { useUserContext } from '@/Context';
 import toast from 'react-hot-toast';
 
 export default function WatchHistoryPage() {

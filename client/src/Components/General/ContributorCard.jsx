@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { icons } from '../../Assets/icons';
+import { icons } from '@/Assets/icons';
 import { motion } from 'framer-motion';
 
 export default function ContributorCard({ contributor }) {

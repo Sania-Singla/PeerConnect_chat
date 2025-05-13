@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { authService } from '../Services';
-import { useUserContext } from '../Context';
+import { authService } from '@/Services';
+import { useUserContext } from '@/Context';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../Components';
-import { verifyExpression, fileRestrictions } from '../Utils';
-import { LOGO, MAX_FILE_SIZE } from '../Constants/constants';
+import { Button } from '@/Components';
+import { verifyExpression, fileRestrictions } from '@/Utils';
+import { LOGO, MAX_FILE_SIZE } from '@/Constants/constants';
 import { motion } from 'framer-motion';
-import { icons } from '../Assets/icons';
+import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
 
 export default function RegisterPage() {

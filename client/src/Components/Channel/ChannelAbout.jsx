@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { useChannelContext } from '../../Context';
-import { formatDateExact } from '../../Utils';
-import { icons } from '../../Assets/icons';
+import { useChannelContext } from '@/Context';
+import { formatDateExact } from '@/Utils';
+import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
 
 export default function ChannelAbout() {

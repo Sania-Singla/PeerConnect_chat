@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePopupContext, useUserContext } from '../../Context';
-import { fileRestrictions } from '../../Utils';
-import { userService } from '../../Services';
-import { icons } from '../../Assets/icons';
-import { Button } from '..';
-import { MAX_FILE_SIZE } from '../../Constants/constants';
+import { usePopupContext, useUserContext } from '@/Context';
+import { fileRestrictions } from '@/Utils';
+import { userService } from '@/Services';
+import { icons } from '@/Assets/icons';
+import { Button } from '@/Components';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function UpdateCoverImage() {

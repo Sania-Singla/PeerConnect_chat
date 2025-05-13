@@ -1,4 +1,4 @@
-import { MAX_FILE_SIZE } from '../Constants/constants';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
 
 /**
  * Utility to restric file sizes and allowed extensions
