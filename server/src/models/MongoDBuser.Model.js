@@ -1,5 +1,5 @@
 import { Iusers } from '../interfaces/user.Interface.js';
-import { User, WatchHistory } from '../schemas/MongoDB/index.js';
+import { User, WatchHistory } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
 export class MongoDBusers extends Iusers {

@@ -1,5 +1,5 @@
 import { Imessages } from '../interfaces/message.Interface.js';
-import { Chat, Message, Attachment } from '../schemas/MongoDB/index.js';
+import { Chat, Message, Attachment } from '../schemas/index.js';
 
 export class MongoDBmessages extends Imessages {
     async messageExistance(messageId) {

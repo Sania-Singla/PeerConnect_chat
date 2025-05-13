@@ -1,5 +1,5 @@
 import { Icategories } from '../interfaces/category.Interface.js';
-import { Category } from '../schemas/MongoDB/index.js';
+import { Category } from '../schemas/index.js';
 
 export class MongoDBcategories extends Icategories {
     async getCategories() {

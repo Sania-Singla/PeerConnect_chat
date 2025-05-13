@@ -1,5 +1,5 @@
 import { Icomments } from '../interfaces/comment.Interface.js';
-import { Comment } from '../schemas/MongoDB/index.js';
+import { Comment } from '../schemas/index.js';
 
 export class MongoDBcomments extends Icomments {
     async getComments(postId, userId, orderBy) {
