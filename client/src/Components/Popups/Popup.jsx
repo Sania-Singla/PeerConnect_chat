@@ -7,6 +7,7 @@ import {
     FriendsPopup,
     RequestsPopup,
     AddMembersPopup,
+    ShowFilePopup,
 } from '@/Components';
 import { usePopupContext } from '@/Context';
 
@@ -20,7 +21,7 @@ export default function Popup() {
 
     const Wrapper = ({ children }) => (
         <div
-            className="fixed inset-0 z-[1000] backdrop-blur-sm flex items-center justify-center"
+            className="fixed inset-0 z-[1000] px-10 backdrop-blur-sm flex items-center justify-center"
             ref={ref}
             onClick={close}
         >
@@ -41,6 +42,12 @@ export default function Popup() {
             return (
                 <Wrapper>
                     <DeleteAccount />
+                </Wrapper>
+            );
+        case 'showFile':
+            return (
+                <Wrapper>
+                    <ShowFilePopup />
                 </Wrapper>
             );
         case 'updateAvatar':

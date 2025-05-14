@@ -51,6 +51,7 @@ import LoginPopup from './Popups/LoginPopup';
 import CustomToast from './Popups/CustomToast';
 import FriendsPopup from './Popups/FriendsPopup';
 import RequestsPopup from './Popups/RequestsPopup';
+import ShowFilePopup from './Popups/ShowFilePopup';
 import AddMembersPopup from './Popups/AddMembersPopup';
 import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
@@ -87,6 +88,7 @@ export {
     LikedPostView,
     SavedPostView,
     Popup,
+    ShowFilePopup,
     AddMembersPopup,
     CustomToast,
     ChatHeader,

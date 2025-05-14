@@ -3,12 +3,14 @@ import { Button } from '@/Components';
 import { useUserContext } from '@/Context';
 import { useNavigate } from 'react-router-dom';
 import { formatFileSize } from '@/Utils';
+import { usePopupContext } from '../../Context/PopupContext';
 
 export default function FilePreview({ attachment, senderId }) {
     const { user } = useUserContext();
     const { url, type, name, size } = attachment;
     const isSender = user.user_id === senderId;
     const navigate = useNavigate();
+    const { setShowPopup, setPopupInfo } = usePopupContext();
 
     const handleDownload = async () => {
         try {
@@ -34,22 +36,32 @@ export default function FilePreview({ attachment, senderId }) {
 
     return (
         <div
-            className={`max-w-[400px] overflow-hidden rounded-md ${
+            onClick={() => {
+                if (type.startsWith('video/') || type.startsWith('image/')) {
+                    setShowPopup(true);
+                    setPopupInfo({ file: { url, type }, type: 'showFile' });
+                }
+            }}
+            className={`max-w-[400px] cursor-pointer overflow-hidden hover:brightness-75 rounded-md h-full ${
                 isSender ? 'bg-blue-400' : 'bg-gray-300'
             }`}
         >
             {type.startsWith('video/') ? (
-                <video
-                    src={url}
-                    controls
-                    className="w-[300px] object-cover aspect-auto"
-                />
+                <div className="h-full w-full">
+                    <video
+                        src={url}
+                        controls
+                        className="w-[300px] object-cover h-full aspect-auto"
+                    />
+                </div>
             ) : type.startsWith('image/') ? (
-                <img
-                    src={url}
-                    alt="message attachment"
-                    className="object-cover w-[300px] aspect-auto"
-                />
+                <div className="h-full w-full">
+                    <img
+                        src={url}
+                        alt="message attachment"
+                        className="object-cover w-[300px] h-full aspect-auto"
+                    />
+                </div>
             ) : (
                 <div
                     className={`aspect-auto w-full flex flex-col p-2 ${
@@ -63,21 +75,19 @@ export default function FilePreview({ attachment, senderId }) {
                             </div>
                         </div>
                         <div
-                            className={`overflow-hidden ${
+                            className={`overflow-hidden space-y-2 ${
                                 isSender ? 'text-white' : 'text-gray-800'
                             }`}
                         >
-                            <p className="truncate text-[13px] leading-tight">
-                                {name}
-                            </p>
-                            <p className="text-[9px] leading-tight">
+                            <p className="truncate leading-tight">{name}</p>
+                            <p className="text-xs leading-tight">
                                 {formatFileSize(size)}
                             </p>
                         </div>
                     </div>
 
                     <hr
-                        className={`border-t-[0.01rem] mt-2 mb-3 ${
+                        className={`border-t-[0.01rem] mt-3 mb-3 ${
                             isSender
                                 ? 'border-[#ffffff4a]'
                                 : 'border-[#0000004a]'
@@ -93,10 +103,15 @@ export default function FilePreview({ attachment, senderId }) {
                                     ? 'text-white bg-[#ffffff39] hover:bg-[#ffffff5b]'
                                     : 'text-gray-800 bg-[#34343425] hover:bg-[#29292924]'
                             }`}
-                            onClick={() => window.open(url, '_blank')}
+                            onClick={() =>
+                                window.open(
+                                    `https://docs.google.com/gview?url=${url}`,
+                                    '_blank'
+                                )
+                            }
                         />
                         <Button
-                            btnText="Save"
+                            btnText="Download"
                             title="Download"
                             className={`rounded-[5px] w-full py-1 hover:scale-100 ${
                                 isSender

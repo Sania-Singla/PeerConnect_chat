@@ -129,7 +129,6 @@ export default function ChatInput() {
 
     return (
         <div className="overflow-visible relative">
-            {/* Emoji Picker */}
             {showEmojiPicker && (
                 <div
                     ref={emojiPickerRef}
@@ -146,7 +145,7 @@ export default function ChatInput() {
 
             {/* Previews */}
             {attachmentPreviews.length > 0 && (
-                <div className="flex space-x-4 items-center p-4 w-[calc(100%-300px)] overflow-x-scroll absolute bottom-[60px]">
+                <div className="flex space-x-4 items-center p-4 overflow-x-scroll w-full absolute bottom-[60px]">
                     {attachmentPreviews.map((file, i) => (
                         <InputFilePreview
                             file={message.attachments[i]}

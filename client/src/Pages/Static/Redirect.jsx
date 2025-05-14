@@ -1,7 +1,7 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useUserContext } from '@/Context';
 
-export default function Redirect({ children, path = '/login' }) {
+export default function Redirect({ path = '/login' }) {
     const { user } = useUserContext();
-    return user ? children : <Navigate to={path} />;
+    return user ? <Outlet /> : <Navigate to={path} replace />;
 }
