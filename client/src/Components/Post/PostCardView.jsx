@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { formatCount, formatDateRelative } from '@/Utils';
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
+import parse from 'html-react-parser';
 
 export default function PostCardView({
     post,
@@ -63,7 +64,7 @@ export default function PostCardView({
 
                 {/* post content */}
                 <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-1 mb-5 mt-2">
-                    {post_content}
+                    {parse(post_content)}
                 </div>
 
                 {/* show owner info if home page */}
