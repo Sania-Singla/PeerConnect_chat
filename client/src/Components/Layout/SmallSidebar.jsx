@@ -145,9 +145,9 @@ export default function Sidebar() {
                         initial="beginning"
                         animate="end"
                         exit="exit"
-                        className="fixed top-0 z-[1] lg:relative h-full w-[250px] px-2 bg-[#f6f6f6] border-r-[0.09rem] border-[#e0e0e0]"
+                        className="fixed top-0 z-[1] h-full w-[250px] px-2 bg-[#f6f6f6] border-r-[0.09rem] border-[#e0e0e0]"
                     >
-                        <div className="lg:hidden h-[55px] w-full flex items-center px-2 justify-between border-b-[0.09rem] border-[#e0e0e0]">
+                        <div className="h-[55px] w-full flex items-center px-2 justify-between border-b-[0.09rem] border-[#e0e0e0]">
                             {/* hamburgur menu btn */}
                             <Button
                                 btnText={
@@ -157,7 +157,7 @@ export default function Sidebar() {
                                 }
                                 title="Show Sidebar"
                                 onClick={() => setShowSideBar((prev) => !prev)}
-                                className="lg:hidden group"
+                                className="group"
                             />
 
                             {user ? (

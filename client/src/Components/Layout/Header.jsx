@@ -73,7 +73,7 @@ export default function Header() {
                 <NavLink
                     to={'/add'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#[#2b2b2b] fill-[#2b2b2b]'} flex flex-col items-center gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -85,14 +85,16 @@ export default function Header() {
                         title="Add Post"
                         className="flex items-center justify-center group"
                     />
-                    <p className="text-xs font-normal">Compose</p>
+                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
+                        Compose
+                    </p>
                 </NavLink>
 
                 {/* projects btn */}
                 <NavLink
                     to={'/projects'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#[#2b2b2b] fill-[#2b2b2b]'} flex flex-col items-center gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -102,16 +104,18 @@ export default function Header() {
                             </div>
                         }
                         title="Add Post"
-                        className="flex items-center justify-center group"
+                        className="flex items-center justify-center"
                     />
-                    <p className="text-xs font-normal">Projects</p>
+                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
+                        Projects
+                    </p>
                 </NavLink>
 
                 {/* chats btn */}
                 <NavLink
                     to={'/chat'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#[#2b2b2b] fill-[#2b2b2b]'} flex flex-col items-center gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -123,7 +127,9 @@ export default function Header() {
                         title="Messaging"
                         className="flex items-center justify-center group"
                     />
-                    <p className="text-xs font-normal">Messaging</p>
+                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
+                        Messaging
+                    </p>
                 </NavLink>
 
                 {/* login/logout btn */}
