@@ -10,15 +10,20 @@ import NotFoundPage from './Static/NotFoundPage';
 import ServerErrorPage from './Static/ServerErrorPage';
 import Redirect from './Static/Redirect';
 import WatchHistoryPage from './WatchHistoryPage';
-import LikedPostsPage from './LikedPostsPage';
 import AdminPage from './AdminPage';
 import UpdatePostPage from './UpdatePostPage';
-import SavedPostsPage from './SavedPostsPage';
 import AboutUsPage from './Static/AboutUsPage';
 import ContactUsPage from './Static/ContactUsPage';
 import FAQpage from './Static/FAQpage';
 import FollowersPage from './FollowersPage';
 import ChatsPage from './ChatsPage';
+import ProjectsPage from './ProjectsPage';
+import QuestionsPage from './QuestionsPage';
+import TopicsPage from './TopicsPage';
+import InterviewPage from './InterviewPage';
+import ResumePage from './ResumePage';
+import TextEditorPage from './TextEditorPage';
+import BotPage from './BotPage';
 
 export {
     AboutUsPage,
@@ -34,12 +39,17 @@ export {
     ServerErrorPage,
     Redirect,
     WatchHistoryPage,
-    LikedPostsPage,
     AdminPage,
     UpdatePostPage,
-    SavedPostsPage,
     ContactUsPage,
     FAQpage,
     FollowersPage,
     ChatsPage,
+    TopicsPage,
+    QuestionsPage,
+    ProjectsPage,
+    InterviewPage,
+    ResumePage,
+    BotPage,
+    TextEditorPage,
 };

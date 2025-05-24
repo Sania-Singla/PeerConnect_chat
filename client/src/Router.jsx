@@ -12,22 +12,25 @@ import {
     RegisterPage,
     PostPage,
     ChannelPage,
-    FollowersPage,
     ServerErrorPage,
     NotFoundPage,
     SettingsPage,
     SupportPage,
     Redirect,
-    WatchHistoryPage,
-    LikedPostsPage,
     AddPostPage,
     AdminPage,
     UpdatePostPage,
-    SavedPostsPage,
     AboutUsPage,
     ContactUsPage,
     FAQpage,
     ChatsPage,
+    ProjectsPage,
+    TextEditorPage,
+    TopicsPage,
+    QuestionsPage,
+    BotPage,
+    InterviewPage,
+    ResumePage,
 } from '@/Pages';
 
 import {
@@ -37,12 +40,24 @@ import {
     UpdatePassword,
     ChannelAbout,
     ChannelPosts,
+    ChannelSavedPosts,
+    ChannelLikedPosts,
+    ChannelProjects,
     ChatLayout,
+    ProjectLayout,
     Details,
     NoChatSelected,
     Members,
     Settings,
     Chat,
+    ProjectDetail,
+    QuestionLayout,
+    ProjectRequests,
+    ProjectTasks,
+    ProjectContributors,
+    ProjectContributionForm,
+    ResumeBuilder,
+    ResumeReviewer,
 } from '@/Components';
 
 import { ChannelContextProvider } from '@/Context/ChannelContext';
@@ -54,10 +69,7 @@ export const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
-            <Route path="followers" element={<FollowersPage />} />
-            <Route path="history" element={<WatchHistoryPage />} />
-            <Route path="liked" element={<LikedPostsPage />} />
-            <Route path="saved" element={<SavedPostsPage />} />
+
             <Route
                 path="channel/:userId"
                 element={
@@ -68,13 +80,43 @@ export const router = createBrowserRouter(
             >
                 <Route path="" element={<ChannelPosts />} />
                 <Route path="about" element={<ChannelAbout />} />
+                <Route path="saved-posts" element={<ChannelSavedPosts />} />
+                <Route path="liked-posts" element={<ChannelLikedPosts />} />
+                <Route path="projects" element={<ChannelProjects />} />
+            </Route>
+
+            <Route path="editor" element={<TextEditorPage />} />
+
+            <Route path="interview" element={<InterviewPage />} />
+
+            <Route path="bot" element={<BotPage />} />
+
+            <Route path="resume" element={<ResumePage />}>
+                <Route path="" element={<ResumeBuilder />} />
+                <Route path="review" element={<ResumeReviewer />} />
+            </Route>
+            
+            <Route path="practice" element={<TopicsPage />} />
+            <Route path="questions" element={<QuestionsPage />} />
+            <Route path="question/:questionId" element={<QuestionLayout />} />
+
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="project/:projectId" element={<ProjectLayout />}>
+                <Route path="" element={<ProjectDetail />} />
+                <Route path="tasks" element={<ProjectTasks />} />
+                <Route path="requests" element={<ProjectRequests />} />
+                <Route path="contributors" element={<ProjectContributors />} />
+                <Route
+                    path="contribution-form"
+                    element={<ProjectContributionForm />}
+                />
             </Route>
 
             {/* protected routes */}
             <Route element={<Redirect path="/login" />}>
                 <Route path="add" element={<AddPostPage />} />
                 <Route path="update/:postId" element={<UpdatePostPage />} />
-                <Route path="admin" element={<AdminPage />} />
+                <Route path="dashboard" element={<AdminPage />} />
                 <Route path="settings/" element={<SettingsPage />}>
                     <Route path="" element={<UpdateAccountDetails />} />
                     <Route path="channel" element={<UpdateChannelDetails />} />

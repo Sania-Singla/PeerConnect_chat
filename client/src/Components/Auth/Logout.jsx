@@ -39,7 +39,7 @@ export default function Logout() {
                     'Logout'
                 )
             }
-            className="text-white rounded-md py-[5px] flex items-center justify-center h-[35px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
+            className="text-white rounded-md w-[75px] h-[32px] bg-[#4977ec] hover:bg-[#3b62c2]"
         />
     );
 }

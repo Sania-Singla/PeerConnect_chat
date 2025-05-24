@@ -1,21 +1,26 @@
 import { Outlet } from 'react-router-dom';
-import { Header, Footer, Sidebar, Popup, CustomToast } from '@/Components';
+import { Header, Footer, SmallSidebar, Sidebar, Popup } from '@/Components';
 import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {
     return (
-        <div className="overflow-y-scroll h-full w-full">
+        <div className="h-full w-full">
             <Header />
-            <hr className="w-full" />
-            <Sidebar />
-            <main className="mt-[65px] p-6 min-h-[calc(100%-60px)] w-full">
-                <Outlet />
-            </main>
-            <hr className="w-full" />
-            <Footer />
+
+            <div className="flex mt-[55px] h-[calc(100%-55px)] border-b-[0.09rem] border-[#e0e0e0]">
+                <div className="hidden lg:block">
+                    <Sidebar />
+                </div>
+                <div className="lg:hidden">
+                    <SmallSidebar />
+                </div>
+                <main className="flex-1 overflow-auto">
+                    <Outlet />
+                    <Footer />
+                </main>
+            </div>
             <Popup />
             <Toaster />
-            <CustomToast />
         </div>
     );
 }

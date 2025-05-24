@@ -2,6 +2,7 @@ import Header from './Layout/Header';
 import Footer from './Layout/Footer';
 import Layout from './Layout/Layout';
 import Sidebar from './Layout/Sidebar';
+import SmallSidebar from './Layout/SmallSidebar';
 
 import RTE from './General/RTE';
 import Button from './General/Button';
@@ -26,6 +27,9 @@ import Recemendations from './Post/Recemendations';
 
 import ChannelAbout from './Channel/ChannelAbout';
 import ChannelPosts from './Channel/ChannelPosts';
+import ChannelLikedPosts from './Channel/ChannelLikedPosts';
+import ChannelSavedPosts from './Channel/ChannelSavedPosts';
+import ChannelProjects from './Channel/ChannelProjects';
 
 import Comment from './Comment/Comment';
 import Comments from './Comment/Comments';
@@ -57,10 +61,25 @@ import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateCoverImagePopup from './Popups/UpdateCoverImagePopup';
 
+import ProjectCard from './Project/ProjectCard';
+import ProjectDetail from './Project/ProjectDetail';
+import ProjectHeader from './Project/ProjectHeader';
+import ProjectLayout from './Project/ProjectLayout';
+import ProjectTasks from './Project/ProjectTasks';
+import ProjectContributionForm from './Project/ProjectContributionForm';
+import ProjectContributors from './Project/ProjectContributors';
+import ProjectRequests from './Project/ProjectRequests';
+
+import QuestionLayout from './Question/QuestionLayout';
+
+import ResumeBuilder from './Resume/ResumeBuilder';
+import ResumeReviewer from './Resume/ResumeReviewer';
+
 export {
     Header,
     Footer,
     Sidebar,
+    SmallSidebar,
     Layout,
     Button,
     RTE,
@@ -81,7 +100,9 @@ export {
     PostListView,
     Recemendations,
     AdminPostRow,
+    ProjectContributors,
     ChannelAbout,
+    ProjectContributionForm,
     ChannelPosts,
     Comment,
     Comments,
@@ -94,6 +115,7 @@ export {
     ChatHeader,
     ChatSidebar,
     ChatNavbar,
+    ProjectRequests,
     ChatInput,
     Chat,
     ChatLayout,
@@ -108,4 +130,15 @@ export {
     Settings,
     FriendsPopup,
     RequestsPopup,
+    ProjectCard,
+    QuestionLayout,
+    ProjectDetail,
+    ProjectHeader,
+    ProjectLayout,
+    ProjectTasks,
+    ChannelLikedPosts,
+    ChannelProjects,
+    ChannelSavedPosts,
+    ResumeReviewer,
+    ResumeBuilder,
 };

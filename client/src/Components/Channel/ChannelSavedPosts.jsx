@@ -1,31 +1,31 @@
 import { useEffect, useState } from 'react';
+import { Button, SavedPostView } from '@/Components';
+import { postService } from '@/Services';
 import { useNavigate } from 'react-router-dom';
-import { LikedPostView } from '@/Components';
-import { likeService } from '@/Services';
-import { paginate } from '@/Utils';
 import { icons } from '@/Assets/icons';
+import { paginate } from '@/Utils';
 import { LIMIT } from '@/Constants/constants';
 import { useUserContext } from '@/Context';
 
-export default function LikedPostsPage() {
+export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
+    const { channel } = useChannelContext();
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const { user } = useUserContext();
     const navigate = useNavigate();
 
-    // pagination
     const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
 
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
-        (async function getPosts() {
+        (async function getSavedPosts() {
             try {
                 setLoading(true);
-                const res = await likeService.getLikedPosts(
+                const res = await postService.getSavedPosts(
                     signal,
                     LIMIT,
                     page
@@ -41,23 +41,36 @@ export default function LikedPostsPage() {
             }
         })();
 
-        return () => controller.abort();
+        return () => {
+            controller.abort();
+        };
     }, [page, user]);
 
     const postElements = posts?.map((post, index) => (
-        <LikedPostView
+        <SavedPostView
             key={post.post_id}
-            likedPost={post}
+            savedPost={post}
             reference={
                 index + 1 === posts.length && postsInfo?.hasNextPage
                     ? paginateRef
                     : null
             }
-        />
+        >
+            {/* children */}
+            <div>
+                <Button
+                    btnText={<div className="size-[20px]">{icons.delete}</div>}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        removeFromLiked();
+                    }}
+                />
+            </div>
+        </SavedPostView>
     ));
 
-    return !user ? (
-        <div>Login to see liked posts</div>
+    return user?.user_id === channel.user_id ? (
+        <div>Login to see Saved posts</div>
     ) : (
         <div>
             {postElements.length > 0 && <div>{postElements}</div>}
@@ -75,7 +88,7 @@ export default function LikedPostsPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No liked posts !!</div>
+                postElements.length === 0 && <div>No saved posts !!</div>
             )}
         </div>
     );
