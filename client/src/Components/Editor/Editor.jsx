@@ -32,7 +32,7 @@ export default function Editor({ roomId, onCodeChange }) {
                 const code = instance.getValue(); // code has value which we write
                 onCodeChange(code);
                 if (origin !== 'setValue') {
-                    socket?.emit(ACTIONS.CODE_CHANGE, {
+                    socket?.emit('codeChange', {
                         roomId,
                         code,
                     });
@@ -44,7 +44,7 @@ export default function Editor({ roomId, onCodeChange }) {
     // data receive from server
     useEffect(() => {
         if (socket) {
-            socket.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+            socket.on('codeChange', ({ code }) => {
                 if (code !== null) editorRef.current.setValue(code);
             });
         }

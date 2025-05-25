@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Client from './Client';
 import Editor from './Editor';
-import { ACTIONS } from './Actions';
 import {
     useNavigate,
     Navigate,
@@ -46,23 +45,23 @@ export default function EditorPage() {
     const { socket } = useSocketContext();
 
     useEffect(() => {
-        socket.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
+        socket.on('joined', ({ clients, username, socketId }) => {
             if (username !== location.state?.username) {
                 toast.success(`${username} joined the room.`);
             }
             setClients(clients);
-            socket.emit(ACTIONS.SYNC_CODE, {
+            socket.emit('syncCode', {
                 code: codeRef.current,
                 socketId,
             });
         });
 
-        socket.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        socket.on('disconnected', ({ socketId, username }) => {
             toast.success(`${username} left the room`);
             setClients((prev) => prev.filter((c) => c.socketId !== socketId));
         });
 
-        socket.emit(ACTIONS.JOIN, {
+        socket.emit('join', {
             roomId,
             username: location.state.username,
         });
@@ -135,7 +134,7 @@ export default function EditorPage() {
                             </button>
                             <button
                                 onClick={() => {
-                                    socket.emit(ACTIONS.DISCONNECTED, {
+                                    socket.emit('disconnected', {
                                         socketId: socket.id,
                                         username: location.state.username,
                                     });

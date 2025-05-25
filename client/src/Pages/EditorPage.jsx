@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useSocketContext } from '@/Context';
-import { ACTIONS } from '@/Components/Editor/Actions';
 import { icons } from '@/Assets/icons';
 import { Button } from '@/Components';
 
@@ -26,7 +25,7 @@ export default function EditorPage() {
             return;
         }
 
-        socket.emit(ACTIONS.JOIN, { roomId, username });
+        socket.emit('join', { roomId, username });
 
         navigate(`/editor/${roomId}`, {
             state: { username },

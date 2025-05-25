@@ -17,13 +17,4 @@ const LANGUAGE_CONFIG = {
     r: { versionIndex: '3' },
 };
 
-const ACTIONS = {
-    JOIN: 'join',
-    JOINED: 'joined',
-    DISCONNECTED: 'disconnected',
-    CODE_CHANGE: 'code-change',
-    SYNC_CODE: 'sync-code',
-    LEAVE: 'leave',
-};
-
-export { LANGUAGE_CONFIG, ACTIONS };
+export { LANGUAGE_CONFIG };
