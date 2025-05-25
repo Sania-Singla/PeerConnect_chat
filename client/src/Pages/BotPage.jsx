@@ -40,7 +40,7 @@ export default function BotPage() {
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-38px)] px-4 bg-gray-50">
             <div className="w-full max-w-6xl bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-[80vh]">
                 {/* Header */}
-                <div className="bg-[#4977ec] p-6 text-center">
+                <div className="bg-[#668cf4] p-6 text-center">
                     <h2 className="text-3xl font-bold text-white">
                         Quick Bot 💬
                     </h2>
