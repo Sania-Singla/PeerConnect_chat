@@ -104,7 +104,6 @@ export default function ProjectContributionForm() {
         if (error[name]) setError((prev) => ({ ...prev, [name]: '' }));
     };
 
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -124,7 +123,7 @@ export default function ProjectContributionForm() {
                         </p>
                     </div>
 
-                    <form  className="space-y-6">
+                    <form className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {inputFields.map((field) => (
                                 <div

@@ -83,10 +83,9 @@ export default function ProjectprojectRequestsPage() {
                                 <Button
                                     className="w-full bg-[#4977ec] rounded-md  text-white px-[4px] py-[5px] md:w-32"
                                     btnText={'Accept'}
-                                    
                                 />
                                 <Button
-                                    btnText={"Ignore"}
+                                    btnText={'Ignore'}
                                     className="w-full bg-[#4977ec] rounded-md  text-white px-[4px] py-[5px] md:w-32"
                                 />
                             </div>
