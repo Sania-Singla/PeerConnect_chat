@@ -1,4 +1,4 @@
-const requests = [
+export const projectRequests = [
     {
         name: 'Sanya Malik',
         email: 'sanya.malik@example.com',

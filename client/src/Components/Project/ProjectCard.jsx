@@ -47,41 +47,65 @@ export default function ProjectCard({ project }) {
 
                 {/* Contributors and Button */}
                 <div className="flex items-center justify-between">
-                    <div className="flex -space-x-2">
-                        {project.contributors?.map((contributor, index) => (
-                            <div key={index} className="relative">
+                    <div className="flex items-center">
+                        <div className="flex -space-x-2">
+                            {project.contributors
+                                ?.slice(0, 5)
+                                .map((contributor, index) => (
+                                    <div key={index} className="relative group">
+                                        <div
+                                            className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-sm font-medium shadow-sm relative overflow-hidden"
+                                            style={{
+                                                zIndex:
+                                                    project.contributors
+                                                        .length - index,
+                                                backgroundColor:
+                                                    !contributor.avatar
+                                                        ? '#e5e7eb'
+                                                        : 'transparent',
+                                            }}
+                                            title={contributor.name}
+                                        >
+                                            {contributor.avatar ? (
+                                                <img
+                                                    src={contributor.avatar}
+                                                    alt={contributor.name}
+                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.style.display =
+                                                            'none';
+                                                        e.target.nextSibling.style.display =
+                                                            'flex';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <span
+                                                className={`${contributor.avatar ? 'hidden' : 'flex'} items-center justify-center w-full h-full`}
+                                            >
+                                                {contributor.name.charAt(0)}
+                                            </span>
+                                        </div>
+                                        <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                            {contributor.name}
+                                        </div>
+                                    </div>
+                                ))}
+                            {project.contributors?.length > 5 && (
                                 <div
-                                    className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-sm font-medium shadow-sm"
-                                    style={{
-                                        zIndex:
-                                            project.contributors.length - index,
-                                        backgroundColor: !contributor.avatar
-                                            ? `#${Math.floor(Math.random() * 16777215).toString(16)}`
-                                            : '',
-                                        backgroundImage: contributor.avatar
-                                            ? url(contributor.avatar)
-                                            : 'none',
-                                        backgroundSize: 'cover',
-                                    }}
-                                    title={contributor.name}
+                                    className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-xs text-gray-500 cursor-default"
+                                    title={`${project.contributors.length - 5} more contributors`}
                                 >
-                                    {!contributor.avatar &&
-                                        contributor.name.charAt(0)}
+                                    +{project.contributors.length - 5}
                                 </div>
-                            </div>
-                        ))}
-                        {project.contributors?.length > 5 && (
-                            <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-xs text-gray-500">
-                                +{project.contributors.length - 5}
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                     <Button
                         onClick={() =>
                             navigate(`/project/${project.projectId}`)
                         }
                         btnText={'View Project'}
-                        className="text-white rounded-md px-[10px] py-[4px] h-[35px] bg-[#4977ec] hover:bg-[#3b62c2] transition-colors"
+                        className="text-white rounded-md px-3 py-2 h-[35px] bg-[#4977ec] hover:bg-[#3b62c2] transition-colors text-sm font-medium"
                     />
                 </div>
             </div>

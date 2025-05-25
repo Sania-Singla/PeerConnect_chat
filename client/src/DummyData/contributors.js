@@ -1,4 +1,4 @@
-const contributers = [
+export const contributers = [
     {
         name: 'Tanvi Sharma',
         email: 'tanvi.s@example.com',
@@ -54,5 +54,5 @@ const contributers = [
         profilelink: 'https://peerconnect.dev/users/adityanair',
         avatar: '',
         contributorSince: '2025-01-30',
-    }
+    },
 ];
