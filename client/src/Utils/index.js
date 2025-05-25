@@ -8,6 +8,7 @@ import {
 } from './formatting';
 import verifyExpression from './regex';
 import paginate from './pagination';
+import downloadCodeFile from './downloadCodeFile';
 
 export {
     fileRestrictions,
@@ -19,4 +20,5 @@ export {
     verifyExpression,
     paginate,
     formatCount,
+    downloadCodeFile,
 };

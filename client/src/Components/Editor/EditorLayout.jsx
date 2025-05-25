@@ -12,6 +12,7 @@ import { toast } from 'react-hot-toast';
 import { BASE_BACKEND_URL } from '@/Constants/constants';
 import { useSocketContext } from '@/Context';
 import { Button } from '..';
+import { downloadCodeFile } from '@/Utils';
 
 const LANGUAGES = [
     'python3',
@@ -178,6 +179,14 @@ export default function EditorPage() {
                                     ? 'Close Compiler'
                                     : 'Open Compiler'
                             }
+                        />
+
+                        <Button
+                            className="bg-green-600 hover:bg-green-700 px-4 h-[32px] rounded text-white"
+                            onClick={() =>
+                                downloadCodeFile(codeRef, selectedLanguage)
+                            }
+                            btnText="Save File"
                         />
                     </div>
                     <div className="flex-grow">
