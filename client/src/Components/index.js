@@ -75,6 +75,8 @@ import QuestionLayout from './Question/QuestionLayout';
 import ResumeBuilder from './Resume/ResumeBuilder';
 import ResumeReviewer from './Resume/ResumeReviewer';
 
+import Editor from './Editor/EditorLayout';
+
 export {
     Header,
     Footer,
@@ -141,4 +143,5 @@ export {
     ChannelSavedPosts,
     ResumeReviewer,
     ResumeBuilder,
+    Editor,
 };

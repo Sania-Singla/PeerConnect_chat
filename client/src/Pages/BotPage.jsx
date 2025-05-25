@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function BotPage() {
-  return <div>BotPage</div>;
+    return <div>BotPage</div>;
 }

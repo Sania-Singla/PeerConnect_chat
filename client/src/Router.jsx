@@ -25,7 +25,7 @@ import {
     FAQpage,
     ChatsPage,
     ProjectsPage,
-    TextEditorPage,
+    EditorPage,
     TopicsPage,
     QuestionsPage,
     BotPage,
@@ -60,7 +60,8 @@ import {
     ResumeReviewer,
 } from '@/Components';
 
-import { ChannelContextProvider } from '@/Context/ChannelContext';
+import { ChannelContextProvider } from '@/Context';
+import EditorLayout from './Components/Editor/EditorLayout';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -85,7 +86,8 @@ export const router = createBrowserRouter(
                 <Route path="projects" element={<ChannelProjects />} />
             </Route>
 
-            <Route path="editor" element={<TextEditorPage />} />
+            <Route path="editor" element={<EditorPage />} />
+            <Route path="editor/:roomId" element={<EditorLayout />} />
 
             <Route path="interview" element={<InterviewPage />} />
 
@@ -95,7 +97,7 @@ export const router = createBrowserRouter(
                 <Route path="" element={<ResumeBuilder />} />
                 <Route path="review" element={<ResumeReviewer />} />
             </Route>
-            
+
             <Route path="practice" element={<TopicsPage />} />
             <Route path="questions" element={<QuestionsPage />} />
             <Route path="question/:questionId" element={<QuestionLayout />} />

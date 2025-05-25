@@ -1,12 +1,11 @@
 import { useContext, createContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { useUserContext, useChatContext } from '@/Context';
+import { useChatContext } from '@/Context';
 
 const SocketContext = createContext();
 
 const SocketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
-    const { user } = useUserContext();
     const {
         setChats,
         setSelectedChat,
@@ -22,9 +21,12 @@ const SocketContextProvider = ({ children }) => {
     }, [selectedChat]);
 
     function connectSocket() {
-        if (!user || socket) return;
+        if (socket) return;
 
         const socketInstance = io(import.meta.env.VITE_BACKEND_BASE_URL, {
+            'force new connection': true,
+            reconnectionAttempts: 'Infinity',
+            timeout: 10000,
             withCredentials: true,
         });
 
@@ -327,9 +329,12 @@ const SocketContextProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        user ? connectSocket() : disconnectSocket();
-        return () => disconnectSocket();
-    }, [user]);
+        connectSocket();
+    }, []);
+    // useEffect(() => {
+    //     user ? connectSocket() : disconnectSocket();
+    //     return () => disconnectSocket();
+    // }, [user]);
 
     return (
         <SocketContext.Provider

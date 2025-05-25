@@ -22,7 +22,7 @@ import QuestionsPage from './QuestionsPage';
 import TopicsPage from './TopicsPage';
 import InterviewPage from './InterviewPage';
 import ResumePage from './ResumePage';
-import TextEditorPage from './TextEditorPage';
+import EditorPage from './EditorPage';
 import BotPage from './BotPage';
 
 export {
@@ -51,5 +51,5 @@ export {
     InterviewPage,
     ResumePage,
     BotPage,
-    TextEditorPage,
+    EditorPage,
 };

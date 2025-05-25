@@ -39,7 +39,7 @@ export default function Sidebar() {
         },
         { show: user, path: '/dashboard', name: 'Dashboard', icon: icons.user },
         {
-            show: user,
+            show: true,
             path: '/editor',
             name: 'Text Editor',
             icon: icons.code,

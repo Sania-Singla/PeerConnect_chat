@@ -10,6 +10,14 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),
+            'codemirror/lib/codemirror.css': 'codemirror/lib/codemirror.css',
+            'codemirror/mode/javascript/javascript':
+                'codemirror/mode/javascript/javascript.js',
+            'codemirror/addon/edit/closetag':
+                'codemirror/addon/edit/closetag.js',
+            'codemirror/addon/edit/closebrackets':
+                'codemirror/addon/edit/closebrackets.js',
+            'codemirror/theme/dracula.css': 'codemirror/theme/dracula.css',
         },
     },
     // proxy doesn't work in deployment

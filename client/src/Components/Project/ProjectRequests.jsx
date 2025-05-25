@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function ProjectRequests() {
-  return <div>ProjectRequests</div>;
+    return <div>ProjectRequests</div>;
 }

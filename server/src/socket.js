@@ -13,90 +13,153 @@ const http = createServer(app);
 const io = new Server(http, { cors: CORS_OPTIONS });
 
 // middleware for extracting user from socket
-io.use((socket, next) => {
-    const req = socket.request;
-    const res = {};
+// ! commented for editor demonstration
+// io.use((socket, next) => {
+//     const req = socket.request;
+//     const res = {};
 
-    cookieParser()(
-        req,
-        res,
-        async (err) => await socketAuthenticator(req, err, socket, next)
+//     cookieParser()(
+//         req,
+//         res,
+//         async (err) => await socketAuthenticator(req, err, socket, next)
+//     );
+// });
+
+// ! for editor ********************
+import { ACTIONS } from './constants/editor.js';
+
+const userSocketMap = {};
+
+const getAllConnectedClients = (roomId) => {
+    return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
+        (socketId) => {
+            return {
+                socketId,
+                username: userSocketMap[socketId],
+            };
+        }
     );
-});
+};
+// ! ******************************
 
 io.on('connection', async (socket) => {
     const user = socket.user;
-    const userId = user.user_id;
+    const userId = user?.user_id;
 
     console.log('User connected:', socket.id);
 
-    // mark yourself online
-    try {
-        await Promise.all([
-            redisClient.setEx(`user:${userId}`, 3600, socket.id), // 1hr exp
-            onlineUserObject.markUserOnline(userId, socket.id),
-        ]);
-        console.log(`User ${userId} marked as online.`);
-    } catch (err) {
-        return console.error('Error marking user as online:', err);
+    if (user) {
+        // mark yourself online
+        try {
+            await Promise.all([
+                redisClient.setEx(`user:${userId}`, 3600, socket.id), // 1hr exp
+                onlineUserObject.markUserOnline(userId, socket.id),
+            ]);
+            console.log(`User ${userId} marked as online.`);
+        } catch (err) {
+            return console.error('Error marking user as online:', err);
+        }
+
+        // notify others about you being online
+
+        // get your chats
+        const chats = await chatObject.getMyChats(userId);
+
+        // Join rooms for your chats
+        chats.forEach(({ chat_id }) => socket.join(`chat:${chat_id}`));
+        console.log(`User ${userId} joined rooms for his/her chats.`);
+
+        // Notify in rooms now
+        chats.forEach(({ chat_id }) =>
+            socket.to(`chat:${chat_id}`).emit('userStatusChange', {
+                userId,
+                targetUser: user,
+                isOnline: true,
+            })
+        );
+
+        socket.on('typing', (chatId) =>
+            socket
+                .to(`chat:${chatId}`)
+                .emit('typing', { chatId, targetUser: user })
+        );
+
+        socket.on('stoppedTyping', (chatId) =>
+            socket
+                .to(`chat:${chatId}`)
+                .emit('stoppedTyping', { chatId, targetUser: user })
+        );
     }
 
-    // notify others about you being online
+    // ! editor **************************
+    socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
+        userSocketMap[socket.id] = username;
+        socket.join(roomId);
+        const clients = getAllConnectedClients(roomId);
+        // notify that new user join
+        clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.JOINED, {
+                clients,
+                username,
+                socketId: socket.id,
+            });
+        });
+    });
 
-    // get your chats
-    const chats = await chatObject.getMyChats(userId);
+    // sync the code
+    socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
+    });
+    // when new user join the room all the code which are there are also shows on that persons editor
+    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
+        io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
+    });
 
-    // Join rooms for your chats
-    chats.forEach(({ chat_id }) => socket.join(`chat:${chat_id}`));
-    console.log(`User ${userId} joined rooms for his/her chats.`);
+    socket.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        console.log('User disconnected:', socketId);
+        const rooms = [...socket.rooms];
+        // leave all the room
+        rooms.forEach((roomId) => {
+            socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+                socketId: socket.id,
+                username,
+            });
+        });
 
-    // Notify in rooms now
-    chats.forEach(({ chat_id }) =>
-        socket.to(`chat:${chat_id}`).emit('userStatusChange', {
-            userId,
-            targetUser: user,
-            isOnline: true,
-        })
-    );
-
-    socket.on('typing', (chatId) =>
-        socket.to(`chat:${chatId}`).emit('typing', { chatId, targetUser: user })
-    );
-
-    socket.on('stoppedTyping', (chatId) =>
-        socket
-            .to(`chat:${chatId}`)
-            .emit('stoppedTyping', { chatId, targetUser: user })
-    );
+        delete userSocketMap[socket.id];
+    });
+    // ! **************************
 
     // disconnection
     socket.on('disconnect', async () => {
         console.log('User disconnected:', socket.id);
 
-        // mark us offline
-        try {
-            await Promise.all([
-                redisClient.del(`user:${userId}`),
-                onlineUserObject.markUserOffline(userId),
-            ]);
-            console.log(`User ${userId} marked as offline`);
-        } catch (err) {
-            return console.error('Error marking user offline:', err);
+        if (user) {
+            // mark us offline
+            try {
+                await Promise.all([
+                    redisClient.del(`user:${userId}`),
+                    onlineUserObject.markUserOffline(userId),
+                ]);
+                console.log(`User ${userId} marked as offline`);
+            } catch (err) {
+                return console.error('Error marking user offline:', err);
+            }
+
+            const chats = await chatObject.getMyChats(userId);
+
+            // Although when a user disconnects, he automatically leave all the rooms he were part of
+            chats.forEach(({ chat_id }) => socket.leave(`chat:${chat_id}`));
+
+            // Notify others in rooms about us being offline
+            chats.forEach(({ chat_id }) =>
+                socket.to(`chat:${chat_id}`).emit('userStatusChange', {
+                    userId,
+                    targetUser: user,
+                    isOnline: false,
+                })
+            );
         }
-
-        const chats = await chatObject.getMyChats(userId);
-
-        // Although when a user disconnects, he automatically leave all the rooms he were part of
-        chats.forEach(({ chat_id }) => socket.leave(`chat:${chat_id}`));
-
-        // Notify others in rooms about us being offline
-        chats.forEach(({ chat_id }) =>
-            socket.to(`chat:${chat_id}`).emit('userStatusChange', {
-                userId,
-                targetUser: user,
-                isOnline: false,
-            })
-        );
     });
 });
 

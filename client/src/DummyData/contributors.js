@@ -54,5 +54,5 @@ const contributers = [
         profilelink: 'https://peerconnect.dev/users/adityanair',
         avatar: '',
         contributorSince: '2025-01-30',
-    }
+    },
 ];

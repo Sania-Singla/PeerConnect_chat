@@ -68,12 +68,12 @@ export default function Header() {
                 />
             </div>
 
-            <div className="flex items-center justify-center gap-5 lg:gap-7">
+            <div className="flex items-center gap-2 lg:gap-4">
                 {/* add post btn */}
                 <NavLink
                     to={'/add'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -94,7 +94,7 @@ export default function Header() {
                 <NavLink
                     to={'/projects'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -115,7 +115,7 @@ export default function Header() {
                 <NavLink
                     to={'/chat'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button

@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function QuestionLayout() {
-  return <div>QuestionLayout</div>;
+    return <div>QuestionLayout</div>;
 }

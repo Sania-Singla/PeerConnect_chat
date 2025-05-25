@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function ProjectContributors() {
-  return <div>ProjectContributors</div>;
+    return <div>ProjectContributors</div>;
 }

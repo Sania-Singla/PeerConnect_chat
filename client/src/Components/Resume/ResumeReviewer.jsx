@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function ResumeReviewer() {
-  return <div>ResumeReviewer</div>;
+    return <div>ResumeReviewer</div>;
 }

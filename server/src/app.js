@@ -22,6 +22,7 @@ import {
     chatRouter,
     messageRouter,
     requestRouter,
+    editorRouter,
 } from './routes/index.js';
 import { errorMiddleware } from './middlewares/index.js';
 
@@ -34,4 +35,6 @@ app.use('/api/categories', categoryRouter);
 app.use('/api/chats', chatRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/requests', requestRouter);
+app.use('/api/codes', editorRouter);
+
 app.use(errorMiddleware);

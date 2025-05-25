@@ -4,10 +4,10 @@ import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {
     return (
-        <div className="h-full w-full">
+        <div className="h-screen w-full">
             <Header />
 
-            <div className="flex mt-[55px] h-[calc(100%-55px)] border-b-[0.09rem] border-[#e0e0e0]">
+            <div className="flex pt-[55px] h-full border-b-[0.09rem] border-[#e0e0e0]">
                 <div className="hidden lg:block">
                     <Sidebar />
                 </div>
