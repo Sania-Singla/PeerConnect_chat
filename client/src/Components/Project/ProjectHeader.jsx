@@ -18,6 +18,11 @@ export default function ProjectHeader() {
             to: 'contributors',
             icon: icons.contributers,
         },
+        {
+            name: 'Contribution Form',
+            to: 'contribution-form',
+            icons: icons.memberAdd,
+        },
     ];
 
     return (
@@ -34,6 +39,9 @@ export default function ProjectHeader() {
                         `}
                     >
                         <div className="flex items-center gap-2">
+                            {/* <div className="w-4 h-4 fill-gray-600">
+                                {tab.icon}
+                            </div> */}
                             {tab.icon}
                             {tab.name}
                         </div>
