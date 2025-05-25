@@ -1,5 +1,5 @@
 import { useSocketContext, useChatContext } from '@/Context';
-import { ChatNavbar, ChatSidebar } from '@/Components';
+import { ChatNavbar, ChatSidebar, SmallSidebar } from '@/Components';
 import { Outlet, useParams } from 'react-router-dom';
 
 export default function ChatsPage() {
@@ -18,6 +18,8 @@ export default function ChatsPage() {
                 >
                     <ChatSidebar />
                 </div>
+                <SmallSidebar />
+
                 <div
                     className={`${chatId && !showSidebar ? 'flex-1 w-full' : 'hidden sm:block sm:flex-1'}`}
                 >
