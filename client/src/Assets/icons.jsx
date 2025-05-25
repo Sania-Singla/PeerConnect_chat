@@ -1,4 +1,15 @@
 export const icons = {
+    leetcode: (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            className="size-full fill-inherit stroke-inherit"
+        >
+            <path d="M227.3 189.4 125.3 249a8 8 0 0 1-8.1 0l-38.5-22.2a8 8 0 1 1 8.1-13.8l34.4 19.8 97.6-56.4-97.6-56.4-97.6 56.4 27.7 16a8 8 0 1 1-8.1 13.8L36.9 189.4a8 8 0 0 1 0-13.8l102-58.9a8 8 0 0 1 8.1 0l102 58.9a8 8 0 0 1 0 13.8Z" />
+            <path d="M230.2 133.8a8 8 0 0 1-7.3-4.6l-102-204a8 8 0 1 1 14.6-7.2l102 204a8 8 0 0 1-7.3 11.8Z" />
+        </svg>
+    ),
+
     noChatSelected: (
         <svg
             xmlns="http://www.w3.org/2000/svg"

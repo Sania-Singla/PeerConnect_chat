@@ -71,6 +71,8 @@ import ProjectContributors from './Project/ProjectContributors';
 import ProjectRequests from './Project/ProjectRequests';
 
 import QuestionLayout from './Question/QuestionLayout';
+import QuestionCard from './Question/QuestionCard';
+import TopicCard from './Question/TopicCard';
 
 import ResumeBuilder from './Resume/ResumeBuilder';
 import ResumeReviewer from './Resume/ResumeReviewer';
@@ -132,6 +134,8 @@ export {
     RequestsPopup,
     ProjectCard,
     QuestionLayout,
+    QuestionCard,
+    TopicCard,
     ProjectDetail,
     ProjectHeader,
     ProjectLayout,
