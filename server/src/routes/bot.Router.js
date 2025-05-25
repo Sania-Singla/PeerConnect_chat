@@ -1,6 +1,5 @@
-import express from "express"
-import { quickBot } from "../controllers/bot.controller";
+import express from 'express';
+import { quickBot } from '../controllers/bot.controller.js';
 export const botRouter = express.Router();
 
-botRouter.route("/quick-bot").post(quickBot);
-
+botRouter.route('/quick-bot').post(quickBot);
