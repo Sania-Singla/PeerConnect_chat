@@ -11,11 +11,11 @@ export default function ChatHeader() {
     return (
         <div className="bg-[#f6f6f6] h-[60px] border-b-[0.01rem] border-b-[#e6e6e6] flex gap-4 items-center px-4">
             <Button
-                className={`sm:hidden bg-[#ffffff] p-2 items-center flex justify-center group rounded-full drop-shadow-md`}
+                className={`sm:hidden group flex items-center justify-center cursor-pointer`}
                 title="Show Chats"
                 onClick={() => setShowSidebar(true)}
                 btnText={
-                    <div className="size-[18px] fill-[#1a1a1a] group-hover:fill-[#4977ec]">
+                    <div className="size-[16px] fill-[#2b2b2b] group-hover:fill-[#4977ec]">
                         {icons.chevronRight}
                     </div>
                 }
@@ -156,7 +156,7 @@ export default function ChatHeader() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-5">
+                <div className="flex align-items-center gap-5">
                     <Button
                         btnText={
                             <div className="size-[18px] fill-[#2b2b2b] group-hover:fill-[#4977ec]">
@@ -164,18 +164,18 @@ export default function ChatHeader() {
                             </div>
                         }
                         title="Video Call"
-                        className="flex items-center justify-center"
+                        className="flex items-center justify-center cursor-pointer group"
                     />
 
                     <Button
                         onClick={() => navigate('/chat')}
                         btnText={
-                            <div className="size-[18px] stroke-[#2b2b2b] group-hover:stroke-[#4977ec]">
+                            <div className="size-[18px] stroke-[#2b2b2b] group-hover:stroke-red-600">
                                 {icons.cross}
                             </div>
                         }
                         title="Close chat"
-                        className="flex items-center justify-center"
+                        className="flex items-center justify-center cursor-pointer group"
                     />
                 </div>
             </div>

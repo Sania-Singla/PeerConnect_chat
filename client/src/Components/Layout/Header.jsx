@@ -22,7 +22,7 @@ export default function Header() {
                     }
                     title="Show Sidebar"
                     onClick={() => setShowSideBar((prev) => !prev)}
-                    className="lg:hidden group"
+                    className="lg:hidden group cursor-pointer"
                 />
 
                 {/* logo */}
@@ -50,7 +50,7 @@ export default function Header() {
                     placeholder="Search here"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="placeholder:text-[14px] font-normal placeholder:text-[#8e8e8e] border border-b-[0.15rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
+                    className="placeholder:text-[14px] font-normal placeholder:text-[#8e8e8e] border-gray-200 border-b-[0.15rem] border-[0.06rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
                 />
                 <div className="size-[16px] fill-[#5a5a5a] group-focus-within:fill-[#4977ec] absolute top-[50%] translate-y-[-50%] left-2">
                     {icons.search}
@@ -64,7 +64,7 @@ export default function Header() {
                     }
                     title="Close"
                     onClick={() => setSearch('')}
-                    className="p-1 rounded-full bg-transparent hover:backdrop-brightness-95 flex items-center justify-center absolute right-1 top-[50%] translate-y-[-50%]"
+                    className="p-1 rounded-full cursor-pointer bg-transparent hover:backdrop-brightness-95 flex items-center justify-center absolute right-1 top-[50%] translate-y-[-50%]"
                 />
             </div>
 

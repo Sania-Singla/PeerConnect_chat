@@ -157,7 +157,7 @@ export default function Sidebar() {
                                 }
                                 title="Show Sidebar"
                                 onClick={() => setShowSideBar((prev) => !prev)}
-                                className="group"
+                                className="group cursor-pointer"
                             />
 
                             {user ? (

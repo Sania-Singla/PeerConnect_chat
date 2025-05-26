@@ -47,7 +47,7 @@ export default function ChatSettings() {
                             <img
                                 src={selectedChat.chat.avatar}
                                 alt="Chat Avatar"
-                                className="size-[100px] border drop-shadow-md border-gray-800 rounded-full bg-blue-100 flex items-center justify-center text-4xl text-blue-600"
+                                className="size-[100px] object-cover border drop-shadow-md border-gray-800 rounded-full bg-blue-100 flex items-center justify-center text-4xl text-blue-600"
                             />
                         </div>
 

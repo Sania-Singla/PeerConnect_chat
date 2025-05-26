@@ -10,12 +10,13 @@ export default function Footer() {
 
     const socialElements = Object.entries(CONTRIBUTORS[0].socials).map(
         ([platform, url]) => (
-            <Link key={platform} to={url} target="_blank">
-                <div className="bg-[#dadada] p-1 sm:p-[6px] lg:p-2 rounded-full drop-shadow-md hover:bg-[#c9c9c9] w-fit">
-                    <div className="size-[15px] sm:size-[18px] lg:size-[20px]">
-                        {icons[platform]}
-                    </div>
-                </div>
+            <Link
+                key={platform}
+                to={url}
+                target="_blank"
+                className="size-[15px] hover:fill-[#4977ec]"
+            >
+                {icons[platform]}
             </Link>
         )
     );
@@ -46,7 +47,7 @@ export default function Footer() {
 
     return (
         <footer className="px-6 pt-6 pb-4 bg-[#f6f6f6]">
-            <div className="flex flex-wrap justify-between gap-4">
+            <div className="flex flex-wrap justify-between gap-4 border-b-[0.09rem] border-[#e0e0e0]">
                 <div className="">
                     <p className="text-black font-medium">
                         Stay Social, Stay Organized.
@@ -101,8 +102,6 @@ export default function Footer() {
                     </div>
                 </form>
             </div>
-
-            <hr className="w-full mt-6 mb-4" />
 
             <div className="flex flex-col xs:flex-row gap-2 transition-all ease-in-out items-center justify-between w-full">
                 <p className="text-black text-xs sm:text-sm text-center">

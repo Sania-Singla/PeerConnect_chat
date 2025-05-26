@@ -14,8 +14,8 @@ export default function Layout() {
                 <div className="lg:hidden">
                     <SmallSidebar />
                 </div>
-                <main className="flex-1 overflow-auto">
-                    <div className="min-h-full p-4">
+                <main className="flex-1 overflow-auto h-full">
+                    <div className="h-full p-4 bg-[#f6f6f6] border-b-[0.09rem] border-[#e0e0e0]">
                         <Outlet />
                     </div>
                     <Footer />

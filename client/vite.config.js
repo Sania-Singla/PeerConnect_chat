@@ -2,11 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
 
 dotenv.config({ path: './src/Config/.env' }); // no need if in root dir
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),
