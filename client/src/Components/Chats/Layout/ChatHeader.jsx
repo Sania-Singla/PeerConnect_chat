@@ -156,26 +156,26 @@ export default function ChatHeader() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-5">
                     <Button
-                        className="bg-[#ffffff] pt-2 pb-[5px] px-[7px] items-center flex justify-center group rounded-full drop-shadow-md"
-                        title="Start Video Call"
                         btnText={
-                            <div className="size-[18px] fill-[#1a1a1a] group-hover:fill-[#4977ec]">
+                            <div className="size-[18px] fill-[#2b2b2b] group-hover:fill-[#4977ec]">
                                 {icons.video}
                             </div>
                         }
+                        title="Video Call"
+                        className="flex items-center justify-center"
                     />
 
                     <Button
-                        className="bg-[#ffffff] p-[6px] group rounded-full drop-shadow-md w-fit"
-                        title="Close Chat"
                         onClick={() => navigate('/chat')}
                         btnText={
-                            <div className="size-[19px] stroke-[#434343] group-hover:stroke-red-600">
+                            <div className="size-[18px] stroke-[#2b2b2b] group-hover:stroke-[#4977ec]">
                                 {icons.cross}
                             </div>
                         }
+                        title="Close chat"
+                        className="flex items-center justify-center"
                     />
                 </div>
             </div>

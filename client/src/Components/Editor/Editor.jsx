@@ -5,7 +5,6 @@ import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/lib/codemirror.css';
 import CodeMirror from 'codemirror';
-import { ACTIONS } from './Actions';
 import { useSocketContext } from '@/Context';
 
 export default function Editor({ roomId, onCodeChange }) {

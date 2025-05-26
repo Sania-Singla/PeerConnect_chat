@@ -48,12 +48,12 @@ export default function ChatLayout() {
                 <ChatHeader />
             </div>
             <div
-                className={`bg-[#f6f6f6] ${pathname.includes('/details') ? 'h-[calc(100%-120px)]' : 'h-[calc(100%-180px)]'} overflow-y-scroll`}
+                className={`bg-[#f6f6f6] ${pathname.includes('/details') ? 'h-[calc(100%-60px)]' : 'h-[calc(100%-120px)]'} overflow-y-scroll`}
             >
                 <Outlet />
             </div>
             <div
-                className={`${pathname.includes('/details') ? 'hidden' : 'block'} h-[60px] bg-[#f6f6f6]`}
+                className={`${pathname.includes('/details') ? 'hidden' : 'block h-[60px]'} bg-[#f6f6f6]`}
             >
                 <ChatInput />
             </div>

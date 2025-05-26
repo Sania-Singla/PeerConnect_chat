@@ -133,7 +133,7 @@ export default function Header() {
                 </NavLink>
 
                 {/* login/logout btn */}
-                <div className="hidden lg:flex">
+                <div className="hidden lg:flex ml-2">
                     {user ? (
                         <div className="w-full h-full py-3 flex items-center justify-end gap-5">
                             <Logout />

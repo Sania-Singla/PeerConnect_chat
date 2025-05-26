@@ -55,7 +55,7 @@ export default function ChatSidebar() {
                         setShowSidebar(false);
                     }}
                     className={({ isActive }) =>
-                        `cursor-pointer flex items-center gap-3 py-2 px-3 rounded-md transition-all duration-200 
+                        `cursor-pointer flex align-items-center gap-3 py-2 px-3 rounded-md transition-all duration-200 
                     hover:backdrop-brightness-95 ${isActive && 'backdrop-brightness-95'} w-full text-left`
                     }
                 >
@@ -65,7 +65,7 @@ export default function ChatSidebar() {
                             {avatar.map((url, i) => (
                                 <div
                                     key={i}
-                                    className="size-[45px] border border-[#434343] rounded-full overflow-hidden"
+                                    className="size-[40px] border border-[#434343] rounded-full overflow-hidden"
                                     style={{ zIndex: avatar.length - i }}
                                 >
                                     <img
@@ -78,7 +78,7 @@ export default function ChatSidebar() {
                         </div>
                     ) : (
                         <div className="relative">
-                            <div className="size-[45px] border border-[#434343] rounded-full overflow-hidden">
+                            <div className="size-[40px] border border-[#434343] rounded-full overflow-hidden">
                                 <img
                                     src={avatar}
                                     alt="User Avatar"
@@ -96,7 +96,7 @@ export default function ChatSidebar() {
                     )}
 
                     {/* User Info */}
-                    <div className="overflow-hidden pb-3 flex-1 space-y-[1px]">
+                    <div className="overflow-hidden flex-1 space-y-[1px]">
                         <div className="flex items-center justify-between gap-4">
                             <p className="text-[15px] font-semibold text-gray-900 truncate">
                                 {chat_name}
@@ -144,7 +144,7 @@ export default function ChatSidebar() {
             </div>
 
             {/* Chats */}
-            <div className="space-y-2 overflow-y-scroll pb-2">
+            <div className="space-y-1 overflow-y-scroll pb-2">
                 {loading ? (
                     <div className="text-center">loading ...</div>
                 ) : chats.length > 0 ? (

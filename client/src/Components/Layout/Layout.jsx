@@ -15,7 +15,9 @@ export default function Layout() {
                     <SmallSidebar />
                 </div>
                 <main className="flex-1 overflow-auto">
-                    <Outlet />
+                    <div className="min-h-full p-4">
+                        <Outlet />
+                    </div>
                     <Footer />
                 </main>
             </div>
