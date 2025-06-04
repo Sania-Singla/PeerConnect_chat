@@ -66,7 +66,9 @@ export default function HomePage() {
 
     return (
         <div>
-            {postElements.length > 0 && <div>{postElements}</div>}
+            {postElements.length > 0 && (
+                <div className="py-4 px-8 sm:px-4">{postElements}</div>
+            )}
 
             {loading ? (
                 page === 1 ? (

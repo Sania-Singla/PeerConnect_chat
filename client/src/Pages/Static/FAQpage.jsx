@@ -11,35 +11,43 @@ export default function FAQpage() {
 
     const faqs = [
         {
-            question: 'What is this blog about?',
-            answer: 'This blog is a collection of articles on various topics, including technology, lifestyle, and personal growth. We aim to provide valuable insights and tips to our readers.',
+            question: 'What is PeerConnect?',
+            answer: 'PeerConnect is a student-first platform designed to help learners collaborate on real-world projects, practice coding, and build a visible portfolio through community-driven learning.',
         },
         {
-            question: 'How often do you post new content?',
-            answer: 'New blog posts are published once a week. We strive to maintain a consistent posting schedule to keep our readers engaged.',
+            question: 'Who can use PeerConnect?',
+            answer: 'Any student or early graduate looking to gain hands-on experience, collaborate with peers, and grow through shared learning can join PeerConnect—no matter their background or college tier.',
         },
         {
-            question: 'Can I contribute to a blog?',
-            answer: "Yes! We welcome guest writers who share a passion for writing and have interesting ideas to contribute. Please visit our 'Contribute' page for more details.",
+            question: 'Is PeerConnect free to use?',
+            answer: 'Yes, PeerConnect is completely free. We believe in equal access to collaborative tools and learning opportunities for all students.',
         },
         {
-            question: 'How can I get in touch with you?',
-            answer: "You can reach out to us via the 'Contact' page. We also respond to messages on our social media accounts, which are linked in the footer of the website.",
+            question: 'Can I contribute to open-source projects here?',
+            answer: 'Absolutely! You can find or create collaborative projects, join teams, contribute meaningfully, and get recognized for your work.',
         },
         {
-            question: 'Do you offer email subscriptions?',
-            answer: 'Yes! You can subscribe to our newsletter to receive the latest blog posts and updates directly in your inbox. Simply enter your email in the subscription form at the bottom of the page.',
+            question: 'What features does PeerConnect offer?',
+            answer: 'PeerConnect includes real-time collaborative editing, mock interviews, project boards, chat, resume tools, coding practice, and more—all in one place.',
+        },
+        {
+            question: 'Do I need prior experience to join a project?',
+            answer: 'Not at all. Projects vary in complexity and skills required. You can explore beginner-friendly opportunities or start your own based on your comfort level.',
+        },
+        {
+            question: 'How does PeerConnect help with job readiness?',
+            answer: 'By working on team projects, practicing interview questions, and building a unified public profile, you gain real-world experience that helps you stand out to recruiters.',
         },
     ];
 
     return (
         <div className="w-full flex items-start justify-center">
-            <div className="w-[90%] px-6">
-                <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+            <div className="w-full p-6">
+                <h1 className="text-3xl border-gray-200 border-b-[0.09rem] pb-5 font-bold text-center text-gray-800 mb-6">
                     Frequently Asked Questions
                 </h1>
-                <hr className="w-full my-4" />
-                <div className="space-y-6">
+
+                <div className="space-y-6 max-w-5xl mx-auto">
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
@@ -57,7 +65,7 @@ export default function FAQpage() {
                                     transition={{ duration: 0.3 }}
                                     className="flex items-center justify-center"
                                 >
-                                    <div className="bg-[#eaeaea] p-2 rounded-full w-fit drop-shadow-md hover:brightness-90">
+                                    <div className="bg-[#f6f6f6] p-2 rounded-full w-fit shadow-sm hover:brightness-90">
                                         <div className="size-[16px]">
                                             {icons.plus}
                                         </div>

@@ -23,7 +23,7 @@ const getMyChats = tryCatch('get my chats', async (req, res) => {
             ...chat,
             chat_name: chat.isGroupChat
                 ? chat.chat_name
-                : `${otherMembers[0].user_firstName} ${otherMembers[0].user_lastName}`,
+                : otherMembers[0].user_fullName,
             avatar: chat.isGroupChat
                 ? chat.members.slice(0, 3).map(({ user_avatar }) => user_avatar)
                 : otherMembers[0].user_avatar,
@@ -51,7 +51,7 @@ const getChatDetails = tryCatch('get chat details', async (req, res, next) => {
         ...populatedChat,
         chat_name: populatedChat.isGroupChat
             ? populatedChat.chat_name
-            : `${otherMembers[0].user_firstName} ${otherMembers[0].user_lastName}`,
+            : otherMembers[0].user_fullName,
         avatar: populatedChat.isGroupChat
             ? populatedChat.members
                   .slice(0, 3)
@@ -466,9 +466,6 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
     const oldSocketIds = await getSocketIds(oldMemberIds);
 
     const sockets = io.sockets.sockets;
-
-    console.log('oldSocketIds', oldSocketIds);
-    console.log('newSocketIds', newSocketIds);
 
     oldSocketIds.forEach((socketId) => {
         if (socketId) {

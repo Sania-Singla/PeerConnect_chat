@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 export default function Footer() {
     const [feedback, setFeedback] = useState('');
+    const [email, setEmail] = useState('');
 
     const socialElements = Object.entries(CONTRIBUTORS[0].socials).map(
         ([platform, url]) => (
@@ -14,101 +15,164 @@ export default function Footer() {
                 key={platform}
                 to={url}
                 target="_blank"
-                className="size-[15px] hover:fill-[#4977ec]"
+                className="size-6 hover:scale-110 transition-transform duration-200 hover:fill-[#4977ec] fill-[#282828]"
             >
                 {icons[platform]}
             </Link>
         )
     );
 
-    const links = [
-        { path: '/', name: 'Home' },
-        { path: '/support', name: 'Support' },
-        { path: '/about-us', name: 'About Us' },
-        { path: '/add', name: 'Add Blog' },
+    const linkCategories = [
+        {
+            title: 'Navigation',
+            links: [
+                { path: '/', name: 'Home' },
+                { path: '/blogs', name: 'Blogs' },
+                { path: '/resources', name: 'Resources' },
+                { path: '/events', name: 'Events' },
+            ],
+        },
+        {
+            title: 'Support',
+            links: [
+                { path: '/support', name: 'Support' },
+                { path: '/contact', name: 'Contact' },
+                { path: '/faq', name: 'FAQs' },
+            ],
+        },
+        {
+            title: 'Company',
+            links: [
+                { path: '/about-us', name: 'About' },
+                { path: '/team', name: 'Team' },
+                { path: '/careers', name: 'Careers' },
+            ],
+        },
+        {
+            title: 'Legal',
+            links: [
+                { path: '/privacy', name: 'Privacy' },
+                { path: '/terms', name: 'Terms' },
+                { path: '/cookies', name: 'Cookies' },
+            ],
+        },
     ];
 
-    const linkElements = links.map((link) => (
-        <p className="text-center" key={link.name}>
-            <Link
-                to={link.path}
-                className="hover:text-[#4977ec] text-[15px] hover:underline"
-            >
-                {link.name}
-            </Link>
-        </p>
-    ));
-
-    function submitFeedback(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
+        if (!feedback.trim() || !email.trim()) {
+            toast.error('Please fill all fields');
+            return;
+        }
         setFeedback('');
-        toast.success('Feedback Submitted Successfully 🤗');
-    }
+        setEmail('');
+        toast.success('Thank you for your feedback! 🤗');
+    };
 
     return (
-        <footer className="px-6 pt-6 pb-4 bg-[#f6f6f6]">
-            <div className="flex flex-wrap justify-between gap-4 border-b-[0.09rem] border-[#e0e0e0]">
-                <div className="">
-                    <p className="text-black font-medium">
-                        Stay Social, Stay Organized.
-                    </p>
-
-                    <Link
-                        to={'/'}
-                        className="flex items-center mt-4 justify-start gap-2"
-                    >
-                        <div>
-                            <div className="size-[40px] rounded-full overflow-hidden drop-shadow-md">
+        <footer className="px-6 py-6 bg-[#f6f6f6] border-t border-gray-200">
+            <div className="max-w-7xl mx-auto">
+                {/* Main Footer Content - Horizontal Layout */}
+                <div className="flex flex-col lg:flex-row gap-8 pb-6">
+                    {/* Brand and Social */}
+                    <div className="lg:w-1/4 space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-lg overflow-hidden bg-white p-1 shadow-sm">
                                 <img
                                     src={LOGO}
-                                    alt="peer connect logo"
-                                    className="object-cover size-full"
+                                    alt="Peer Connect logo"
+                                    className="object-contain size-full"
                                 />
                             </div>
+                            <h3 className="text-lg font-semibold text-gray-800">
+                                Peer Connect
+                            </h3>
                         </div>
-                        <div className="text-black font-medium">
-                            Peer Connect
+                        <p className="text-gray-600 text-xs">
+                            Stay Social, Stay Organized. Connecting peers
+                            through shared knowledge.
+                        </p>
+                        <div className="flex items-center gap-5 mt-8">
+                            {socialElements}
                         </div>
-                    </Link>
-                </div>
-
-                <div className="text-black">
-                    <p className="text-center underline font-medium underline-offset-2 text-black">
-                        Quick Links
-                    </p>
-                    <div>{linkElements}</div>
-                </div>
-
-                <form
-                    onSubmit={submitFeedback}
-                    className="w-full flex flex-col items-center justify-center gap-2 max-w-[350px]"
-                >
-                    <p className="text-black font-medium underline underline-offset-2">
-                        Provide a Feedback
-                    </p>
-                    <div className="flex items-center justify-center gap-4 h-[32px] w-full">
-                        <input
-                            type="text"
-                            placeholder="Provide a Feedback !!"
-                            value={feedback}
-                            onChange={(e) => setFeedback(e.target.value)}
-                            className="bg-transparent border-gray-500 border-[0.01rem] w-full indent-2 rounded-md px-[5px] h-full text-black placeholder:text-[15px] focus:border-[#4977ec] outline-none placeholder:text-[#505050]"
-                        />
-                        <Button
-                            btnText={'Submit'}
-                            type="submit"
-                            className="text-white rounded-md px-3 h-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                        />
                     </div>
-                </form>
-            </div>
 
-            <div className="flex flex-col xs:flex-row gap-2 transition-all ease-in-out items-center justify-between w-full">
-                <p className="text-black text-xs sm:text-sm text-center">
-                    &copy; 2024 Peer Connect. All rights reserved.
-                </p>
-                <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8">
-                    {socialElements}
+                    {/* Compact Link Grid */}
+                    <div className="lg:w-2/4">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            {linkCategories.map((category) => (
+                                <div key={category.title} className="space-y-2">
+                                    <h4 className="text-sm font-medium text-gray-800">
+                                        {category.title}
+                                    </h4>
+                                    <ul className="space-y-1">
+                                        {category.links.map((link) => (
+                                            <li key={link.name}>
+                                                <Link
+                                                    to={link.path}
+                                                    className="text-gray-600 hover:text-[#4977ec] text-xs hover:underline underline-offset-2"
+                                                >
+                                                    {link.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Compact Feedback Form */}
+                    <div className="lg:w-1/4 space-y-3 max-w-[300px]">
+                        <h4 className="text-sm font-medium text-gray-800">
+                            Stay Updated
+                        </h4>
+                        <form onSubmit={handleSubmit} className="space-y-2">
+                            <input
+                                type="email"
+                                placeholder="Your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-3 py-2 rounded border border-gray-300 focus:border-[#4977ec] text-xs"
+                                required
+                            />
+                            <textarea
+                                placeholder="Quick feedback..."
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                className="w-full px-3 py-2 rounded border border-gray-300 focus:border-[#4977ec] text-xs h-16"
+                                rows="2"
+                                required
+                            />
+                            <Button
+                                btnText="Submit"
+                                type="submit"
+                                className="w-full bg-[#4977ec] hover:bg-[#3b62c2] text-white py-2 rounded text-xs font-medium"
+                            />
+                        </form>
+                    </div>
+                </div>
+
+                {/* Copyright - Compact */}
+                <div className="pt-4 border-t text-gray-500 text-xs border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <p>
+                        &copy; {new Date().getFullYear()} Peer Connect. All
+                        rights reserved.
+                    </p>
+                    <div className="flex items-center gap-3">
+                        <Link to="/privacy" className="hover:text-[#4977ec]">
+                            Privacy
+                        </Link>
+                        <Link to="/terms" className="hover:text-[#4977ec]">
+                            Terms
+                        </Link>
+                        <Link
+                            to="/accessibility"
+                            className="hover:text-[#4977ec]"
+                        >
+                            Accessibility
+                        </Link>
+                    </div>
                 </div>
             </div>
         </footer>

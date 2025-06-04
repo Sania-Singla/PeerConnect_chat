@@ -56,12 +56,25 @@ import {
     ProjectTasks,
     ProjectContributors,
     ProjectContributionForm,
-    ResumeBuilder,
-    ResumeReviewer,
+    QuestionDescription,
+    QuestionEditorial,
+    QuestionSubmissions,
+    QuestionSolutions,
+    QuestionDiscuss,
+
+    // interview components
+    InterviewDetails,
+    Home,
+    Feedback,
+    EditorLayout,
+    Form,
 } from '@/Components';
 
 import { ChannelContextProvider } from '@/Context';
-import EditorLayout from './Components/Editor/EditorLayout';
+
+import ViewResume from '@/Components/Resume/ViewResume';
+import AddResume from '@/Components/Resume/resume/AddResume';
+import EditResume from '@/Components/Resume/resume/EditResume';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -86,21 +99,37 @@ export const router = createBrowserRouter(
                 <Route path="projects" element={<ChannelProjects />} />
             </Route>
 
-            <Route path="editor" element={<EditorPage />} />
-            <Route path="editor/:roomId" element={<EditorLayout />} />
+            <Route path="editor/" element={<EditorPage />}>
+                <Route path="" element={<Form />} />
+                <Route path=":roomId" element={<EditorLayout />} />
+            </Route>
 
-            <Route path="interview" element={<InterviewPage />} />
+            <Route path="interview/" element={<InterviewPage />}>
+                <Route path="" element={<Home />} />
+                <Route path=":id" element={<InterviewDetails />} />
+                <Route path=":id/feedback" element={<Feedback />} />
+            </Route>
 
             <Route path="bot" element={<BotPage />} />
 
-            <Route path="resume" element={<ResumePage />}>
-                <Route path="" element={<ResumeBuilder />} />
-                <Route path="review" element={<ResumeReviewer />} />
+            <Route path="resume/" element={<ResumePage />}>
+                <Route path="" element={<AddResume />} />
+                <Route path=":resumeId/view" element={<ViewResume />} />
+                <Route path=":resumeId/edit" element={<EditResume />} />
             </Route>
 
             <Route path="practice" element={<TopicsPage />} />
-            <Route path="questions" element={<QuestionsPage />} />
-            <Route path="question/:questionId" element={<QuestionLayout />} />
+            <Route path="questions/:topicId" element={<QuestionsPage />} />
+            <Route
+                path="question/:topicId/:questionId"
+                element={<QuestionLayout />}
+            >
+                <Route path="" element={<QuestionDescription />} />
+                <Route path="editorial" element={<QuestionEditorial />} />
+                <Route path="submissions" element={<QuestionSubmissions />} />
+                <Route path="solutions" element={<QuestionSolutions />} />
+                <Route path="discuss" element={<QuestionDiscuss />} />
+            </Route>
 
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="project/:projectId" element={<ProjectLayout />}>
@@ -118,7 +147,7 @@ export const router = createBrowserRouter(
             <Route element={<Redirect path="/login" />}>
                 <Route path="add" element={<AddPostPage />} />
                 <Route path="update/:postId" element={<UpdatePostPage />} />
-                <Route path="dashboard" element={<AdminPage />} />
+                {/* <Route path="dashboard" element={<AdminPage />} /> */}
                 <Route path="settings/" element={<SettingsPage />}>
                     <Route path="" element={<UpdateAccountDetails />} />
                     <Route path="channel" element={<UpdateChannelDetails />} />

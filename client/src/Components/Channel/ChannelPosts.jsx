@@ -86,7 +86,7 @@ export default function ChannelPosts() {
             {postElements.length > 0 && (
                 <div
                     className={
-                        postElements.lenght > 1
+                        postElements.length > 1
                             ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6'
                             : 'w-[450px]'
                     }
@@ -108,7 +108,11 @@ export default function ChannelPosts() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No posts found !!</div>
+                postElements.length === 0 && (
+                    <div className="text-sm italic text-gray-500">
+                        No posts found !!
+                    </div>
+                )
             )}
         </div>
     );

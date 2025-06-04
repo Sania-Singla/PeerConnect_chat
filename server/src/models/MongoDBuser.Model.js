@@ -27,22 +27,20 @@ export class MongoDBusers extends Iusers {
 
     async createUser({
         userName,
-        firstName,
-        lastName,
+        fullName,
         avatar,
-        coverImage,
         email,
         password,
+        authProvider,
     }) {
         try {
             const user = await User.create({
                 user_name: userName,
-                user_firstName: firstName,
-                user_lastName: lastName,
+                user_fullName: fullName,
                 user_avatar: avatar,
-                user_coverImage: coverImage,
                 user_email: email,
                 user_password: password,
+                auth_provider: authProvider,
             });
 
             const { refresh_token, user_password, ...createdUser } =
@@ -70,14 +68,8 @@ export class MongoDBusers extends Iusers {
         try {
             return await User.findOneAndUpdate(
                 { user_id: userId },
-                {
-                    $set: {
-                        refresh_token: '',
-                    },
-                },
-                {
-                    new: true,
-                }
+                { $set: { refresh_token: '' } },
+                { new: true }
             )
                 .select('-refresh_token -user_password')
                 .lean();
@@ -90,14 +82,8 @@ export class MongoDBusers extends Iusers {
         try {
             return await User.findOneAndUpdate(
                 { user_id: userId },
-                {
-                    $set: {
-                        refresh_token: refreshToken,
-                    },
-                },
-                {
-                    new: true,
-                }
+                { $set: { refresh_token: refreshToken } },
+                { new: true }
             )
                 .select('-refresh_token -user_password')
                 .lean();
@@ -182,14 +168,13 @@ export class MongoDBusers extends Iusers {
         }
     }
 
-    async updateAccountDetails({ userId, firstName, lastName, email }) {
+    async updateAccountDetails({ userId, fullName, email }) {
         try {
             return await User.findOneAndUpdate(
                 { user_id: userId },
                 {
                     $set: {
-                        user_firstName: firstName,
-                        user_lastName: lastName,
+                        user_fullName: fullName,
                         user_email: email,
                     },
                 },
@@ -344,15 +329,6 @@ export class MongoDBusers extends Iusers {
                     localField: 'user_id',
                     foreignField: 'following_id',
                     as: 'followers',
-                },
-            },
-            // followings[]
-            {
-                $lookup: {
-                    from: 'followers',
-                    localField: 'user_id',
-                    foreignField: 'follower_id',
-                    as: 'followings',
                 },
             },
             // posts[ { post_views[], post_likes[] } ]

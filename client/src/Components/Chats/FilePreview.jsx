@@ -57,6 +57,7 @@ export default function FilePreview({ attachment, senderId }) {
             ) : type.startsWith('image/') ? (
                 <div className="h-full w-full">
                     <img
+                        loading="lazy"
                         src={url}
                         alt="message attachment"
                         className="object-cover w-[300px] h-full aspect-auto"

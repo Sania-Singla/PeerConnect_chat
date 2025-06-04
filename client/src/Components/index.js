@@ -70,12 +70,27 @@ import ProjectContributionForm from './Project/ProjectContributionForm';
 import ProjectContributors from './Project/ProjectContributors';
 import ProjectRequests from './Project/ProjectRequests';
 
-import QuestionLayout from './Question/QuestionLayout';
+import QuestionCard from './Practice/QuestionCard';
+import TopicCard from './Practice/TopicCard';
+import QuestionDescription from './Practice/Layout/QuestionDescription';
+import QuestionDiscuss from './Practice/Layout/QuestionDiscuss';
+import QuestionEditorial from './Practice/Layout/QuestionEditorial';
+import QuestionLayout from './Practice/Layout/QuestionLayout';
+import QuestionSolutions from './Practice/Layout/QuestionSolution';
+import QuestionSubmissions from './Practice/Layout/QuestionSubmissions';
+import QuestionEditor from './Practice/Layout/QuestionEditor';
+import QuestionHeader from './Practice/Layout/QuestionHeader';
 
-import ResumeBuilder from './Resume/ResumeBuilder';
-import ResumeReviewer from './Resume/ResumeReviewer';
+import Editor from './Editor/Editor';
+import EditorLayout from './Editor/EditorLayout';
+import Form from './Editor/Form';
 
-import Editor from './Editor/EditorLayout';
+import Home from './Interview/Pages/Home';
+import InterviewDetails from './Interview/Pages/InterviewDetails';
+import Agent from './Interview/Components/Agent';
+import InterviewCard from './Interview/Components/InterviewCard';
+import DisplayTechIcons from './Interview/Components/DisplayTechIcons';
+import Feedback from './Interview/Pages/Feedback';
 
 export {
     Header,
@@ -141,7 +156,24 @@ export {
     ChannelLikedPosts,
     ChannelProjects,
     ChannelSavedPosts,
-    ResumeReviewer,
-    ResumeBuilder,
     Editor,
+    EditorLayout,
+    Form,
+    QuestionCard,
+    TopicCard,
+    QuestionDescription,
+    QuestionDiscuss,
+    QuestionEditorial,
+    QuestionSolutions,
+    QuestionSubmissions,
+    QuestionEditor,
+    QuestionHeader,
+
+    // interview components
+    Home,
+    InterviewDetails,
+    Agent,
+    InterviewCard,
+    DisplayTechIcons,
+    Feedback,
 };

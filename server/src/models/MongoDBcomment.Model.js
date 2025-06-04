@@ -17,8 +17,7 @@ export class MongoDBcomments extends Icomments {
                                 $project: {
                                     user_id: 1,
                                     user_name: 1,
-                                    user_firstName: 1,
-                                    user_lastName: 1,
+                                    user_fullName: 1,
                                     user_avatar: 1,
                                 },
                             },

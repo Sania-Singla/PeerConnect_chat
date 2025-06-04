@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { requestService } from '@/Services';
@@ -11,28 +11,8 @@ export default function RequestsPopup() {
         requestId: '',
         status: '',
     });
-    const [loading, setLoading] = useState(true);
     const { requests, setRequests } = useChatContext();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        (async function getRequests() {
-            try {
-                setLoading(true);
-                const data = await requestService.getMyRequests(signal);
-                setRequests(data);
-            } catch (err) {
-                navigate('/server-error');
-            } finally {
-                setLoading(false);
-            }
-        })();
-
-        return () => controller.abort();
-    }, []);
 
     async function acceptRequest(requestId) {
         try {
@@ -72,13 +52,7 @@ export default function RequestsPopup() {
     const requestElements = requests.map(
         ({
             request_id,
-            sender: {
-                user_avatar,
-                user_firstName,
-                user_lastName,
-                user_name,
-                user_id,
-            },
+            sender: { user_avatar, user_fullName, user_name, user_id },
         }) => (
             <div
                 key={request_id}
@@ -96,9 +70,7 @@ export default function RequestsPopup() {
                         />
                     </div>
                     <div className="overflow-hidden flex-1">
-                        <p className="truncate">
-                            {user_firstName} {user_lastName}
-                        </p>
+                        <p className="truncate">{user_fullName}</p>
                         <p className="text-sm">@{user_name}</p>
                     </div>
                 </NavLink>
@@ -142,18 +114,14 @@ export default function RequestsPopup() {
 
     return (
         <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">
-            {loading ? (
-                <div className="flex items-center justify-center">
-                    <div className="size-[22px] fill-[#4977ec] dark:text-[#ececec]">
-                        {icons.loading}
-                    </div>
-                </div>
-            ) : requests.length > 0 ? (
+            {requests.length > 0 ? (
                 <div className="w-full flex flex-col gap-4">
                     {requestElements}
                 </div>
             ) : (
-                <div>No Collaboration Requests.</div>
+                <div className="text-sm italic text-gray-500">
+                    No Collaboration Requests.
+                </div>
             )}
         </div>
     );

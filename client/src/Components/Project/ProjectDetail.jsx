@@ -1,58 +1,15 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
+import { useProjectContext, useUserContext } from '@/Context';
 
 export default function ProjectDetail() {
     const { projectId } = useParams();
+    const project = useProjectContext();
     const navigate = useNavigate();
 
-    // dummy data
-    const project = {
-        projectId: projectId,
-        title: 'AI-Powered Mental Health Chatbot',
-        description:
-            'A conversational AI assistant that provides mental health support, mood tracking, and connects users with professional help when needed. The system uses natural language processing to understand user emotions and provide appropriate responses.',
-        longDescription: `
-            <p>This project aims to bridge the gap in mental health accessibility by providing 24/7 support through an AI chatbot. Key features include:</p>
-            <ul>
-                <li>Real-time mood analysis through conversational patterns</li>
-                <li>Journaling functionality with sentiment analysis</li>
-                <li>Crisis detection and escalation to human professionals</li>
-                <li>Personalized mental health resources</li>
-                <li>Anonymous usage for user privacy</li>
-            </ul>
-            <p>The system is built using React for the frontend, Node.js for the backend, and integrates with several mental health APIs. We're currently working on improving the NLP models for better emotional understanding.</p>
-        `,
-        tags: [
-            { name: 'mental health', color: '#E8EAF6' },
-            { name: 'chatbot', color: '#E0F7FA' },
-            { name: 'AI', color: '#F3E5F5' },
-        ],
-        githubLink: 'https://github.com/example/mental-health-chatbot',
-        owner: {
-            name: 'Jane Doe',
-            avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
-        },
-        contributors: [
-            {
-                name: 'John Smith',
-                avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-            },
-            {
-                name: 'Alex Johnson',
-                avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
-            },
-            {
-                name: 'Sarah Williams',
-                avatar: 'https://randomuser.me/api/portraits/women/63.jpg',
-            },
-        ],
-        createdAt: '2023-10-15',
-        status: 'Active',
-    };
-
     return (
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-8xl mx-auto">
             {/* Project Title and Metadata */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <div className="flex justify-between items-start mb-4">
@@ -101,7 +58,7 @@ export default function ProjectDetail() {
                     />
                     <Button
                         onClick={() =>
-                            navigate(`/project/${projectId}/contributors`)
+                            navigate(`/project/${projectId}/contribution-form`)
                         }
                         btnText="Join Project"
                         className="bg-white border border-[#4977ec] text-[#4977ec] hover:bg-gray-50 px-4 py-2 rounded-md"
@@ -132,14 +89,17 @@ export default function ProjectDetail() {
                         <h3 className="font-medium text-gray-700">
                             Project Owner
                         </h3>
-                        <div className="flex items-center gap-2 mt-2">
+                        <Link
+                            to={project.owner.profilelink}
+                            className="flex items-center gap-2 mt-2"
+                        >
                             <img
                                 src={project.owner.avatar}
                                 alt={project.owner.name}
                                 className="w-10 h-10 rounded-full"
                             />
                             <span>{project.owner.name}</span>
-                        </div>
+                        </Link>
                     </div>
                 </div>
 
@@ -148,14 +108,18 @@ export default function ProjectDetail() {
                 </h3>
                 <div className="flex flex-wrap gap-4">
                     {project.contributors.map((contributor, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                        <Link
+                            to={contributor.profilelink}
+                            key={index}
+                            className="flex items-center gap-2"
+                        >
                             <img
                                 src={contributor.avatar}
                                 alt={contributor.name}
                                 className="w-8 h-8 rounded-full"
                             />
                             <span className="text-sm">{contributor.name}</span>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

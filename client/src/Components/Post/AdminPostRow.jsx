@@ -12,11 +12,11 @@ export default function AdminPostRow({ post, reference, setPosts }) {
         post_image,
         post_visibility,
         post_createdAt,
-        totalLikes,
-        totalDislikes,
+        likes,
+        dislikes,
         category_name,
-        totalViews,
-        totalComments,
+        views,
+        comments,
     } = post;
 
     const navigate = useNavigate();
@@ -117,19 +117,19 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 {formatDateExact(post_createdAt)}
             </td>
             <td className=" text-center text-[1.1rem] ">
-                {formatCount(totalViews)}
+                {formatCount(views)}
             </td>
             <td className=" text-center text-[1.1rem]">
-                {formatCount(totalComments)}
+                {formatCount(comments)}
             </td>
 
             <td className="">
                 <div className="flex items-center justify-center">
                     <div className="drop-shadow-md rounded-md bg-[#d9fed9] px-2 py-[2px] text-[#196619] text-[1.1rem]">
-                        {formatCount(totalLikes)} likes
+                        {formatCount(likes)} likes
                     </div>
                     <div className="drop-shadow-md rounded-md bg-[#ffd8d8] px-2 py-[2px] ml-4 text-[#ba2828] text-[1.1rem]">
-                        {formatCount(totalDislikes)} dislikes
+                        {formatCount(dislikes)} dislikes
                     </div>
                 </div>
             </td>

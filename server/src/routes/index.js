@@ -8,6 +8,7 @@ import { chatRouter } from './chat.Router.js';
 import { messageRouter } from './message.Router.js';
 import { requestRouter } from './request.Router.js';
 import { editorRouter } from './editor.Router.js';
+import { botRouter } from './bot.Router.js';
 
 export {
     userRouter,
@@ -20,4 +21,5 @@ export {
     messageRouter,
     requestRouter,
     editorRouter,
+    botRouter,
 };

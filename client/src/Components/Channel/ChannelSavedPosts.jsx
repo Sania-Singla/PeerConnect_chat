@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { icons } from '@/Assets/icons';
 import { paginate } from '@/Utils';
 import { LIMIT } from '@/Constants/constants';
-import { useUserContext } from '@/Context';
+import { useChannelContext, useUserContext } from '@/Context';
 
 export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -69,11 +69,21 @@ export default function SavedPostsPage() {
         </SavedPostView>
     ));
 
-    return user?.user_id === channel.user_id ? (
-        <div>Login to see Saved posts</div>
+    return user?.user_id !== channel.user_id ? (
+        <div>You are not authorised to see these posts</div>
     ) : (
         <div>
-            {postElements.length > 0 && <div>{postElements}</div>}
+            {postElements.length > 0 && (
+                <div
+                    className={
+                        postElements.length > 1
+                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6'
+                            : 'w-[450px]'
+                    }
+                >
+                    {postElements}
+                </div>
+            )}
 
             {loading ? (
                 page === 1 ? (
@@ -88,7 +98,11 @@ export default function SavedPostsPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No saved posts !!</div>
+                postElements.length === 0 && (
+                    <div className="text-sm italic text-gray-500">
+                        No saved posts !!
+                    </div>
+                )
             )}
         </div>
     );

@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "format": "prettier --write .",
-        "dev": "npm run format && nodemon src/server.js",
+        "dev": "nodemon src/server.js",
         "start": "node src/server.js"
     },
     "keywords": [],
@@ -13,6 +13,9 @@
     "license": "ISC",
     "description": "This is the backend for Peer Connect.",
     "dependencies": {
+        "@ai-sdk/google": "^1.2.18",
+        "@google/genai": "^1.0.1",
+        "ai": "^4.3.16",
         "bcrypt": "^5.1.1",
         "cloudinary": "^2.4.0",
         "cookie-parser": "^1.4.6",
@@ -20,6 +23,7 @@
         "date-fns": "^4.1.0",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
+        "google-auth-library": "^9.15.1",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.7.1",
         "mongoose-aggregate-paginate-v2": "^1.1.2",
@@ -28,7 +32,8 @@
         "redis": "^4.7.0",
         "socket.io": "^4.8.1",
         "uuid": "^10.0.0",
-        "validator": "^13.12.0"
+        "validator": "^13.12.0",
+        "zod": "^3.25.32"
     },
     "devDependencies": {
         "nodemon": "^3.1.4",

@@ -40,6 +40,7 @@ export default function ChatHeader() {
                                     }}
                                 >
                                     <img
+                                        loading="lazy"
                                         src={url}
                                         alt="avatar"
                                         className="object-cover size-full rounded-full"
@@ -51,6 +52,7 @@ export default function ChatHeader() {
                         <div>
                             <div className="size-[35px] border border-[#434343] rounded-full overflow-hidden">
                                 <img
+                                    loading="lazy"
                                     src={selectedChat?.chat?.avatar}
                                     alt="User Avatar"
                                     className="object-cover size-full rounded-full"
@@ -78,11 +80,11 @@ export default function ChatHeader() {
                                             .slice(0, 3)
                                             .map(
                                                 ({
-                                                    user_firstName,
+                                                    user_fullName,
                                                     user_id,
                                                 }) => (
                                                     <span key={user_id}>
-                                                        {user_firstName},{' '}
+                                                        {user_fullName},{' '}
                                                     </span>
                                                 )
                                             )}{' '}
@@ -106,11 +108,11 @@ export default function ChatHeader() {
                                             ?.slice(0, 3)
                                             .map(
                                                 ({
-                                                    user_firstName,
+                                                    user_fullName,
                                                     user_id,
                                                 }) => (
                                                     <span key={user_id}>
-                                                        {user_firstName},{' '}
+                                                        {user_fullName},{' '}
                                                     </span>
                                                 )
                                             )}
@@ -157,7 +159,7 @@ export default function ChatHeader() {
                 </div>
 
                 <div className="flex align-items-center gap-5">
-                    <Button
+                    {/* <Button
                         btnText={
                             <div className="size-[18px] fill-[#2b2b2b] group-hover:fill-[#4977ec]">
                                 {icons.video}
@@ -165,7 +167,7 @@ export default function ChatHeader() {
                         }
                         title="Video Call"
                         className="flex items-center justify-center cursor-pointer group"
-                    />
+                    /> */}
 
                     <Button
                         onClick={() => navigate('/chat')}

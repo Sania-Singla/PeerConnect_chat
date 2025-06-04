@@ -5,7 +5,7 @@ import { likeService } from '@/Services';
 import { paginate } from '@/Utils';
 import { icons } from '@/Assets/icons';
 import { LIMIT } from '@/Constants/constants';
-import { useUserContext } from '@/Context';
+import { useChannelContext, useUserContext } from '@/Context';
 
 export default function LikedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -57,11 +57,21 @@ export default function LikedPostsPage() {
         />
     ));
 
-    return user?.user_id === channel.user_id ? (
-        <div>Login to see liked posts</div>
+    return user?.user_id !== channel.user_id ? (
+        <div>You are not authorised to see these posts</div>
     ) : (
         <div>
-            {postElements.length > 0 && <div>{postElements}</div>}
+            {postElements.length > 0 && (
+                <div
+                    className={
+                        postElements.length > 1
+                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6'
+                            : 'w-[450px]'
+                    }
+                >
+                    {postElements}
+                </div>
+            )}
 
             {loading ? (
                 page === 1 ? (
@@ -76,7 +86,11 @@ export default function LikedPostsPage() {
                     </div>
                 )
             ) : (
-                postElements.length === 0 && <div>No liked posts !!</div>
+                postElements.length === 0 && (
+                    <div className="text-sm italic text-gray-500">
+                        No liked posts !!
+                    </div>
+                )
             )}
         </div>
     );

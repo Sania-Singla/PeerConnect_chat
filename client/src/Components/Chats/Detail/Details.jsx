@@ -46,7 +46,7 @@ export default function Details() {
     );
 
     return (
-        <div className="flex h-full flex-col lg:flex-row">
+        <div className="flex h-full flex-col lg:flex-row overflow-scroll">
             <section className="border-b-[0.01rem] lg:border-b-0 lg:h-full w-full lg:w-1/3 lg:min-w-[150px] overflow-scroll lg:max-w-[200px] px-2 py-4 gap-2 border-r-[0.01rem] border-gray-200 flex flex-row items-center justify-evenly lg:justify-start lg:flex-col">
                 {optionElements}
             </section>

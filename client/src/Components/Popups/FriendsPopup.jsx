@@ -57,63 +57,52 @@ export default function FriendsPopup() {
 
     const friendElements = friends
         .filter(
-            ({ user_firstName, user_lastName, user_name }) =>
+            ({ user_fullName, user_name }) =>
                 !search.trim() ||
-                user_firstName
-                    .toLowerCase()
-                    .includes(search.trim().toLowerCase()) ||
-                user_lastName
+                user_fullName
                     .toLowerCase()
                     .includes(search.trim().toLowerCase()) ||
                 user_name.toLowerCase().includes(search.trim().toLowerCase())
         )
-        .map(
-            ({
-                user_avatar,
-                user_firstName,
-                user_lastName,
-                user_id,
-                user_bio,
-            }) => (
-                <label
-                    htmlFor={user_id}
-                    key={user_id}
-                    className="cursor-pointer flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
-                >
-                    <input
-                        type="checkbox"
-                        className="size-4"
-                        id={user_id}
-                        checked={members.includes(user_id)}
-                        onChange={(e) => {
-                            e.target.checked
-                                ? setMembers((prev) => prev.concat(user_id))
-                                : setMembers((prev) =>
-                                      prev.filter((id) => id !== user_id)
-                                  );
-                        }}
-                    />
+        .map(({ user_avatar, user_fullName, user_id, user_bio }) => (
+            <label
+                htmlFor={user_id}
+                key={user_id}
+                className="cursor-pointer flex items-center gap-4 hover:backdrop-brightness-95 rounded-md p-2"
+            >
+                <input
+                    type="checkbox"
+                    className="size-4"
+                    id={user_id}
+                    checked={members.includes(user_id)}
+                    onChange={(e) => {
+                        e.target.checked
+                            ? setMembers((prev) => prev.concat(user_id))
+                            : setMembers((prev) =>
+                                  prev.filter((id) => id !== user_id)
+                              );
+                    }}
+                />
 
-                    <div className="flex gap-3 items-center cursor-pointer w-full">
-                        <div>
-                            <img
-                                src={user_avatar}
-                                alt="user avatar"
-                                className="rounded-full size-[40px] border object-cover"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <p className="truncate font-medium leading-tight text-gray-800">
-                                {user_firstName} {user_lastName}
-                            </p>
-                            <p className="text-xs leading-tight text-gray-700">
-                                {user_bio}
-                            </p>
-                        </div>
+                <div className="flex gap-3 items-center cursor-pointer w-full">
+                    <div>
+                        <img
+                            src={user_avatar}
+                            alt="user avatar"
+                            className="rounded-full size-[40px] border object-cover"
+                        />
                     </div>
-                </label>
-            )
-        );
+                    <div className="flex-1">
+                        <p className="truncate font-medium leading-tight text-gray-800">
+                            {user_fullName}
+                        </p>
+                        <p className="text-xs leading-tight text-gray-700">
+                            {user_bio}
+                        </p>
+                    </div>
+                </div>
+            </label>
+        ));
 
     return (
         <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">

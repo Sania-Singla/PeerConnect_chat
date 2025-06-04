@@ -118,9 +118,7 @@ const getPost = tryCatch('get post', async (req, res, next) => {
     let userIdentifier = userId || req.ip;
 
     // update user's watch history
-    if (userId) {
-        await userObject.updateWatchHistory(postId, userId);
-    }
+    if (userId) await userObject.updateWatchHistory(postId, userId);
 
     // update post views
     await postObject.updatePostViews(postId, userIdentifier);

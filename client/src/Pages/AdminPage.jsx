@@ -151,8 +151,7 @@ export default function AdminPage() {
                     </div>
                     <div className="mt-4">
                         <div className="text-3xl font-medium">
-                            Welcome Back, {user.user_firstName}{' '}
-                            {user.user_lastName}
+                            Welcome Back, {user.user_fullName}
                         </div>
                         <div className="text-[15px] mt-1 text-black">
                             Track you channel's progress, Seamless post

@@ -49,12 +49,9 @@ export default function Members() {
 
     const memberElements = selectedChat?.chat.members
         .filter(
-            ({ user_firstName, user_lastName }) =>
+            ({ user_fullName }) =>
                 !search.trim() ||
-                user_firstName
-                    .toLowerCase()
-                    .includes(search.trim().toLowerCase()) ||
-                user_lastName
+                user_fullName
                     .toLowerCase()
                     .includes(search.trim().toLowerCase())
         )
@@ -63,8 +60,7 @@ export default function Members() {
                 user_id,
                 user_avatar,
                 role,
-                user_firstName,
-                user_lastName,
+                user_fullName,
                 user_bio,
                 isOnline,
             }) => (
@@ -85,7 +81,7 @@ export default function Members() {
                             <p className="text-sm font-medium text-gray-900 truncate">
                                 {user_id === user.user_id
                                     ? 'You'
-                                    : `${user_firstName} ${user_lastName}`}
+                                    : user_fullName}
                             </p>
 
                             <div className="flex justify-between w-full gap-4">

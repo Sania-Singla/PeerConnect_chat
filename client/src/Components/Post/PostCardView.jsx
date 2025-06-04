@@ -27,10 +27,10 @@ export default function PostCardView({
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
+            className="min-w-[300px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
         >
             {/* post image */}
-            <div className="h-[250px] drop-shadow-md w-full rounded-xl overflow-hidden">
+            <div className="h-[200px] drop-shadow-md w-full rounded-xl overflow-hidden">
                 <img
                     alt="post image"
                     src={post_image}
@@ -41,11 +41,11 @@ export default function PostCardView({
             <div className="w-full">
                 <div className="flex items-start justify-between gap-4 w-full">
                     {/* post category */}
-                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-3 py-[2px]">
+                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#f5f9ff] shadow-sm rounded-full w-fit px-3 py-[2px]">
                         <div className="size-[9px] fill-[#2556d1]">
                             {icons.dot}
                         </div>
-                        <span className="text-[#2556d1]">
+                        <span className="text-[#2556d1] text-[14px]">
                             {category_name.toUpperCase()}
                         </span>
                     </div>
@@ -58,12 +58,12 @@ export default function PostCardView({
                 </div>
 
                 {/* post title */}
-                <div className="w-fit hover:cursor-text text-2xl font-medium text-black text-ellipsis line-clamp-1 mt-4">
+                <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
                     {post_title}
                 </div>
 
                 {/* post content */}
-                <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-1 mb-5 mt-2">
+                <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
                     {parse(post_content)}
                 </div>
 
@@ -72,7 +72,7 @@ export default function PostCardView({
                     <Link
                         to={`/channel/${owner.user_id}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3"
+                        className="flex items-start justify-start gap-3 mt-4"
                     >
                         {/* avatar */}
                         <div className="drop-shadow-md">
@@ -80,6 +80,7 @@ export default function PostCardView({
                                 <img
                                     alt="post owner avatar"
                                     src={owner.user_avatar}
+                                    loading='lazy'
                                     className="size-full object-cover rounded-full hover:brightness-90"
                                 />
                             </div>
@@ -88,7 +89,7 @@ export default function PostCardView({
                         {/* channel info */}
                         <div className="">
                             <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
-                                {owner.user_firstName} {owner.user_lastName}
+                                {owner.user_fullName}
                             </div>
 
                             <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">

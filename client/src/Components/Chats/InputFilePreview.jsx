@@ -20,6 +20,7 @@ export default function InputFilePreview({
                 />
             ) : type?.startsWith('image/') ? (
                 <img
+                    loading="lazy"
                     src={previewURL}
                     alt="attachment preview"
                     className="aspect-auto max-w-[150px] h-fit rounded-lg object-cover"

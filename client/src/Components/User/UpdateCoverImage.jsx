@@ -60,28 +60,34 @@ export default function UpdateCoverImage() {
     }
 
     return (
-        <div className="relative bg-orange-200 rounded-xl w-[310px] sm:w-[350px] md:w-[440px] p-4">
-            <div className="text-black text-xl w-full bg-red-400 text-center font-medium mb-4">
+        <div className="relative w-[310px] sm:w-[350px] md:w-[440px] bg-white rounded-2xl shadow-lg p-4">
+            <div className="text-black text-xl text-center font-semibold mb-4">
                 Update Cover Image
             </div>
 
             {/* preview */}
             <Button
-                btnText={
-                    <img
-                        alt="preview"
-                        src={coverImagePreview}
-                        className={`object-cover h-full w-full ${
-                            error ? 'border-red-500' : 'border-green-500'
-                        } `}
-                    />
-                }
                 onClick={() => ref.current.click()}
-                className="h-[160px] md:h-[200px] w-full overflow-hidden rounded-xl"
+                className="h-[160px] md:h-[200px] w-full border shadow-sm overflow-hidden rounded-xl"
+                btnText={
+                    coverImagePreview ? (
+                        <img
+                            src={coverImagePreview}
+                            alt="Thumbnail Preview"
+                            className="object-cover w-full h-full"
+                        />
+                    ) : (
+                        <div className="flex items-center justify-center h-full w-full">
+                            <div className="flex items-center justify-center size-10 text-gray-400">
+                                {icons.image}
+                            </div>
+                        </div>
+                    )
+                }
             />
 
-            <div className="">
-                <form onSubmit={handleSubmit} className="">
+            <div>
+                <form onSubmit={handleSubmit} className="w-full mt-4">
                     <input
                         type="file"
                         name="coverImage"
@@ -90,36 +96,48 @@ export default function UpdateCoverImage() {
                         onChange={handleChange}
                         ref={ref}
                     />
-
                     {error && (
-                        <div className="w-full text-center text-sm text-red-500">
+                        <div className="w-full text-center text-sm text-red-500 mt-2">
                             {error}
                         </div>
                     )}
-
-                    {/* sbumit btn */}
-                    <div className="w-full flex items-center justify-center mt-4">
+                    <div className="w-full flex justify-center mt-4">
                         <Button
-                            btnText={loading ? 'Uploading...' : 'Upload'}
+                            btnText={
+                                loading ? (
+                                    <div className="w-full flex items-center justify-center">
+                                        <div className="size-5 fill-white dark:text-[#c5d5ff]">
+                                            {icons.loading}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    'Upload'
+                                )
+                            }
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             type="submit"
+                            className={`text-white rounded-md w-[100px] h-[36px] text-sm transition-all duration-200 ${
+                                disabled
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-[#4977ec] hover:bg-[#3b62c2]'
+                            }`}
                         />
                     </div>
                 </form>
             </div>
 
             {/* cross */}
-            <div>
+            <div className="absolute top-3 right-4">
                 <Button
                     title="Close"
                     btnText={
-                        <div className="size-[23px] fill-none stroke-slate-700">
+                        <div className="size-[20px] fill-none stroke-slate-700">
                             {icons.cross}
                         </div>
                     }
                     onClick={() => setShowPopup(false)}
-                    className="absolute top-1 right-1 bg-transparent"
+                    className="bg-transparent hover:scale-110 transition-transform duration-200"
                 />
             </div>
         </div>

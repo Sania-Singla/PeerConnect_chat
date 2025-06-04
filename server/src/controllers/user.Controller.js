@@ -1,8 +1,9 @@
 import { getServiceObject } from '../db/serviceObjects.js';
 import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
 import { COOKIE_OPTIONS } from '../constants/options.js';
-import fs from 'fs';
+import { USER_AVATAR } from '../constants/files.js';
 import bcrypt from 'bcrypt';
+import { OAuth2Client } from 'google-auth-library';
 import {
     verifyExpression,
     verifyOrderBy,
@@ -17,48 +18,22 @@ import {
 
 export const userObject = getServiceObject('users');
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const registerUser = tryCatch('register user', async (req, res, next) => {
-    let coverImageURL, avatarURL;
     try {
-        const { userName, email, firstName, lastName, password } = req.body;
+        const { userName, email, fullName, password } = req.body;
         const data = {
             userName,
-            firstName,
-            lastName,
+            fullName,
             email,
             password,
-            avatar: req.files?.avatar?.[0].path,
-            coverImage: req.files?.coverImage?.[0].path,
+            avatar: USER_AVATAR,
         };
 
-        // field validity/empty checks
-        const allowedEmptyFields = ['lastName', 'coverImage'];
-
         for (const [key, value] of Object.entries(data)) {
-            if (value) {
-                const isValid = verifyExpression(
-                    key === 'avatar' || key === 'coverImage' ? 'file' : key,
-                    value
-                );
-
-                if (!isValid) {
-                    // Remove uploaded files if any
-                    if (data.avatar) fs.unlinkSync(data.avatar);
-                    if (data.coverImage) fs.unlinkSync(data.coverImage);
-
-                    return next(
-                        new ErrorHandler(
-                            key === 'avatar' || key === 'coverImage'
-                                ? `only png, jpg/jpeg files are allowed for ${key} and File size should not exceed 100MB.`
-                                : `${key} is invalid`,
-                            BAD_REQUEST
-                        )
-                    );
-                }
-            } else if (!allowedEmptyFields.includes(key)) {
-                if (data.avatar) fs.unlinkSync(data.avatar);
-                if (data.coverImage) fs.unlinkSync(data.coverImage);
-                return next(new ErrorHandler('missing fields', BAD_REQUEST));
+            if (value && key !== 'avatar' && !verifyExpression(key, value)) {
+                return next(new ErrorHandler(`${key} is invalid`, BAD_REQUEST));
             }
         }
 
@@ -68,19 +43,7 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
         }
 
         if (existingUser) {
-            if (data.avatar) fs.unlinkSync(data.avatar);
-            if (data.coverImage) fs.unlinkSync(data.coverImage);
             return next(new ErrorHandler('user already exists', BAD_REQUEST));
-        }
-
-        let result = await uploadOnCloudinary(data.avatar);
-        data.avatar = result.secure_url;
-        avatarURL = data.avatar;
-
-        if (data.coverImage) {
-            result = await uploadOnCloudinary(data.coverImage);
-            data.coverImage = result.secure_url;
-            coverImageURL = data.coverImage;
         }
 
         data.password = await bcrypt.hash(data.password, 10); // hash the password
@@ -89,12 +52,69 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
 
         return res.status(OK).json(user);
     } catch (err) {
-        if (avatarURL) await deleteFromCloudinary(avatarURL);
-        if (coverImageURL) await deleteFromCloudinary(coverImageURL);
-
         throw err;
     }
 });
+
+const loginWithGoogle = tryCatch(
+    'login user with google token',
+    async (req, res, next) => {
+        const { credential } = req.body;
+
+        if (!credential)
+            return next(
+                new ErrorHandler('No credential provided', BAD_REQUEST)
+            );
+
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+
+        const { email, name, picture } = payload;
+
+        if (!email || !name)
+            return next(
+                new ErrorHandler('Invalid Google payload', BAD_REQUEST)
+            );
+
+        let user = await userObject.getUser(email);
+
+        if (!user) {
+            const userName = email.split('@')[0];
+            const newUserData = {
+                userName,
+                fullName: name,
+                email,
+                avatar: picture || USER_AVATAR,
+                password: null, // indicate Google-auth user
+                authProvider: 'google',
+            };
+
+            user = await userObject.createUser(newUserData);
+        }
+
+        const { accessToken, refreshToken } = await generateTokens(user);
+
+        await userObject.loginUser(user.user_id, refreshToken);
+
+        const { user_password, refresh_token, ...loggedInUser } = user; // for mongo
+
+        return res
+            .status(OK)
+            .cookie('peerConnect_accessToken', accessToken, {
+                ...COOKIE_OPTIONS,
+                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
+            })
+            .cookie('peerConnect_refreshToken', refreshToken, {
+                ...COOKIE_OPTIONS,
+                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
+            })
+            .json(loggedInUser);
+    }
+);
 
 const loginUser = tryCatch('login user', async (req, res, next) => {
     const { loginInput, password } = req.body;
@@ -146,8 +166,9 @@ const deleteAccount = tryCatch(
 
         await userObject.deleteUser(user_id);
 
-        await deleteFromCloudinary(user_coverImage);
-        await deleteFromCloudinary(user_avatar);
+        if (user_coverImage) await deleteFromCloudinary(user_coverImage);
+        if (user_avatar !== USER_AVATAR)
+            await deleteFromCloudinary(user_avatar);
 
         return res
             .status(OK)
@@ -187,18 +208,22 @@ const getChannelProfile = tryCatch(
 const updateAccountDetails = tryCatch(
     'update account details',
     async (req, res, next) => {
-        const { user_id, user_password } = req.user;
-        const { firstName, lastName, email, password } = req.body;
+        const { user_id, user_password, auth_provider } = req.user;
+        const { fullName, email, password } = req.body;
 
-        const isPassValid = bcrypt.compareSync(password, user_password);
-        if (!isPassValid) {
-            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
+        let isPassValid;
+        if (auth_provider === 'local') {
+            isPassValid = bcrypt.compareSync(password, user_password);
+            if (!isPassValid) {
+                return next(
+                    new ErrorHandler('invalid credentials', BAD_REQUEST)
+                );
+            }
         }
 
         const updatedUser = await userObject.updateAccountDetails({
             userId: user_id,
-            firstName,
-            lastName,
+            fullName,
             email,
         });
 
@@ -209,12 +234,17 @@ const updateAccountDetails = tryCatch(
 const updateChannelDetails = tryCatch(
     'update channel details',
     async (req, res, next) => {
-        const { user_id, user_password } = req.user;
+        const { user_id, user_password, auth_provider } = req.user;
         const { userName, bio, password } = req.body;
 
-        const isPassValid = bcrypt.compareSync(password, user_password);
-        if (!isPassValid) {
-            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
+        let isPassValid;
+        if (auth_provider === 'local') {
+            isPassValid = bcrypt.compareSync(password, user_password);
+            if (!isPassValid) {
+                return next(
+                    new ErrorHandler('invalid credentials', BAD_REQUEST)
+                );
+            }
         }
 
         const updatedUser = await userObject.updateChannelDetails({
@@ -228,8 +258,14 @@ const updateChannelDetails = tryCatch(
 );
 
 const updatePassword = tryCatch('update password', async (req, res, next) => {
-    const { user_id, user_password } = req.user;
+    const { user_id, user_password, auth_provider } = req.user;
     const { oldPassword, newPassword } = req.body;
+
+    if (auth_provider !== 'local') {
+        return next(
+            new ErrorHandler('OAuth users cannot change password', BAD_REQUEST)
+        );
+    }
 
     const isPassValid = bcrypt.compareSync(oldPassword, user_password);
     if (!isPassValid) {
@@ -345,15 +381,15 @@ const clearWatchHistory = tryCatch('clear watch history', async (req, res) => {
         .json({ message: 'watch history cleared successfully' });
 });
 
-const getAdminStats = tryCatch('get admin stats', async (req, res, next) => {
-    const { user_id } = req.user;
-    const result = await userObject.getAdminStats(user_id);
+const getAdminStats = tryCatch('get admin stats', async (req, res) => {
+    const result = await userObject.getAdminStats(req.user.user_id);
     return res.status(OK).json(result);
 });
 
 export {
     registerUser,
     loginUser,
+    loginWithGoogle,
     logoutUser,
     deleteAccount,
     updateAccountDetails,

@@ -6,7 +6,7 @@ export const app = express();
 
 // Configurations
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('../public'));
 app.use(cookieParser());
 app.use(cors(CORS_OPTIONS));
@@ -23,6 +23,7 @@ import {
     messageRouter,
     requestRouter,
     editorRouter,
+    botRouter,
 } from './routes/index.js';
 import { errorMiddleware } from './middlewares/index.js';
 
@@ -36,5 +37,6 @@ app.use('/api/chats', chatRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/requests', requestRouter);
 app.use('/api/codes', editorRouter);
+app.use('/api/bot', botRouter);
 
 app.use(errorMiddleware);

@@ -8,8 +8,7 @@ export const requestObject = getServiceObject('requests');
 
 const sendRequest = tryCatch('send request', async (req, res, next) => {
     const { userId } = req.params;
-    const { user_id, user_firstName, user_avatar, user_lastName, user_name } =
-        req.user;
+    const { user_id, user_fullName, user_avatar, user_name } = req.user;
 
     const result = await requestObject.sendRequest(user_id, userId);
 
@@ -22,8 +21,7 @@ const sendRequest = tryCatch('send request', async (req, res, next) => {
             sender: {
                 user_id,
                 user_name,
-                user_lastName,
-                user_firstName,
+                user_fullName,
                 user_avatar,
             },
         };
@@ -88,19 +86,23 @@ const acceptRequest = tryCatch('accept request', async (req, res, next) => {
         })),
     };
 
-    theirSocketId.join(`chat:${chat.chat_id}`);
-    ourSocketId.join(`chat:${chat.chat_id}`);
+    const sockets = io.sockets.sockets;
+
+    sockets.get(theirSocketId)?.join(`chat:${chat.chat_id}`);
+    sockets.get(ourSocketId)?.join(`chat:${chat.chat_id}`);
 
     io.to(ourSocketId).emit('requestAccepted', {
         ...chat,
         avatar: otherMember.user_avatar,
-        chat_name: `${otherMember.user_firstName} ${otherMember.user_lastName}`,
+        chat_name: otherMember.user_fullName,
     });
+
     io.to(theirSocketId).emit('requestAccepted', {
         ...chat,
         avatar: req.user.user_avatar,
-        chat_name: `${req.user.user_firstName} ${req.user.user_lastName}`,
+        chat_name: req.user.user_fullName,
     });
+
     return res.status(OK).json(chat);
 });
 
@@ -115,9 +117,8 @@ const getRequest = tryCatch('get request', async (req, res) => {
 
     const request = await requestObject.getRequest(userId, myId);
 
-    if (request) {
-        return res.status(OK).json(request);
-    } else {
+    if (request) return res.status(OK).json(request);
+    else {
         return res.status(OK).json({ message: 'no request or chat found' });
     }
 });

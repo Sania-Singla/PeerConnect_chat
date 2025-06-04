@@ -44,17 +44,17 @@ const Message = memo(({ message, reference }) => {
             }`}
         >
             <div
-                className={`w-fit max-w-[600px] p-2 pb-[3px] flex flex-col gap-1 rounded-lg ${
+                className={`w-fit max-w-[600px] p-2 pb-[3px] flex flex-col gap-1 rounded-lg rounded-br-none ${
                     isSender
-                        ? 'bg-blue-500 text-white self-end'
+                        ? 'bg-[#4977ec] text-white self-end'
                         : 'bg-gray-200 text-gray-800 self-start'
                 }`}
             >
                 {/* sender name */}
                 {selectedChat.chat.isGroupChat && !isSender && (
-                    <div
-                        className={`${getRandomColor()} font-medium text-sm`}
-                    >{`${sender?.user_firstName} ${sender?.user_lastName}`}</div>
+                    <div className={`${getRandomColor()} font-medium text-sm`}>
+                        {sender?.user_fullName}
+                    </div>
                 )}
 
                 {attachments.length > 0 && (

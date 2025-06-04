@@ -110,7 +110,9 @@ export default function Comments() {
                     <div className="mt-4">{commentElements}</div>
                 </div>
             ) : (
-                <div className="text-black mt-4">No Comments Found !!</div>
+                <div className="text-gray-500 italic text-sm mt-4">
+                    No Comments Found !!
+                </div>
             )}
         </div>
     );

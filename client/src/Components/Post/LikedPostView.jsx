@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { likeService } from '@/Services';
-import { Button, PostListView } from '@/Components';
+import { Button, PostCardView } from '@/Components';
 import { icons } from '@/Assets/icons';
 
 export default function LikedPostView({ likedPost, reference }) {
@@ -24,7 +24,7 @@ export default function LikedPostView({ likedPost, reference }) {
     const modifiedPost = { ...rest, ...post };
 
     return (
-        <PostListView post={modifiedPost} reference={reference}>
+        <PostCardView post={modifiedPost} reference={reference}>
             {/* children */}
             <div
                 className="absolute top-2 right-2"
@@ -46,6 +46,6 @@ export default function LikedPostView({ likedPost, reference }) {
                     onClick={toggleLike}
                 />
             </div>
-        </PostListView>
+        </PostCardView>
     );
 }

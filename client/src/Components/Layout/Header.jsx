@@ -94,7 +94,7 @@ export default function Header() {
                 <NavLink
                     to={'/projects'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[3px] justify-center`
                     }
                 >
                     <Button
@@ -129,6 +129,27 @@ export default function Header() {
                     />
                     <p className="text-xs group-hover:text-[#4977ec] font-normal">
                         Messaging
+                    </p>
+                </NavLink>
+
+                {/* bot btn */}
+                <NavLink
+                    to={'/bot'}
+                    className={({ isActive }) =>
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} gap-[1px] hidden sm:flex flex-col w-[60px] cursor-pointer items-center group justify-center`
+                    }
+                >
+                    <Button
+                        btnText={
+                            <div className="size-[17px] group-hover:fill-[#4977ec] fill-inherit">
+                                {icons.robot}
+                            </div>
+                        }
+                        title="Query Bot"
+                        className="flex items-center justify-center group"
+                    />
+                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
+                        Query Bot
                     </p>
                 </NavLink>
 

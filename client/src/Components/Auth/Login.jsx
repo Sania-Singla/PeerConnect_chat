@@ -71,10 +71,10 @@ export default function Login() {
 
     const inputElements = inputFields.map((field) => (
         <div key={field.name} className="w-full">
-            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
+            <div className="bg-white z-[1] ml-2 px-1 text-[15px] w-fit relative top-[11px] font-medium">
                 <label htmlFor={field.name}>
-                    {field.label}
-                    {field.required && <span className="text-red-500">*</span>}
+                    <span className="text-red-500 text-sm">* </span>
+                    {field.label} :
                 </label>
             </div>
             <div className="relative">
@@ -85,7 +85,7 @@ export default function Login() {
                     value={inputs[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="shadow-md shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
+                    className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
                 />
                 {field.name === 'password' && (
                     <div
@@ -100,14 +100,14 @@ export default function Login() {
     ));
 
     return (
-        <div className="text-black w-[400px] h-full">
+        <div className="text-black w-full h-full">
             {error && (
                 <div className="text-red-500 w-full text-center mb-2">
                     {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                 {inputElements}
 
                 <div>
@@ -117,7 +117,7 @@ export default function Login() {
                         type="submit"
                         btnText={
                             loading ? (
-                                <div className="size-5 fill-[#4977ec] dark:text-[#a2bdff]">
+                                <div className="size-5 fill-white dark:text-[#c5d5ff]">
                                     {icons.loading}
                                 </div>
                             ) : (
@@ -126,7 +126,7 @@ export default function Login() {
                         }
                         disabled={disabled}
                     />
-                    <p className="w-full text-center text-[16px] mt-2">
+                    <p className="w-full text-center mt-3 text-[15px]">
                         don't have an Account ?{' '}
                         <Link
                             to={'/register'}

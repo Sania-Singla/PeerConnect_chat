@@ -29,15 +29,17 @@ export default function SettingsPage() {
 
     return (
         <div className="w-full h-full overflow-scroll">
-            <div className="w-full">
+            <div className="w-full p-1">
                 {/* coverImage */}
-                <div className="drop-shadow-md w-full relative  rounded-xl overflow-hidden">
+                <div className="shadow-sm w-full relative rounded-xl overflow-hidden">
                     <div className="h-[180px] w-full">
-                        <img
-                            alt="user coverImage"
-                            src={user.user_coverImage}
-                            className="h-full w-full object-cover"
-                        />
+                        {user.user_coverImage && (
+                            <img
+                                alt="user coverImage"
+                                src={user.user_coverImage}
+                                className="h-full w-full object-cover"
+                            />
+                        )}
                     </div>
 
                     <div>
@@ -59,7 +61,7 @@ export default function SettingsPage() {
                 {/* avatar */}
                 <div className="relative -top-8 flex gap-2 items-center justify-start">
                     <div className="relative">
-                        <div className="rounded-full  overflow-hidden size-[140px] border-[0.5rem] border-white ">
+                        <div className="rounded-full overflow-hidden size-[140px] shadow-sm">
                             <img
                                 alt="user avatar"
                                 src={user.user_avatar}
@@ -86,7 +88,7 @@ export default function SettingsPage() {
                     {/* channel info*/}
                     <div className="flex flex-col items-start justify-center gap-1">
                         <div className="text-3xl font-medium">
-                            {user.user_firstName} {user.user_lastName}
+                            {user.user_fullName}
                         </div>
                         <div className="text-xl text-[#151515]">
                             @{user.user_name}
@@ -95,7 +97,7 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="flex items-center justify-evenly w-full gap-6">
+            <div className="flex items-center justify-evenly w-full gap-2">
                 {tabElements}
             </div>
 

@@ -6,6 +6,7 @@ import { userService } from './userService';
 import { authService } from './authService';
 import { chatService } from './chatService';
 import { requestService } from './requestService';
+import { botService } from './botService';
 
 export {
     likeService,
@@ -16,4 +17,5 @@ export {
     authService,
     chatService,
     requestService,
+    botService,
 };

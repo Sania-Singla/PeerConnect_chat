@@ -82,7 +82,7 @@ export default function Recemendations({ category }) {
                 )
             ) : (
                 postElements.length === 0 && (
-                    <div className="text-lg text-[#363636]">
+                    <div className="text-gray-500 italic text-sm mt-4">
                         No Similar Posts Found !!
                     </div>
                 )

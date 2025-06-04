@@ -51,12 +51,9 @@ export default function FriendsPopup() {
 
     const friendElements = friends
         .filter(
-            ({ user_firstName, user_lastName, user_name }) =>
+            ({ user_fullName, user_name }) =>
                 !search.trim() ||
-                user_firstName
-                    .toLowerCase()
-                    .includes(search.trim().toLowerCase()) ||
-                user_lastName
+                user_fullName
                     .toLowerCase()
                     .includes(search.trim().toLowerCase()) ||
                 user_name.toLowerCase().includes(search.trim().toLowerCase())
@@ -64,8 +61,7 @@ export default function FriendsPopup() {
         .map(
             ({
                 user_avatar,
-                user_firstName,
-                user_lastName,
+                user_fullName,
                 user_id,
                 user_bio,
                 alreadyPresent,
@@ -105,7 +101,7 @@ export default function FriendsPopup() {
                         </div>
                         <div className="flex-1">
                             <p className="truncate font-medium text-gray-800">
-                                {user_firstName} {user_lastName}
+                                {user_fullName}
                             </p>
                             <p className="text-sm text-gray-700">
                                 {alreadyPresent ? (

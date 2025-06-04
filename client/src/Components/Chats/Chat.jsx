@@ -18,8 +18,9 @@ export default function Chat() {
 
     useEffect(() => {
         setMessages([]);
+        setPage(1); // Reset page when chat changes
         isInitialLoad.current = true;
-    }, [chatId]);
+    }, [chatId, setMessages]);
 
     // Handle scroll behavior
     useEffect(() => {
@@ -68,7 +69,15 @@ export default function Chat() {
                 );
 
                 if (data && !data.message) {
-                    setMessages((prev) => [...prev, ...data.messages]);
+                    setMessages((prev) => {
+                        const existingIds = new Set(
+                            prev.map((m) => m.message_id)
+                        );
+                        const newMessages = data.messages.filter(
+                            (m) => !existingIds.has(m.message_id)
+                        );
+                        return [...prev, ...newMessages];
+                    });
                     setMessagesInfo(data.messagesInfo);
                 }
             } catch (err) {
@@ -79,7 +88,7 @@ export default function Chat() {
         })();
 
         return () => controller.abort();
-    }, [chatId, page, selectedChat, setMessages, navigate]);
+    }, [chatId, page]);
 
     const topMessageRef = paginate(messagesInfo?.hasNextPage, loading, setPage);
 
@@ -92,10 +101,7 @@ export default function Chat() {
     ));
 
     return (
-        <div
-            ref={chatContainerRef}
-            className="px-3 py-6 h-full overflow-y-auto"
-        >
+        <div ref={chatContainerRef} className="p-4 overflow-scroll h-full">
             {loading && (
                 <div className="w-full flex items-center justify-center pb-6">
                     <div className="size-[20px] fill-[#4977ec] dark:text-[#ececec]">

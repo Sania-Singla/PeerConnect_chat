@@ -1,13 +1,32 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { usePopupContext, useSideBarContext } from '@/Context';
+import { useChatContext, usePopupContext, useSideBarContext } from '@/Context';
 import { LOGO } from '@/Constants/constants';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { requestService } from '@/Services';
+import { useEffect } from 'react';
 
 export default function ChatNavbar() {
     const { setShowSideBar } = useSideBarContext();
     const { setShowPopup, setPopupInfo } = usePopupContext();
+    const { requests, setRequests } = useChatContext();
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        (async function getRequests() {
+            try {
+                const data = await requestService.getMyRequests(signal);
+                setRequests(data);
+            } catch (err) {
+                navigate('/server-error');
+            }
+        })();
+
+        return () => controller.abort();
+    }, []);
     return (
         <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] border-b-[0.09rem] border-[#e0e0e0] text-black h-[55px] px-4 font-medium flex items-center justify-between gap-4">
             <div className="flex items-center justify-center gap-4">
@@ -43,7 +62,7 @@ export default function ChatNavbar() {
 
             <div className="flex items-center justify-center gap-5 lg:gap-7">
                 <div
-                    className="group flex flex-col items-center gap-[3px] cursor-pointer justify-center"
+                    className="group relative flex flex-col items-center gap-[3px] cursor-pointer justify-center"
                     onClick={() => {
                         setShowPopup(true);
                         setPopupInfo({ type: 'requests' });
@@ -61,6 +80,10 @@ export default function ChatNavbar() {
                     <p className="text-xs group-hover:text-[#4977ec] font-normal text-[#2b2b2b]">
                         Requests
                     </p>
+
+                    {requests.length > 0 && (
+                        <div className="absolute -top-1 right-3 bg-[#4977ec] rounded-full size-2" />
+                    )}
                 </div>
                 <div
                     onClick={() => {

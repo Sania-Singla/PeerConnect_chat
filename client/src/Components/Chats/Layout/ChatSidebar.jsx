@@ -69,6 +69,7 @@ export default function ChatSidebar() {
                                     style={{ zIndex: avatar.length - i }}
                                 >
                                     <img
+                                        loading="lazy"
                                         src={url}
                                         alt="avatar"
                                         className="object-cover size-full rounded-full"
@@ -80,6 +81,7 @@ export default function ChatSidebar() {
                         <div className="relative">
                             <div className="size-[40px] border border-[#434343] rounded-full overflow-hidden">
                                 <img
+                                    loading="lazy"
                                     src={avatar}
                                     alt="User Avatar"
                                     className="object-cover w-full h-full rounded-full"

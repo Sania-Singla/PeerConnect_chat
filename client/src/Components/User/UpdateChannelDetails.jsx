@@ -33,11 +33,14 @@ export default function UpdateChannelDetails() {
 
     async function onMouseOver() {
         if (
-            Object.entries(inputs).some(
-                ([key, value]) => !value && key !== 'bio'
-            ) ||
+            Object.entries(inputs).some(([key, value]) => {
+                if (key === 'bio') return false;
+                if (key === 'password' && user.auth_provider === 'google')
+                    return false;
+                return !value;
+            }) ||
             Object.entries(error).some(
-                ([key, value]) => value !== '' && key !== 'password'
+                ([key, value]) => value && key !== 'password'
             ) ||
             !Object.entries(inputs).some(
                 ([key, value]) =>
@@ -79,6 +82,14 @@ export default function UpdateChannelDetails() {
             placeholder: 'Enter your user name',
             label: 'Username',
             required: true,
+            show: true,
+        },
+        {
+            name: 'bio',
+            placeholder: 'Add channel bio',
+            label: 'Bio',
+            required: false,
+            show: true,
         },
         {
             name: 'password',
@@ -86,71 +97,76 @@ export default function UpdateChannelDetails() {
             placeholder: 'Enter your password',
             label: 'Password',
             required: true,
-        },
-        {
-            name: 'bio',
-            placeholder: 'Add channel bio',
-            label: 'Bio',
-            required: false,
+            show: user.auth_provider === 'local',
         },
     ];
 
-    const inputElements = inputFields.map((field) => (
-        <div key={field.name}>
-            <div className="bg-[#f9f9f9] z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
-                <label htmlFor={field.name}>
-                    {field.label}
-                    {field.required && <span className="text-red-500">*</span>}
-                </label>
-            </div>
-            {field.name !== 'bio' ? (
-                <div>
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        id={field.name}
-                        value={inputs[field.name]}
-                        placeholder={field.placeholder}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required={field.required}
-                        className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
-                    />
+    const inputElements = inputFields.map(
+        (field) =>
+            field.show && (
+                <div key={field.name}>
+                    <div className="bg-[#f9f9f9] z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
+                        <label htmlFor={field.name}>
+                            {field.label}
+                            {field.required && (
+                                <span className="text-red-500">*</span>
+                            )}
+                        </label>
+                    </div>
+                    {field.name !== 'bio' ? (
+                        <div>
+                            <input
+                                type={field.type}
+                                name={field.name}
+                                id={field.name}
+                                value={inputs[field.name]}
+                                placeholder={field.placeholder}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required={field.required}
+                                className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            <textarea
+                                name={field.name}
+                                id={field.name}
+                                value={inputs[field.name]}
+                                placeholder={field.placeholder}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required={field.required}
+                                className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                            />
+                        </div>
+                    )}
+                    {error[field.name] && (
+                        <div className="pt-[0.09rem] text-red-500 text-sm">
+                            {error[field.name]}
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <div>
-                    <textarea
-                        name={field.name}
-                        id={field.name}
-                        value={inputs[field.name]}
-                        placeholder={field.placeholder}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required={field.required}
-                        className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
-                    />
-                </div>
-            )}
-            {error[field.name] && (
-                <div className="pt-[0.09rem] text-red-500 text-sm">
-                    {error[field.name]}
-                </div>
-            )}
-        </div>
-    ));
+            )
+    );
 
     return (
-        <div className="w-full px-4 py-2">
-            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] px-12 py-6 sm:gap-14">
-                <div className="w-full py-6 px-4">
-                    <h3>Update Channel Information</h3>
-                    <p className="">
+        <div className="w-full py-2">
+            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4  pt-2 lg:px-8">
+                <div className="w-full py-6">
+                    <h3 className="text-2xl font-semibold">
+                        Update Channel Information
+                    </h3>
+                    <p className="mt-4">
                         Update your channel details to keep information current.
                         Changes are final once saved.
                     </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="w-full max-w-[600px]">
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full max-w-[600px] pb-6"
+                >
                     <div className="flex flex-col gap-4">{inputElements}</div>
                     <div className="flex gap-6 mt-6">
                         <Button

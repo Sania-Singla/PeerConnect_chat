@@ -16,12 +16,9 @@ const userSchema = new Schema({
         required: true,
         index: true,
     },
-    user_firstName: {
+    user_fullName: {
         type: String,
         required: true,
-    },
-    user_lastName: {
-        type: String,
     },
     user_bio: {
         type: String,
@@ -29,10 +26,11 @@ const userSchema = new Schema({
     },
     user_avatar: {
         type: String,
-        required: true,
+        required: false,
     },
     user_coverImage: {
         type: String,
+        default: '',
     },
     user_email: {
         type: String,
@@ -41,7 +39,14 @@ const userSchema = new Schema({
     },
     user_password: {
         type: String,
-        required: true,
+        required: function () {
+            return this.auth_provider === 'local'; // password required only for local
+        },
+    },
+    auth_provider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local',
     },
     user_createdAt: {
         type: Date,

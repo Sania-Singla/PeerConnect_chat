@@ -23,13 +23,13 @@ export default function RTE({
 
             <div className={`w-full ${loading ? 'opacity-0' : 'opacity-100'}`}>
                 <Editor
-                    apiKey="j9kfm3dyfhatgtujh4rx6vidqe9j7otmi2ij6rjr3yqmpwa8"
+                    apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
                     initialValue={defaultValue}
                     onEditorChange={onChange}
                     init={{
                         menubar: true,
                         height: height,
-                        widht: width,
+                        width: width,
                         plugins: [
                             'image',
                             'advlist',

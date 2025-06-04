@@ -4,7 +4,7 @@ import { fileRestrictions, verifyExpression } from '@/Utils';
 import { Button, RTE } from '@/Components';
 import { postService } from '@/Services';
 import { icons } from '@/Assets/icons';
-import { MAX_FILE_SIZE } from '@/Constants/constants';
+import { BASE_BACKEND_URL, MAX_FILE_SIZE } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function AddPostPage() {
@@ -83,12 +83,11 @@ export default function AddPostPage() {
 
     useEffect(() => {
         (async function getCategories() {
-            const res = await fetch('/api/categories/', {
+            const res = await fetch(`${BASE_BACKEND_URL}/categories/`, {
                 method: 'GET',
             });
 
             const data = await res.json();
-            console.log(data);
             setCategories(data);
         })();
     }, []);
@@ -99,7 +98,7 @@ export default function AddPostPage() {
               <label
                   htmlFor={category.category_name}
                   key={category.category_name}
-                  className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] text-[18px] hover:cursor-pointer flex items-center justify-start gap-3 bg-[#ffffff] rounded-full w-fit px-4 py-[4px]"
+                  className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] hover:cursor-pointer flex items-center justify-start gap-2 bg-[#ffffff] shadow-sm rounded-full w-fit px-3 py-[3px]"
               >
                   <input
                       type="radio"
@@ -108,81 +107,76 @@ export default function AddPostPage() {
                       value={category.category_id}
                       checked={inputs.categoryId === category.category_id} // just good for verification
                       onChange={handleChange}
+                      className="size-[10px]"
                   />
                   {category.category_name}
               </label>
           ));
 
     return (
-        <div className="w-full h-full overflow-scroll">
-            <h2 className="text-[#252525] w-full text-center mb-8 underline underline-offset-2">
+        <div className="w-full min-h-screen bg-gray-50 p-6 rounded-lg">
+            <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">
                 Add a New Post
             </h2>
             <form
                 onSubmit={handleSubmit}
-                className="w-full h-full flex flex-col lg:flex-row items-start justify-start gap-10"
+                className="flex flex-col lg:flex-row gap-10 w-full"
             >
-                <div className="w-full lg:w-[70%] h-full">
-                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-10">
-                        <div className="w-full">
-                            <div className="flex items-center justify-start gap-2">
-                                <div className="bg-white z-[1] ml-3 px-2 w-fit text-[1.1rem] relative top-3 font-medium">
-                                    <label htmlFor="title">
-                                        <span className="text-red-500">* </span>
-                                        Title :
-                                    </label>
-                                </div>
-                            </div>
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Enter Post Title"
-                                    name="title"
-                                    id="title"
-                                    onChange={handleChange}
-                                    value={inputs.title}
-                                    onBlur={handleBlur}
-                                    className="shadow-md shadow-[#f7f7f7] py-[18px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
-                                />
-                            </div>
-                            {error.title && (
-                                <div className="pt-[0.09rem] text-red-500 text-sm">
-                                    {error.title}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="w-full">
-                            <div className="flex items-center justify-start gap-2">
-                                <div className="bg-white z-[1] ml-3 px-2 w-fit text-[1.1rem] relative top-3 font-medium">
-                                    <label htmlFor="postImage">
-                                        <span className="text-red-500">* </span>
-                                        Thumbnail :
-                                    </label>
-                                </div>
-
-                                {error.postImage && (
-                                    <div className="pt-[0.09rem] text-red-500 text-sm">
-                                        {error.postImage}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <input
-                                    type="file"
-                                    onChange={handleFileChange}
-                                    name="postImage"
-                                    id="postImage"
-                                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] border border-gray-500 w-full"
-                                />
-                            </div>
-                        </div>
+                {/* Left: Content Section */}
+                <div className="flex-1 bg-white p-6 rounded-xl shadow-md space-y-8">
+                    {/* Title Field */}
+                    <div>
+                        <label
+                            htmlFor="title"
+                            className="block font-medium text-gray-700 mb-1"
+                        >
+                            <span className="text-red-500">*</span> Title
+                        </label>
+                        <input
+                            type="text"
+                            name="title"
+                            id="title"
+                            value={inputs.title}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="Enter a descriptive title"
+                            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {error.title && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {error.title}
+                            </p>
+                        )}
                     </div>
 
-                    <div className="w-full mt-10">
-                        <div className="text-lg font-medium">
-                            <span className="text-red-500">* </span>Content :
-                        </div>
+                    {/* Thumbnail Upload */}
+                    <div>
+                        <label
+                            htmlFor="postImage"
+                            className="block font-medium text-gray-700 mb-1"
+                        >
+                            <span className="text-red-500">*</span> Thumbnail
+                        </label>
+                        <input
+                            type="file"
+                            name="postImage"
+                            id="postImage"
+                            accept="image/png, image/jpeg, image/jpg"
+                            onChange={handleFileChange}
+                            className="w-full border border-gray-300 rounded-md p-3"
+                        />
+                        {error.postImage && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {error.postImage}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Content Editor */}
+                    <div>
+                        <label className="block font-medium text-gray-700 mb-1">
+                            <span className="text-red-500">*</span> Content
+                        </label>
                         <RTE
                             onChange={() =>
                                 setInputs((prev) => ({
@@ -194,50 +188,56 @@ export default function AddPostPage() {
                     </div>
                 </div>
 
-                <div className="drop-shadow-md h-full w-full lg:w-[30%] mt-6 flex flex-col items-center">
-                    <div className="w-full flex items-center justify-center">
-                        <div className="drop-shadow-md border-[0.01rem] border-gray-500 max-w-[350px] w-full h-[200px] rounded-lg overflow-hidden">
+                <div className="lg:w-[30%] w-full space-y-8">
+                    {/* Thumbnail Preview */}
+                    <div className="bg-white rounded-xl shadow-md p-4">
+                        <div className="text-center font-medium text-gray-800 mb-2">
+                            Thumbnail Preview
+                        </div>
+                        <div className="w-full aspect-video border rounded-md overflow-hidden bg-gray-100">
                             {thumbnailPreview ? (
                                 <img
                                     src={thumbnailPreview}
-                                    alt="thumbnail preview"
-                                    className="object-cover h-full w-full"
+                                    alt="Thumbnail Preview"
+                                    className="object-cover w-full h-full"
                                 />
                             ) : (
-                                <div className="flex flex-col items-center justify-center gap-2 h-full w-full">
-                                    <div
-                                        className="bg-[#f9f9f9] p-2
-                                    rounded-full w-fit"
-                                    >
-                                        <div className="size-[20px]">
-                                            {icons.image}
-                                        </div>
-                                    </div>
-                                    <div className="text-lg">
-                                        Thumbnail Preview
+                                <div className="flex items-center justify-center h-full w-full">
+                                    <div className="flex items-center justify-center size-10 text-gray-400">
+                                        {icons.image}
                                     </div>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="border-[0.01rem] border-gray-500 rounded-lg p-6 max-w-[350px] w-full gap-6 mt-8 flex flex-col items-center">
-                        <div className="text-xl font-medium text-center">
-                            <span className="text-red-500">* </span>Select a
+                    <div className="bg-white rounded-xl shadow-md p-6">
+                        <div className="text-lg font-medium mb-4 text-center text-gray-800">
+                            <span className="text-red-500">*</span> Select a
                             Category
                         </div>
-                        <div className="flex flex-wrap items-center justify-center gap-3">
+                        <div className="flex flex-wrap gap-3">
                             {categoryElements}
                         </div>
                     </div>
 
-                    <div className="w-full text-center mt-7">
+                    <div className="w-full text-center">
                         <Button
-                            btnText={loading ? 'Uploading...' : 'Upload'}
+                            btnText={
+                                loading ? (
+                                    <div className="w-full flex items-center justify-center">
+                                        <div className="size-5 fill-white dark:text-[#c5d5ff]">
+                                            {icons.loading}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    'Upload'
+                                )
+                            }
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-2 text-lg w-full max-w-[350px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="text-white rounded-md py-3 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                         />
                     </div>
                 </div>

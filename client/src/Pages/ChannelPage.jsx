@@ -2,8 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { Button } from '@/Components';
 import { userService, followerService, requestService } from '@/Services';
-import { useChannelContext, useUserContext, usePopupContext } from '@/Context';
+import {
+    useChannelContext,
+    useUserContext,
+    usePopupContext,
+    useSocketContext,
+} from '@/Context';
 import toast from 'react-hot-toast';
+import { icons } from '@/Assets/icons';
 
 export default function ChannelPage() {
     const { userId } = useParams();
@@ -14,6 +20,7 @@ export default function ChannelPage() {
     const { setShowPopup, setPopupInfo } = usePopupContext();
     const [request, setRequest] = useState(null);
     const [chat, setChat] = useState(null);
+    const { socket } = useSocketContext();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -105,6 +112,13 @@ export default function ChannelPage() {
     const tabs = [
         { name: 'posts', path: '' },
         { name: 'About', path: 'about' },
+        { name: 'Projects', path: 'projects' },
+        ...(user?.user_id == channel?.user_id
+            ? [
+                  { name: 'Saved', path: 'saved-posts' },
+                  { name: 'Liked', path: 'liked-posts' },
+              ]
+            : []),
     ];
 
     const tabElements = tabs?.map(({ name, path }) => (
@@ -125,21 +139,29 @@ export default function ChannelPage() {
     ) : channel ? (
         <div className="w-full h-full">
             {/* owner coverImage */}
-            <div className="w-full h-[180px] overflow-hidden rounded-xl drop-shadow-md">
-                <img
-                    src={channel.user_coverImage}
-                    alt="channel coverImage"
-                    className="object-cover h-full w-full"
-                />
+            <div className="w-full h-[180px] overflow-hidden rounded-xl shadow-md">
+                {channel.user_coverImage ? (
+                    <img
+                        src={channel.user_coverImage}
+                        alt="channel coverImage"
+                        className="object-cover h-full w-full"
+                    />
+                ) : (
+                    <div className="flex items-center justify-center h-full w-full">
+                        <div className="flex items-center justify-center size-10 text-gray-400">
+                            {icons.image}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* owner info */}
             <div className="flex items-center justify-between w-full pr-0 sm:pr-8 relative">
                 <div className="flex items-center justify-start gap-4">
                     {/* owner avatar */}
-                    <div className="relative -top-8 flex gap-2 items-center justify-start">
+                    <div className="relative -top-8 flex gap-4 items-center justify-start">
                         <div className="relative">
-                            <div className="rounded-full  overflow-hidden size-[140px] border-[0.5rem] border-white ">
+                            <div className="rounded-full overflow-hidden size-[140px] shadow-sm">
                                 <img
                                     alt="user avatar"
                                     src={channel.user_avatar}
@@ -151,7 +173,7 @@ export default function ChannelPage() {
                         {/* channel info*/}
                         <div className="flex flex-col items-start justify-center mt-6">
                             <div className="text-3xl font-medium">
-                                {channel.user_firstName} {channel.user_lastName}
+                                {channel.user_fullName}
                             </div>
                             <div className="text-lg text-[#151515]">
                                 @{channel.user_name}

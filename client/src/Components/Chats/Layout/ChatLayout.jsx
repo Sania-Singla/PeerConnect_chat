@@ -43,20 +43,21 @@ export default function ChatLayout() {
     if (loading) return <div>loading...</div>;
 
     return (
-        <div className="h-full w-full">
-            <div className="h-[60px] bg-[#f6f6f6]">
+        <div className="flex flex-col h-full w-full bg-[#f6f6f6]">
+            <div className="h-[60px]">
                 <ChatHeader />
             </div>
-            <div
-                className={`bg-[#f6f6f6] ${pathname.includes('/details') ? 'h-[calc(100%-60px)]' : 'h-[calc(100%-120px)]'} overflow-y-scroll`}
-            >
-                <Outlet />
-            </div>
-            <div
-                className={`${pathname.includes('/details') ? 'hidden' : 'block h-[60px]'} bg-[#f6f6f6]`}
-            >
-                <ChatInput />
-            </div>
+
+            <Outlet />
+
+            {/* Input bar only if not in chat details */}
+            {!pathname.includes('/details') && (
+                <div>
+                    <div className="bg-[#f6f6f6] h-[60px]">
+                        <ChatInput />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

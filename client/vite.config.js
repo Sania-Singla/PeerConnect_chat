@@ -1,10 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import dotenv from 'dotenv';
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
-
-dotenv.config({ path: './src/Config/.env' }); // no need if in root dir
 
 export default defineConfig({
     plugins: [react(), tailwindcss()],
@@ -21,10 +18,4 @@ export default defineConfig({
             'codemirror/theme/dracula.css': 'codemirror/theme/dracula.css',
         },
     },
-    // proxy doesn't work in deployment
-    // server: {
-    //     proxy: {
-    //         '/api': 'http://localhost:3000',
-    //     },
-    // },
 });

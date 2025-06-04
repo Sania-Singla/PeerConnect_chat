@@ -1,43 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import Client from './Client';
-import Editor from './Editor';
-import {
-    useNavigate,
-    Navigate,
-    useLocation,
-    useParams,
-} from 'react-router-dom';
+import { Editor, Button } from '@/Components';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { BASE_BACKEND_URL } from '@/Constants/constants';
+import { BASE_BACKEND_URL, LANGUAGES } from '@/Constants/constants';
 import { useSocketContext } from '@/Context';
-import { Button } from '..';
 import { downloadCodeFile } from '@/Utils';
+import Avatar from 'react-avatar';
 
-const LANGUAGES = [
-    'python3',
-    'java',
-    'cpp',
-    'nodejs',
-    'c',
-    'ruby',
-    'go',
-    'scala',
-    'bash',
-    'sql',
-    'pascal',
-    'csharp',
-    'php',
-    'swift',
-    'rust',
-    'r',
-];
-
-export default function EditorPage() {
+export default function EditorLayout() {
     const [clients, setClients] = useState([]);
     const [output, setOutput] = useState('');
     const [isCompileWindowOpen, setIsCompileWindowOpen] = useState(false);
     const [isCompiling, setIsCompiling] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState('cpp');
+    const [isJoining, setIsJoining] = useState(true);
     const codeRef = useRef(null);
     const location = useLocation();
     const navigate = useNavigate();
@@ -45,6 +21,16 @@ export default function EditorPage() {
     const { socket } = useSocketContext();
 
     useEffect(() => {
+        if (!location.state?.username) {
+            navigate('/');
+            return;
+        }
+
+        socket.emit('join', {
+            roomId,
+            username: location.state.username,
+        });
+
         socket.on('joined', ({ clients, username, socketId }) => {
             if (username !== location.state?.username) {
                 toast.success(`${username} joined the room.`);
@@ -54,6 +40,7 @@ export default function EditorPage() {
                 code: codeRef.current,
                 socketId,
             });
+            setIsJoining(false);
         });
 
         socket.on('disconnected', ({ socketId, username }) => {
@@ -61,22 +48,19 @@ export default function EditorPage() {
             setClients((prev) => prev.filter((c) => c.socketId !== socketId));
         });
 
-        socket.emit('join', {
-            roomId,
-            username: location.state.username,
-        });
+        return () => {
+            socket.emit('disconnected', {
+                socketId: socket.id,
+                username: location.state.username,
+            });
+        };
     }, []);
-
-    if (!location.state) {
-        return <Navigate to="/" />;
-    }
 
     const copyRoomId = async () => {
         try {
             await navigator.clipboard.writeText(roomId);
             toast.success(`Room ID copied`);
         } catch (error) {
-            console.error(error);
             toast.error('Failed to copy Room ID');
         }
     };
@@ -95,102 +79,117 @@ export default function EditorPage() {
             res = await res.json();
             setOutput(res.output || JSON.stringify(res));
         } catch (err) {
-            console.error(err);
-            setOutput(res?.error || 'An error occurred');
+            setOutput('An error occurred while compiling.');
         } finally {
             setIsCompiling(false);
         }
     };
 
+    if (isJoining) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-gray-900 text-white text-lg">
+                Joining room...
+            </div>
+        );
+    }
+
     return (
-        <div className="flex flex-col relative h-full w-full">
-            <div className="flex overflow-hidden h-full">
+        <div className="flex flex-col h-[calc(100vh-87px)] w-full">
+            <div className="flex flex-col md:flex-row flex-1">
                 {/* Sidebar */}
-                <div className="h-full">
-                    <aside className="h-full w-60 overflow-hidden bg-gray-900 border-[0.09rem] border-gray-700 text-white flex flex-col p-4">
-                        <div className="flex flex-col overflow-y-auto flex-grow space-y-2">
-                            <span className="text-sm font-semibold mb-2">
-                                Members
-                            </span>
-                            <div className="flex flex-col space-y-4">
-                                {clients.map((client, i) => (
-                                    <Client
-                                        key={client.socketId}
-                                        username={client.username}
-                                        avatar={`https://i.pravatar.cc/150?img=${i + 1}`}
+                <aside className="bg-gray-900 text-white w-full md:w-[240px] border-r border-gray-700 p-4">
+                    <span className="font-semibold block mb-3">Members</span>
+                    <div className="gap-4 max-h-[200px] md:max-h-full md:h-[calc(100%-160px)] overflow-y-auto flex flex-wrap md:flex-col">
+                        {clients.map((client, i) => (
+                            <div
+                                key={client.socketId}
+                                className="relative group cursor-pointer flex items-center gap-3"
+                            >
+                                {client.avatar ? (
+                                    <img
+                                        src={client.avatar}
+                                        alt={client.username}
+                                        className="rounded-full size- border border-gray-700"
                                     />
-                                ))}
+                                ) : (
+                                    <Avatar
+                                        name={client.username?.toString()}
+                                        size="36"
+                                        className="rounded-full text-sm"
+                                    />
+                                )}
+
+                                <span className="text-sm truncate">
+                                    {client.username}
+                                </span>
                             </div>
-                        </div>
+                        ))}
+                    </div>
 
-                        <hr className="my-4 border-gray-700" />
+                    <hr className="my-4 border-gray-700" />
 
-                        <div className="space-y-2">
-                            <button
-                                onClick={copyRoomId}
-                                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
-                            >
-                                Copy Room ID
-                            </button>
-                            <button
-                                onClick={() => {
-                                    socket.emit('disconnected', {
-                                        socketId: socket.id,
-                                        username: location.state.username,
-                                    });
-                                    navigate('/');
-                                }}
-                                className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
-                            >
-                                Leave Room
-                            </button>
-                        </div>
-                    </aside>
-                </div>
+                    <div className="flex md:flex-col gap-2">
+                        <button
+                            onClick={copyRoomId}
+                            className="w-full bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
+                        >
+                            Copy Room ID
+                        </button>
+                        <button
+                            onClick={() => {
+                                socket.emit('disconnected', {
+                                    socketId: socket.id,
+                                    username: location.state.username,
+                                });
+                                navigate('/');
+                            }}
+                            className="w-full bg-red-600 hover:bg-red-700 py-2 px-4 rounded"
+                        >
+                            Leave Room
+                        </button>
+                    </div>
+                </aside>
 
-                {/* Editor and language selector */}
-                <main className="flex flex-col flex-grow w-full overflow-scroll">
-                    <div className="flex justify-end bg-gray-800 items-center border-gray-700 border-b-[0.09rem] p-2 gap-2 h-[50px]">
-                        <div className="bg-gray-800 text-white h-full flex justify-end">
-                            <select
-                                className="bg-gray-700 border border-gray-700 text-white px-2 py-1 rounded-md"
-                                value={selectedLanguage}
-                                onChange={(e) =>
-                                    setSelectedLanguage(e.target.value)
-                                }
-                            >
-                                {LANGUAGES.map((lang) => (
-                                    <option key={lang} value={lang}>
-                                        {lang}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                {/* Main Editor */}
+                <main className="flex flex-col flex-1 overflow-hidden">
+                    {/* Top Bar */}
+                    <div className="flex flex-wrap gap-2 items-center justify-end bg-gray-900 border-b border-gray-700 p-3">
+                        <select
+                            className="bg-gray-700 text-white px-2 py-1 rounded text-sm w-[100px]"
+                            value={selectedLanguage}
+                            onChange={(e) =>
+                                setSelectedLanguage(e.target.value)
+                            }
+                        >
+                            {LANGUAGES.map((lang) => (
+                                <option key={lang} value={lang}>
+                                    {lang}
+                                </option>
+                            ))}
+                        </select>
 
-                        {/* Toggle Button */}
                         <Button
-                            className="text-white rounded-md h-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="bg-[#4977ec] hover:bg-[#3b62c2] text-white px-4 py-1 rounded"
                             onClick={() =>
                                 setIsCompileWindowOpen(!isCompileWindowOpen)
                             }
-                            btnText={
-                                isCompileWindowOpen
-                                    ? 'Close Compiler'
-                                    : 'Open Compiler'
-                            }
+                            btnText={isCompileWindowOpen ? 'Close' : 'Compile'}
                         />
 
                         <Button
-                            className="bg-green-600 hover:bg-green-700 px-4 h-[32px] rounded text-white"
+                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
                             onClick={() =>
                                 downloadCodeFile(codeRef, selectedLanguage)
                             }
                             btnText="Save File"
                         />
                     </div>
-                    <div className="flex-grow">
+
+                    {/* Code Editor */}
+                    <div className="flex-1 overflow-auto">
                         <Editor
                             roomId={roomId}
+                            lang={selectedLanguage}
                             onCodeChange={(code) => (codeRef.current = code)}
                         />
                     </div>
@@ -199,7 +198,7 @@ export default function EditorPage() {
 
             {/* Compiler Output */}
             {isCompileWindowOpen && (
-                <div className="absolute bottom-0 right-0 w-[calc(100%-240px)] z-[1] bg-gray-900 border-t-[0.09rem] border-gray-600 text-white p-4 h-[200px] transition-all">
+                <div className="bg-gray-900 border-t border-gray-600 text-white p-4 h-[200px] overflow-auto">
                     <div className="flex justify-between items-center mb-3">
                         <h5 className="font-semibold">
                             Compiler Output ({selectedLanguage})
@@ -209,9 +208,7 @@ export default function EditorPage() {
                                 className="bg-green-600 hover:bg-green-700 px-4 h-[32px] rounded text-white"
                                 onClick={runCode}
                                 disabled={isCompiling}
-                                btnText={
-                                    isCompiling ? 'Compiling...' : 'Run Code'
-                                }
+                                btnText={isCompiling ? 'Compiling...' : 'Run'}
                             />
                             <Button
                                 className="bg-gray-600 hover:bg-gray-700 px-4 h-[32px] rounded text-white"
@@ -220,7 +217,7 @@ export default function EditorPage() {
                             />
                         </div>
                     </div>
-                    <pre className="bg-gray-800 p-3 rounded break-words whitespace-pre-wrap overflow-y-auto overflow-x-hidden h-[calc(100%-40px)]">
+                    <pre className="bg-gray-800 p-3 rounded whitespace-pre-wrap break-words h-[calc(100%-40px)] overflow-y-auto">
                         {output || 'Output will appear here after compilation'}
                     </pre>
                 </div>

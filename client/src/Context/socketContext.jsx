@@ -1,10 +1,11 @@
 import { useContext, createContext, useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { useChatContext } from '@/Context';
+import { useChatContext, useUserContext } from '@/Context';
 
 const SocketContext = createContext();
 
 const SocketContextProvider = ({ children }) => {
+    const { user } = useUserContext();
     const [socket, setSocket] = useState(null);
     const {
         setChats,
@@ -24,9 +25,6 @@ const SocketContextProvider = ({ children }) => {
         if (socket) return;
 
         const socketInstance = io(import.meta.env.VITE_BACKEND_BASE_URL, {
-            'force new connection': true,
-            reconnectionAttempts: 'Infinity',
-            timeout: 10000,
             withCredentials: true,
         });
 
@@ -106,14 +104,14 @@ const SocketContextProvider = ({ children }) => {
 
             // for chat header updations
             setSelectedChat((prev) => {
-                const alreadyPresent = prev?.membersTyping.find(
+                const alreadyPresent = prev?.membersTyping?.find(
                     ({ user_id }) => user_id === targetUser.user_id
                 );
 
                 if (!alreadyPresent) {
                     return {
                         ...prev,
-                        membersTyping: prev?.membersTyping.concat(targetUser),
+                        membersTyping: prev?.membersTyping?.concat(targetUser),
                     };
                 } else return prev;
             });
@@ -140,7 +138,7 @@ const SocketContextProvider = ({ children }) => {
             setSelectedChat((prev) => {
                 return {
                     ...prev,
-                    membersTyping: prev.membersTyping.filter(
+                    membersTyping: prev?.membersTyping?.filter(
                         ({ user_id }) => user_id !== targetUser.user_id
                     ),
                 };
@@ -170,8 +168,11 @@ const SocketContextProvider = ({ children }) => {
 
         socketInstance.on('newMessage', ({ chatId, message }) => {
             setMessages((prev) => {
-                if (selectedChatRef.current?.chat.chat_id === chatId) {
-                    return [message, ...prev];
+                if (selectedChatRef.current?.chat?.chat_id === chatId) {
+                    const existingIds = new Set(prev.map((m) => m.message_id));
+                    if (existingIds.has(message.message_id)) {
+                        return prev; // If message already exists, do not add again
+                    } else return [message, ...prev];
                 } else return prev;
             });
 
@@ -330,7 +331,8 @@ const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         connectSocket();
-    }, []);
+    }, [user]);
+
     // useEffect(() => {
     //     user ? connectSocket() : disconnectSocket();
     //     return () => disconnectSocket();

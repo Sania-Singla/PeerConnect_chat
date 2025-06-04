@@ -128,7 +128,7 @@ export default function ChatInput() {
     }
 
     return (
-        <div className="overflow-visible relative">
+        <div className="relative h-full">
             {showEmojiPicker && (
                 <div
                     ref={emojiPickerRef}
@@ -161,7 +161,7 @@ export default function ChatInput() {
             {/* form */}
             <form
                 onSubmit={handleSend}
-                className="w-full px-6 h-[60px] border-t border-gray-300 flex items-center space-x-6"
+                className="w-full px-6 h-full border-t border-gray-300 flex items-center space-x-6"
             >
                 {/* emoji Icon */}
                 <Button

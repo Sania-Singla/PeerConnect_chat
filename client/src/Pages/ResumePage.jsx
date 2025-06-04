@@ -1,5 +1,9 @@
-import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 export default function ResumePage() {
-    return <div>ResumePage</div>;
+    return (
+        <div className="themed bg-transparent">
+            <Outlet />
+        </div>
+    );
 }

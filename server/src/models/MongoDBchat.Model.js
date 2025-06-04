@@ -136,8 +136,7 @@ export class MongoDBchats extends Ichats {
                 {
                     $project: {
                         user_id: '$members.user_id',
-                        user_firstName: '$members.user_firstName',
-                        user_lastName: '$members.user_lastName',
+                        user_fullName: '$members.user_fullName',
                         user_name: '$members.user_name',
                         user_avatar: '$members.user_avatar',
                         user_bio: '$members.user_bio',

@@ -27,16 +27,34 @@ class AuthService {
         }
     }
 
-    async register(inputs) {
+    async loginWithGoogle(credential) {
         try {
-            const formData = new FormData();
-            Object.entries(inputs).forEach(([key, value]) => {
-                formData.append(key, value);
+            const res = await fetch(`${BASE_BACKEND_URL}/users/google/login`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential }),
             });
 
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === SERVER_ERROR) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('error in loginWithGoogle service', err);
+            throw err;
+        }
+    }
+
+    async register(inputs) {
+        try {
             const res = await fetch(`${BASE_BACKEND_URL}/users/register`, {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(inputs),
             });
 
             const data = await res.json();

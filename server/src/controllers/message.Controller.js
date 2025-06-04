@@ -75,8 +75,7 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
         sender: {
             user_id: me.user_id,
             user_name: me.user_name,
-            user_firstName: me.user_firstName,
-            user_lastName: me.user_lastName,
+            user_fullName: me.user_fullName,
             user_avatar: me.user_avatar,
         },
         attachments: detailedAttachments,

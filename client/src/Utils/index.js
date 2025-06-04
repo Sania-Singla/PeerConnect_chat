@@ -8,7 +8,7 @@ import {
 } from './formatting';
 import verifyExpression from './regex';
 import paginate from './pagination';
-import downloadCodeFile from './downloadCodeFile';
+import { downloadCodeFile, formatLeetcodeInput } from './editor';
 
 export {
     fileRestrictions,
@@ -21,4 +21,5 @@ export {
     paginate,
     formatCount,
     downloadCodeFile,
+    formatLeetcodeInput,
 };

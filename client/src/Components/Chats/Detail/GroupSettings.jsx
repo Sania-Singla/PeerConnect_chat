@@ -132,7 +132,7 @@ export default function GroupSettings() {
                                 disabled={renaming}
                             />
                             <Button
-                                className="w-full xl:w-[140px] h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center"
+                                className="w-full xl:w-[140px] h-[40px] bg-[#4977ec] hover:bg-blue-700 text-white rounded-lg flex items-center justify-center"
                                 disabled={renaming || !groupName.trim()}
                                 onClick={handleUpdate}
                                 btnText={

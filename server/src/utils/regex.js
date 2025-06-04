@@ -15,9 +15,8 @@ export default function verifyRegex(name, value) {
                 );
             }
 
-            case 'firstName':
-            case 'lastName': {
-                return /^[a-zA-Z]{1,15}$/.test(value);
+            case 'fullName': {
+                return /^[a-zA-Z ]{1,30}$/.test(value);
             }
 
             case 'userName': {

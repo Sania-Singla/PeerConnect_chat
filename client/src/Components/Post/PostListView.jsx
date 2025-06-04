@@ -17,8 +17,7 @@ const PostListView = memo(({ post, reference, children }) => {
         owner,
     } = post;
     const { category_name } = category;
-    const { user_id, user_name, user_avatar, user_firstName, user_lastName } =
-        owner;
+    const { user_id, user_name, user_avatar, user_fullName } = owner;
 
     const navigate = useNavigate();
 
@@ -36,21 +35,22 @@ const PostListView = memo(({ post, reference, children }) => {
             {/* LIST VIEW */}
             <div
                 onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
-                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 bg-white drop-shadow-md rounded-2xl overflow-hidden"
+                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
             >
                 {/* post image */}
-                <div className="h-[300px] drop-shadow-md w-[45%] rounded-xl overflow-hidden">
+                <div className="h-[250px] drop-shadow-md w-[50%] rounded-xl overflow-hidden">
                     <img
                         alt="post image"
                         src={post_image}
+                        loading="lazy"
                         className="h-full object-cover w-full"
                     />
                 </div>
 
-                <div className="w-[55%] pt-4 realtive flex flex-col items-start justify-start">
+                <div className="w-[50%] pt-4 realtive flex flex-col items-start justify-start">
                     <div className="flex items-start justify-between w-full">
                         {/* post category */}
-                        <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-3 py-[2px]">
+                        <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#f5f9ff] shadow-sm rounded-full w-fit px-3 py-[2px]">
                             <div className="size-[9px] fill-[#2556d1]">
                                 {icons.dot}
                             </div>
@@ -67,11 +67,11 @@ const PostListView = memo(({ post, reference, children }) => {
                     </div>
 
                     {/* post title */}
-                    <div className="hover:cursor-text text-2xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
+                    <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
                         {post_title}
                     </div>
 
-                    <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-2 mt-4">
+                    <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
                         {parse(post_content)}
                     </div>
 
@@ -94,7 +94,7 @@ const PostListView = memo(({ post, reference, children }) => {
 
                         <div>
                             <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
-                                {user_firstName} {user_lastName}
+                                {user_fullName}
                             </div>
 
                             <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">

@@ -20,13 +20,12 @@ export default function verifyExpression(name, value, setError) {
                 break;
             }
 
-            case 'firstName':
-            case 'lastName': {
-                /^[a-zA-Z]{1,15}$/.test(value)
+            case 'fullName': {
+                /^[a-zA-Z ]{1,15}$/.test(value)
                     ? setError((prevError) => ({ ...prevError, [name]: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: `only letters are allowed and should not exceed 15 characters.`,
+                          [name]: `only letters are allowed and should not exceed 30 characters.`,
                       }));
                 break;
             }

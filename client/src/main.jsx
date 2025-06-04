@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import './Styles/index.css';
+import './Styles/resume.css';
 
 import { RouterProvider } from 'react-router-dom';
 

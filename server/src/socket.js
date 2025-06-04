@@ -13,17 +13,16 @@ const http = createServer(app);
 const io = new Server(http, { cors: CORS_OPTIONS });
 
 // middleware for extracting user from socket
-// ! commented for editor demonstration
-// io.use((socket, next) => {
-//     const req = socket.request;
-//     const res = {};
+io.use((socket, next) => {
+    const req = socket.request;
+    const res = {};
 
-//     cookieParser()(
-//         req,
-//         res,
-//         async (err) => await socketAuthenticator(req, err, socket, next)
-//     );
-// });
+    cookieParser()(
+        req,
+        res,
+        async (err) => await socketAuthenticator(req, err, socket, next)
+    );
+});
 
 // ! for editor ********************
 const userSocketMap = {};
@@ -41,6 +40,48 @@ const getAllConnectedClients = (roomId) => {
 // ! ******************************
 
 io.on('connection', async (socket) => {
+    // ! editor **************************
+    socket.on('join', ({ roomId, username }) => {
+        if (roomId) {
+            userSocketMap[socket.id] = username;
+            socket.join(roomId);
+            const clients = getAllConnectedClients(roomId);
+            // notify that new user join
+            clients.forEach(({ socketId }) => {
+                io.to(socketId).emit('joined', {
+                    clients,
+                    username,
+                    socketId: socket.id,
+                });
+            });
+        }
+    });
+
+    // sync the code
+    socket.on('codeChange', ({ roomId, code }) => {
+        if (roomId) socket.in(roomId).emit('codeChange', { code });
+    });
+    
+    // when new user join the room all the code which are there are also shows on that persons editor
+    socket.on('syncCode', ({ socketId, code }) => {
+        if (code) io.to(socketId).emit('codeChange', { code });
+    });
+
+    socket.on('disconnected', ({ socketId, username }) => {
+        console.log('User disconnected:', socketId);
+        const rooms = [...socket.rooms];
+        // leave all the room
+        rooms.forEach((roomId) => {
+            socket.in(roomId).emit('disconnected', {
+                socketId: socket.id,
+                username,
+            });
+        });
+
+        delete userSocketMap[socket.id];
+    });
+    // ! **************************
+
     const user = socket.user;
     const userId = user?.user_id;
 
@@ -88,45 +129,6 @@ io.on('connection', async (socket) => {
                 .emit('stoppedTyping', { chatId, targetUser: user })
         );
     }
-
-    // ! editor **************************
-    socket.on('join', ({ roomId, username }) => {
-        userSocketMap[socket.id] = username;
-        socket.join(roomId);
-        const clients = getAllConnectedClients(roomId);
-        // notify that new user join
-        clients.forEach(({ socketId }) => {
-            io.to(socketId).emit('joined', {
-                clients,
-                username,
-                socketId: socket.id,
-            });
-        });
-    });
-
-    // sync the code
-    socket.on('codeChange', ({ roomId, code }) => {
-        socket.in(roomId).emit('codeChange', { code });
-    });
-    // when new user join the room all the code which are there are also shows on that persons editor
-    socket.on('syncCode', ({ socketId, code }) => {
-        io.to(socketId).emit('codeChange', { code });
-    });
-
-    socket.on('disconnected', ({ socketId, username }) => {
-        console.log('User disconnected:', socketId);
-        const rooms = [...socket.rooms];
-        // leave all the room
-        rooms.forEach((roomId) => {
-            socket.in(roomId).emit('disconnected', {
-                socketId: socket.id,
-                username,
-            });
-        });
-
-        delete userSocketMap[socket.id];
-    });
-    // ! **************************
 
     // disconnection
     socket.on('disconnect', async () => {

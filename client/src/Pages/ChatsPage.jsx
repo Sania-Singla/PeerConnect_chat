@@ -19,7 +19,6 @@ export default function ChatsPage() {
                     <ChatSidebar />
                 </div>
                 <SmallSidebar />
-
                 <div
                     className={`${chatId && !showSidebar ? 'flex-1 w-full' : 'hidden sm:block sm:flex-1'} h-full`}
                 >

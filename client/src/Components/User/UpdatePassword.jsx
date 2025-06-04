@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from '@/Services';
 import { Button } from '@/Components';
 import toast from 'react-hot-toast';
+import { useUserContext } from '@/Context';
 
 export default function UpdatePassword() {
     const initialInputs = {
@@ -16,6 +17,7 @@ export default function UpdatePassword() {
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
+    const { user } = useUserContext();
 
     async function handleChange(e) {
         const { name, value } = e.target;
@@ -131,37 +133,45 @@ export default function UpdatePassword() {
     ));
 
     return (
-        <div className="w-full px-4 py-2">
-            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] px-12 py-6 sm:gap-14">
-                <div className="w-full py-6 px-4">
-                    <h3>Change Password</h3>
-                    <p className="">
-                        Update your password to secure your account. Changes are
-                        final once saved.
+        <div className="w-full py-2">
+            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 lg:px-8 pb-4">
+                <div className="w-full py-6">
+                    <h3 className="text-2xl font-semibold">Change Password</h3>
+                    <p className="mt-4">
+                        {user.auth_provider === 'local'
+                            ? 'Update your password to secure your account. Changes are final once saved.'
+                            : 'Password change is not available for Google accounts.'}
                     </p>
                 </div>
-                <form onSubmit={handleSubmit} className="w-full max-w-[600px]">
-                    <div className="flex flex-col gap-4">{inputElements}</div>
-                    <div className="flex gap-6 mt-6">
-                        <Button
-                            btnText="Cancel"
-                            onMouseOver={onMouseOver}
-                            disabled={loading}
-                            onClick={() => {
-                                setInputs(initialInputs);
-                                setError(nullErrors);
-                            }}
-                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                        />
-                        <Button
-                            btnText={loading ? 'Updating...' : 'Update'}
-                            type="submit"
-                            disabled={disabled}
-                            onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                        />
-                    </div>
-                </form>
+                {user.auth_provider === 'local' && (
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-full max-w-[600px]"
+                    >
+                        <div className="flex flex-col gap-4">
+                            {inputElements}
+                        </div>
+                        <div className="flex gap-6 mt-6">
+                            <Button
+                                btnText="Cancel"
+                                onMouseOver={onMouseOver}
+                                disabled={loading}
+                                onClick={() => {
+                                    setInputs(initialInputs);
+                                    setError(nullErrors);
+                                }}
+                                className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            />
+                            <Button
+                                btnText={loading ? 'Updating...' : 'Update'}
+                                type="submit"
+                                disabled={disabled}
+                                onMouseOver={onMouseOver}
+                                className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            />
+                        </div>
+                    </form>
+                )}
             </div>
         </div>
     );

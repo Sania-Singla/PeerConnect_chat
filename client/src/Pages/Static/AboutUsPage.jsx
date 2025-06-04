@@ -1,147 +1,192 @@
 import { CONTRIBUTORS } from '@/Constants/constants';
 import { Link } from 'react-router-dom';
 
-export default function AboutUsPage() {
-    const members = CONTRIBUTORS.map((contributor) => (
-        <div
-            key={contributor.name}
-            className="flex flex-col gap-3 items-center justify-center"
-        >
-            <div className="drop-shadow-xl hover:brightness-90">
-                <div className="size-[100px] rounded-full overflow-hidden">
-                    <img
-                        src={contributor.image}
-                        alt="contributor profile image"
-                        className="size-full object-cover"
-                    />
-                </div>
-            </div>
-            <div className="w-full text-center font-semibold text-xl">
-                {contributor.name}
-            </div>
-        </div>
-    ));
-
+function FeatureCard({ title, description }) {
     return (
-        <div className="w-full flex items-start justify-center">
-            <div className="w-[90%]">
-                <h1 className="w-full font-semibold text-center mb-6">
-                    About Us
+        <div className="bg-white shadow-md rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-700 mt-2">{description}</p>
+        </div>
+    );
+}
+
+function PrivacyCard({ title, description }) {
+    return (
+        <div className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-700 mt-2">{description}</p>
+        </div>
+    );
+}
+
+export default function AboutUsPage() {
+    return (
+        <div className="w-full min-h-screen sm:p-4">
+            {/* Hero Section */}
+            <section className="w-full bg-[#fbfbfb] shadow-md rounded-xl p-8 md:px-10">
+                <h1 className="text-[35px] font-bold text-gray-900">
+                    About Peer Connect
                 </h1>
-                <p className="text-md">
+                <p className="mt-4 text-gray-700">
                     Welcome to <strong>Peer Connect</strong>, a platform created
                     by students for students. We aim to provide a space where
                     peers can share their thoughts, experiences, and ideas while
                     building connections within the college community.
                 </p>
-                <hr className="my-6" />
-                <h2 className="w-full text-center my-6">Our Mission</h2>
-                <p className="text-md">
-                    Our mission is to create a digital space that encourages
-                    collaboration, learning, and fun through writing. Whether
-                    it's about the latest campus event, personal experiences, or
-                    simply sharing knowledge, College Connect Blog serves as the
-                    go-to place for students to express themselves and connect
-                    with like-minded individuals.
-                </p>
-                <hr className="m-8" />
-                <h2 className="w-full text-center my-6">Why We Started?</h2>
-                <p className="text-md">
-                    As college students, we wanted a place where we could freely
-                    share our ideas and engage with others. We realized that
-                    many students have great stories to tell, but sometimes
-                    there isn't a dedicated space to share them. So, we decided
-                    to build College Connect Blog as a way to bridge that gap
-                    and provide a platform for communication and connection.
-                </p>
-                <hr className="m-8" />
-                <h2 className="w-full text-center my-6">What We Do</h2>
-                <ul>
-                    <li>
-                        <strong>Blog Posts:</strong> Articles written by
-                        students, for students, covering a wide range of topics
-                        from personal experiences to helpful tips and advice.
-                    </li>
-                    <li>
-                        <strong>Collaboration:</strong> A place where students
-                        can collaborate on projects, share ideas, and make new
-                        connections.
-                    </li>
-                    <li>
-                        <strong>Community Building:</strong> We believe in the
-                        power of community. Through College Connect, we aim to
-                        foster a positive, open environment where everyone can
-                        contribute.
-                    </li>
-                </ul>
-                <hr className="m-8" />
-                <h2 className="w-full text-center my-6">Meet the Team</h2>
-                <p className="text-md">
+            </section>
+
+            {/* Content Section with Grid Layout */}
+            <div className="w-full px-8 md:px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-12">
+                {/* Mission */}
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                        Our Mission
+                    </h2>
+                    <p className="text-gray-700 mt-3">
+                        Our mission is to create a digital space that encourages
+                        collaboration, learning, and fun through writing.
+                        Whether it's about the latest campus event, personal
+                        experiences, or simply sharing knowledge, Peer Connect
+                        serves as the go-to place for students to express
+                        themselves and connect with like-minded individuals.
+                    </p>
+                </div>
+
+                {/* Why We Started */}
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                        Why We Started
+                    </h2>
+                    <p className="text-gray-700 mt-3">
+                        As college students, we wanted a place where we could
+                        freely share our ideas and engage with others. We
+                        realized that many students have great stories to tell,
+                        but sometimes there isn't a dedicated space to share
+                        them. So, we decided to build Peer Connect as a way to
+                        bridge that gap.
+                    </p>
+                </div>
+            </div>
+
+            {/* Features Section */}
+            <section className="w-full px-8 md:px-10 py-10 bg-gray-100 rounded-xl">
+                <h2 className="text-2xl font-bold text-gray-900 text-center">
+                    What We Offer
+                </h2>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <FeatureCard
+                        title="✍️ Blog Posts"
+                        description="Articles written by students, for students, covering a wide range of topics from personal experiences to helpful tips."
+                    />
+                    <FeatureCard
+                        title="🤝 Collaboration"
+                        description="A place where students can work together on projects, share ideas, and make new connections."
+                    />
+                    <FeatureCard
+                        title="🌱 Community Building"
+                        description="We foster a positive, open environment where everyone can contribute and grow together."
+                    />
+                    <FeatureCard
+                        title="🔒 Privacy Focused"
+                        description="We take your privacy seriously with secure authentication and data protection."
+                    />
+                    <FeatureCard
+                        title="💡 Knowledge Sharing"
+                        description="A platform to exchange academic insights, study tips, and campus resources."
+                    />
+                    <FeatureCard
+                        title="🎉 Campus Engagement"
+                        description="Stay updated on events, activities, and opportunities within your college community."
+                    />
+                </div>
+            </section>
+
+            {/* Meet the Team */}
+            <section className="w-full px-8 md:px-10 py-12 text-center">
+                <h2 className="text-2xl font-bold text-gray-900">
+                    Meet the Team
+                </h2>
+                <p className="text-gray-700 mt-3">
                     Our team consists of passionate students who are eager to
                     make a difference in the college community. We come from
-                    different zones, but we share a common goal: to build a
-                    space for students to connect, collaborate, and grow.
+                    different backgrounds, but we share a common goal: to build
+                    a space for students to connect, collaborate, and grow.
                 </p>
-                <div className="mt-10 flex flex-wrap justify-evenly gap-4 w-full">
-                    {members}
+                <div className="flex w-full justify-center">
+                    <div className="mt-8 flex flex-wrap justify-evenly gap-x-4 gap-y-8 w-full">
+                        {CONTRIBUTORS.map((contributor) => (
+                            <div
+                                key={contributor.name}
+                                className="flex flex-col items-center"
+                            >
+                                <div className="size-24 rounded-full overflow-hidden shadow-sm hover:brightness-90 transition duration-300">
+                                    <img
+                                        src={contributor.image}
+                                        alt={contributor.name}
+                                        className="w-full h-full object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <p className="mt-2 font-semibold text-gray-800">
+                                    {contributor.name}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <hr className="m-8" />
-                <h2 className="w-full text-center my-6">Privacy Policy</h2>
-                <p className="text-md">
-                    Your privacy is important to us. Below is our Privacy Policy
-                    outlining how we handle your data:
-                </p>
-                <ul>
-                    <li>
-                        <strong>Data Collection:</strong> We collect personal
-                        information like your name, email address, and any other
-                        details you provide when registering or commenting on
-                        the blog.
-                    </li>
-                    <li>
-                        <strong>Data Use:</strong> Your personal data is used
-                        solely for the purpose of enabling you to interact with
-                        the blog (e.g., posting comments, subscribing to
-                        updates).
-                    </li>
-                    <li>
-                        <strong>Third-Party Services:</strong> We may use
-                        third-party services like Google Analytics to help us
-                        understand how users interact with our website. These
-                        services may collect data such as IP addresses and
-                        device information.
-                    </li>
-                    <li>
-                        <strong>Cookies:</strong> Our website uses cookies to
-                        enhance your experience. By using the site, you agree to
-                        our use of cookies.
-                    </li>
-                    <li>
-                        <strong>Security:</strong> We take the security of your
-                        personal information seriously. We use standard industry
-                        practices to protect your data.
-                    </li>
-                    <li>
-                        <strong>Opt-Out:</strong> If you no longer wish to
-                        receive communications from us, you can opt out at any
-                        time by clicking the "Unsubscribe" link in our emails.
-                    </li>
-                </ul>
-                <hr className="m-8" />
-                <h2 className="w-full text-center my-6">Contact Us</h2>
-                <p className="text-md">
-                    If you have any questions or would like to collaborate, feel
-                    free to connect with us on{' '}
+            </section>
+
+            {/* Privacy & Security */}
+            <section className="w-full px-8 md:px-10 py-12 bg-gray-100 rounded-xl">
+                <h2 className="text-2xl font-bold text-gray-900 text-center">
+                    Privacy Policy
+                </h2>
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <PrivacyCard
+                        title="🔹 Data Collection"
+                        description="We collect personal information like your name and email when you register or interact with the platform."
+                    />
+                    <PrivacyCard
+                        title="🔹 Data Use"
+                        description="Your data is used solely to enable platform features and improve your experience."
+                    />
+                    <PrivacyCard
+                        title="🔹 Third-Party Services"
+                        description="We may use analytics services to understand user interactions, which may collect anonymized data."
+                    />
+                    <PrivacyCard
+                        title="🔹 Cookies"
+                        description="Our website uses cookies to enhance functionality. You can manage cookie preferences in your browser."
+                    />
+                    <PrivacyCard
+                        title="🔹 Security Measures"
+                        description="We implement industry-standard security practices to protect your personal information."
+                    />
+                    <PrivacyCard
+                        title="🔹 User Control"
+                        description="You can update or delete your account information at any time through your profile settings."
+                    />
+                </div>
+            </section>
+
+            {/* Contact Section */}
+            <section className="w-full px-8 md:px-10 py-12 text-center">
+                <h2 className="text-2xl font-bold text-gray-900">
+                    Get In Touch
+                </h2>
+                <p className="text-md text-gray-700 mt-3">
+                    Have questions or want to collaborate? Connect with us on{' '}
                     <Link
-                        className="text-[#3547ec] font-medium hover:underline"
+                        to="https://discord.com/channels/@sania_singla"
                         target="_blank"
-                        to={'https://discord.com/channels/@sania_singla'}
+                        className="text-blue-500 font-medium hover:underline"
                     >
                         Discord
-                    </Link>
-                    . We would love to hear from you!!
+                    </Link>{' '}
+                    or drop us an email. We'd love to hear from you!
                 </p>
-            </div>
+            </section>
         </div>
     );
 }

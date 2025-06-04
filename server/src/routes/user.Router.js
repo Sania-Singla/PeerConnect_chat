@@ -22,27 +22,18 @@ import {
     getWatchHistory,
     clearWatchHistory,
     getAdminStats,
+    loginWithGoogle,
 } from '../controllers/user.Controller.js';
 
-userRouter.route('/register').post(
-    upload.fields([
-        {
-            name: 'avatar',
-            maxCount: 1,
-        },
-        {
-            name: 'coverImage',
-            maxCount: 1,
-        },
-    ]),
-    registerUser
-);
+userRouter.route('/register').post(registerUser);
 
 userRouter
     .route('/channel/:channelId')
     .get(validateUUID('channelId'), optionalVerifyJwt, getChannelProfile);
 
 userRouter.route('/login').post(loginUser);
+
+userRouter.route('/google/login').post(loginWithGoogle);
 
 userRouter.use(verifyJwt);
 
