@@ -1,23 +1,28 @@
+// Layout components
 import Header from './Layout/Header';
 import Footer from './Layout/Footer';
 import Layout from './Layout/Layout';
 import Sidebar from './Layout/Sidebar';
 import SmallSidebar from './Layout/SmallSidebar';
 
+// General components
 import RTE from './General/RTE';
 import Button from './General/Button';
 import ContributorCard from './General/ContributorCard';
 
+// Auth components
 import Login from './Auth/Login';
 import Logout from './Auth/Logout';
 import DeleteAccount from './Auth/DeleteAccount';
 
+// User components
 import UpdateAvatar from './User/UpdateAvatar';
 import UpdatePassword from './User/UpdatePassword';
 import UpdateCoverImage from './User/UpdateCoverImage';
 import UpdateAccountDetails from './User/UpdateAccountDetails';
 import UpdateChannelDetails from './User/UpdateChannelDetails';
 
+// Post components
 import AdminPostRow from './Post/AdminPostRow';
 import PostCardView from './Post/PostCardView';
 import PostListView from './Post/PostListView';
@@ -25,15 +30,18 @@ import LikedPostView from './Post/LikedPostView';
 import SavedPostView from './Post/SavedPostView';
 import Recemendations from './Post/Recemendations';
 
+// Channel components
 import ChannelAbout from './Channel/ChannelAbout';
 import ChannelPosts from './Channel/ChannelPosts';
 import ChannelLikedPosts from './Channel/ChannelLikedPosts';
 import ChannelSavedPosts from './Channel/ChannelSavedPosts';
 import ChannelProjects from './Channel/ChannelProjects';
 
+// Comment components
 import Comment from './Comment/Comment';
 import Comments from './Comment/Comments';
 
+// Chats components
 import Chat from './Chats/Chat';
 import Message from './Chats/Message';
 import Details from './Chats/Detail/Details';
@@ -50,6 +58,7 @@ import ChatSettings from './Chats/Detail/ChatSettings';
 import GroupSettings from './Chats/Detail/GroupSettings';
 import InputFilePreview from './Chats/InputFilePreview';
 
+// Popups
 import Popup from './Popups/Popup';
 import LoginPopup from './Popups/LoginPopup';
 import CustomToast from './Popups/CustomToast';
@@ -61,6 +70,7 @@ import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateCoverImagePopup from './Popups/UpdateCoverImagePopup';
 
+// Project components
 import ProjectCard from './Project/ProjectCard';
 import ProjectDetail from './Project/ProjectDetail';
 import ProjectHeader from './Project/ProjectHeader';
@@ -70,6 +80,7 @@ import ProjectContributionForm from './Project/ProjectContributionForm';
 import ProjectContributors from './Project/ProjectContributors';
 import ProjectRequests from './Project/ProjectRequests';
 
+// Practice components
 import QuestionCard from './Practice/QuestionCard';
 import TopicCard from './Practice/TopicCard';
 import QuestionDescription from './Practice/Layout/QuestionDescription';
@@ -81,10 +92,27 @@ import QuestionSubmissions from './Practice/Layout/QuestionSubmissions';
 import QuestionEditor from './Practice/Layout/QuestionEditor';
 import QuestionHeader from './Practice/Layout/QuestionHeader';
 
+// Editor components
 import Editor from './Editor/Editor';
 import EditorLayout from './Editor/EditorLayout';
 import Form from './Editor/Form';
 
+// Resume components
+import PersonalDetail from './Resume/Forms/PersonalInfoForm';
+import Education from './Resume/Forms/EducationForm';
+import Experience from './Resume/Forms/ExperienceForm';
+import Skills from './Resume/Forms/SkillsForm';
+import Achievements from './Resume/Forms/AchievementsForm';
+import Summary from './Resume/Forms/SummaryForm';
+
+import PersonalDetailPreview from './Resume/Previews/PersonalDetailPreview';
+import EducationPreview from './Resume/Previews/EducationPreview';
+import ExperiencePreview from './Resume/Previews/ExperiencePreview';
+import SkillsPreview from './Resume/Previews/SkillsPreview';
+import AchievementsPreview from './Resume/Previews/AchievementsPreview';
+import SummaryPreview from './Resume/Previews/SummaryPreview';
+
+// Interview components
 import Home from './Interview/Pages/Home';
 import InterviewDetails from './Interview/Pages/InterviewDetails';
 import Agent from './Interview/Components/Agent';

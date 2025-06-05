@@ -1,16 +1,19 @@
 import express from 'express';
 import {
-    getFeedback,
     getResume,
+    createResume,
     getResumes,
     saveSection,
+    deleteResume,
 } from '../controllers/resume.Controller.js';
 export const resumeRouter = express.Router();
 
-resumeRouter.route('/save/:resumeId').post(saveSection);
+resumeRouter.route('/new').post(createResume);
 
-resumeRouter.route('/feedback').post(getFeedback);
-
-resumeRouter.route('/:resumeId').get(getResume);
+resumeRouter
+    .route('/:resumeId')
+    .get(getResume)
+    .post(saveSection)
+    .delete(deleteResume);
 
 resumeRouter.route('/').get(getResumes);

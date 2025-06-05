@@ -8,6 +8,7 @@ import { messageRouter } from './message.Router.js';
 import { requestRouter } from './request.Router.js';
 import { editorRouter } from './editor.Router.js';
 import { resumeRouter } from './resume.Router.js';
+import { interviewRouter } from './interview.Router.js';
 
 export {
     userRouter,
@@ -20,4 +21,5 @@ export {
     requestRouter,
     editorRouter,
     resumeRouter,
+    interviewRouter,
 };

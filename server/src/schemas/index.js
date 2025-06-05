@@ -7,6 +7,8 @@ import { Chat } from './chat.Schema.js';
 import { Message, Attachment } from './message.Schema.js';
 import { OnlineUser } from './onlineUser.Schema.js';
 import { Request } from './request.Schema.js';
+import { Resume } from './resume.Schema.js';
+
 export {
     User,
     SavedPost,
@@ -21,4 +23,5 @@ export {
     Attachment,
     OnlineUser,
     Request,
+    Resume,
 };

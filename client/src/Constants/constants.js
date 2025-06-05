@@ -57,6 +57,29 @@ const IMAGES = {
     resumeCover: '/images/resumeCover.png',
 };
 
+const RESUME_THEMES = [
+    '#5579CC', // medium blue
+    '#333333', // dark gray (instead of black)
+    '#E06A4A', // warm coral
+    '#6BA46B', // fresh green
+    '#658CCF', // steel blue lighter
+    '#B66B93', // soft pinkish mauve
+    '#7F63B8', // moderate violet
+    '#5DB29B', // teal green
+    '#D27D49', // warm caramel
+    '#8CAC51', // olive green brighter
+    '#7A71B8', // medium indigo
+    '#D37B8B', // muted rose
+    '#4D7BBF', // bright blue
+    '#A7BC44', // lively chartreuse
+    '#4CA8BF', // turquoise bright
+    '#6B62B5', // moderate purple
+    '#6AB276', // fresh green
+    '#6B62B5', // slate purple
+    '#D0616E', // muted red
+    '#4B6CBF', // classic blue
+];
+
 const CONTRIBUTORS = [
     {
         image: IMAGES.contributors.sania,
@@ -262,4 +285,5 @@ export {
     LANGUAGES,
     QUES_LANGUAGES,
     USER_AVATAR,
+    RESUME_THEMES,
 };

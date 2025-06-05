@@ -4,7 +4,7 @@ import { getInterviewById, saveFeedback } from '../Lib/feedback';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { botService } from '@/Services';
+import { interviewService } from '@/Services';
 
 export default function Feedback() {
     const { id } = useParams();
@@ -34,7 +34,7 @@ export default function Feedback() {
 
                 if (!feedback) {
                     // generate feedback
-                    feedback = await botService.feedback(messages);
+                    feedback = await interviewService.getFeedback(messages);
                     saveFeedback(interviewData.id, feedback);
                 }
 

@@ -6,8 +6,12 @@ import {
     Download,
     Trash2,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { IMAGES } from '@/Constants/constants';
+import { resumeService } from '@/Services';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -24,28 +28,27 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from './ui/alert-dialog';
-import GlobalApi from './GlobalApi';
-import  toast  from 'react-hot-toast';
-import { IMAGES } from '@/Constants/constants';
 
-export default function ResumeCardItem({ resume, refreshData }) {
+export default function ResumeCardItem({ resume }) {
     const navigate = useNavigate();
     const [openAlert, setOpenAlert] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const onDelete = async () => {
-        setLoading(true);
+    async function onDelete() {
         try {
-            await GlobalApi.DeleteResumeById(resume.resumeId);
-            toast.success('Resume deleted successfully');
-            refreshData();
+            setLoading(true);
+            const res = await resumeService.deleteResume(resume.resumeId);
+            if (res && !res.message) {
+                toast.success('Resume deleted successfully');
+            }
+            // refreshData();
         } catch (error) {
             toast.error('Failed to delete resume');
         } finally {
             setLoading(false);
             setOpenAlert(false);
         }
-    };
+    }
 
     return (
         <div className="group relative overflow-hidden rounded-xl shadow-md transition-all duration-300">
@@ -78,6 +81,8 @@ export default function ResumeCardItem({ resume, refreshData }) {
                         {new Date(resume.createdAt).toLocaleDateString()}
                     </p>
                 </div>
+
+                {/* ✨MAKE IT IN OUR STYLE */}
 
                 {/* Actions Dropdown */}
                 <DropdownMenu>

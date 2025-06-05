@@ -18,7 +18,11 @@ import {
 import { AIChatSession } from '../AIModal';
 import toast from 'react-hot-toast';
 
-function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
+export default function RichTextEditor({
+    onRichTextEditorChange,
+    index,
+    defaultValue,
+}) {
     const [value, setValue] = useState(defaultValue);
     const { resumeInfo } = useContext(ResumeInfoContext);
     const [loading, setLoading] = useState(false);
@@ -35,10 +39,10 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
 
         try {
             const PROMPT = `
-                            Position Title: ${positionTitle}
-                            Write 2–3 bullet points suitable for a resume under this job title. 
-                            Return ONLY an HTML <ul><li> list. Do NOT include extra formatting, JSON, or labels.
-                            `;
+                        Position Title: ${positionTitle}
+                        Write 2–3 bullet points suitable for a resume under this job title. 
+                        Return ONLY an HTML <ul><li> list. Do NOT include extra formatting, JSON, or labels.
+                    `;
 
             const response = await AIChatSession.sendMessage(PROMPT);
             const rawText = await response.response.text();
@@ -106,5 +110,3 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
         </div>
     );
 }
-
-export default RichTextEditor;

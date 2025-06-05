@@ -21,6 +21,7 @@ import {
     requestRouter,
     editorRouter,
     resumeRouter,
+    interviewRouter,
 } from './routes/index.js';
 import { errorMiddleware } from './middlewares/index.js';
 import { OK } from 'zod';
@@ -35,6 +36,7 @@ app.use('/api/messages', messageRouter);
 app.use('/api/requests', requestRouter);
 app.use('/api/codes', editorRouter);
 app.use('/api/resume', resumeRouter);
+app.use('/api/interviews', interviewRouter);
 
 app.get('/', (req, res) => {
     res.status(OK).json({ message: 'Welcome to PeerConnect Server' });
