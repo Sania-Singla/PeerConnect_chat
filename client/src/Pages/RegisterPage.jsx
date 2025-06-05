@@ -4,7 +4,7 @@ import { useUserContext } from '@/Context';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/Components';
 import { verifyExpression } from '@/Utils';
-import { LOGO } from '@/Constants/constants';
+import { LOGO_SVG } from '@/Constants/constants';
 import { motion } from 'framer-motion';
 import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
@@ -140,15 +140,15 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="text-black flex items-center justify-center fixed z-[1] bg-white inset-0">
-            <div className="max-w-[350px] w-[50%] flex flex-col items-center justify-center">
+        <div className="text-black flex justify-center fixed z-[1] bg-white inset-0 p-6 h-screen overflow-scroll">
+            <div className="max-w-[350px] w-[50%] flex flex-col items-center my-auto">
                 <Link
                     to={'/'}
                     className="w-fit flex items-center justify-center hover:brightness-95 mb-4"
                 >
                     <div className="overflow-hidden rounded-full size-[80px] drop-shadow-sm">
                         <img
-                            src={LOGO}
+                            src={LOGO_SVG}
                             alt="peer connect logo"
                             className="object-cover size-full"
                         />

@@ -1,7 +1,7 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Button, Logout } from '@/Components';
 import { useUserContext, useSideBarContext, useSearchContext } from '@/Context';
-import { LOGO } from '@/Constants/constants';
+import { LOGO_SVG } from '@/Constants/constants';
 import { icons } from '@/Assets/icons';
 
 export default function Header() {
@@ -30,12 +30,8 @@ export default function Header() {
                     to={'/'}
                     className="flex items-center justify-center gap-3 font-medium text-[17px]"
                 >
-                    <div className="overflow-hidden size-[34px]">
-                        <img
-                            src={LOGO}
-                            alt="peer connect logo"
-                            className="object-cover rounded-full hover:brightness-95 border-[0.09rem] border-[#e0e0e0]"
-                        />
+                    <div className="overflow-hidden size-[30px]">
+                        <img src={LOGO_SVG} alt="peer connect logo" />
                     </div>
                     <div className="hidden sm:block hover:text-[#4977ec] transition-all duration-200">
                         PeerConnect

@@ -1,4 +1,5 @@
 import LOGO from '/images/logo.jpg';
+import LOGO_SVG from '/images/logo_without_bg.png';
 
 const LIMIT = 10;
 const DEFAULT_RTE_TEXT = 'Welcome to Post Manager ⭐';
@@ -273,6 +274,7 @@ export {
     BASE_BACKEND_URL,
     DEFAULT_RTE_TEXT,
     LOGO,
+    LOGO_SVG,
     SERVER_ERROR,
     BAD_REQUEST,
     MAX_FILE_SIZE,

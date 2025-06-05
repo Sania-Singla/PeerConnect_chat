@@ -1,6 +1,6 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Login } from '@/Components';
-import { LOGO } from '@/Constants/constants';
+import { LOGO_SVG } from '@/Constants/constants';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext } from '@/Context';
@@ -29,15 +29,15 @@ export default function LoginPage() {
 
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-            <div className="text-black flex items-center justify-center fixed z-[1] bg-white inset-0">
-                <div className="max-w-[350px] w-[50%] flex flex-col items-center justify-center">
+            <div className="text-black flex justify-center fixed z-[1] bg-white inset-0 p-6 h-screen overflow-scroll">
+                <div className="max-w-[350px] w-[50%] flex flex-col items-center my-auto">
                     <Link
                         to={'/'}
                         className="w-fit flex items-center justify-center hover:brightness-95 mb-6"
                     >
                         <div className="overflow-hidden rounded-full size-[80px] drop-shadow-sm">
                             <img
-                                src={LOGO}
+                                src={LOGO_SVG}
                                 alt="peer connect logo"
                                 className="object-cover size-full"
                             />
@@ -65,8 +65,11 @@ export default function LoginPage() {
                     <GoogleLogin
                         onSuccess={handleGoogleLogin}
                         onError={() => toast.error('Google login failed')}
-                        width="300px"
-                        size="large"
+                        containerProps={{
+                            style: {
+                                width: '100%',
+                            },
+                        }}
                         theme="filled_blue"
                         text="continue_with"
                     />

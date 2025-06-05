@@ -13,7 +13,6 @@ export default function Sidebar() {
 
     const items = [
         { show: true, path: '/', name: 'Home', icon: icons.home },
-
         {
             show: true,
             path: '/resume',
@@ -37,12 +36,6 @@ export default function Sidebar() {
             path: '/practice',
             name: 'Practice DSA',
             icon: icons.practice,
-        },
-        {
-            show: true,
-            path: '/bot',
-            name: 'Query Bot',
-            icon: icons.robot,
         },
         {
             show: true,
