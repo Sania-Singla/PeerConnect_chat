@@ -9,12 +9,12 @@ import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 
 export default function Skills() {
+    const { resumeInfo, setResumeInfo } = useResumeContext();
     const [skills, setSkills] = useState(
         resumeInfo?.skills || [{ name: '', rating: 0 }]
     );
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useResumeContext();
 
     const handleChange = (index, name, value) => {
         setSkills((prev) =>

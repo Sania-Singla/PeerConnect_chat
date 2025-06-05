@@ -91,16 +91,16 @@ export default function EditResume() {
                                         >
                                             <button
                                                 onClick={() =>
-                                                    setActiveFormIndex(i + 1)
+                                                    setActiveFormIndex(i)
                                                 }
                                                 className={`flex items-center cursor-pointer justify-center size-7 rounded-full text-sm font-medium 
                                     ${
-                                        activeFormIndex === i + 1
+                                        activeFormIndex === i 
                                             ? 'bg-[#4977ec] text-white'
                                             : 'bg-white border border-[#4977ec20] text-[#555555]'
                                     }`}
                                             >
-                                                {i + 1}
+                                                {i }
                                             </button>
                                             {i < forms.length - 1 && (
                                                 <div className="w-5 h-[1px] bg-[#4977ec30]"></div>
