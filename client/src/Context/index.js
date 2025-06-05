@@ -1,5 +1,4 @@
 import { useChannelContext, ChannelContextProvider } from './ChannelContext';
-import { useChannelContext, ChannelContextProvider } from './ChannelContext';
 import { useUserContext, UserContextProvider } from './UserContext';
 import { usePopupContext, PopupContextProvider } from './PopupContext';
 import { useSideBarContext, SideBarContextProvider } from './SideBarContext';

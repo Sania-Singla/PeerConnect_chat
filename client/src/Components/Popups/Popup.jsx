@@ -9,6 +9,8 @@ import {
     AddMembersPopup,
     ShowFilePopup,
     NewResumePopup,
+    DeleteResumePopup,
+    ResumeThemePopup,
 } from '@/Components';
 import { usePopupContext } from '@/Context';
 
@@ -73,6 +75,18 @@ export default function Popup() {
             return (
                 <Wrapper>
                     <NewResumePopup />
+                </Wrapper>
+            );
+        case 'deleteResume':
+            return (
+                <Wrapper>
+                    <DeleteResumePopup />
+                </Wrapper>
+            );
+        case 'resumeTheme':
+            return (
+                <Wrapper>
+                    <ResumeThemePopup />
                 </Wrapper>
             );
         case 'addMembers':

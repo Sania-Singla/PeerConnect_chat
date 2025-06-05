@@ -1,5 +1,4 @@
-import { Button } from '@/Components';
-import { ResumePreview } from '@/Components';
+import { ResumePreview, Button } from '@/Components';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RWebShare } from 'react-web-share';

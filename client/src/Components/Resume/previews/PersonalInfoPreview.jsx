@@ -7,7 +7,7 @@ import {
     FaGithub,
 } from 'react-icons/fa';
 
-export default function PersonalDetailPreview() {
+export default function PersonalInfoPreview() {
     const { resumeInfo } = useResumeContext();
 
     const {

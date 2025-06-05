@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resumeService } from '@/Services';
-import { useResumeContext } from '@/Context';
+import { usePopupContext, useResumeContext } from '@/Context';
 import toast from 'react-hot-toast';
 import {
-    PersonalInfoPreview,
-    EducationPreview,
-    ExperiencePreview,
-    SkillsPreview,
-    AchievementsPreview,
-    SummaryPreview,
     SummaryForm,
     ExperienceForm,
     EducationForm,
@@ -17,17 +11,18 @@ import {
     AchievementsForm,
     PersonalInfoForm,
     Button,
-    ThemeColor,
+    ResumePreview,
 } from '@/Components';
-import { Award, Star, ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default function EditResume() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { setResumeInfo } = useResumeContext();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [enableNext, setEnableNext] = useState(true);
     const [activeFormIndex, setActiveFormIndex] = useState(0);
+    const [setPopupInfo, setShowPopup] = usePopupContext();
 
     useEffect(() => {
         (async function () {
@@ -63,6 +58,11 @@ export default function EditResume() {
         { title: 'Achievements', component: <AchievementsForm /> },
     ];
 
+    function handleThemeClick() {
+        setShowPopup(true);
+        setPopupInfo({ type: 'resumeTheme', resumeId });
+    }
+
     return (
         <div className="h-full bg-gray-50 p-4 rounded-xl">
             {loading ? (
@@ -76,7 +76,11 @@ export default function EditResume() {
                         </h2>
                         <div className="h-full">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                                <ThemeColor />
+                                <Button
+                                    onClick={handleThemeClick}
+                                    className=""
+                                    btnText={<>Change Theme</>}
+                                />
 
                                 {/* Progress Stepper */}
                                 <div className="flex items-center gap-1 overflow-x-auto py-2">
@@ -158,131 +162,7 @@ export default function EditResume() {
                         <h2 className="text-xl font-semibold mb-4 text-gray-800">
                             Live Resume Preview
                         </h2>
-                        <div
-                            className="w-full max-w-4xl bg-white shadow-md rounded-lg overflow-hidden print:shadow-none border-2"
-                            style={{
-                                borderTop: `8px solid ${resumeInfo.themeColor}`,
-                                fontFamily: 'Inter, sans-serif',
-                            }}
-                        >
-                            <header
-                                className="p-6 border-b-2"
-                                style={{
-                                    backgroundColor: `${resumeInfo.themeColor}10`,
-                                    borderColor: `${resumeInfo.themeColor}10`,
-                                }}
-                            >
-                                <PersonalInfoPreview resumeInfo={resumeInfo} />
-                            </header>
-
-                            <main className="flex flex-col p-4 space-y-10 text-gray-800">
-                                {resumeInfo?.summary && (
-                                    <section>
-                                        <h2
-                                            className="font-semibold text-sm text-gray-900 tracking-wide mb-3 border-b border-gray-200 pb-1"
-                                            style={{
-                                                borderColor: `${resumeInfo.themeColor}40`,
-                                            }}
-                                        >
-                                            Summary
-                                        </h2>
-                                        <SummaryPreview
-                                            resumeInfo={resumeInfo}
-                                        />
-                                    </section>
-                                )}
-
-                                {resumeInfo?.experiences?.length > 0 && (
-                                    <section>
-                                        <h2
-                                            className="font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b border-gray-200 pb-1"
-                                            style={{
-                                                borderColor: `${resumeInfo.themeColor}40`,
-                                            }}
-                                        >
-                                            Experience
-                                        </h2>
-                                        <ExperiencePreview
-                                            resumeInfo={resumeInfo}
-                                        />
-                                    </section>
-                                )}
-
-                                {resumeInfo?.educationList?.length > 0 && (
-                                    <section>
-                                        <h2
-                                            className="font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b border-gray-200 pb-1"
-                                            style={{
-                                                borderColor: `${resumeInfo.themeColor}40`,
-                                            }}
-                                        >
-                                            Education
-                                        </h2>
-                                        <EducationPreview
-                                            resumeInfo={resumeInfo}
-                                        />
-                                    </section>
-                                )}
-
-                                {resumeInfo?.skills?.length > 0 && (
-                                    <section>
-                                        <h2
-                                            className="flex items-center gap-[5px] font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b pb-1"
-                                            style={{
-                                                borderColor: `${resumeInfo.themeColor}40`,
-                                            }}
-                                        >
-                                            <Star
-                                                className="size-4"
-                                                style={{
-                                                    color: resumeInfo.themeColor,
-                                                }}
-                                            />
-                                            <span className="pt-[1px]">
-                                                Skills
-                                            </span>
-                                        </h2>
-                                        <SkillsPreview
-                                            resumeInfo={resumeInfo}
-                                        />
-                                    </section>
-                                )}
-
-                                {resumeInfo?.achievements?.length > 0 && (
-                                    <section>
-                                        <h2
-                                            className="flex gap-[5px] items-center font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b pb-1"
-                                            style={{
-                                                borderColor: `${resumeInfo.themeColor}40`,
-                                            }}
-                                        >
-                                            <Award
-                                                style={{
-                                                    color: resumeInfo.themeColor,
-                                                }}
-                                                className="size-4"
-                                            />
-                                            <span className="pt-[1px]">
-                                                Achievements
-                                            </span>
-                                        </h2>
-                                        <AchievementsPreview
-                                            resumeInfo={resumeInfo}
-                                        />
-                                    </section>
-                                )}
-                            </main>
-
-                            <footer
-                                className="p-4 text-center text-[11px] text-gray-500 border-t border-gray-100"
-                                style={{
-                                    backgroundColor: `${resumeInfo.themeColor}15`,
-                                }}
-                            >
-                                Generated with PeerConnect •{' '}
-                                {new Date().getFullYear()}
-                            </footer>
-                        </div>
+                        <ResumePreview />
                     </div>
                 </div>
             )}

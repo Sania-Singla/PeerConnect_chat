@@ -1,6 +1,6 @@
 import { useResumeContext } from '@/Context';
 
-export default function EducationalPreview() {
+export default function EducationPreview() {
     const { resumeInfo } = useResumeContext();
 
     return resumeInfo?.education.map((edu, index) => (

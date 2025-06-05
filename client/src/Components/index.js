@@ -108,6 +108,8 @@ import SkillsForm from './Resume/Forms/SkillsForm';
 import AchievementsForm from './Resume/Forms/AchievementsForm';
 import SummaryForm from './Resume/Forms/SummaryForm';
 
+import ResumeCardItem from './Resume/Previews/ResumeCardItem';
+import ResumePreview from './Resume/Previews/ResumePreview';
 import PersonalInfoPreview from './Resume/Previews/PersonalInfoPreview';
 import EducationPreview from './Resume/Previews/EducationPreview';
 import ExperiencePreview from './Resume/Previews/ExperiencePreview';
@@ -202,6 +204,20 @@ export {
     QuestionSubmissions,
     QuestionEditor,
     QuestionHeader,
+    ResumeCardItem,
+    ResumePreview,
+    PersonalInfoForm,
+    EducationForm,
+    ExperienceForm,
+    SkillsForm,
+    AchievementsForm,
+    SummaryForm,
+    PersonalInfoPreview,
+    EducationPreview,
+    ExperiencePreview,
+    SkillsPreview,
+    AchievementsPreview,
+    SummaryPreview,
 
     // interview components
     Home,
