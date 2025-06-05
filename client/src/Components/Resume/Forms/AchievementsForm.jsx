@@ -1,14 +1,14 @@
 import { Button } from '@/Components';
-import { ResumeInfoContext } from '../../ResumeInfoContext';
 import { icons } from '@/Assets/icons';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
+import { useResumeContext } from '@/Context';
 
 export default function AchievementsForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo, setResumeInfo } = useResumeContext();
     const [achievements, setAchievements] = useState(
         resumeInfo?.achievements || []
     );

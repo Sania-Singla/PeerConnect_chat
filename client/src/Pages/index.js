@@ -9,7 +9,6 @@ import AddPostPage from './AddPostPage';
 import NotFoundPage from './Static/NotFoundPage';
 import ServerErrorPage from './Static/ServerErrorPage';
 import Redirect from './Static/Redirect';
-import WatchHistoryPage from './WatchHistoryPage';
 import AdminPage from './AdminPage';
 import UpdatePostPage from './UpdatePostPage';
 import AboutUsPage from './Static/AboutUsPage';
@@ -37,7 +36,6 @@ export {
     NotFoundPage,
     ServerErrorPage,
     Redirect,
-    WatchHistoryPage,
     AdminPage,
     UpdatePostPage,
     ContactUsPage,

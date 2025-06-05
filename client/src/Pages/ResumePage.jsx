@@ -31,7 +31,7 @@ export default function ResumePage() {
 
     function handleCreateResume() {
         setShowPopup(true);
-        setPopupInfo({ type: 'NewResume' });
+        setPopupInfo({ type: 'newResume' });
     }
 
     return loading ? (
@@ -96,12 +96,8 @@ export default function ResumePage() {
                         </div>
 
                         {/* Existing Resumes */}
-                        {resumes.map((resume) => (
-                            <ResumeCardItem
-                                resume={resume}
-                                key={resume.resumeId}
-                                refreshData={GetResumesList}
-                            />
+                        {resumes.map((r) => (
+                            <ResumeCardItem resume={r} key={r.resumeId} />
                         ))}
                     </div>
                 ) : (

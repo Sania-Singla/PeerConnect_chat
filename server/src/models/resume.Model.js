@@ -11,17 +11,7 @@ export class ResumeModel {
 
     async createResume(userId, title) {
         try {
-            const resume = await Resume.create({
-                title,
-                userId,
-                personalInfo: {},
-                education: {},
-                experiences: [],
-                skills: [],
-                achievements: [],
-                projects: [],
-            });
-
+            const resume = await Resume.create({ title, userId });
             return resume.toObject();
         } catch (err) {
             throw err;

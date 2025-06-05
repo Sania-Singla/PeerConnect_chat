@@ -67,13 +67,11 @@ import {
     Feedback,
     EditorLayout,
     Form,
+    ViewResume,
+    EditResume,
 } from '@/Components';
 
 import { ChannelContextProvider } from '@/Context';
-
-import ViewResume from '@/Components/Resume/ViewResume';
-import AddResume from '@/Components/Resume/resume/AddResume';
-import EditResume from '@/Components/Resume/EditResume';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(

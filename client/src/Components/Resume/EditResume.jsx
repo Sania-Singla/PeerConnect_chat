@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext, useResumeContext } from '@/Context';
 import toast from 'react-hot-toast';
@@ -22,7 +22,7 @@ export default function EditResume() {
     const [loading, setLoading] = useState(false);
     const [enableNext, setEnableNext] = useState(true);
     const [activeFormIndex, setActiveFormIndex] = useState(0);
-    const [setPopupInfo, setShowPopup] = usePopupContext();
+    const { setPopupInfo, setShowPopup } = usePopupContext();
 
     useEffect(() => {
         (async function () {
@@ -129,10 +129,13 @@ export default function EditResume() {
                                                     activeFormIndex - 1
                                                 )
                                             }
-                                        >
-                                            <ArrowLeft className="w-5 h-5" />
-                                            Previous
-                                        </Button>
+                                            btnText={
+                                                <>
+                                                    <ArrowLeft className="w-5 h-5" />{' '}
+                                                    Previous
+                                                </>
+                                            }
+                                        />
                                     )}
                                 </div>
                                 <Button

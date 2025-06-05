@@ -35,7 +35,7 @@ app.use('/api/chats', chatRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/requests', requestRouter);
 app.use('/api/codes', editorRouter);
-app.use('/api/resume', resumeRouter);
+app.use('/api/resumes', resumeRouter);
 app.use('/api/interviews', interviewRouter);
 
 app.get('/', (req, res) => {

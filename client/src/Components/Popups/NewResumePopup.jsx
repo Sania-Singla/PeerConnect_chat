@@ -1,7 +1,7 @@
-import { Loader2, FileText } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { useState } from 'react';
+import { icons } from '@/Assets/icons';
 import { Button } from '@/Components';
-import { Input } from '../ui/input';
 import { useNavigate } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext } from '@/Context';
@@ -50,7 +50,7 @@ export default function NewResumePopup() {
                     >
                         Resume Title
                     </label>
-                    <Input
+                    <input
                         id="resume-title"
                         placeholder="e.g. Senior Frontend Developer Resume"
                         className="w-full focus:border-[#4977ec] focus:ring-1 focus:ring-[#4977ec30]"
@@ -66,7 +66,7 @@ export default function NewResumePopup() {
 
             <div>
                 <Button
-                    onClick={() => setOpenDialog(false)}
+                    onClick={() => setShowPopup(false)}
                     disabled={loading}
                     btnText="Cancel"
                 />
@@ -76,10 +76,11 @@ export default function NewResumePopup() {
                     className="bg-[#4977ec] hover:bg-[#3b62c2] text-white gap-2"
                     btnText={
                         loading ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                Creating...
-                            </>
+                            <div className="flex items-center justify-center my-2 w-full">
+                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                    {icons.loading}
+                                </div>
+                            </div>
                         ) : (
                             'Create Resume'
                         )

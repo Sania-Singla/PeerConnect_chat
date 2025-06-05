@@ -5,7 +5,7 @@ export class PostModel {
     // pending search query
     async getRandomPosts(limit, orderBy, page) {
         try {
-            pipeline = [
+            const pipeline = [
                 {
                     $lookup: {
                         from: 'users',

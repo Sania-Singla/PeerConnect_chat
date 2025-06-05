@@ -6,7 +6,10 @@ import {
     saveSection,
     deleteResume,
 } from '../controllers/resume.Controller.js';
+import { verifyJwt } from '../middlewares/auth.Middleware.js';
 export const resumeRouter = express.Router();
+
+resumeRouter.use(verifyJwt);
 
 resumeRouter.route('/new').post(createResume);
 

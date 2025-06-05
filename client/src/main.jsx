@@ -11,6 +11,7 @@ import {
     SearchContextProvider,
     SocketContextProvider,
     ChatContextProvider,
+    ResumeContextProvider,
 } from '@/Context';
 
 import { router } from '@/Router';
@@ -23,7 +24,9 @@ function Wrapper() {
                     <PopupContextProvider>
                         <SideBarContextProvider>
                             <SearchContextProvider>
-                                <RouterProvider router={router} />
+                                <ResumeContextProvider>
+                                    <RouterProvider router={router} />
+                                </ResumeContextProvider>
                             </SearchContextProvider>
                         </SideBarContextProvider>
                     </PopupContextProvider>
