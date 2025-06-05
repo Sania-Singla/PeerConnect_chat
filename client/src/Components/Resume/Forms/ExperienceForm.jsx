@@ -175,18 +175,22 @@ export default function Experience() {
                                     value={item?.endDate}
                                 />
                             </div>
-                            <div className="col-span-2">
-                                <RichTextEditor
-                                    index={index}
-                                    value={item?.description}
-                                    onRichTextEditorChange={(e) =>
-                                        handleRichTextEditor(
-                                            e,
-                                            'description',
-                                            index
-                                        )
-                                    }
-                                />
+                            <div>
+                                <label className="text-[14px] font-medium">
+                                    Discription
+                                </label>
+
+                                <div className="col-span-2">
+                                    <RichTextEditor
+                                        onRichTextEditorChange={(e) =>
+                                            handleRichTextEditor(
+                                                e,
+                                                'description',
+                                                index
+                                            )
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
