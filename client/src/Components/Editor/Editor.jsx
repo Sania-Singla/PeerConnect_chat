@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
+import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/python/python';
+import 'codemirror/mode/clike/clike';
 import 'codemirror/theme/dracula.css';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/lib/codemirror.css';
-import CodeMirror from 'codemirror';
 import { useSocketContext } from '@/Context';
 import { BOILER_PLATE_CODES } from '@/Constants/constants';
 
@@ -12,62 +14,59 @@ export default function Editor({ roomId, lang, onCodeChange }) {
     const editorRef = useRef(null);
     const { socket } = useSocketContext();
 
-    // Initialize the editor
     useEffect(() => {
+        const modeMap = {
+            javascript: 'javascript',
+            python: 'python',
+            cpp: 'text/x-c++src',
+            java: 'text/x-java',
+            c: 'text/x-csrc',
+        };
+
         const editor = CodeMirror.fromTextArea(
-            document.getElementById('realtimeEditor'),
+            document.getElementById('editor'),
             {
-                mode: { name: 'javascript', json: true },
+                mode: modeMap[lang] || 'javascript',
                 theme: 'dracula',
+                lineNumbers: true,
                 autoCloseTags: true,
                 autoCloseBrackets: true,
-                lineNumbers: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
             }
         );
 
         editor.setSize(null, '100%');
+        editor.setValue(BOILER_PLATE_CODES[lang] || '');
         editorRef.current = editor;
 
-        editor.setValue(BOILER_PLATE_CODES[lang] || '');
-
-        editor.on('change', (instance, changes) => {
-            const { origin } = changes;
+        const handleChange = (instance) => {
             const code = instance.getValue();
             onCodeChange(code);
-            if (origin !== 'setValue') {
-                socket?.emit('codeChange', {
-                    roomId,
-                    code,
-                });
+            socket?.emit('codeChange', { roomId, code });
+        };
+
+        editor.on('change', handleChange);
+
+        const handleCodeChange = ({ code }) => {
+            if (code !== editor.getValue()) {
+                editor.setValue(code);
             }
-        });
+        };
+
+        socket?.on('codeChange', handleCodeChange);
 
         return () => {
-            editor.toTextArea(); // clean up on unmount
+            editor.off('change', handleChange);
+            socket?.off('codeChange', handleCodeChange);
+            editor.toTextArea();
         };
-    }, []);
-
-    // Update editor when `lang` changes
-    useEffect(() => {
-        if (editorRef.current) {
-            editorRef.current.setValue(BOILER_PLATE_CODES[lang] || '');
-        }
-    }, [lang]);
-
-    // Listen for incoming code changes
-    useEffect(() => {
-        if (socket) {
-            socket.on('codeChange', ({ code }) => {
-                if (code !== null && editorRef.current) {
-                    editorRef.current.setValue(code);
-                }
-            });
-        }
-    }, [socket]);
+    }, [lang, roomId, socket]);
 
     return (
         <div className="h-full">
-            <textarea id="realtimeEditor" />
+            <textarea id="editor" />
         </div>
     );
 }

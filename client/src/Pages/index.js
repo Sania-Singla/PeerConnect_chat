@@ -17,8 +17,6 @@ import FAQpage from './Static/FAQpage';
 import FollowersPage from './FollowersPage';
 import ChatsPage from './ChatsPage';
 import ProjectsPage from './ProjectsPage';
-import QuestionsPage from './QuestionsPage';
-import TopicsPage from './TopicsPage';
 import InterviewPage from './InterviewPage';
 import ResumePage from './ResumePage';
 import EditorPage from './EditorPage';
@@ -42,8 +40,6 @@ export {
     FAQpage,
     FollowersPage,
     ChatsPage,
-    TopicsPage,
-    QuestionsPage,
     ProjectsPage,
     InterviewPage,
     ResumePage,

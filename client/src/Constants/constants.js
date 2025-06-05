@@ -123,24 +123,7 @@ const CONTRIBUTORS = [
     },
 ];
 
-const LANGUAGES = [
-    'python3',
-    'java',
-    'cpp',
-    'nodejs',
-    'c',
-    'ruby',
-    'go',
-    'scala',
-    'bash',
-    'sql',
-    'pascal',
-    'csharp',
-    'php',
-    'swift',
-    'rust',
-    'r',
-];
+const LANGUAGES = ['python3', 'java', 'cpp', 'javascript', 'c'];
 
 const BOILER_PLATE_CODES = {
     python3: `
@@ -168,7 +151,7 @@ int main() {
 }
     `.trim(),
 
-    nodejs: `
+    javascript: `
 function main() {
     // your code goes here
 }
@@ -183,91 +166,7 @@ int main() {
     return 0;
 }
     `.trim(),
-
-    ruby: `
-def main
-  # your code goes here
-end
-
-main
-    `.trim(),
-
-    go: `
-package main
-import "fmt"
-
-func main() {
-    // your code goes here
-}
-    `.trim(),
-
-    scala: `
-object Main {
-  def main(args: Array[String]): Unit = {
-    // your code goes here
-  }
-}
-    `.trim(),
-
-    bash: `
-#!/bin/bash
-# your code goes here
-    `.trim(),
-
-    sql: `
--- your code goes here
-SELECT 'your code goes here';
-    `.trim(),
-
-    pascal: `
-program HelloWorld;
-begin
-  // your code goes here
-end.
-    `.trim(),
-
-    csharp: `
-using System;
-class Program {
-    static void Main() {
-        // your code goes here
-    }
-}
-    `.trim(),
-
-    php: `
-<?php
-// your code goes here
-?>
-    `.trim(),
-
-    swift: `
-import Foundation
-
-func main() {
-    // your code goes here
-}
-
-main()
-    `.trim(),
-
-    rust: `
-fn main() {
-    // your code goes here
-}
-    `.trim(),
-
-    r: `
-# your code goes here
-main <- function() {
-    # your code goes here
-}
-
-main()
-    `.trim(),
 };
-
-const QUES_LANGUAGES = ['nodejs', 'python3', 'java', 'cpp', 'c', 'ruby', 'go'];
 
 export {
     LIMIT,
@@ -285,7 +184,6 @@ export {
     BOILER_PLATE_CODES,
     IMAGES,
     LANGUAGES,
-    QUES_LANGUAGES,
     USER_AVATAR,
     RESUME_THEMES,
 };

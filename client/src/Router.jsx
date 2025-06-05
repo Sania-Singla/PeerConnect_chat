@@ -26,8 +26,6 @@ import {
     ChatsPage,
     ProjectsPage,
     EditorPage,
-    TopicsPage,
-    QuestionsPage,
     InterviewPage,
     ResumePage,
 } from '@/Pages';
@@ -50,16 +48,10 @@ import {
     Settings,
     Chat,
     ProjectDetail,
-    QuestionLayout,
     ProjectRequests,
     ProjectTasks,
     ProjectContributors,
     ProjectContributionForm,
-    QuestionDescription,
-    QuestionEditorial,
-    QuestionSubmissions,
-    QuestionSolutions,
-    QuestionDiscuss,
 
     // interview components
     InterviewDetails,
@@ -108,20 +100,6 @@ export const router = createBrowserRouter(
                     path="contribution-form"
                     element={<ProjectContributionForm />}
                 />
-            </Route>
-
-            {/* dsa */}
-            <Route path="practice" element={<TopicsPage />} />
-            <Route path="questions/:topicId" element={<QuestionsPage />} />
-            <Route
-                path="question/:topicId/:questionId"
-                element={<QuestionLayout />}
-            >
-                <Route path="" element={<QuestionDescription />} />
-                <Route path="editorial" element={<QuestionEditorial />} />
-                <Route path="submissions" element={<QuestionSubmissions />} />
-                <Route path="solutions" element={<QuestionSolutions />} />
-                <Route path="discuss" element={<QuestionDiscuss />} />
             </Route>
 
             {/* protected routes */}

@@ -141,13 +141,12 @@ const createGroup = tryCatch(
 
         const memberIds = transformedMembers.map((m) => m.user_id);
         const socketIds = await getSocketIds(memberIds);
-
-        const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
+        const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // because socketId.join() is not a function
 
         socketIds.forEach((socketId) => {
             const socket = sockets.get(socketId);
             if (socket) {
-                socket.join(`chat:${chat.chat_id}`);
+                socket.join(chat.chat_id);
                 io.to(socketId).emit('newChat', transformedChat);
             }
         });
@@ -210,21 +209,13 @@ const removeMember = tryCatch(
 
         const result = await chatObject.removeMember(chatId, userId);
 
-        const memberIds = chat.members
-            .map((m) => m.user_id)
-            .filter((id) => id !== userId);
-        const socketIds = await getSocketIds(memberIds);
-
-        const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
-
         const socketId = await getSocketId(userId);
-        const socket = sockets.get(socketId);
-        if (socket) socket.leave(`chat:${chatId}`);
+        const socket = io.sockets.sockets.get(socketId); // This is a Map of socketId => Socket // necause socketId.join() is not a function
+        if (socket) socket.leave(chatId);
 
-        socketIds.forEach((socketId) => {
-            if (socketId) {
-                io.to(socketId).emit('memberRemoved', { chatId, userId });
-            }
+        socket.to(chatId).emit('memberRemoved', {
+            chatId,
+            userId,
         });
 
         return res.status(OK).json(result);
@@ -257,13 +248,9 @@ const makeAdmin = tryCatch('make admin', async (req, res, next) => {
 
     const group = await chatObject.makeAdmin(chatId, userId);
 
-    const memberIds = group.members.map((m) => m.user_id);
-    const socketIds = await getSocketIds(memberIds);
-
-    socketIds.forEach((socketId) => {
-        if (socketId) {
-            io.to(socketId).emit('memberPromoted', { chatId, userId });
-        }
+    io.to(chatId).emit('memberPromoted', {
+        chatId,
+        userId,
     });
 
     return res.status(OK).json({ message: 'user is now an admin' });
@@ -295,13 +282,9 @@ const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
 
     const result = await chatObject.renameGroup(chatId, newName);
 
-    const memberIds = result.members.map((m) => m.user_id);
-    const socketIds = await getSocketIds(memberIds);
-
-    socketIds.forEach((socketId) => {
-        if (socketId) {
-            io.to(socketId).emit('groupRenamed', { chatId, newName });
-        }
+    io.to(chatId).emit('groupRenamed', {
+        chatId,
+        newName,
     });
 
     return res.status(OK).json(result);
@@ -338,22 +321,14 @@ const leaveGroup = tryCatch('leave group', async (req, res, next) => {
     }
 
     const result = await chatObject.leaveGroup(chatId, memberLeaving);
-    const memberIds = result.members.map((m) => m.user_id);
-    const socketIds = await getSocketIds(memberIds.concat(memberLeaving));
-
-    const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // necause socketId.join() is not a function
 
     const socketId = await getSocketId(memberLeaving);
-    const socket = sockets.get(socketId);
-    if (socket) socket.leave(`chat:${chatId}`);
+    const socket = io.sockets.sockets.get(socketId);
+    if (socket) socket.leave(chatId);
 
-    socketIds.forEach((socketId) => {
-        if (socketId) {
-            io.to(socketId).emit('memberRemoved', {
-                chatId,
-                userId: memberLeaving,
-            });
-        }
+    io.to(chatId).emit('memberRemoved', {
+        chatId,
+        userId: memberLeaving,
     });
 
     return res.status(OK).json(result);
@@ -374,12 +349,7 @@ const deleteChat = tryCatch('delete chat', async (req, res, next) => {
 
     await chatObject.deleteChat(chatId);
 
-    const memberIds = chat.members.map((m) => m.user_id);
-    const socketIds = await getSocketIds(memberIds);
-
-    socketIds.forEach((socketId) => {
-        if (socketId) io.to(socketId).emit('chatDeleted', chatId);
-    });
+    io.to(chatId).emit('chatDeleted', chatId);
 
     return res.status(OK).json(chat);
 });
@@ -479,7 +449,7 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
     newSocketIds.forEach((socketId) => {
         const socket = sockets.get(socketId);
         if (socket) {
-            socket.join(`chat:${chatId}`);
+            socket.join(chatId);
             io.to(socketId).emit('newChat', result);
         }
     });

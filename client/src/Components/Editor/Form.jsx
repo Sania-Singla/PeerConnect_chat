@@ -8,28 +8,19 @@ import { Button } from '@/Components';
 
 export default function Form() {
     const [roomId, setRoomId] = useState('');
-    const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const { socket } = useSocketContext();
 
-    function generateRoomId(e) {
-        e.preventDefault();
-        const Id = uuid();
-        setRoomId(Id);
-        toast.success('Room Id is generated');
-    }
-
     function joinRoom() {
-        if (!roomId || !username) {
-            toast.error('Both the field is required');
+        if (!roomId) {
+            toast.error('Room ID is required');
             return;
         }
 
-        socket.emit('join', { roomId, username });
+        socket.emit('joinCode', roomId);
 
-        navigate(`/editor/${roomId}`, {
-            state: { username },
-        });
+        navigate(`/editor/${roomId}`);
+
         toast.success('Room is created');
     }
 
@@ -64,36 +55,18 @@ export default function Form() {
                             />
                         </div>
                     </div>
-                    <div className="w-full mb-6">
-                        <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
-                            <label htmlFor="username" className="text-sm">
-                                Username
-                                <span className="text-red-500">*</span>
-                            </label>
-                        </div>
-                        <div className="relative">
-                            <input
-                                type="text"
-                                id="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                placeholder="Enter your username"
-                                onKeyUp={handleInputEnter}
-                                className="shadow-md shadow-[#efefef] px-2 py-3 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
-                            />
-                        </div>
-                    </div>
 
                     <Button
                         onClick={joinRoom}
-                        className="text-white rounded-md h-[40px] w-full flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2]"
+                        defaultStyles={true}
+                        className="h-[40px] w-full mt-5"
                         btnText="JOIN"
                     />
                 </div>
                 <p className="w-full text-center text-[15px] mt-4">
                     Don't have a room ID?{' '}
                     <span
-                        onClick={generateRoomId}
+                        onClick={() => setRoomId(uuid())}
                         className="text-[#355ab6] hover:underline"
                     >
                         Create New Room
