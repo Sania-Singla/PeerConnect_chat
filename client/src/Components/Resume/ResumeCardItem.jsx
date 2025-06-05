@@ -1,16 +1,7 @@
-import {
-    Loader2Icon,
-    MoreVertical,
-    Edit,
-    Eye,
-    Download,
-    Trash2,
-} from 'lucide-react';
-import toast from 'react-hot-toast';
+import { MoreVertical, Edit, Eye, Download, Trash2 } from 'lucide-react';
 import { IMAGES } from '@/Constants/constants';
-import { resumeService } from '@/Services';
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { usePopupContext } from '@/Context';
 
 import {
     DropdownMenu,
@@ -18,36 +9,14 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from './ui/alert-dialog';
 
 export default function ResumeCardItem({ resume }) {
     const navigate = useNavigate();
-    const [openAlert, setOpenAlert] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const { setShowPopup, setPopupInfo } = usePopupContext();
 
-    async function onDelete() {
-        try {
-            setLoading(true);
-            const res = await resumeService.deleteResume(resume.resumeId);
-            if (res && !res.message) {
-                toast.success('Resume deleted successfully');
-            }
-            // refreshData();
-        } catch (error) {
-            toast.error('Failed to delete resume');
-        } finally {
-            setLoading(false);
-            setOpenAlert(false);
-        }
+    async function handleDelete() {
+        setShowPopup(true);
+        setPopupInfo({ type: 'deleteResume', resume });
     }
 
     return (
@@ -81,6 +50,12 @@ export default function ResumeCardItem({ resume }) {
                         {new Date(resume.createdAt).toLocaleDateString()}
                     </p>
                 </div>
+
+                {/* Theme Color Accent */}
+                <div
+                    className="absolute bottom-0 left-0 right-0 h-1"
+                    style={{ backgroundColor: resume.themeColor }}
+                />
 
                 {/* ✨MAKE IT IN OUR STYLE */}
 
@@ -120,7 +95,7 @@ export default function ResumeCardItem({ resume }) {
                             <span>Download</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            onClick={() => setOpenAlert(true)}
+                            onClick={handleDelete}
                             className="cursor-pointer text-red-600 focus:text-red-600"
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
@@ -128,41 +103,7 @@ export default function ResumeCardItem({ resume }) {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-
-                {/* Delete Confirmation Dialog */}
-                <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-                    <AlertDialogContent setOpenAlert={setOpenAlert}>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                Delete this resume?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This will permanently delete "{resume.title}"
-                                and cannot be undone.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={onDelete}
-                                disabled={loading}
-                                className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
-                            >
-                                {loading ? (
-                                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                                ) : null}
-                                Delete Resume
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
             </div>
-
-            {/* Theme Color Accent */}
-            <div
-                className="absolute bottom-0 left-0 right-0 h-1"
-                style={{ backgroundColor: resume.themeColor }}
-            />
         </div>
     );
 }

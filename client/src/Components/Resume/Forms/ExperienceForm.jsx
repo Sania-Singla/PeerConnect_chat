@@ -1,18 +1,17 @@
-import { Button } from '../../ui/button';
-import { Input } from '../../ui/input';
-import { ResumeInfoContext } from '../../ResumeInfoContext';
-import { LoaderCircle } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import RichTextEditor from '../RichTextEditor';
 import { resumeService } from '@/Services';
+import { useResumeContext } from '@/Context';
 
 export default function Experience() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo, setResumeInfo } = useResumeContext();
     const [experiences, setExperiences] = useState(
-        resumeInfo?.experience || []
+        resumeInfo?.experiences || []
     );
     const [loading, setLoading] = useState(false);
 
@@ -52,12 +51,10 @@ export default function Experience() {
         setExperiences(experiences.slice(0, -1));
     };
 
-    useEffect(() => {
-        setResumeInfo({
-            ...resumeInfo,
-            experiences,
-        });
-    }, [experiences]);
+    useEffect(
+        () => setResumeInfo({ ...resumeInfo, experiences }),
+        [experiences]
+    );
 
     async function onSave(e) {
         try {
@@ -67,7 +64,7 @@ export default function Experience() {
                 resumeId,
                 experiences
             );
-            if (res && !res.message) toast.success('Experience List updated!');
+            if (res && !res.message) toast.success('Experience updated!');
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -93,12 +90,12 @@ export default function Experience() {
                                 >
                                     Position
                                 </label>
-                                <Input
+                                <input
                                     name="position"
                                     id="position"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.position}
+                                    value={item?.position}
                                 />
                             </div>
                             <div>
@@ -108,12 +105,12 @@ export default function Experience() {
                                 >
                                     Company
                                 </label>
-                                <Input
+                                <input
                                     name="company"
                                     id="company"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.company}
+                                    value={item?.company}
                                 />
                             </div>
                             <div>
@@ -123,12 +120,12 @@ export default function Experience() {
                                 >
                                     City
                                 </label>
-                                <Input
+                                <input
                                     name="city"
                                     id="city"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.city}
+                                    value={item?.city}
                                 />
                             </div>
                             <div>
@@ -138,12 +135,12 @@ export default function Experience() {
                                 >
                                     State
                                 </label>
-                                <Input
+                                <input
                                     name="state"
                                     id="state"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.state}
+                                    value={item?.state}
                                 />
                             </div>
                             <div>
@@ -153,13 +150,13 @@ export default function Experience() {
                                 >
                                     Start Date
                                 </label>
-                                <Input
+                                <input
                                     type="date"
                                     name="startDate"
                                     id="startDate"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.startDate}
+                                    value={item?.startDate}
                                 />
                             </div>
                             <div>
@@ -169,19 +166,19 @@ export default function Experience() {
                                 >
                                     End Date
                                 </label>
-                                <Input
+                                <input
                                     type="date"
                                     id="endDate"
                                     name="endDate"
                                     required
                                     onChange={(e) => handleChange(index, e)}
-                                    defaultValue={item?.endDate}
+                                    value={item?.endDate}
                                 />
                             </div>
                             <div className="col-span-2">
                                 <RichTextEditor
                                     index={index}
-                                    defaultValue={item?.description}
+                                    value={item?.description}
                                     onRichTextEditorChange={(e) =>
                                         handleRichTextEditor(
                                             e,
@@ -202,30 +199,33 @@ export default function Experience() {
                             variant="outline"
                             className="text-primary"
                             onClick={addNewExperience}
-                        >
-                            + Add More Experience
-                        </Button>
+                            btnText="+ Add More Experience"
+                        />
                         <Button
                             type="button"
                             variant="outline"
                             className="text-primary"
                             onClick={removeExperience}
                             disabled={experiences.length === 0}
-                        >
-                            - Remove
-                        </Button>
+                            btnText="- Remove"
+                        />
                     </div>
                     <Button
                         type="submit"
                         className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
                         disabled={loading}
-                    >
-                        {loading ? (
-                            <LoaderCircle className="animate-spin" />
-                        ) : (
-                            'Save'
-                        )}
-                    </Button>
+                        btnText={
+                            loading ? (
+                                <div className="flex items-center justify-center my-2 w-full">
+                                    <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                        {icons.loading}
+                                    </div>
+                                </div>
+                            ) : (
+                                'Save'
+                            )
+                        }
+                    />
                 </div>
             </form>
         </div>

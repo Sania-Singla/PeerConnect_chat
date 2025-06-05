@@ -1,13 +1,12 @@
-import { Input } from '../../ui/input';
-import { useContext, useEffect, useState } from 'react';
-import { Rating } from '@smastrom/react-rating';
-import '@smastrom/react-rating/style.css';
-import { Button } from '../../ui/button';
-import { LoaderCircle } from 'lucide-react';
-import { ResumeInfoContext } from '../../ResumeInfoContext';
+import { useEffect, useState } from 'react';
+import { Button } from '@/Components';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
+import { useResumeContext } from '@/Context';
+import { icons } from '@/Assets/icons';
+import { Rating } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 
 export default function Skills() {
     const [skills, setSkills] = useState(
@@ -15,7 +14,7 @@ export default function Skills() {
     );
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo, setResumeInfo } = useResumeContext();
 
     const handleChange = (index, name, value) => {
         setSkills((prev) =>
@@ -26,12 +25,7 @@ export default function Skills() {
     };
 
     const AddNewSkills = () => {
-        setSkills((prev) =>
-            prev.push({
-                name: '',
-                rating: 0,
-            })
-        );
+        setSkills((prev) => prev.push({ name: '', rating: 0 }));
     };
     const RemoveSkills = () => {
         setSkills((skillsList) => skillsList.slice(0, -1));
@@ -65,7 +59,7 @@ export default function Skills() {
                     <div className="flex justify-between items-center gap-4 my-5">
                         <div className="w-full">
                             <label className="text-sm font-medium">Name</label>
-                            <Input
+                            <input
                                 className="w-full sm:w-[70%]"
                                 defaultValue={item.name}
                                 onChange={(e) =>
@@ -89,28 +83,31 @@ export default function Skills() {
                         variant="outline"
                         onClick={AddNewSkills}
                         className="text-primary"
-                    >
-                        + Add More Skill
-                    </Button>
+                        btnText="+ Add More Skill"
+                    />
                     <Button
                         variant="outline"
                         onClick={RemoveSkills}
                         className="text-primary"
-                    >
-                        - Remove
-                    </Button>
+                        btnText="- Remove"
+                    />
                 </div>
                 <Button
                     disabled={loading}
                     onClick={onSave}
                     className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
-                >
-                    {loading ? (
-                        <LoaderCircle className="animate-spin" />
-                    ) : (
-                        'Save'
-                    )}
-                </Button>
+                    btnText={
+                        loading ? (
+                            <div className="flex items-center justify-center my-2 w-full">
+                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                    {icons.loading}
+                                </div>
+                            </div>
+                        ) : (
+                            'Save'
+                        )
+                    }
+                />
             </div>
         </div>
     );

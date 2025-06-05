@@ -70,6 +70,8 @@ import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateCoverImagePopup from './Popups/UpdateCoverImagePopup';
 import NewResumePopup from './Popups/NewResumePopup';
+import DeleteResumePopup from './Popups/DeleteResumePopup';
+import ResumeThemePopup from './Popups/ResumeThemePopup';
 
 // Project components
 import ProjectCard from './Project/ProjectCard';
@@ -99,14 +101,14 @@ import EditorLayout from './Editor/EditorLayout';
 import Form from './Editor/Form';
 
 // Resume components
-import PersonalDetail from './Resume/Forms/PersonalInfoForm';
-import Education from './Resume/Forms/EducationForm';
-import Experience from './Resume/Forms/ExperienceForm';
-import Skills from './Resume/Forms/SkillsForm';
-import Achievements from './Resume/Forms/AchievementsForm';
-import Summary from './Resume/Forms/SummaryForm';
+import PersonalInfoForm from './Resume/Forms/PersonalInfoForm';
+import EducationForm from './Resume/Forms/EducationForm';
+import ExperienceForm from './Resume/Forms/ExperienceForm';
+import SkillsForm from './Resume/Forms/SkillsForm';
+import AchievementsForm from './Resume/Forms/AchievementsForm';
+import SummaryForm from './Resume/Forms/SummaryForm';
 
-import PersonalDetailPreview from './Resume/Previews/PersonalDetailPreview';
+import PersonalInfoPreview from './Resume/Previews/PersonalInfoPreview';
 import EducationPreview from './Resume/Previews/EducationPreview';
 import ExperiencePreview from './Resume/Previews/ExperiencePreview';
 import SkillsPreview from './Resume/Previews/SkillsPreview';
@@ -168,6 +170,8 @@ export {
     ChatLayout,
     Message,
     FilePreview,
+    ResumeThemePopup,
+    DeleteResumePopup,
     NoChatSelected,
     InputFilePreview,
     Details,

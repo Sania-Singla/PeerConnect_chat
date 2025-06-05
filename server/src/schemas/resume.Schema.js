@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 // Sub-Schemas
 
@@ -60,6 +61,12 @@ const achievementSchema = new Schema({
 
 const resumeSchema = new Schema(
     {
+        resumeId: {
+            type: String,
+            required: true,
+            unique: true,
+            default: () => uuid(),
+        },
         userId: { type: String, required: true, ref: 'User' },
         personal: personalSchema,
         education: [educationSchema],
@@ -67,6 +74,7 @@ const resumeSchema = new Schema(
         skills: [skillSchema],
         projects: [projectSchema],
         achievements: [achievementSchema],
+        title: { type: String, required: true },
         themeColor: { type: String, required: true, default: '#000000' },
     },
     { timestamps: true }

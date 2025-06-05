@@ -1,17 +1,15 @@
-import { Button } from '../../ui/button';
-import { Input } from '../../ui/input';
-import { Textarea } from '../../ui/textarea';
-import { ResumeInfoContext } from '../../ResumeInfoContext';
-import { LoaderCircle } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { Button } from '@/Components';
+import { icons } from '@/Assets/icons';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
+import { useResumeContext } from '@/Context';
 
-export default function Education() {
+export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo, setResumeInfo } = useResumeContext();
     const [educationList, setEducationList] = useState(
         resumeInfo?.education || [
             {
@@ -67,12 +65,10 @@ export default function Education() {
     }
 
     // for preview
-    useEffect(() => {
-        setResumeInfo({
-            ...resumeInfo,
-            education: educationList,
-        });
-    }, [educationList]);
+    useEffect(
+        () => setResumeInfo({ ...resumeInfo, education: educationList }),
+        [educationList]
+    );
 
     return (
         <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
@@ -82,69 +78,75 @@ export default function Education() {
             </p>
 
             <div>
-                {educationList?.map((item, index) => (
-                    <div key={index}>
+                {educationList?.map((item, i) => (
+                    <div key={i}>
                         <div className="grid grid-cols-2 gap-3 my-5">
                             <div className="col-span-2">
                                 <label className="text-sm font-medium">
                                     Institution Name
                                 </label>
-                                <Input
+                                <input
                                     name="institution"
+                                    type="text"
+                                    required
+                                    value={item.institution}
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.institution}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium">
                                     Degree
                                 </label>
-                                <Input
+                                <input
                                     name="degree"
+                                    type="text"
+                                    required
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.degree}
+                                    value={item?.degree}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium">
                                     Major
                                 </label>
-                                <Input
+                                <input
                                     name="major"
+                                    required
+                                    type="text"
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.major}
+                                    value={item?.major}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium">
                                     Start Date
                                 </label>
-                                <Input
+                                <input
                                     type="date"
                                     name="startDate"
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.startDate}
+                                    value={item?.startDate}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium">
                                     End Date
                                 </label>
-                                <Input
+                                <input
                                     type="date"
                                     name="endDate"
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.endDate}
+                                    value={item?.endDate}
                                 />
                             </div>
                             <div className="col-span-2">
                                 <label className="text-sm font-medium">
                                     Description
                                 </label>
-                                <Textarea
+                                <textarea
                                     name="description"
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.description}
+                                    value={item?.description}
                                 />
                             </div>
                         </div>
@@ -157,28 +159,31 @@ export default function Education() {
                         variant="outline"
                         onClick={AddNewEducation}
                         className="text-primary"
-                    >
-                        + Add More Education
-                    </Button>
+                        btnText="+ Add More Education"
+                    />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
                         className="text-primary"
-                    >
-                        - Remove
-                    </Button>
+                        btnText="- Remove"
+                    />
                 </div>
                 <Button
                     disabled={loading}
                     onClick={onSave}
                     className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
-                >
-                    {loading ? (
-                        <LoaderCircle className="animate-spin" />
-                    ) : (
-                        'Save'
-                    )}
-                </Button>
+                    btnText={
+                        loading ? (
+                            <div className="flex items-center justify-center my-2 w-full">
+                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                    {icons.loading}
+                                </div>
+                            </div>
+                        ) : (
+                            'Save'
+                        )
+                    }
+                />
             </div>
         </div>
     );

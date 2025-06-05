@@ -1,13 +1,12 @@
-import { Button } from '../../ui/button';
-import { Input } from '../../ui/input';
+import { Button } from '@/Components';
 import { ResumeInfoContext } from '../../ResumeInfoContext';
-import { LoaderCircle } from 'lucide-react';
+import { icons } from '@/Assets/icons';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 
-export default function Achievements() {
+export default function AchievementsForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const [achievements, setAchievements] = useState(
@@ -64,11 +63,13 @@ export default function Achievements() {
                             <label className="text-sm font-medium block mb-1">
                                 Achievement #{index + 1}
                             </label>
-                            <Input
-                                value={item}
+                            <input
+                                type="text"
                                 required
-                                placeholder="e.g. Awarded 'Employee of the Year' in 2022"
+                                value={item}
                                 onChange={(e) => handleChange(index, e)}
+                                placeholder="e.g. Awarded 'Employee of the Year' in 2022"
+                                className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
                             />
                         </div>
                     ))}
@@ -81,30 +82,33 @@ export default function Achievements() {
                             variant="outline"
                             className="text-primary"
                             onClick={addNewAchievement}
-                        >
-                            + Add Achievement
-                        </Button>
+                            btnText="+ Add Achievement"
+                        />
                         <Button
                             type="button"
                             variant="outline"
                             className="text-primary"
                             onClick={removeAchievement}
                             disabled={achievements.length === 0}
-                        >
-                            - Remove
-                        </Button>
+                            btnText="- Remove"
+                        />
                     </div>
                     <Button
                         type="submit"
                         className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
                         disabled={loading}
-                    >
-                        {loading ? (
-                            <LoaderCircle className="animate-spin" />
-                        ) : (
-                            'Save'
-                        )}
-                    </Button>
+                        btnText={
+                            loading ? (
+                                <div className="flex items-center justify-center my-2 w-full">
+                                    <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                        {icons.loading}
+                                    </div>
+                                </div>
+                            ) : (
+                                'Save'
+                            )
+                        }
+                    />
                 </div>
             </form>
         </div>
