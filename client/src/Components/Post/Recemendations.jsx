@@ -1,17 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { postService } from '@/Services';
-import { paginate } from '@/Utils';
 import { icons } from '@/Assets/icons';
-import { LIMIT } from '@/Constants/constants';
 import { PostCardView } from '@/Components';
 
-export default function Recemendations({ category }) {
+export default function Recemendations() {
     const { postId } = useParams();
     const [posts, setPosts] = useState([]);
-    const [postsInfo, setPostsInfo] = useState({});
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,18 +17,12 @@ export default function Recemendations({ category }) {
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getRandomPosts(
-                    signal,
-                    page,
-                    LIMIT,
-                    category
-                );
+                const res = await postService.getRandomPosts(signal);
                 if (res && !res.message) {
                     const recemendations = res.posts.filter(
                         (post) => post.post_id !== postId
                     );
-                    setPosts((prev) => [...prev, ...recemendations]);
-                    setPostsInfo(res.postsInfo);
+                    setPosts(recemendations);
                 }
             } catch (err) {
                 navigate('/server-error');
@@ -42,22 +32,10 @@ export default function Recemendations({ category }) {
         })();
 
         return () => controller.abort();
-    }, [category, page]);
+    }, []);
 
-    // pagination
-    const paginateRef = paginate(postsInfo?.hasNextPage, loading, setPage);
-
-    const postElements = posts?.map((post, index) => (
-        <PostCardView
-            key={post.post_id}
-            post={post}
-            reference={
-                index + 1 === posts.length && postsInfo?.hasNextPage
-                    ? paginateRef
-                    : null
-            }
-            showOwnerInfo={true}
-        />
+    const postElements = posts?.map((post) => (
+        <PostCardView key={post.post_id} post={post} showOwnerInfo={true} />
     ));
 
     return (
@@ -69,17 +47,11 @@ export default function Recemendations({ category }) {
             )}
 
             {loading ? (
-                page === 1 ? (
-                    <div className="w-full text-center">
-                        loading first batch...
+                <div className="flex items-center justify-center my-2 w-full">
+                    <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
+                        {icons.loading}
                     </div>
-                ) : (
-                    <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
-                            {icons.loading}
-                        </div>
-                    </div>
-                )
+                </div>
             ) : (
                 postElements.length === 0 && (
                     <div className="text-gray-500 italic text-sm mt-4">

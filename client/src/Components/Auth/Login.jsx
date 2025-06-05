@@ -112,7 +112,8 @@ export default function Login() {
 
                 <div>
                     <Button
-                        className="text-white rounded-md py-2 mt-4 h-[45px] text-lg w-full flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2]"
+                        defaultStyles={true}
+                        className="py-2 mt-4 w-full h-[45px] text-lg"
                         onMouseOver={onMouseOver}
                         type="submit"
                         btnText={

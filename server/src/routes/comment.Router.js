@@ -14,8 +14,8 @@ import {
 } from '../controllers/comment.Controller.js';
 
 const isCommentOwner = isOwner('comment', 'user_id');
-const doesPostExist = doesResourceExist('post', 'postId', 'post');
-const doesCommentExist = doesResourceExist('comment', 'commentId', 'comment');
+const doesPostExist = doesResourceExist('Post', 'postId', 'post');
+const doesCommentExist = doesResourceExist('Comment', 'commentId', 'comment');
 
 commentRouter
     .route('/post/:postId')

@@ -7,8 +7,8 @@ import {
     togglePostLike,
 } from '../controllers/like.Controller.js';
 
-const doesPostExist = doesResourceExist('post', 'postId', 'post');
-const doesCommentExist = doesResourceExist('comment', 'commentId', 'comment');
+const doesPostExist = doesResourceExist('Post', 'postId', 'post');
+const doesCommentExist = doesResourceExist('Comment', 'commentId', 'comment');
 
 likeRouter.use(verifyJwt);
 

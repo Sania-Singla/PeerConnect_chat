@@ -9,8 +9,8 @@ import {
 
 export const messageRouter = express.Router();
 
-const doesChatExist = doesResourceExist('chat', 'chatId', 'chat');
-const doesMessageExist = doesResourceExist('message', 'messageId', 'message');
+const doesChatExist = doesResourceExist('Chat', 'chatId', 'chat');
+const doesMessageExist = doesResourceExist('Message', 'messageId', 'message');
 
 messageRouter.use(verifyJwt);
 

@@ -16,7 +16,7 @@ import {
 
 export const chatRouter = express.Router();
 
-const doesChatExist = doesResourceExist('chat', 'chatId', 'chat');
+const doesChatExist = doesResourceExist('Chat', 'chatId', 'chat');
 
 chatRouter.use(verifyJwt);
 

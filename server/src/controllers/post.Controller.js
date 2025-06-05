@@ -2,7 +2,6 @@ import { getServiceObject } from '../db/serviceObjects.js';
 import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
 import { verifyOrderBy, tryCatch, ErrorHandler } from '../utils/index.js';
 import { uploadOnCloudinary, deleteFromCloudinary } from '../helpers/index.js';
-import { userObject } from './user.Controller.js';
 
 export const postObject = getServiceObject('Post');
 
@@ -75,9 +74,6 @@ const getPost = tryCatch('get post', async (req, res, next) => {
     }
 
     let userIdentifier = userId || req.ip;
-
-    // update user's watch history
-    if (userId) await userObject.updateWatchHistory(postId, userId);
 
     // update post views
     await postObject.updatePostViews(postId, userIdentifier);

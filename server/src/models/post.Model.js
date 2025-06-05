@@ -1,4 +1,4 @@
-import { Post, PostView, SavedPost } from '../schemas/index.js';
+import { Post, PostView } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
 export class PostModel {
@@ -46,7 +46,7 @@ export class PostModel {
 
     async getPosts(channelId, limit, orderBy, page) {
         try {
-            pipeline = [
+            const pipeline = [
                 { $match: { post_ownerId: channelId } },
                 {
                     $lookup: {
@@ -221,7 +221,9 @@ export class PostModel {
 
     async deletePost(postId) {
         try {
-            return await Post.findOneAndDelete({ post_id: postId }).lean();
+            return await Post.findOneAndDelete({
+                post_id: postId,
+            }).lean();
         } catch (err) {
             throw err;
         }

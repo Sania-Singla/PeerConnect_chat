@@ -82,7 +82,7 @@ export default function PostCardView({
                     </Link>
                 )}
 
-                <div className="w-full flex items-center justify-end text-white ">
+                <div className="w-full flex items-center justify-end text-white mt-3">
                     <Button
                         btnText={
                             <div className="flex items-center justify-center gap-3">
@@ -92,8 +92,9 @@ export default function PostCardView({
                                 </div>
                             </div>
                         }
+                        defaultStyles={true}
                         onClick={() => navigate(`/post/${post_id}`)}
-                        className="rounded-md p-2 px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
+                        className="p-2 px-3"
                     />
                 </div>
             </div>

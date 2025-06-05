@@ -8,7 +8,7 @@ import {
     toggleFollow,
 } from '../controllers/follower.Controller.js';
 
-const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
+const doesChannelExist = doesResourceExist('User', 'channelId', 'channel');
 
 // followerRouter.use(doesChannelExist);  // causes error because this middleware needs the params
 

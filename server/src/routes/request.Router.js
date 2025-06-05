@@ -14,7 +14,7 @@ import {
 
 export const requestRouter = express.Router();
 
-const doesRequestExist = doesResourceExist('request', 'requestId', 'request');
+const doesRequestExist = doesResourceExist('Request', 'requestId', 'request');
 
 requestRouter.use(verifyJwt);
 

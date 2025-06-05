@@ -32,7 +32,7 @@ export function getServiceObject(serviceType) {
         if (!serviceMap[dbType]) {
             throw new Error('Unsupported DB Type');
         }
-
+        console.log(serviceType);
         const ServiceClass = serviceMap[dbType][serviceType];
         if (!ServiceClass) {
             throw new Error('Unsupported service type');

@@ -23,8 +23,8 @@ import {
 } from '../controllers/post.Controller.js';
 
 const isPostOwner = isOwner('post', 'post_ownerId');
-const doesPostExist = doesResourceExist('post', 'postId', 'post');
-const doesChannelExist = doesResourceExist('user', 'channelId', 'channel');
+const doesPostExist = doesResourceExist('Post', 'postId', 'post');
+const doesChannelExist = doesResourceExist('User', 'channelId', 'channel');
 
 postRouter.route('/all').get(getRandomPosts);
 

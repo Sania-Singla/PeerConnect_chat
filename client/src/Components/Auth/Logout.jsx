@@ -32,14 +32,15 @@ export default function Logout() {
             disabled={loading}
             btnText={
                 loading ? (
-                                        <div className="size-5 fill-white dark:text-[#c5d5ff]">
+                    <div className="size-5 fill-white dark:text-[#c5d5ff]">
                         {icons.loading}
                     </div>
                 ) : (
                     'Logout'
                 )
             }
-            className="text-white flex items-center justify-center rounded-md w-[75px] h-[32px] bg-[#4977ec] hover:bg-[#3b62c2]"
+            defaultStyles={true}
+            className="w-[75px] h-[32px]"
         />
     );
 }

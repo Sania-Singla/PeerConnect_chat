@@ -429,7 +429,7 @@ export default function PostPage() {
                     Recommended Similar Posts
                 </h2>
                 <div className="w-full">
-                    <Recemendations category={post.category.category_name} />
+                    <Recemendations />
                 </div>
             </div>
 

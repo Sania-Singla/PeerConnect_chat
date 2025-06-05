@@ -95,8 +95,9 @@ const PostListView = memo(({ post, reference, children }) => {
                                     </div>
                                 </div>
                             }
+                            defaultStyles={true}
                             onClick={() => navigate(`/post/${post_id}`)}
-                            className="rounded-md py-2 px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="py-2 px-3"
                         />
                     </div>
                 </div>

@@ -24,9 +24,11 @@ export const doesResourceExist = (service, idParam, reqKey) => {
                 });
             }
 
-            const serviceObject = getServiceObject(service + 's');
+            const serviceObject = getServiceObject(service);
             const resource =
-                await serviceObject[`${service}Existance`](resourceId);
+                await serviceObject[`${service.toLowerCase()}Existance`](
+                    resourceId
+                );
 
             if (!resource) {
                 return res

@@ -192,7 +192,8 @@ export default function ChannelPage() {
                         <Button
                             btnText="Edit"
                             onClick={() => navigate('/settings')}
-                            className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="py-[5px] px-4"
+                            defaultStyles={true}
                         />
                     </div>
                 ) : (
@@ -200,7 +201,8 @@ export default function ChannelPage() {
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
-                            className="rounded-md text-white py-[5px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="py-[5px] px-4"
+                            defaultStyles={true}
                         />
                         <Button
                             btnText={
@@ -216,7 +218,8 @@ export default function ChannelPage() {
                                     : 'Connect'
                             }
                             onClick={handleCollab}
-                            className="rounded-md py-[5px] px-4 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className="py-[5px] px-4 sm:px-6"
                         />
                     </div>
                 )}
