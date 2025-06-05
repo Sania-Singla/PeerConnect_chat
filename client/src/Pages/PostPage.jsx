@@ -221,16 +221,6 @@ export default function PostPage() {
                             />
 
                             {/* SMALL SCREEN */}
-                            {/* post category */}
-                            <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] shadow-sm rounded-full w-fit px-3 py-1">
-                                <div className="size-[10px] fill-[#2556d1]">
-                                    {icons.dot}
-                                </div>
-                                <span className="text-[#2556d1]">
-                                    {post.category.category_name.toUpperCase()}
-                                </span>
-                            </div>
-
                             {/* saved btn */}
                             <div className="xl:hidden absolute top-2 right-2 flex items-center justify-center">
                                 <Button
@@ -314,35 +304,23 @@ export default function PostPage() {
 
                     <div className="shadow-sm bg-[#f9f9f9] pt-3 p-4 rounded-xl w-full xl:w-[25%] flex flex-col">
                         {/* BIGGER SCREEN */}
-                        <div className="hidden xl:flex items-center justify-between w-full">
-                            {/* post category */}
-                            <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] shadow-sm rounded-full w-fit px-3 py-1">
-                                <div className="size-[10px] fill-[#2556d1]">
-                                    {icons.dot}
-                                </div>
-                                <span className="text-[#2556d1]">
-                                    {post.category.category_name}
-                                </span>
-                            </div>
-
-                            {/* saved btn */}
-                            <div className="flex items-center justify-center">
-                                <Button
-                                    btnText={
-                                        <div
-                                            className={`${
-                                                post.isSaved
-                                                    ? 'fill-[#4977ec] '
-                                                    : 'fill-white'
-                                            } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
-                                        >
-                                            {icons.save}
-                                        </div>
-                                    }
-                                    onClick={toggleSave}
-                                    className="bg-[#f6f6f6] p-3 group rounded-full shadow-sm hover:bg-[#ebeaea]"
-                                />
-                            </div>
+                        {/* saved btn */}
+                        <div className="hidden xl:flex items-center justify-center">
+                            <Button
+                                btnText={
+                                    <div
+                                        className={`${
+                                            post.isSaved
+                                                ? 'fill-[#4977ec] '
+                                                : 'fill-white'
+                                        } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
+                                    >
+                                        {icons.save}
+                                    </div>
+                                }
+                                onClick={toggleSave}
+                                className="bg-[#f6f6f6] p-3 group rounded-full shadow-sm hover:bg-[#ebeaea]"
+                            />
                         </div>
 
                         {/* owner info: FOR BOTH SMALLER & BIGGER SCREENS */}

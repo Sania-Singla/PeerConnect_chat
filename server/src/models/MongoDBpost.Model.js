@@ -1,58 +1,42 @@
-import { Iposts } from '../interfaces/post.Interface.js';
 import { Post, PostView, SavedPost } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
-export class MongoDBposts extends Iposts {
+export class MongoDBposts {
     // pending search query
-    async getRandomPosts(limit, orderBy, page, categoryId) {
+    async getRandomPosts(limit, orderBy, page) {
         try {
-            const pipeline = categoryId
-                ? [{ $match: { post_category: categoryId } }]
-                : [];
-
-            pipeline.push(
-                ...[
-                    {
-                        $lookup: {
-                            from: 'categories',
-                            localField: 'post_category',
-                            foreignField: 'category_id',
-                            as: 'category',
-                        },
-                    },
-                    { $unwind: '$category' },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'post_ownerId',
-                            foreignField: 'user_id',
-                            as: 'owner',
-                            pipeline: [
-                                {
-                                    $project: {
-                                        user_id: 1,
-                                        user_name: 1,
-                                        user_avatar: 1,
-                                        user_fullName: 1,
-                                    },
+            pipeline = [
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'post_ownerId',
+                        foreignField: 'user_id',
+                        as: 'owner',
+                        pipeline: [
+                            {
+                                $project: {
+                                    user_id: 1,
+                                    user_name: 1,
+                                    user_avatar: 1,
+                                    user_fullName: 1,
                                 },
-                            ],
-                        },
+                            },
+                        ],
                     },
-                    { $unwind: '$owner' },
-                    {
-                        $lookup: {
-                            from: 'postviews',
-                            localField: 'post_id',
-                            foreignField: 'post_id',
-                            as: 'views',
-                        },
+                },
+                { $unwind: '$owner' },
+                {
+                    $lookup: {
+                        from: 'postviews',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'views',
                     },
-                    { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
-                    { $addFields: { totalViews: { $size: '$views' } } },
-                    { $project: { post_category: 0, views: 0 } },
-                ]
-            );
+                },
+                { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
+                { $addFields: { totalViews: { $size: '$views' } } },
+                { $project: { post_category: 0, views: 0 } },
+            ];
 
             return await Post.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
@@ -60,44 +44,22 @@ export class MongoDBposts extends Iposts {
         }
     }
 
-    async getPosts(channelId, limit, orderBy, page, categoryId) {
+    async getPosts(channelId, limit, orderBy, page) {
         try {
-            const pipeline = categoryId
-                ? [
-                      {
-                          $match: {
-                              post_ownerId: channelId,
-                              post_category: categoryId,
-                          },
-                      },
-                  ]
-                : [{ $match: { post_ownerId: channelId } }];
-
-            // concat() returns a modified new array
-            pipeline.push(
-                ...[
-                    {
-                        $lookup: {
-                            from: 'categories',
-                            localField: 'post_category',
-                            foreignField: 'category_id',
-                            as: 'category',
-                        },
+            pipeline = [
+                { $match: { post_ownerId: channelId } },
+                {
+                    $lookup: {
+                        from: 'postviews',
+                        localField: 'post_id',
+                        foreignField: 'post_id',
+                        as: 'views',
                     },
-                    { $unwind: '$category' },
-                    {
-                        $lookup: {
-                            from: 'postviews',
-                            localField: 'post_id',
-                            foreignField: 'post_id',
-                            as: 'views',
-                        },
-                    },
-                    { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
-                    { $addFields: { totalViews: { $size: '$views' } } },
-                    { $project: { post_category: 0, views: 0 } },
-                ]
-            );
+                },
+                { $sort: { post_updatedAt: orderBy === 'DESC' ? -1 : 1 } },
+                { $addFields: { totalViews: { $size: '$views' } } },
+                { $project: { post_category: 0, views: 0 } },
+            ];
 
             return await Post.aggregatePaginate(pipeline, { page, limit });
         } catch (err) {
@@ -119,19 +81,20 @@ export class MongoDBposts extends Iposts {
                 { $match: { post_id: postId } },
                 {
                     $lookup: {
-                        from: 'categories',
-                        localField: 'post_category',
-                        foreignField: 'category_id',
-                        as: 'category',
-                    },
-                },
-                { $unwind: '$category' },
-                {
-                    $lookup: {
                         from: 'users',
                         localField: 'post_ownerId',
                         foreignField: 'user_id',
                         as: 'owner',
+                        pipeline: [
+                            {
+                                $project: {
+                                    user_id: 1,
+                                    user_name: 1,
+                                    user_avatar: 1,
+                                    user_fullName: 1,
+                                },
+                            },
+                        ],
                     },
                 },
                 { $unwind: '$owner' },
@@ -140,23 +103,26 @@ export class MongoDBposts extends Iposts {
                         from: 'postlikes',
                         localField: 'post_id',
                         foreignField: 'post_id',
-                        as: 'likes',
-                        pipeline: [
-                            { $match: { is_liked: true } },
-                            { $project: { user_id: 1 } },
-                        ],
+                        as: 'likesData',
+                        pipeline: [{ $project: { user_id: 1, is_liked: 1 } }],
                     },
                 },
                 {
-                    $lookup: {
-                        from: 'postlikes',
-                        localField: 'post_id',
-                        foreignField: 'post_id',
-                        as: 'dislikes',
-                        pipeline: [
-                            { $match: { is_liked: false } },
-                            { $project: { user_id: 1 } },
-                        ],
+                    $addFields: {
+                        likes: {
+                            $filter: {
+                                input: '$likesData',
+                                as: 'like',
+                                cond: { $eq: ['$$like.is_liked', true] },
+                            },
+                        },
+                        dislikes: {
+                            $filter: {
+                                input: '$likesData',
+                                as: 'like',
+                                cond: { $eq: ['$$like.is_liked', false] },
+                            },
+                        },
                     },
                 },
                 {
@@ -206,7 +172,7 @@ export class MongoDBposts extends Iposts {
                                     userId,
                                     {
                                         $map: {
-                                            input: '$likes',
+                                            input: '$likesData',
                                             as: 'like',
                                             in: '$$like.user_id',
                                         },
@@ -218,7 +184,7 @@ export class MongoDBposts extends Iposts {
                                     userId,
                                     {
                                         $map: {
-                                            input: '$dislikes',
+                                            input: '$likesData',
                                             as: 'dislike',
                                             in: '$$dislike.user_id',
                                         },
@@ -239,13 +205,12 @@ export class MongoDBposts extends Iposts {
         }
     }
 
-    async createPost({ userId, title, content, categoryId, postImage }) {
+    async createPost({ userId, title, content, postImage }) {
         try {
             const post = await Post.create({
                 post_ownerId: userId,
                 post_title: title,
                 post_content: content,
-                post_category: categoryId,
                 post_image: postImage,
             });
             return post.toObject();
@@ -280,7 +245,7 @@ export class MongoDBposts extends Iposts {
         }
     }
 
-    async updatePostDetails({ postId, title, content, categoryId }) {
+    async updatePostDetails({ postId, title, content }) {
         try {
             return await Post.findOneAndUpdate(
                 { post_id: postId },
@@ -288,7 +253,6 @@ export class MongoDBposts extends Iposts {
                     $set: {
                         post_title: title,
                         post_content: content,
-                        post_category: categoryId,
                         post_updatedAt: new Date(),
                     },
                 },

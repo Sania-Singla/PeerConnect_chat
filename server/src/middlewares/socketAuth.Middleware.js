@@ -9,20 +9,17 @@ export const socketAuthenticator = async (req, err, socket, next) => {
 
         const accessToken = req?.cookies?.peerConnect_accessToken;
 
-        if (accessToken) {
-            const decodedToken = jwt.verify(
-                accessToken,
-                process.env.ACCESS_TOKEN_SECRET
-            );
+        const decodedToken = jwt.verify(
+            accessToken,
+            process.env.ACCESS_TOKEN_SECRET
+        );
 
-            const user = await userObject.getUser(decodedToken.userId);
-            if (!user) {
-                throw new Error('user with provided access token not found');
-            }
-
-            socket.user = user;
+        const user = await userObject.getUser(decodedToken.userId);
+        if (!user) {
+            throw new Error('user with provided access token not found');
         }
 
+        socket.user = user;
         return next();
     } catch (err) {
         return next(

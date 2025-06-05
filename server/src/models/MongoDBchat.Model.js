@@ -3,10 +3,9 @@ import {
     getPipeline2,
     getSocketIds,
 } from '../helpers/index.js';
-import { Ichats } from '../interfaces/chat.Interface.js';
 import { Attachment, Chat, Message } from '../schemas/index.js';
 
-export class MongoDBchats extends Ichats {
+export class MongoDBchats {
     async chatExistance(chatId) {
         try {
             return await Chat.findOne({ chat_id: chatId }).lean();

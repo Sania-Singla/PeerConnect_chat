@@ -145,54 +145,6 @@ class UserService {
             throw err;
         }
     }
-
-    async getWatchHistory(signal, limit = 10, page = 1, orderBy = 'desc') {
-        try {
-            const res = await fetch(
-                `${BASE_BACKEND_URL}/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
-                {
-                    method: 'GET',
-                    signal,
-                    credentials: 'include',
-                }
-            );
-
-            const data = await res.json();
-            console.log(data);
-
-            if (res.status === SERVER_ERROR) {
-                throw new Error(data.message);
-            }
-            return data;
-        } catch (err) {
-            if (err.name === 'AbortError') {
-                console.log('get watch history request aborted.');
-            } else {
-                console.error('error in getWatchHistory service', err);
-                throw err;
-            }
-        }
-    }
-
-    async clearWatchHistory() {
-        try {
-            const res = await fetch(`${BASE_BACKEND_URL}/users/history`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-
-            const data = await res.json();
-            console.log(data);
-
-            if (res.status === SERVER_ERROR) {
-                throw new Error(data.message);
-            }
-            return data;
-        } catch (err) {
-            console.error('error in clearWatchHistory service', err);
-            throw err;
-        }
-    }
 }
 
 export const userService = new UserService();

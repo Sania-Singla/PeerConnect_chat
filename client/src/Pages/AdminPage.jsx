@@ -92,7 +92,6 @@ export default function AdminPage() {
         'Toggle',
         'Visibility',
         'Post',
-        'Category',
         'Date uploaded',
         'Views',
         'Comments',

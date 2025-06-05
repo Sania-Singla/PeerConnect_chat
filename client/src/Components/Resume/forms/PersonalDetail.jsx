@@ -4,54 +4,66 @@ import { ResumeInfoContext } from '../../ResumeInfoContext';
 import { LoaderCircle } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GlobalApi from '../../GlobalApi';
 import { toast } from 'react-hot-toast';
+import { resumeService } from '@/Services';
 
-function PersonalDetail({ enabledNext }) {
+export default function PersonalDetail({ enabledNext }) {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-    const [formData, setFormData] = useState({});
+    const [personalInfo, setPersonalInfo] = useState({});
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
         enabledNext(false);
         const { name, value } = e.target;
 
-        if (name === 'linkedin' || name === 'github' || name === 'leetcode') {
-            // just prompt the user to enter the username only
-            if (
-                value.startsWith('https://') ||
-                value.startsWith('http://') ||
-                value.includes('www.') ||
-                value.includes('.com') ||
-                value.includes('/')
-            ) {
-                toast.error('Please enter only the LinkedIn username.');
-                return;
-            }
+        // move to a util
+        // if (name === 'linkedin' || name === 'github' || name === 'leetcode') {
+        //     // just prompt the user to enter the username only
+        //     if (
+        //         value.startsWith('https://') ||
+        //         value.startsWith('http://') ||
+        //         value.includes('www.') ||
+        //         value.includes('.com') ||
+        //         value.includes('/')
+        //     ) {
+        //         toast.error('Please enter only the LinkedIn username.');
+        //         return;
+        //     }
+        // }
+
+        setPersonalInfo({ ...personalInfo, [name]: value });
+        setResumeInfo({ ...resumeInfo, [name]: value });
+    };
+
+    // const onSave = (e) => {
+    //     e.preventDefault();
+    //     setLoading(true);
+    //     GlobalApi.UpdateResumeDetail(resumeId, {
+    //         ...personalInfo,
+    //         themeColor: resumeInfo?.themeColor || '#4977ec',
+    //     });
+    //     enabledNext(true);
+    //     setLoading(false);
+    //     toast.success('Details updated');
+    // };
+
+    async function onSave(e) {
+        try {
+            e.preventDefault();
+            setLoading(true);
+            const res = await resumeService.updatePersonalInfo(
+                resumeId,
+                personalInfo
+            );
+            if (res && !res.message) toast.success('Personal Info updated!');
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
         }
+    }
 
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-        setResumeInfo({
-            ...resumeInfo,
-            [name]: value,
-        });
-    };
-
-    const onSave = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        GlobalApi.UpdateResumeDetail(resumeId, {
-            ...formData,
-            themeColor: resumeInfo?.themeColor || '#4977ec',
-        });
-        enabledNext(true);
-        setLoading(false);
-        toast.success('Details updated');
-    };
     return (
         <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
             <h2 className="font-bold text-lg">Personal Detail</h2>
@@ -79,15 +91,6 @@ function PersonalDetail({ enabledNext }) {
                             required
                             onChange={handleInputChange}
                             defaultValue={resumeInfo?.lastName}
-                        />
-                    </div>
-                    <div className="col-span-2">
-                        <label className="text-sm font-medium">Job Title</label>
-                        <Input
-                            name="jobTitle"
-                            required
-                            defaultValue={resumeInfo?.jobTitle}
-                            onChange={handleInputChange}
                         />
                     </div>
                     <div className="col-span-2">
@@ -155,5 +158,3 @@ function PersonalDetail({ enabledNext }) {
         </div>
     );
 }
-
-export default PersonalDetail;

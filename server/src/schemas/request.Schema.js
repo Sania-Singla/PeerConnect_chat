@@ -9,16 +9,8 @@ const requestSchema = new Schema({
         unique: true,
         default: () => uuid(),
     },
-    sender_id: {
-        type: String,
-        ref: 'User',
-        index: true,
-    },
-    receiver_id: {
-        type: String,
-        ref: 'User',
-        index: true,
-    },
+    sender_id: { type: String, ref: 'User', index: true },
+    receiver_id: { type: String, ref: 'User', index: true },
     status: {
         type: String,
         default: 'pending',

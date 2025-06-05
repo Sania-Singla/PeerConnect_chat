@@ -12,7 +12,6 @@ export default function AddPostPage() {
         title: '',
         postImage: null,
         content: '',
-        categoryId: '',
     });
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -80,38 +79,6 @@ export default function AddPostPage() {
             setDisabled(false);
         }
     }
-
-    useEffect(() => {
-        (async function getCategories() {
-            const res = await fetch(`${BASE_BACKEND_URL}/categories/`, {
-                method: 'GET',
-            });
-
-            const data = await res.json();
-            setCategories(data);
-        })();
-    }, []);
-
-    const categoryElements = !categories.length
-        ? []
-        : categories?.map((category) => (
-              <label
-                  htmlFor={category.category_name}
-                  key={category.category_name}
-                  className="hover:bg-[#ebebeb] hover:text-black text-[#2556d1] hover:cursor-pointer flex items-center justify-start gap-2 bg-[#ffffff] shadow-sm rounded-full w-fit px-3 py-[3px]"
-              >
-                  <input
-                      type="radio"
-                      name="categoryId"
-                      id={category.category_name}
-                      value={category.category_id}
-                      checked={inputs.categoryId === category.category_id} // just good for verification
-                      onChange={handleChange}
-                      className="size-[10px]"
-                  />
-                  {category.category_name}
-              </label>
-          ));
 
     return (
         <div className="w-full min-h-screen bg-gray-50 p-6 rounded-lg">
@@ -208,16 +175,6 @@ export default function AddPostPage() {
                                     </div>
                                 </div>
                             )}
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-md p-6">
-                        <div className="text-lg font-medium mb-4 text-center text-gray-800">
-                            <span className="text-red-500">*</span> Select a
-                            Category
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                            {categoryElements}
                         </div>
                     </div>
 

@@ -1,16 +1,10 @@
 import { SERVER_ERROR, BASE_BACKEND_URL } from '@/Constants/constants';
 
 class PostService {
-    async getRandomPosts(
-        signal,
-        page = 1,
-        limit = 10,
-        category = '',
-        orderBy = 'desc'
-    ) {
+    async getRandomPosts(signal, page = 1, limit = 10, orderBy = 'desc') {
         try {
             const res = await fetch(
-                `${BASE_BACKEND_URL}/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
+                `${BASE_BACKEND_URL}/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}`,
                 { method: 'GET', signal }
             );
 
@@ -92,7 +86,7 @@ class PostService {
                     method: 'PATCH',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inputs), // title, content & category
+                    body: JSON.stringify(inputs), // title, content
                 }
             );
 

@@ -1,8 +1,6 @@
-import { Iusers } from '../interfaces/user.Interface.js';
-import { User, WatchHistory } from '../schemas/index.js';
-import { getPipeline1 } from '../helpers/index.js';
+import { User } from '../schemas/index.js';
 
-export class MongoDBusers extends Iusers {
+export class MongoDBusers {
     async getUser(searchInput) {
         try {
             return await User.findOne({
@@ -99,56 +97,67 @@ export class MongoDBusers extends Iusers {
                 {
                     $lookup: {
                         from: 'followers',
-                        localField: 'user_id',
-                        foreignField: 'following_id',
+                        let: { user_id: '$user_id' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ['$$user_id', '$following_id'],
+                                    },
+                                },
+                            },
+                            { $project: { follower_id: 1 } },
+                        ],
                         as: 'followers',
                     },
                 },
                 {
                     $lookup: {
                         from: 'posts',
-                        localField: 'user_id',
-                        foreignField: 'post_ownerId',
-                        as: 'posts',
+                        let: { user_id: '$user_id' },
                         pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ['$$user_id', '$post_ownerId'],
+                                    },
+                                },
+                            },
                             {
                                 $lookup: {
                                     from: 'postviews',
-                                    localField: 'post_id',
-                                    foreignField: 'post_id',
+                                    let: { post_id: '$post_id' },
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [
+                                                        '$$post_id',
+                                                        '$post_id',
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        { $count: 'views_count' },
+                                    ],
                                     as: 'views',
                                 },
                             },
+                            { $project: { views: 1 } },
                         ],
+                        as: 'posts',
                     },
                 },
                 {
                     $addFields: {
                         isFollowed:
                             channelId !== userId
-                                ? {
-                                      $in: [
-                                          userId,
-                                          {
-                                              $map: {
-                                                  input: '$followers',
-                                                  as: 'follower',
-                                                  in: '$$follower.follower_id',
-                                              },
-                                          },
-                                      ],
-                                  }
+                                ? { $in: [userId, '$followers.follower_id'] }
                                 : false,
                         totalPosts: { $size: '$posts' },
                         totalFollowers: { $size: '$followers' },
                         totalViews: {
-                            $sum: {
-                                $map: {
-                                    input: '$posts',
-                                    as: 'post',
-                                    in: { $size: '$$post.views' },
-                                },
-                            },
+                            $sum: '$posts.views.views_count',
                         },
                     },
                 },
@@ -178,9 +187,7 @@ export class MongoDBusers extends Iusers {
                         user_email: email,
                     },
                 },
-                {
-                    new: true,
-                }
+                { new: true }
             )
                 .select('-user_password -refresh_token')
                 .lean();
@@ -270,54 +277,7 @@ export class MongoDBusers extends Iusers {
         }
     }
 
-    async getWatchHistory(userId, orderBy, limit, page) {
-        try {
-            const pipeline1 = getPipeline1(orderBy, 'watchedAt');
-            const pipeline = [{ $match: { user_id: userId } }, ...pipeline1];
-
-            return await WatchHistory.aggregatePaginate(pipeline, {
-                page,
-                limit,
-            });
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async clearWatchHistory(userId) {
-        try {
-            return await WatchHistory.deleteMany({
-                user_id: userId,
-            });
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async updateWatchHistory(postId, userId) {
-        try {
-            return await WatchHistory.findOneAndUpdate(
-                {
-                    post_id: postId,
-                    user_id: userId,
-                },
-                {
-                    $setOnInsert: {
-                        post_id: postId,
-                        user_id: userId,
-                    },
-                    $set: {
-                        watchedAt: new Date(),
-                    },
-                },
-                {
-                    upsert: true,
-                }
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
+    // PENDING
 
     async getAdminStats(userId) {
         const pipeline = [

@@ -8,25 +8,10 @@ const commentSchema = new Schema({
         required: true,
         default: () => uuid(),
     },
-    user_id: {
-        type: String,
-        ref: 'User',
-        required: true,
-    },
-    post_id: {
-        type: String,
-        ref: 'Post',
-        required: true,
-        index: true,
-    },
-    comment_content: {
-        type: String,
-        required: true,
-    },
-    comment_createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
+    user_id: { type: String, ref: 'User', required: true },
+    post_id: { type: String, ref: 'Post', required: true, index: true },
+    comment_content: { type: String, required: true },
+    comment_createdAt: { type: Date, default: Date.now() },
 });
 
 export const Comment = new model('Comment', commentSchema);

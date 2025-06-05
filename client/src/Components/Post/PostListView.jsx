@@ -8,7 +8,6 @@ import { memo } from 'react';
 const PostListView = memo(({ post, reference, children }) => {
     const {
         post_id,
-        category,
         post_content,
         post_image,
         totalViews,
@@ -16,7 +15,6 @@ const PostListView = memo(({ post, reference, children }) => {
         post_createdAt,
         owner,
     } = post;
-    const { category_name } = category;
     const { user_id, user_name, user_avatar, user_fullName } = owner;
 
     const navigate = useNavigate();
@@ -48,29 +46,14 @@ const PostListView = memo(({ post, reference, children }) => {
                 </div>
 
                 <div className="w-[50%] pt-4 realtive flex flex-col items-start justify-start">
-                    <div className="flex items-start justify-between w-full">
-                        {/* post category */}
-                        <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#f5f9ff] shadow-sm rounded-full w-fit px-3 py-[2px]">
-                            <div className="size-[9px] fill-[#2556d1]">
-                                {icons.dot}
-                            </div>
-                            <span className="text-[#2556d1] text-[14px]">
-                                {category_name.toUpperCase()}
-                            </span>
-                        </div>
-
-                        {/* statistics */}
-                        <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
-                            {formatCount(totalViews)} views &bull;
-                            {' ' + formatDateRelative(post_createdAt)}
-                        </div>
+                    <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                        {formatCount(totalViews)} views &bull;
+                        {' ' + formatDateRelative(post_createdAt)}
                     </div>
 
-                    {/* post title */}
                     <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
                         {post_title}
                     </div>
-
                     <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
                         {parse(post_content)}
                     </div>
@@ -102,7 +85,6 @@ const PostListView = memo(({ post, reference, children }) => {
                             </div>
                         </div>
                     </Link>
-
                     <div className="absolute right-6 bottom-6 text-white">
                         <Button
                             btnText={

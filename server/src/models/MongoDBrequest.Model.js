@@ -1,7 +1,6 @@
-import { Irequests } from '../interfaces/request.Interface.js';
 import { Chat, Request } from '../schemas/index.js';
 
-export class MongoDBrequests extends Irequests {
+export class MongoDBrequests {
     async requestExistance(requestId) {
         try {
             return await Request.findOne({ request_id: requestId }).lean();
@@ -31,9 +30,8 @@ export class MongoDBrequests extends Irequests {
             ]);
 
             if (request) return { ...request.toObject(), isRequest: true };
-            if (chat) return { ...chat.toObject(), isRequest: false };
-
-            return null; // No request or chat found
+            else if (chat) return { ...chat.toObject(), isRequest: false };
+            else return null;
         } catch (err) {
             throw err;
         }
@@ -70,8 +68,7 @@ export class MongoDBrequests extends Irequests {
                 return chat.toObject();
             }
             return 'Collaboration request already sent';
-        }
-        if (chat) {
+        } else if (chat) {
             return 'You are already friends with this user';
         }
 

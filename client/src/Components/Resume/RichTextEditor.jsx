@@ -16,7 +16,7 @@ import {
     Toolbar,
 } from 'react-simple-wysiwyg';
 import { AIChatSession } from '../AIModal';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
     const [value, setValue] = useState(defaultValue);
@@ -27,7 +27,7 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
         const positionTitle = resumeInfo?.Experience[index]?.title;
 
         if (!positionTitle) {
-            toast('Please add a Position Title');
+            toast.error('Please add a Position Title');
             return;
         }
 

@@ -1,9 +1,12 @@
-function SkillsPreview({ resumeInfo }) {
-    console.log(resumeInfo?.skills);
+import { useResumeContext } from '@/Context';
+
+export default function SkillsPreview() {
+    const { resumeInfo } = useResumeContext();
+
     return (
         <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-            {resumeInfo?.skills?.map((skill, index) => (
-                <div key={index} className="flex flex-col">
+            {resumeInfo.skills.map((skill, i) => (
+                <div key={i} className="flex flex-col">
                     <div className="flex justify-between text-xs font-medium">
                         <span>{skill.name}</span>
                         <span>{skill.rating}/5</span>
@@ -24,5 +27,3 @@ function SkillsPreview({ resumeInfo }) {
         </div>
     );
 }
-
-export default SkillsPreview;

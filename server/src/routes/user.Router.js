@@ -19,8 +19,6 @@ import {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
-    getWatchHistory,
-    clearWatchHistory,
     getAdminStats,
     loginWithGoogle,
 } from '../controllers/user.Controller.js';
@@ -56,5 +54,3 @@ userRouter.route('/avatar').patch(upload.single('avatar'), updateAvatar);
 userRouter
     .route('/coverImage')
     .patch(upload.single('coverImage'), updateCoverImage);
-
-userRouter.route('/history').get(getWatchHistory).delete(clearWatchHistory);

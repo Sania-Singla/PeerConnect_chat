@@ -1,4 +1,8 @@
-function EducationalPreview({ resumeInfo }) {
+import { useResumeContext } from '@/Context';
+
+export default function EducationalPreview() {
+    const { resumeInfo } = useResumeContext();
+
     return resumeInfo?.education.map((edu, index) => (
         <div key={index} className="mb-6">
             <div className="flex justify-between items-center">
@@ -6,7 +10,7 @@ function EducationalPreview({ resumeInfo }) {
                     className="text-sm font-bold"
                     style={{ color: resumeInfo?.themeColor }}
                 >
-                    {edu.universityName}
+                    {edu.Institution}
                 </h3>
                 <span className="text-[11px] text-gray-500">
                     {edu.startDate} - {edu.endDate}
@@ -21,5 +25,3 @@ function EducationalPreview({ resumeInfo }) {
         </div>
     ));
 }
-
-export default EducationalPreview;

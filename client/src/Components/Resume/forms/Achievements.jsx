@@ -2,50 +2,53 @@ import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { ResumeInfoContext } from '../../ResumeInfoContext';
 import { LoaderCircle } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GlobalApi from '../../GlobalApi';
 import { toast } from 'react-hot-toast';
+import { resumeService } from '@/Services';
 
-function Achievements() {
+export default function Achievements() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-
-    const [achievements, setAchievements] = useState([]);
+    const [achievements, setAchievements] = useState(
+        resumeInfo?.achievements || []
+    );
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        if (resumeInfo?.achievements?.length > 0) {
-            setAchievements(resumeInfo.achievements);
-        }
-    }, []);
-
     const handleChange = (index, event) => {
-        const newAchievements = [...achievements];
-        newAchievements[index] = event.target.value;
-        setAchievements(newAchievements);
+        setAchievements((prev) =>
+            prev.map((item, i) => (i === index ? event.target.value : item))
+        );
     };
 
     const addNewAchievement = () => {
-        setAchievements([...achievements, '']);
+        setAchievements((prev) => prev.push(''));
     };
 
     const removeAchievement = () => {
         setAchievements(achievements.slice(0, -1));
     };
 
+    // for preview
     useEffect(() => {
         setResumeInfo({ ...resumeInfo, achievements });
     }, [achievements]);
 
-    const onSave = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const data = { achievements };
-        GlobalApi.UpdateResumeDetail(resumeId, data);
-        setLoading(false);
-        toast.success('Achievements updated!');
-    };
+    async function onSave(e) {
+        try {
+            e.preventDefault();
+            setLoading(true);
+            const res = await resumeService.updateAchievements(
+                resumeId,
+                achievements
+            );
+            if (res && !res.message) toast.success('Achievements updated!');
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
@@ -107,5 +110,3 @@ function Achievements() {
         </div>
     );
 }
-
-export default Achievements;

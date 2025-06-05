@@ -14,7 +14,6 @@ export default function AdminPostRow({ post, reference, setPosts }) {
         post_createdAt,
         likes,
         dislikes,
-        category_name,
         views,
         comments,
     } = post;
@@ -112,7 +111,6 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 </div>
             </td>
 
-            <td className=" text-center text-[1.1rem]">{category_name}</td>
             <td className=" text-center text-[1.1rem]">
                 {formatDateExact(post_createdAt)}
             </td>

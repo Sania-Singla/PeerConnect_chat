@@ -23,7 +23,6 @@ import TopicsPage from './TopicsPage';
 import InterviewPage from './InterviewPage';
 import ResumePage from './ResumePage';
 import EditorPage from './EditorPage';
-import BotPage from './BotPage';
 
 export {
     AboutUsPage,
@@ -50,6 +49,5 @@ export {
     ProjectsPage,
     InterviewPage,
     ResumePage,
-    BotPage,
     EditorPage,
 };

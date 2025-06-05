@@ -4,12 +4,7 @@ import { COOKIE_OPTIONS } from '../constants/options.js';
 import { USER_AVATAR } from '../constants/files.js';
 import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
-import {
-    verifyExpression,
-    verifyOrderBy,
-    tryCatch,
-    ErrorHandler,
-} from '../utils/index.js';
+import { verifyExpression, tryCatch, ErrorHandler } from '../utils/index.js';
 import {
     uploadOnCloudinary,
     deleteFromCloudinary,
@@ -341,46 +336,6 @@ const updateCoverImage = tryCatch(
     }
 );
 
-const getWatchHistory = tryCatch(
-    'get watch history',
-    async (req, res, next) => {
-        const { orderBy = 'desc', limit = 10, page = 1 } = req.query;
-        const { user_id } = req.user;
-
-        if (!verifyOrderBy(orderBy)) {
-            return next(new ErrorHandler('invalid orderBy value', BAD_REQUEST));
-        }
-
-        const result = await userObject.getWatchHistory(
-            user_id,
-            orderBy.toUpperCase(),
-            Number(limit),
-            Number(page)
-        );
-
-        if (result.docs.length) {
-            const data = {
-                posts: result.docs,
-                postaInfo: {
-                    hasNextPage: result.hasNextPage,
-                    hasPrevPage: result.hasPrevPage,
-                    totalPosts: result.totalDocs,
-                },
-            };
-            return res.status(OK).json(data);
-        } else {
-            return res.status(OK).json({ message: 'empty watch history' });
-        }
-    }
-);
-
-const clearWatchHistory = tryCatch('clear watch history', async (req, res) => {
-    await userObject.clearWatchHistory(req.user?.user_id);
-    return res
-        .status(OK)
-        .json({ message: 'watch history cleared successfully' });
-});
-
 const getAdminStats = tryCatch('get admin stats', async (req, res) => {
     const result = await userObject.getAdminStats(req.user.user_id);
     return res.status(OK).json(result);
@@ -399,7 +354,5 @@ export {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
-    getWatchHistory,
-    clearWatchHistory,
     getAdminStats,
 };

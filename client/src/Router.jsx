@@ -28,7 +28,6 @@ import {
     EditorPage,
     TopicsPage,
     QuestionsPage,
-    BotPage,
     InterviewPage,
     ResumePage,
 } from '@/Pages';
@@ -74,7 +73,7 @@ import { ChannelContextProvider } from '@/Context';
 
 import ViewResume from '@/Components/Resume/ViewResume';
 import AddResume from '@/Components/Resume/resume/AddResume';
-import EditResume from '@/Components/Resume/resume/EditResume';
+import EditResume from '@/Components/Resume/EditResume';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -110,13 +109,9 @@ export const router = createBrowserRouter(
                 <Route path=":id/feedback" element={<Feedback />} />
             </Route>
 
-            <Route path="bot" element={<BotPage />} />
-
-            <Route path="resume/" element={<ResumePage />}>
-                <Route path="" element={<AddResume />} />
-                <Route path=":resumeId/view" element={<ViewResume />} />
-                <Route path=":resumeId/edit" element={<EditResume />} />
-            </Route>
+            <Route path="resume" element={<ResumePage />} />
+            <Route path="resume/:resumeId/view" element={<ViewResume />} />
+            <Route path="resume/:resumeId/edit" element={<EditResume />} />
 
             <Route path="practice" element={<TopicsPage />} />
             <Route path="questions/:topicId" element={<QuestionsPage />} />

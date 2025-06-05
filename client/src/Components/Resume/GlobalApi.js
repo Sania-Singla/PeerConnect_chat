@@ -1,3 +1,5 @@
+// MAKE SERVICE FROM THIS FILE
+
 const CreateNewResume = (data) => {
     const resumes = JSON.parse(localStorage.getItem('userResumes')) || [];
     localStorage.setItem(

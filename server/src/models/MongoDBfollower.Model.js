@@ -1,7 +1,6 @@
-import { Ifollowers } from '../interfaces/follower.Interface.js';
 import { Follower } from '../schemas/index.js';
 
-export class MongoDBfollowers extends Ifollowers {
+export class MongoDBfollowers {
     async getFollowers(channelId) {
         try {
             const pipeline = [
@@ -18,23 +17,9 @@ export class MongoDBfollowers extends Ifollowers {
                         as: 'follower',
                     },
                 },
-                {
-                    $lookup: {
-                        from: 'followers',
-                        localField: 'follower_id',
-                        foreignField: 'following_id',
-                        as: 'followers',
-                    },
-                },
-                {
-                    $unwind: '$followers',
-                    $unwind: '$follower',
-                },
+                { $unwind: '$follower' },
                 {
                     $addFields: {
-                        totalFollowers: {
-                            $size: '$followers',
-                        },
                         user_id: '$follower.user_id',
                         user_name: '$follower.user_name',
                         user_fullName: '$follower.user_fullName',
@@ -44,14 +29,13 @@ export class MongoDBfollowers extends Ifollowers {
                 {
                     $project: {
                         follower: 0,
-                        followers: 0,
                         follower_id: 0,
                         following_id: 0,
                     },
                 },
             ];
 
-            return await Follower.aggregate(pipeline); // return the array itself don't destructure it
+            return await Follower.aggregate(pipeline);
         } catch (err) {
             throw err;
         }
@@ -73,23 +57,9 @@ export class MongoDBfollowers extends Ifollowers {
                         as: 'following',
                     },
                 },
-                {
-                    $lookup: {
-                        from: 'followers',
-                        localField: 'following_id',
-                        foreignField: 'following_id',
-                        as: 'followers',
-                    },
-                },
-                {
-                    $unwind: '$followers',
-                    $unwind: '$following',
-                },
+                { $unwind: '$following' },
                 {
                     $addFields: {
-                        totalFollowers: {
-                            $size: '$followers',
-                        },
                         user_id: '$following.user_id',
                         user_name: '$following.user_name',
                         user_fullName: '$follower.user_fullName',
@@ -99,7 +69,6 @@ export class MongoDBfollowers extends Ifollowers {
                 {
                     $project: {
                         following: 0,
-                        followers: 0,
                         follower_id: 0,
                         following_id: 0,
                     },

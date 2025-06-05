@@ -1,3 +1,4 @@
+import { useResumeContext } from '@/Context';
 import {
     FaMapMarkerAlt,
     FaPhoneAlt,
@@ -6,13 +7,14 @@ import {
     FaGithub,
 } from 'react-icons/fa';
 
-function PersonalDetailPreview({ resumeInfo }) {
+export default function PersonalDetailPreview() {
+    const { resumeInfo } = useResumeContext();
+
     const {
         themeColor,
         firstName,
         linkedin,
         lastName,
-        jobTitle,
         address,
         phone,
         email,
@@ -27,7 +29,6 @@ function PersonalDetailPreview({ resumeInfo }) {
             >
                 {firstName} {lastName}
             </h2>
-            <h2 className="text-center text-xs mt-2 font-medium">{jobTitle}</h2>
 
             <div
                 className="flex justify-evenly gap-6 items-end mt-4 text-[0.7rem] font-normal"
@@ -72,5 +73,3 @@ function PersonalDetailPreview({ resumeInfo }) {
         </div>
     );
 }
-
-export default PersonalDetailPreview;

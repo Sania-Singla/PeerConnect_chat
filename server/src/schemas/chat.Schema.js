@@ -8,24 +8,9 @@ const chatSchema = new Schema({
         unique: true,
         default: () => uuid(),
     },
-    isGroupChat: {
-        type: Boolean,
-        default: false,
-    },
-    chat_name: {
-        type: String,
-    },
-    creator: {
-        type: String,
-        ref: 'User',
-        default: null,
-    },
     members: [
         {
-            user_id: {
-                type: String,
-                ref: 'User',
-            },
+            user_id: { type: String, ref: 'User' },
             role: {
                 type: String,
                 enum: ['admin', 'member'],
@@ -33,20 +18,14 @@ const chatSchema = new Schema({
             },
         },
     ],
+    isGroupChat: { type: Boolean, default: false },
+    chat_name: { type: String },
+    creator: { type: String, ref: 'User', default: null },
     lastMessage: {
-        message: {
-            type: String,
-            default: '',
-        },
-        time: {
-            type: Date,
-            default: '',
-        },
+        message: { type: String, default: '' },
+        time: { type: Date, default: '' },
     },
-    chat_createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
+    chat_createdAt: { type: Date, default: Date.now() },
 });
 
 export const Chat = new model('Chat', chatSchema);

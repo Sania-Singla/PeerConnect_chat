@@ -1,7 +1,6 @@
-import { Imessages } from '../interfaces/message.Interface.js';
 import { Chat, Message, Attachment } from '../schemas/index.js';
 
-export class MongoDBmessages extends Imessages {
+export class MongoDBmessages {
     async messageExistance(messageId) {
         try {
             return await Message.findOne({ message_id: messageId }).lean();

@@ -1,23 +1,35 @@
 import { Button } from '@/Components';
-import { ResumeInfoContext } from './ResumeInfoContext';
-import ResumePreview from './resume/ResumePreview';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import GlobalApi from './GlobalApi';
+import { ResumePreview } from '@/Components';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RWebShare } from 'react-web-share';
+import { resumeService } from '@/Services';
+import { useResumeContext } from '@/Context';
+import toast from 'react-hot-toast';
 
-function ViewResume() {
-    const [resumeInfo, setResumeInfo] = useState();
+export default function ViewResume() {
+    const { resumeInfo, setResumeInfo } = useResumeContext();
     const { resumeId } = useParams();
-
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const data = GlobalApi.GetResumeById(resumeId);
-        setResumeInfo(data);
+        (async function () {
+            try {
+                const res = resumeService.getResume(resumeId);
+                if (res && !res.message) {
+                    setResumeInfo(res);
+                } else {
+                    toast.error('Resume not found!');
+                    navigate('/resume');
+                }
+            } catch (err) {
+                navigate('/server-error');
+            }
+        })();
     }, []);
 
     return (
-        <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
+        <div>
             <div id="no-print">
                 <div className="my-10 mx-10 md:mx-20 lg:mx-36">
                     <h2 className="text-center text-2xl font-semibold">
@@ -33,37 +45,30 @@ function ViewResume() {
                             className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
                             btnText="Download"
                         />
-                        {/* <RWebShare
+                        <RWebShare
                             data={{
-                                text: 'Hello Everyone, This is my resume please open url to see it',
-                                url:
-                                    import.meta.env.VITE_FRONTEND_BASE_URL +
-                                    '/resume/' +
-                                    resumeId +
-                                    '/view',
-                                title:
-                                    resumeInfo?.firstName +
-                                    ' ' +
-                                    resumeInfo?.lastName +
-                                    ' resume',
+                                text: 'Hello Everyone, This is my resume please visit the url to see it',
+                                url: `${import.meta.env.VITE_FRONTEND_BASE_URL}/resume/${resumeId}/view`,
+                                title: `${resumeInfo?.firstName} ${resumeInfo?.lastName} resume`,
                             }}
-                            onClick={() => console.log('shared successfully!')}
                         >
                             <Button
+                                onClick={() =>
+                                    toast.success('shared successfully!')
+                                }
                                 className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
                                 btnText="Share"
                             />
-                        </RWebShare> */}
+                        </RWebShare>
                     </div>
                 </div>
             </div>
-            <div className="my-10 mx-10 md:mx-20 lg:mx-36 h-full">
-                <div id="print-area">
-                    <ResumePreview />
-                </div>
+            <div
+                className="my-10 mx-10 md:mx-20 lg:mx-36 h-full"
+                id="print-area"
+            >
+                <ResumePreview />
             </div>
-        </ResumeInfoContext.Provider>
+        </div>
     );
 }
-
-export default ViewResume;

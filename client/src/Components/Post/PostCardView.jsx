@@ -17,10 +17,8 @@ export default function PostCardView({
         post_title,
         post_createdAt,
         owner,
-        category,
         totalViews,
     } = post;
-    const { category_name } = category;
     const navigate = useNavigate();
 
     return (
@@ -39,30 +37,15 @@ export default function PostCardView({
             </div>
 
             <div className="w-full">
-                <div className="flex items-start justify-between gap-4 w-full">
-                    {/* post category */}
-                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#f5f9ff] shadow-sm rounded-full w-fit px-3 py-[2px]">
-                        <div className="size-[9px] fill-[#2556d1]">
-                            {icons.dot}
-                        </div>
-                        <span className="text-[#2556d1] text-[14px]">
-                            {category_name.toUpperCase()}
-                        </span>
-                    </div>
-
-                    {/* statistics */}
-                    <div className="hover:cursor-text text-wrap text-[15px] text-[#5a5a5a] text-end">
-                        {formatCount(totalViews)} views &bull;
-                        {' ' + formatDateRelative(post_createdAt)}
-                    </div>
+                <div className="hover:cursor-text text-wrap text-[15px] text-[#5a5a5a] text-end">
+                    {formatCount(totalViews)} views &bull;
+                    {' ' + formatDateRelative(post_createdAt)}
                 </div>
 
-                {/* post title */}
                 <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
                     {post_title}
                 </div>
 
-                {/* post content */}
                 <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
                     {parse(post_content)}
                 </div>
@@ -80,7 +63,7 @@ export default function PostCardView({
                                 <img
                                     alt="post owner avatar"
                                     src={owner.user_avatar}
-                                    loading='lazy'
+                                    loading="lazy"
                                     className="size-full object-cover rounded-full hover:brightness-90"
                                 />
                             </div>

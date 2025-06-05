@@ -91,7 +91,6 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
 
 //! *********************************PENDING
 //! *********************************PENDING
-//! *********************************PENDING
 
 const deleteMessage = tryCatch('delete message', async (req, res, next) => {
     const { messageId } = req.params;

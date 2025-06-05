@@ -1,11 +1,11 @@
 import { useContext, useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Button } from '../ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Button } from './ui/button';
 import { LayoutGrid } from 'lucide-react';
 import { ResumeInfoContext } from '../ResumeInfoContext';
-import GlobalApi from '../GlobalApi';
+import GlobalApi from './GlobalApi';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 
 function ThemeColor() {
     const colors = [

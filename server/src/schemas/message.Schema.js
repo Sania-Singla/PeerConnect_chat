@@ -9,49 +9,22 @@ const messageSchema = new Schema({
         index: true,
         default: () => uuid(),
     },
-    chat_id: {
-        type: String,
-        ref: 'Chat',
-        required: true,
-        index: true,
-    },
-    sender_id: {
-        type: String,
-        ref: 'User',
-        required: true,
-    },
-    text: {
-        type: String,
-        default: '',
-    },
+    chat_id: { type: String, ref: 'Chat', required: true, index: true },
+    sender_id: { type: String, ref: 'User', required: true },
+    text: { type: String, default: '' },
     attachments: [
         {
             type: String, // publicId
             ref: 'Attachment',
         },
     ],
-    message_createdAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    message_updatedAt: {
-        type: Date,
-        default: Date.now(),
-    },
+    message_createdAt: { type: Date, default: Date.now() },
+    message_updatedAt: { type: Date, default: Date.now() },
 });
 
 const attachmentSchema = new Schema({
-    publicId: {
-        type: String,
-        unique: true,
-        index: true,
-        required: true,
-    },
-    url: {
-        type: String,
-        unique: true,
-        required: true,
-    },
+    publicId: { type: String, unique: true, index: true, required: true },
+    url: { type: String, unique: true, required: true },
     size: { type: Number },
     name: { type: String },
     type: { type: String },

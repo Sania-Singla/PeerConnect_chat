@@ -5,68 +5,75 @@ import { ResumeInfoContext } from '../../ResumeInfoContext';
 import { LoaderCircle } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GlobalApi from '../../GlobalApi';
 import { toast } from 'react-hot-toast';
+import { resumeService } from '@/Services';
 
-function Education() {
+export default function Education() {
+    const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-    const params = useParams();
-    const [educationalList, setEducationalList] = useState([
-        {
-            universityName: '',
-            degree: '',
-            major: '',
-            startDate: '',
-            endDate: '',
-            description: '',
-        },
-    ]);
-
-    useEffect(() => {
-        resumeInfo?.education && setEducationalList(resumeInfo?.education);
-    }, []);
-
-    const handleChange = (event, index) => {
-        const newEntries = educationalList.slice();
-        const { name, value } = event.target;
-        newEntries[index][name] = value;
-        setEducationalList(newEntries);
-    };
-
-    const AddNewEducation = () => {
-        setEducationalList([
-            ...educationalList,
+    const [educationList, setEducationList] = useState(
+        resumeInfo?.education || [
             {
-                universityName: '',
+                institution: '',
                 degree: '',
                 major: '',
                 startDate: '',
                 endDate: '',
                 description: '',
             },
-        ]);
+        ]
+    );
+
+    const handleChange = (event, index) => {
+        const { name, value } = event.target;
+        setEducationList((prev) =>
+            prev.map((item, i) =>
+                i === index ? { ...item, [name]: value } : item
+            )
+        );
+    };
+
+    const AddNewEducation = () => {
+        setEducationList((prev) =>
+            prev.push({
+                institution: '',
+                degree: '',
+                major: '',
+                startDate: '',
+                endDate: '',
+                description: '',
+            })
+        );
     };
     const RemoveEducation = () => {
-        setEducationalList((educationalList) => educationalList.slice(0, -1));
-    };
-    const onSave = () => {
-        setLoading(true);
-        const data = {
-            education: educationalList.map(({ id, ...rest }) => rest),
-        };
-
-        GlobalApi.UpdateResumeDetail(params.resumeId, data);
-        setLoading(false);
-        toast.success('Details updated !');
+        setEducationList((educationalList) => educationalList.slice(0, -1));
     };
 
+    async function onSave(e) {
+        try {
+            e.preventDefault();
+            setLoading(true);
+            const res = await resumeService.updateEducation(
+                resumeId,
+                educationList
+            );
+            if (res && !res.message) toast.success('Education List updated!');
+        } catch (err) {
+            navigate('/server-error');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // for preview
     useEffect(() => {
         setResumeInfo({
             ...resumeInfo,
-            education: educationalList,
+            education: educationList,
         });
-    }, [educationalList]);
+    }, [educationList]);
+
     return (
         <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
             <h2 className="font-bold text-lg">Education</h2>
@@ -75,17 +82,17 @@ function Education() {
             </p>
 
             <div>
-                {educationalList?.map((item, index) => (
+                {educationList?.map((item, index) => (
                     <div key={index}>
                         <div className="grid grid-cols-2 gap-3 my-5">
                             <div className="col-span-2">
                                 <label className="text-sm font-medium">
-                                    University Name
+                                    Institution Name
                                 </label>
                                 <Input
-                                    name="universityName"
+                                    name="institution"
                                     onChange={(e) => handleChange(e, index)}
-                                    defaultValue={item?.universityName}
+                                    defaultValue={item?.institution}
                                 />
                             </div>
                             <div>
@@ -151,7 +158,6 @@ function Education() {
                         onClick={AddNewEducation}
                         className="text-primary"
                     >
-                        {' '}
                         + Add More Education
                     </Button>
                     <Button
@@ -159,7 +165,6 @@ function Education() {
                         onClick={RemoveEducation}
                         className="text-primary"
                     >
-                        {' '}
                         - Remove
                     </Button>
                 </div>
@@ -178,5 +183,3 @@ function Education() {
         </div>
     );
 }
-
-export default Education;

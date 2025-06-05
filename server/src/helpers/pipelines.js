@@ -28,15 +28,6 @@ function getPipeline1(orderBy, sortBy) {
                     { $unwind: '$owner' },
                     {
                         $lookup: {
-                            from: 'categories',
-                            localField: 'post_category',
-                            foreignField: 'category_id',
-                            as: 'category',
-                        },
-                    },
-                    { $unwind: '$category' },
-                    {
-                        $lookup: {
                             from: 'postviews',
                             localField: 'post_id',
                             foreignField: 'post_id',
@@ -125,7 +116,6 @@ function getPipeline2() {
                 },
             },
         },
-        // Remove temporary `populatedMembers` field
         { $unset: 'populatedMembers' },
     ];
 }

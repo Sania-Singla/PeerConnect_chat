@@ -25,10 +25,10 @@ import {
     AlertDialogTitle,
 } from './ui/alert-dialog';
 import GlobalApi from './GlobalApi';
-import { toast } from 'sonner';
+import  toast  from 'react-hot-toast';
 import { IMAGES } from '@/Constants/constants';
 
-function ResumeCardItem({ resume, refreshData }) {
+export default function ResumeCardItem({ resume, refreshData }) {
     const navigate = useNavigate();
     const [openAlert, setOpenAlert] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -161,5 +161,3 @@ function ResumeCardItem({ resume, refreshData }) {
         </div>
     );
 }
-
-export default ResumeCardItem;

@@ -1,5 +1,7 @@
-function AchievementsPreview({ resumeInfo }) {
-    if (!resumeInfo?.achievements?.length) return null;
+import { useResumeContext } from '@/Context';
+
+export default function AchievementsPreview() {
+    const { resumeInfo } = useResumeContext();
 
     return (
         <div className="my-6 px-3">
@@ -13,5 +15,3 @@ function AchievementsPreview({ resumeInfo }) {
         </div>
     );
 }
-
-export default AchievementsPreview;
