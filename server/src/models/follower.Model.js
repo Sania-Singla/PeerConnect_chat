@@ -1,6 +1,6 @@
 import { Follower } from '../schemas/index.js';
 
-export class MongoDBfollowers {
+export class FollowerModel {
     async getFollowers(channelId) {
         try {
             const pipeline = [

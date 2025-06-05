@@ -2,7 +2,7 @@ import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { getServiceObject } from '../db/serviceObjects.js';
 import { ErrorHandler, tryCatch, verifyOrderBy } from '../utils/index.js';
 
-export const commentObject = getServiceObject('comments');
+export const commentObject = getServiceObject('Comment');
 
 const getComments = tryCatch('get comments', async (req, res, next) => {
     const { postId } = req.params;

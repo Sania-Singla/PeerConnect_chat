@@ -4,7 +4,7 @@ import { ErrorHandler, tryCatch } from '../utils/index.js';
 import { io, redisClient } from '../socket.js';
 import { userObject } from './user.Controller.js';
 
-export const requestObject = getServiceObject('requests');
+export const requestObject = getServiceObject('Request');
 
 const sendRequest = tryCatch('send request', async (req, res, next) => {
     const { userId } = req.params;

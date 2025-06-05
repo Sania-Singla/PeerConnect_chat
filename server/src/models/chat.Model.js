@@ -5,7 +5,7 @@ import {
 } from '../helpers/index.js';
 import { Attachment, Chat, Message } from '../schemas/index.js';
 
-export class MongoDBchats {
+export class ChatModel {
     async chatExistance(chatId) {
         try {
             return await Chat.findOne({ chat_id: chatId }).lean();

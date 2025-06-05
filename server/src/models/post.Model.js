@@ -1,7 +1,7 @@
 import { Post, PostView, SavedPost } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
-export class MongoDBposts {
+export class PostModel {
     // pending search query
     async getRandomPosts(limit, orderBy, page) {
         try {

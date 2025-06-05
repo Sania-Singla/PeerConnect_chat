@@ -1,6 +1,6 @@
 import { User } from '../schemas/index.js';
 
-export class MongoDBusers {
+export class UserModel {
     async getUser(searchInput) {
         try {
             return await User.findOne({

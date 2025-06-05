@@ -9,7 +9,7 @@ import {
 import validator from 'validator';
 import { io } from '../socket.js';
 
-export const chatObject = getServiceObject('chats');
+export const chatObject = getServiceObject('Chat');
 
 // groups also
 const getMyChats = tryCatch('get my chats', async (req, res) => {

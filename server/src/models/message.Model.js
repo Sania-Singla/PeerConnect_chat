@@ -1,6 +1,6 @@
 import { Chat, Message, Attachment } from '../schemas/index.js';
 
-export class MongoDBmessages {
+export class MessageModel {
     async messageExistance(messageId) {
         try {
             return await Message.findOne({ message_id: messageId }).lean();

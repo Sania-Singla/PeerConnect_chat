@@ -2,7 +2,7 @@ import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
 import { getServiceObject } from '../db/serviceObjects.js';
 import { verifyOrderBy, tryCatch, ErrorHandler } from '../utils/index.js';
 
-export const likeObject = getServiceObject('likes');
+export const likeObject = getServiceObject('Like');
 
 const getLikedPosts = tryCatch('get liked posts', async (req, res, next) => {
     const { user_id } = req.user;

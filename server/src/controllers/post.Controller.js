@@ -4,7 +4,7 @@ import { verifyOrderBy, tryCatch, ErrorHandler } from '../utils/index.js';
 import { uploadOnCloudinary, deleteFromCloudinary } from '../helpers/index.js';
 import { userObject } from './user.Controller.js';
 
-export const postObject = getServiceObject('posts');
+export const postObject = getServiceObject('Post');
 
 // pending searchTerm (query)
 const getRandomPosts = tryCatch('get random posts', async (req, res, next) => {

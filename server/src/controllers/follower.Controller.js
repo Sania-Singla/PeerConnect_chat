@@ -2,7 +2,7 @@ import { BAD_REQUEST, OK } from '../constants/errorCodes.js';
 import { getServiceObject } from '../db/serviceObjects.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
 
-export const followerObject = getServiceObject('followers');
+export const followerObject = getServiceObject('Follower');
 
 const getFollowers = tryCatch('get followers', async (req, res) => {
     const channelId = req.channel.user_id;

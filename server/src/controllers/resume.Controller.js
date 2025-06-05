@@ -1,26 +1,57 @@
 import { BAD_REQUEST, OK, SERVER_ERROR } from '../constants/errorCodes.js';
+import { getServiceObject } from '../db/serviceObjects.js';
 import { tryCatch } from '../utils/tryCatch.js';
-import { z } from 'zod';
+import { feedbackSchema } from '../helpers/index.js';
 
-const feedbackSchema = z.object({
-    totalScore: z.number(),
-    categoryScores: z.array(
-        z.object({
-            name: z.enum([
-                'Communication Skills',
-                'Technical Knowledge',
-                'Problem-Solving',
-                'Cultural & Role Fit',
-                'Confidence & Clarity',
-            ]),
-            score: z.number(),
-            comment: z.string(),
-        })
-    ),
-    strengths: z.array(z.string()),
-    areasForImprovement: z.array(z.string()),
-    finalAssessment: z.string(),
-    createdAt: z.string().optional(), // ISO timestamp string
+export const resumeObject = getServiceObject('Resume');
+
+const saveSection = tryCatch('save personal info', async (req, res) => {
+    const { resumeId } = req.params;
+    const { sectionName } = req.query;
+    const { data } = req.body;
+
+    let model;
+
+    switch (sectionName) {
+        case 'education':
+            model = resumeObject.saveEducation;
+            break;
+        case 'experience':
+            model = resumeObject.saveExperience;
+            break;
+        case 'skills':
+            model = resumeObject.saveSkills;
+            break;
+        case 'achievements':
+            model = resumeObject.saveAchievements;
+            break;
+        case 'projects':
+            model = resumeObject.saveProjects;
+            break;
+        case 'personalInfo':
+            model = resumeObject.savePersonalInfo;
+            break;
+        case 'summary':
+            model = resumeObject.saveSummary;
+            break;
+        default:
+            throw new Error('Invalid section name');
+    }
+
+    const resume = await model(resumeId, data);
+
+    return res.status(OK).json(resume);
+});
+
+const getResume = tryCatch('get resume', async (req, res) => {
+    const { resumeId } = req.params;
+    const resume = await resumeObject.getResume(resumeId);
+    return res.status(OK).json(resume);
+});
+
+const getResumes = tryCatch('get resumes', async (req, res) => {
+    const resumes = await resumeObject.getResumes(req.user.user_id);
+    return res.status(OK).json(resumes);
 });
 
 const getFeedback = tryCatch('get resume feedback', async (req, res) => {
@@ -36,8 +67,7 @@ const getFeedback = tryCatch('get resume feedback', async (req, res) => {
         .map(({ role, content }) => `- ${role}: ${content}`)
         .join('\n');
 
-    const prompt = `
-                    You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+    const prompt = `You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
 
                     Transcript:
                     ${formattedTranscript}
@@ -173,4 +203,4 @@ const getFeedback = tryCatch('get resume feedback', async (req, res) => {
     return res.status(OK).json(feedbackWithTimestamp);
 });
 
-export { getFeedback };
+export { saveSection, getResume, getResumes, getFeedback };

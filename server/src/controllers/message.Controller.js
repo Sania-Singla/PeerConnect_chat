@@ -4,7 +4,7 @@ import { BAD_REQUEST, OK } from '../constants/errorCodes.js';
 import { uploadOnCloudinary } from '../helpers/index.js';
 import { io } from '../socket.js';
 
-export const messageObject = getServiceObject('messages');
+export const messageObject = getServiceObject('Message');
 
 const getMessages = tryCatch('get messages', async (req, res, next) => {
     const { chatId } = req.params;

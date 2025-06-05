@@ -11,7 +11,7 @@ import {
     generateTokens,
 } from '../helpers/index.js';
 
-export const userObject = getServiceObject('users');
+export const userObject = getServiceObject('User');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 

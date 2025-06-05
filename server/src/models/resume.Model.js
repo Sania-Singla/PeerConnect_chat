@@ -1,6 +1,6 @@
 import { OnlineUser } from '../schemas/index.js';
 
-export class MongoDBonlineUsers {
+export class ResumeModel {
     async getOnlineUser(userId) {
         try {
             return await OnlineUser.findOne({

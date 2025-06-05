@@ -1,6 +1,6 @@
 import { Comment } from '../schemas/index.js';
 
-export class MongoDBcomments {
+export class CommentModel {
     async getComments(postId, userId, orderBy) {
         try {
             const pipeline = [

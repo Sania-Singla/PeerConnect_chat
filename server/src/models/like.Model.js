@@ -1,7 +1,7 @@
 import { CommentLike, PostLike } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
-export class MongoDBlikes {
+export class LikeModel {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
             const pipeline1 = getPipeline1(orderBy, 'likedAt');

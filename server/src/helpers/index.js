@@ -1,4 +1,7 @@
 import { uploadOnCloudinary, deleteFromCloudinary } from './cloudinary.js';
+import { getPipeline1, getPipeline2 } from './pipelines.js';
+import { getSocketIds, getOtherMembers, getSocketId } from './sockets.js';
+import { feedbackSchema } from './resumeFeedback.js';
 import {
     generateAccessToken,
     generateRefreshToken,
@@ -6,8 +9,6 @@ import {
     extractAccessToken,
     extractRefreshToken,
 } from './tokens.js';
-import { getPipeline1, getPipeline2 } from './pipelines.js';
-import { getSocketIds, getOtherMembers, getSocketId } from './sockets.js';
 
 export {
     uploadOnCloudinary,
@@ -22,4 +23,5 @@ export {
     getSocketIds,
     getOtherMembers,
     getSocketId,
+    feedbackSchema,
 };

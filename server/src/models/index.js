@@ -1,21 +1,23 @@
-import { MongoDBusers } from './MongoDBuser.Model.js';
-import { MongoDBposts } from './MongoDBpost.Model.js';
-import { MongoDBfollowers } from './MongoDBfollower.Model.js';
-import { MongoDBlikes } from './MongoDBlike.Model.js';
-import { MongoDBcomments } from './MongoDBcomment.Model.js';
-import { MongoDBchats } from './MongoDBchat.Model.js';
-import { MongoDBmessages } from './MongoDBmessage.Model.js';
-import { MongoDBonlineUsers } from './MongoDBonlineUser.Model.js';
-import { MongoDBrequests } from './MongoDBrequest.Model.js';
+import { UserModel } from './user.Model.js';
+import { PostModel } from './post.Model.js';
+import { FollowerModel } from './follower.Model.js';
+import { LikeModel } from './like.Model.js';
+import { CommentModel } from './comment.Model.js';
+import { ChatModel } from './chat.Model.js';
+import { MessageModel } from './message.Model.js';
+import { OnlineUserModel } from './onlineUser.Model.js';
+import { RequestModel } from './request.Model.js';
+import { ResumeModel } from './resume.Model.js';
 
 export {
-    MongoDBusers,
-    MongoDBcomments,
-    MongoDBfollowers,
-    MongoDBlikes,
-    MongoDBposts,
-    MongoDBchats,
-    MongoDBmessages,
-    MongoDBrequests,
-    MongoDBonlineUsers,
+    UserModel,
+    PostModel,
+    FollowerModel,
+    LikeModel,
+    CommentModel,
+    ChatModel,
+    MessageModel,
+    OnlineUserModel,
+    RequestModel,
+    ResumeModel,
 };

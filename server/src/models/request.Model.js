@@ -1,6 +1,6 @@
 import { Chat, Request } from '../schemas/index.js';
 
-export class MongoDBrequests {
+export class RequestModel {
     async requestExistance(requestId) {
         try {
             return await Request.findOne({ request_id: requestId }).lean();
