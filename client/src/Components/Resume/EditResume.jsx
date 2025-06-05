@@ -77,8 +77,9 @@ export default function EditResume() {
                         <div className="h-full">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                 <Button
+                                    defaultStyles={true}
                                     onClick={handleThemeClick}
-                                    className=""
+                                    className="py-1 px-2"
                                     btnText={<>Change Theme</>}
                                 />
 
@@ -95,12 +96,12 @@ export default function EditResume() {
                                                 }
                                                 className={`flex items-center cursor-pointer justify-center size-7 rounded-full text-sm font-medium 
                                     ${
-                                        activeFormIndex === i 
+                                        activeFormIndex === i
                                             ? 'bg-[#4977ec] text-white'
                                             : 'bg-white border border-[#4977ec20] text-[#555555]'
                                     }`}
                                             >
-                                                {i }
+                                                {i}
                                             </button>
                                             {i < forms.length - 1 && (
                                                 <div className="w-5 h-[1px] bg-[#4977ec30]"></div>
@@ -122,8 +123,9 @@ export default function EditResume() {
                                 <div>
                                     {activeFormIndex > 0 && (
                                         <Button
+                                            defaultStyles={true}
+                                            className="px-2 py-1"
                                             variant="outline"
-                                            className="border-[#4977ec] hover:bg-[#4977ec10] text-[#4977ec] gap-2"
                                             onClick={() =>
                                                 setActiveFormIndex(
                                                     activeFormIndex - 1
@@ -139,12 +141,12 @@ export default function EditResume() {
                                     )}
                                 </div>
                                 <Button
-                                    className={`bg-[#4977ec] hover:bg-[#3b62c2] text-white gap-2 
-                        ${!enableNext ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                    className={`py-1 px-4 ${!enableNext ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     onClick={() =>
                                         setActiveFormIndex((prev) => prev + 1)
                                     }
                                     disabled={!enableNext}
+                                    defaultStyles={true}
                                     btnText={
                                         activeFormIndex < forms.length ? (
                                             <>

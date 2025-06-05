@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
+import Input from '@/Components/General/Input';
 
 export default function EducationForm() {
     const { resumeId } = useParams();
@@ -82,10 +83,8 @@ export default function EducationForm() {
                     <div key={i}>
                         <div className="grid grid-cols-2 gap-3 my-5">
                             <div className="col-span-2">
-                                <label className="text-sm font-medium">
-                                    Institution Name
-                                </label>
-                                <input
+                                <Input
+                                    label={'Institution Name'}
                                     name="institution"
                                     type="text"
                                     required
@@ -93,57 +92,43 @@ export default function EducationForm() {
                                     onChange={(e) => handleChange(e, index)}
                                 />
                             </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Degree
-                                </label>
-                                <input
-                                    name="degree"
-                                    type="text"
-                                    required
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.degree}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Major
-                                </label>
-                                <input
-                                    name="major"
-                                    required
-                                    type="text"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.major}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Start Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.startDate}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    End Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="endDate"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.endDate}
-                                />
-                            </div>
+
+                            <Input
+                                label={'Degree'}
+                                name="degree"
+                                type="text"
+                                required
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.degree}
+                            />
+
+                            <Input
+                                label={'Major'}
+                                name="major"
+                                required
+                                type="text"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.major}
+                            />
+
+                            <Input
+                                label={'Start Date'}
+                                type="date"
+                                name="startDate"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.startDate}
+                            />
+                            <Input
+                                label={'End date'}
+                                type="date"
+                                name="End Date"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.endDate}
+                            />
                             <div className="col-span-2">
-                                <label className="text-sm font-medium">
-                                    Description
-                                </label>
-                                <textarea
+                                <Input
+                                    type="textarea"
+                                    label="Description"
                                     name="description"
                                     onChange={(e) => handleChange(e, index)}
                                     value={item?.description}

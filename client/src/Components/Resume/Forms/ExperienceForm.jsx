@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
+import Input from '@/Components/General/Input';
 
 export default function Experience() {
     const { resumeId } = useParams();
@@ -81,101 +82,64 @@ export default function Experience() {
                 {experiences.map((item, index) => (
                     <div key={index} className="my-5 rounded-lg">
                         <div className="grid grid-cols-2 gap-3">
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="position"
-                                >
-                                    Position
-                                </label>
-                                <input
-                                    name="position"
-                                    id="position"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.position}
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="company"
-                                >
-                                    Company
-                                </label>
-                                <input
-                                    name="company"
-                                    id="company"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.company}
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="city"
-                                >
-                                    City
-                                </label>
-                                <input
-                                    name="city"
-                                    id="city"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.city}
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="state"
-                                >
-                                    State
-                                </label>
-                                <input
-                                    name="state"
-                                    id="state"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.state}
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="startDate"
-                                >
-                                    Start Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    id="startDate"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.startDate}
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    className="text-sm font-medium"
-                                    htmlFor="endDate"
-                                >
-                                    End Date
-                                </label>
-                                <input
-                                    type="date"
-                                    id="endDate"
-                                    name="endDate"
-                                    required
-                                    onChange={(e) => handleChange(index, e)}
-                                    value={item?.endDate}
-                                />
-                            </div>
+                            <Input
+                                label="Position"
+                                name="position"
+                                id="position"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.position}
+                            />
+
+                            <Input
+                                label="Company"
+                                name="company"
+                                id="company"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.company}
+                            />
+
+                            <Input
+                                label="Ciy"
+                                name="city"
+                                id="city"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.city}
+                            />
+
+                            <Input
+                                label="State"
+                                name="state"
+                                id="state"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.state}
+                            />
+
+                            <Input
+                                label="Start Date"
+                                type="date"
+                                name="startDate"
+                                id="startDate"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.startDate}
+                            />
+
+                            <Input
+                                label="End Date"
+                                type="date"
+                                id="endDate"
+                                name="endDate"
+                                required
+                                onChange={(e) => handleChange(index, e)}
+                                value={item?.endDate}
+                            />
                             <div>
                                 <label className="text-[14px] font-medium">
-                                    Discription
+                                    Description
                                 </label>
 
                                 <div className="col-span-2">
@@ -214,7 +178,8 @@ export default function Experience() {
                     </div>
                     <Button
                         type="submit"
-                        className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
+                        defaultStyles={true}
+                        className=" px-4 py-2 text-base"
                         disabled={loading}
                         btnText={
                             loading ? (

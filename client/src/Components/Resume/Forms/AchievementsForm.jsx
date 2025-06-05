@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
+import Input from '@/Components/General/Input';
 
 export default function AchievementsForm() {
     const { resumeId } = useParams();
@@ -59,11 +60,8 @@ export default function AchievementsForm() {
             <form onSubmit={onSave}>
                 <div className="space-y-4 mt-4">
                     {achievements.map((item, index) => (
-                        <div key={index}>
-                            <label className="text-sm font-medium block mb-1">
-                                Achievement #{index + 1}
-                            </label>
-                            <input
+                            <Input
+                                label="Achievement #{index + 1}"
                                 type="text"
                                 required
                                 value={item}
@@ -71,7 +69,6 @@ export default function AchievementsForm() {
                                 placeholder="e.g. Awarded 'Employee of the Year' in 2022"
                                 className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
                             />
-                        </div>
                     ))}
                 </div>
 

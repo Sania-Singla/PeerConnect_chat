@@ -34,6 +34,7 @@
         "framer-motion": "^11.18.2",
         "html-react-parser": "^5.1.18",
         "lucide-react": "^0.394.0",
+        "peer-connect": "file:..",
         "re-resizable": "^6.11.2",
         "react": "^18.3.1",
         "react-avatar": "^5.0.3",

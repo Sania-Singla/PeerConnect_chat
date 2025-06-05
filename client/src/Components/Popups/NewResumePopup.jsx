@@ -5,6 +5,7 @@ import { Button } from '@/Components';
 import { useNavigate } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext } from '@/Context';
+import Input from '../General/Input';
 
 export default function NewResumePopup() {
     const [resumeTitle, setResumeTitle] = useState('');
@@ -44,16 +45,10 @@ export default function NewResumePopup() {
 
             <div className="grid gap-4 py-4">
                 <div className="space-y-2">
-                    <label
-                        htmlFor="resume-title"
-                        className="block text-sm font-medium text-gray-700"
-                    >
-                        Resume Title
-                    </label>
-                    <input
+                    <Input
+                        label={'Resume Title'}
                         id="resume-title"
                         placeholder="e.g. Senior Frontend Developer Resume"
-                        className="w-full focus:border-[#4977ec] focus:ring-1 focus:ring-[#4977ec30]"
                         value={resumeTitle}
                         onChange={(e) => setResumeTitle(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && onCreate()}
@@ -64,16 +59,19 @@ export default function NewResumePopup() {
                 </div>
             </div>
 
-            <div>
+            <div className="flex gap-4">
                 <Button
+                    defaultStyles={true}
                     onClick={() => setShowPopup(false)}
                     disabled={loading}
                     btnText="Cancel"
+                    className="px-2 py-1"
                 />
                 <Button
+                    defaultStyles={true}
                     onClick={onCreate}
                     disabled={!resumeTitle.trim() || loading}
-                    className="bg-[#4977ec] hover:bg-[#3b62c2] text-white gap-2"
+                    className="px-2 py-1"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">
