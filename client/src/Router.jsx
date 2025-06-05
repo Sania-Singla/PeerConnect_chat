@@ -81,6 +81,7 @@ export const router = createBrowserRouter(
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
 
+            {/* channel */}
             <Route
                 path="channel/:userId"
                 element={
@@ -96,21 +97,20 @@ export const router = createBrowserRouter(
                 <Route path="projects" element={<ChannelProjects />} />
             </Route>
 
-            <Route path="editor/" element={<EditorPage />}>
-                <Route path="" element={<Form />} />
-                <Route path=":roomId" element={<EditorLayout />} />
+            {/* projects */}
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="project/:projectId" element={<ProjectLayout />}>
+                <Route path="" element={<ProjectDetail />} />
+                <Route path="tasks" element={<ProjectTasks />} />
+                <Route path="requests" element={<ProjectRequests />} />
+                <Route path="contributors" element={<ProjectContributors />} />
+                <Route
+                    path="contribution-form"
+                    element={<ProjectContributionForm />}
+                />
             </Route>
 
-            <Route path="interview/" element={<InterviewPage />}>
-                <Route path="" element={<Home />} />
-                <Route path=":id" element={<InterviewDetails />} />
-                <Route path=":id/feedback" element={<Feedback />} />
-            </Route>
-
-            <Route path="resume" element={<ResumePage />} />
-            <Route path="resume/:resumeId/view" element={<ViewResume />} />
-            <Route path="resume/:resumeId/edit" element={<EditResume />} />
-
+            {/* dsa */}
             <Route path="practice" element={<TopicsPage />} />
             <Route path="questions/:topicId" element={<QuestionsPage />} />
             <Route
@@ -124,29 +124,40 @@ export const router = createBrowserRouter(
                 <Route path="discuss" element={<QuestionDiscuss />} />
             </Route>
 
-            <Route path="projects" element={<ProjectsPage />} />
-            <Route path="project/:projectId" element={<ProjectLayout />}>
-                <Route path="" element={<ProjectDetail />} />
-                <Route path="tasks" element={<ProjectTasks />} />
-                <Route path="requests" element={<ProjectRequests />} />
-                <Route path="contributors" element={<ProjectContributors />} />
-                <Route
-                    path="contribution-form"
-                    element={<ProjectContributionForm />}
-                />
-            </Route>
-
             {/* protected routes */}
             <Route element={<Redirect path="/login" />}>
+                {/* editor */}
+                <Route path="editor/" element={<EditorPage />}>
+                    <Route path="" element={<Form />} />
+                    <Route path=":roomId" element={<EditorLayout />} />
+                </Route>
+
+                {/* interview */}
+                <Route path="interview/" element={<InterviewPage />}>
+                    <Route path="" element={<Home />} />
+                    <Route path=":id" element={<InterviewDetails />} />
+                    <Route path=":id/feedback" element={<Feedback />} />
+                </Route>
+
+                {/* resume */}
+                <Route path="resume" element={<ResumePage />} />
+                <Route path="resume/:resumeId/view" element={<ViewResume />} />
+                <Route path="resume/:resumeId/edit" element={<EditResume />} />
+
+                {/* post */}
                 <Route path="add" element={<AddPostPage />} />
                 <Route path="update/:postId" element={<UpdatePostPage />} />
                 {/* <Route path="dashboard" element={<AdminPage />} /> */}
+
+                {/* settings */}
                 <Route path="settings/" element={<SettingsPage />}>
                     <Route path="" element={<UpdateAccountDetails />} />
                     <Route path="channel" element={<UpdateChannelDetails />} />
                     <Route path="password" element={<UpdatePassword />} />
                     <Route path="delete-account" element={<DeleteAccount />} />
                 </Route>
+
+                {/* chat */}
                 <Route path="chat" element={<ChatsPage />}>
                     <Route path="" element={<NoChatSelected />} />
                     <Route path=":chatId" element={<ChatLayout />}>

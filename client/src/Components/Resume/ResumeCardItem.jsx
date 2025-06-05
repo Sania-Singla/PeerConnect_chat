@@ -38,13 +38,19 @@ export default function ResumeCardItem({ resume }) {
     }
 
     return (
-        <div className="group relative rounded-xl shadow-md transition-all duration-300">
+        <div className="group relative rounded-xl shadow-sm transition-all duration-300">
             <div>
                 {/* Card Content */}
-                <Link to={`/resume/${resume.resumeId}/edit`} className="block">
+                <Link
+                    to={`/resume/${resume.resumeId}/edit`}
+                    className="block rounded-t-xl overflow-hidden"
+                >
                     <div
-                        className="h-64 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center relative overflow-hidden rounded-t-xl"
-                        style={{ borderTop: `3px solid ${resume.themeColor}` }}
+                        className="h-64 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center relative"
+                        style={{
+                            borderTop: `10px solid ${resume.themeColor}40`,
+                            borderBottom: `1px solid ${resume.themeColor}20`,
+                        }}
                     >
                         <img
                             src={IMAGES.resume}
@@ -56,12 +62,7 @@ export default function ResumeCardItem({ resume }) {
                 </Link>
 
                 {/* Card Footer */}
-                <div
-                    style={{
-                        borderBottom: `3px solid ${resume.themeColor}`,
-                    }}
-                    className="relative bg-white p-4 flex items-center justify-between border-t border-gray-100 rounded-b-xl"
-                >
+                <div className="relative bg-white p-4 flex items-center justify-between border-t border-gray-100 rounded-b-xl">
                     <div className="flex-1 min-w-0">
                         <h3 className="text-sm font-medium text-gray-900 truncate">
                             {resume.title}
