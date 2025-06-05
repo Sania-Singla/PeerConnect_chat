@@ -9,6 +9,7 @@ import {
 import verifyExpression from './regex';
 import paginate from './pagination';
 import { downloadCodeFile, formatLeetcodeInput } from './editor';
+import { ai } from './ai';
 
 export {
     fileRestrictions,
@@ -22,4 +23,5 @@ export {
     formatCount,
     downloadCodeFile,
     formatLeetcodeInput,
+    ai,
 };

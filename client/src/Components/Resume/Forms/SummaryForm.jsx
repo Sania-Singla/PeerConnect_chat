@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { icons } from '@/Assets/icons';
 import { toast } from 'react-hot-toast';
-import { AIChatSession } from '../../AIModal';
+import { ai } from '@/Utils';
 import { useResumeContext } from '@/Context';
 import { resumeService } from '@/Services';
 
@@ -25,7 +25,7 @@ export default function SummaryForm() {
             setLoading(true);
 
             const PROMPT = `Job Title: ${resumeInfo.title}, Depends on job title give me list of summary for 3 experience level, Mid Level and Freasher level in 3-4 lines in array format, with summary and experienceLevel Field in JSON Format`;
-            const result = await AIChatSession.sendMessage(PROMPT);
+            const result = await ai.sendMessage(PROMPT);
             const parsed = JSON.parse(result.response.text());
             console.log('AI Generated Summary:', parsed);
 

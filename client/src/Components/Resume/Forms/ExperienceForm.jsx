@@ -1,9 +1,8 @@
-import { Button } from '@/Components';
+import { Button, RTE } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import RichTextEditor from '../RichTextEditor';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 
@@ -24,11 +23,10 @@ export default function Experience() {
         );
     };
 
-    const handleRichTextEditor = (e, name, index) => {
-        const { value } = e.target.value;
+    const handleRichTextEditor = (content, name, index) => {
         setExperiences((prev) =>
             prev.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
+                i === index ? { ...item, [name]: content } : item
             )
         );
     };
@@ -181,10 +179,10 @@ export default function Experience() {
                                 </label>
 
                                 <div className="col-span-2">
-                                    <RichTextEditor
-                                        onRichTextEditorChange={(e) =>
+                                    <RTE
+                                        onChange={() =>
                                             handleRichTextEditor(
-                                                e,
+                                                tinymce.activeEditor.getContent(),
                                                 'description',
                                                 index
                                             )
