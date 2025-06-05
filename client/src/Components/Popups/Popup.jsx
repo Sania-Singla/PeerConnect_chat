@@ -8,6 +8,7 @@ import {
     RequestsPopup,
     AddMembersPopup,
     ShowFilePopup,
+    NewResumePopup,
 } from '@/Components';
 import { usePopupContext } from '@/Context';
 
@@ -66,6 +67,12 @@ export default function Popup() {
             return (
                 <Wrapper>
                     <FriendsPopup />
+                </Wrapper>
+            );
+        case 'newResume':
+            return (
+                <Wrapper>
+                    <NewResumePopup />
                 </Wrapper>
             );
         case 'addMembers':

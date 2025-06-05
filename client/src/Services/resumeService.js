@@ -86,11 +86,13 @@ class ResumeService {
         }
     }
 
-    async createResume() {
+    async createResume(title) {
         try {
             const res = await fetch(`${BASE_BACKEND_URL}/resumes/new`, {
                 method: 'POST',
                 credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title }),
             });
 
             const data = await res.json();

@@ -1,56 +1,44 @@
-import { Loader2, PlusSquare, FileText } from 'lucide-react';
+import { PlusSquare, FileText } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from '../ui/dialog';
 import { Button, ResumeCardItem } from '@/Components';
-import { Input } from '../ui/input';
 import { useNavigate } from 'react-router-dom';
 import { IMAGES } from '@/Constants/constants';
 import { resumeService } from '@/Services';
-import { useUserContext } from '@/Context';
+import { usePopupContext, useUserContext } from '@/Context';
 
 export default function ResumePage() {
-    const [openDialog, setOpenDialog] = useState(false);
-    const [resumeTitle, setResumeTitle] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [resumes, setResumes] = useState([]);
     const { user } = useUserContext();
+    const { setShowPopup, setPopupInfo } = usePopupContext();
 
     useEffect(() => {
         (async function () {
             try {
+                setLoading(true);
                 const res = await resumeService.getResumes(user.user_id);
                 if (res && !res.message) {
                     setResumes(res);
                 }
             } catch (err) {
                 navigate('/server-error');
+            } finally {
+                setLoading(false);
             }
         })();
     }, []);
 
-    async function onCreate() {
-        if (!resumeTitle.trim()) return;
-        setLoading(true);
-
-        const res = await resumeService.createResume(resumeTitle);
-        if (res && !res.message) {
-            setOpenDialog(false);
-            navigate(`/resume/${res.resumeId}/edit`);
-        }
-
-        setLoading(false);
+    function handleCreateResume() {
+        setShowPopup(true);
+        setPopupInfo({ type: 'NewResume' });
     }
 
-    return (
+    return loading ? (
+        <div>loading...</div>
+    ) : (
         <div className="p-4 themed bg-transparent">
+            {/* Hero Section */}
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
                 <div className="flex flex-col gap-6 max-w-lg relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
@@ -63,7 +51,7 @@ export default function ResumePage() {
 
                     <Button
                         className="text-white rounded-md py-2 mt-4 flex items-center justify-center w-full bg-[#4977ec] hover:bg-[#3b62c2]"
-                        onClick={() => setOpenDialog(true)}
+                        onClick={handleCreateResume}
                         btnText={
                             <div className="flex items-center gap-3">
                                 <span>Create New Resume</span>
@@ -99,7 +87,7 @@ export default function ResumePage() {
                             className="h-full flex flex-col items-center justify-center gap-3 p-6 
                             border-2 border-dashed border-gray-300 rounded-xl bg-white hover:border-[#4977ec]
                             transition-all duration-300 cursor-pointer hover:shadow-md"
-                            onClick={() => setOpenDialog(true)}
+                            onClick={handleCreateResume}
                         >
                             <PlusSquare className="w-10 h-10 text-[#4977ec]" />
                             <h3 className="text-lg font-medium text-gray-700">
@@ -128,79 +116,12 @@ export default function ResumePage() {
                         </p>
                         <Button
                             className="bg-[#4977ec] hover:bg-[#3b62c2] text-white"
-                            onClick={() => setOpenDialog(true)}
+                            onClick={handleCreateResume}
                             btnText="Create Resume"
                         />
                     </div>
                 )}
             </section>
-
-            {/* ✨✨ render POPUP */}
-
-            {/* Create Resume Dialog */}
-            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-semibold text-gray-800">
-                            <div className="flex items-center gap-2">
-                                <FileText className="w-5 h-5 text-[#4977ec]" />
-                                Create New Resume
-                            </div>
-                        </DialogTitle>
-                        <DialogDescription className="mt-2 text-gray-600">
-                            Give your resume a title to get started
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="grid gap-4 py-4">
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="resume-title"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Resume Title
-                            </label>
-                            <Input
-                                id="resume-title"
-                                placeholder="e.g. Senior Frontend Developer Resume"
-                                className="w-full focus:border-[#4977ec] focus:ring-1 focus:ring-[#4977ec30]"
-                                value={resumeTitle}
-                                onChange={(e) => setResumeTitle(e.target.value)}
-                                onKeyDown={(e) =>
-                                    e.key === 'Enter' && onCreate()
-                                }
-                            />
-                            <p className="text-xs text-gray-500">
-                                You can change this later
-                            </p>
-                        </div>
-                    </div>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setOpenDialog(false)}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onCreate}
-                            disabled={!resumeTitle.trim() || loading}
-                            className="bg-[#4977ec] hover:bg-[#3b62c2] text-white gap-2"
-                        >
-                            {loading ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Creating...
-                                </>
-                            ) : (
-                                'Create Resume'
-                            )}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }

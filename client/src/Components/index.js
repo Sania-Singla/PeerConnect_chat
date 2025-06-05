@@ -69,6 +69,7 @@ import AddMembersPopup from './Popups/AddMembersPopup';
 import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateCoverImagePopup from './Popups/UpdateCoverImagePopup';
+import NewResumePopup from './Popups/NewResumePopup';
 
 // Project components
 import ProjectCard from './Project/ProjectCard';
@@ -146,6 +147,7 @@ export {
     Recemendations,
     AdminPostRow,
     ProjectContributors,
+    NewResumePopup,
     ChannelAbout,
     ProjectContributionForm,
     ChannelPosts,
