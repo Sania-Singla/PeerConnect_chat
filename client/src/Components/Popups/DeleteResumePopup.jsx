@@ -8,11 +8,15 @@ import { useState } from 'react';
 export default function DeleteResumePopup() {
     const { popupInfo, setShowPopup } = usePopupContext();
     const [loading, setLoading] = useState(false);
+    const [confirmed, setConfirmed] = useState(false);
 
     async function deleteResume() {
         try {
             setLoading(true);
-            await resumeService.deleteResume(popupInfo.resumeId);
+            const response = await resumeService.deleteResume(
+                popupInfo.resumeId
+            );
+            console.log(response);
             toast.success('Resume deleted successfully');
         } catch (err) {
             toast.error('Failed to delete resume');
@@ -22,6 +26,7 @@ export default function DeleteResumePopup() {
         }
     }
 
+
     return (
         <div className="w-[300px] md:w-sm bg-white p-6 rounded-lg grid gap-2 shadow-sm">
             <h2 className="text-red-600 font-semibold mb-2">
@@ -29,13 +34,17 @@ export default function DeleteResumePopup() {
             </h2>
             <div>
                 <div className="flex items-start gap-2 text-sm text-gray-700">
-                    <input type="checkbox" className="mt-1 size-5" />
+                    <input
+                        type="checkbox"
+                        className="mt-1 size-5"
+                        onChange={(e) => setConfirmed(e.target.checked)}
+                    />
                     <span>
                         This will permanently delete{' '}
                         <strong className="text-black">
                             {popupInfo.resume.title}
                         </strong>{' '}
-                        resume, changes cannot be undone.
+                        and cannot be undone.
                     </span>
                 </div>
             </div>
@@ -44,23 +53,23 @@ export default function DeleteResumePopup() {
                 <Button
                     onClick={() => setShowPopup(false)}
                     defaultStyles={true}
-                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 h-[35px] text-[15px] w-full"
+                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 h-[35px] w-full"
                     btnText="Cancel"
                 />
                 <Button
                     onClick={deleteResume}
-                    disabled={loading}
+                    disabled={!confirmed || loading}
                     defaultStyles={true}
-                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 h-[35px] text-[15px] w-full"
+                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 h-[35px] w-full"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">
-                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
                             </div>
                         ) : (
-                            'Delete'
+                            'Delete Resume'
                         )
                     }
                 />
