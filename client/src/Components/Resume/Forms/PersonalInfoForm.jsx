@@ -21,8 +21,8 @@ export default function PersonalInfoForm() {
         setResumeInfo({ ...resumeInfo, [name]: value });
     };
 
-    function handleBlur(e){
-        const {name, value} = e.target
+    function handleBlur(e) {
+        const { name, value } = e.target;
         verifyUserName(name, value);
     }
     async function onSave(e) {
@@ -60,7 +60,7 @@ export default function PersonalInfoForm() {
                         required
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        placeholder="Enter your first name"
+                        placeholder="e.g. John"
                     />
 
                     <Input
@@ -70,66 +70,65 @@ export default function PersonalInfoForm() {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         defaultValue={resumeInfo?.lastName}
-                        placeholder="Enter your last name"
+                        placeholder="e.g. Doe"
                     />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="Address"
-                            name="address"
-                            required
-                            defaultValue={resumeInfo?.address}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            placeholder="Enter your full address"
-                        />
-                    </div>
+                    <Input
+                        label="State"
+                        name="state"
+                        required
+                        defaultValue={resumeInfo?.address}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. Chandigarh"
+                    />
+                    <Input
+                        label="Country"
+                        name="country"
+                        required
+                        defaultValue={resumeInfo?.address}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. India"
+                    />
 
-                    <div>
-                        <Input
-                            label="Phone"
-                            name="phone"
-                            required
-                            defaultValue={resumeInfo?.phone}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            placeholder="Enter your phone number"
-                        />
-                    </div>
+                    <Input
+                        label="Phone"
+                        name="phone"
+                        required
+                        defaultValue={resumeInfo?.phone}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. +91 2345678901"
+                    />
 
-                    <div>
-                        <Input
-                            label="Email"
-                            name="email"
-                            required
-                            defaultValue={resumeInfo?.email}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            placeholder="Enter your email address"
-                        />
-                    </div>
+                    <Input
+                        label="Email"
+                        name="email"
+                        required
+                        defaultValue={resumeInfo?.email}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. john.doe@example.com"
+                    />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="LinkedIn Username"
-                            name="linkedin"
-                            defaultValue={resumeInfo?.linkedin}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            placeholder="Enter your LinkedIn username"
-                        />
-                    </div>
+                    <Input
+                        label="LinkedIn Username"
+                        name="linkedin"
+                        defaultValue={resumeInfo?.linkedin}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. john-doe"
+                    />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="GitHub Username"
-                            name="github"
-                            defaultValue={resumeInfo?.github}
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            placeholder="Enter your GitHub username"
-                        />
-                    </div>
+                    <Input
+                        label="GitHub Username"
+                        name="github"
+                        defaultValue={resumeInfo?.github}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. johndoe123"
+                    />
                 </div>
 
                 <div className="mt-5 flex justify-end">
