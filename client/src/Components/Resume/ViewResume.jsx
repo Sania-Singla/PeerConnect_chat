@@ -41,7 +41,8 @@ export default function ViewResume() {
                     <div className="flex justify-between px-44 w-full my-8 gap-6">
                         <Button
                             onClick={() => window.print()}
-                            className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
+                            defaultStyles="true"
+                            className="w-full text-white py-[5px] px-3"
                             btnText="Download"
                         />
                         <RWebShare
@@ -55,7 +56,8 @@ export default function ViewResume() {
                                 onClick={() =>
                                     toast.success('shared successfully!')
                                 }
-                                className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
+                                defaultStyles="true"
+                                className="w-full text-white py-[5px] px-3"
                                 btnText="Share"
                             />
                         </RWebShare>
