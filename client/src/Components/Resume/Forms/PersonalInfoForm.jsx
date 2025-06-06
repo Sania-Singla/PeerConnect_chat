@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { verifyUserName } from '@/Utils/regex';
 
 export default function PersonalInfoForm({ enabledNext }) {
     const { resumeId } = useParams();
@@ -17,26 +18,14 @@ export default function PersonalInfoForm({ enabledNext }) {
     const handleInputChange = (e) => {
         enabledNext(false);
         const { name, value } = e.target;
-
-        // move to a util
-        // if (name === 'linkedin' || name === 'github' || name === 'leetcode') {
-        //     // just prompt the user to enter the username only
-        //     if (
-        //         value.startsWith('https://') ||
-        //         value.startsWith('http://') ||
-        //         value.includes('www.') ||
-        //         value.includes('.com') ||
-        //         value.includes('/')
-        //     ) {
-        //         toast.error('Please enter only the LinkedIn username.');
-        //         return;
-        //     }
-        // }
-
         setPersonalInfo({ ...personalInfo, [name]: value });
         setResumeInfo({ ...resumeInfo, [name]: value });
     };
 
+    function handleBlur(e){
+        const {name, value} = e.target
+        verifyUserName(name, value);
+    }
     async function onSave(e) {
         try {
             e.preventDefault();
@@ -68,6 +57,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                         defaultValue={resumeInfo?.firstName}
                         required
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         placeholder="Enter your first name"
                     />
 
@@ -76,6 +66,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                         name="lastName"
                         required
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         defaultValue={resumeInfo?.lastName}
                         placeholder="Enter your last name"
                     />
@@ -87,6 +78,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                             required
                             defaultValue={resumeInfo?.address}
                             onChange={handleInputChange}
+                            onBlur={handleBlur}
                             placeholder="Enter your full address"
                         />
                     </div>
@@ -98,6 +90,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                             required
                             defaultValue={resumeInfo?.phone}
                             onChange={handleInputChange}
+                            onBlur={handleBlur}
                             placeholder="Enter your phone number"
                         />
                     </div>
@@ -109,6 +102,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                             required
                             defaultValue={resumeInfo?.email}
                             onChange={handleInputChange}
+                            onBlur={handleBlur}
                             placeholder="Enter your email address"
                         />
                     </div>
@@ -119,6 +113,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                             name="linkedin"
                             defaultValue={resumeInfo?.linkedin}
                             onChange={handleInputChange}
+                            onBlur={handleBlur}
                             placeholder="Enter your LinkedIn username"
                         />
                     </div>
@@ -129,6 +124,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                             name="github"
                             defaultValue={resumeInfo?.github}
                             onChange={handleInputChange}
+                            onBlur={handleBlur}
                             placeholder="Enter your GitHub username"
                         />
                     </div>

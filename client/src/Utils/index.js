@@ -6,7 +6,8 @@ import {
     formatFileSize,
     formatCount,
 } from './formatting';
-import verifyExpression from './regex';
+import { verifyExpression } from './regex';
+import { verifyUserName } from './regex';
 import paginate from './pagination';
 import { downloadCodeFile, formatLeetcodeInput } from './editor';
 import { ai } from './ai';
@@ -19,6 +20,7 @@ export {
     formatDateRelative,
     formatTime,
     verifyExpression,
+    verifyUserName,
     paginate,
     formatCount,
     downloadCodeFile,
