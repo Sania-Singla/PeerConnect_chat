@@ -195,14 +195,16 @@ export default function Comment({ comment, setComments }) {
                                     setNewContent(comment_content);
                                 }}
                                 btnText="Cancel"
-                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
+                                defaultStyles={true}
+                                className="px-3 py-1 group text-white"
                             />
 
                             {/* submit btn */}
                             <Button
                                 type="submit"
                                 btnText={isUpdating ? 'Updating...' : 'Update'}
-                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
+                                defaultStyles={true}
+                                className="px-3 py-1 group text-white"
                             />
                         </div>
                     </form>
@@ -212,7 +214,7 @@ export default function Comment({ comment, setComments }) {
                     </div>
                 )}
 
-                <div className="bg-[#f0efef] rounded-full overflow-hidden mt-4 drop-shadow-md hover:bg-[#ebeaea] w-fit">
+                <div className="bg-[#f0efef] rounded-full overflow-hidden mt-3 shadow-sm w-fit">
                     <Button
                         onClick={handleLike}
                         title="Like"
@@ -223,7 +225,7 @@ export default function Comment({ comment, setComments }) {
                                         isLiked === 1
                                             ? 'fill-[#4977ec] stroke-[#4977ec]'
                                             : 'fill-none stroke-black'
-                                    } size-[20px]`}
+                                    } size-[16px]`}
                                 >
                                     {icons.like}
                                 </div>
@@ -232,7 +234,7 @@ export default function Comment({ comment, setComments }) {
                                 </div>
                             </div>
                         }
-                        className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea] border-r-[0.1rem] border-[#e6e6e6]"
+                        className="py-1 px-2 hover:bg-[#d7d7d7] border-r-[0.1rem] border-[#e6e6e6]"
                     />
 
                     <Button
@@ -245,7 +247,7 @@ export default function Comment({ comment, setComments }) {
                                         isLiked === 0
                                             ? 'fill-[#4977ec] stroke-[#4977ec]'
                                             : 'fill-none stroke-black'
-                                    } size-[20px]`}
+                                    } size-[16px]`}
                                 >
                                     {icons.dislike}
                                 </div>
@@ -254,7 +256,7 @@ export default function Comment({ comment, setComments }) {
                                 </div>
                             </div>
                         }
-                        className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea]"
+                        className="py-1 px-2 hover:bg-[#d7d7d7]"
                     />
                 </div>
             </div>
@@ -269,7 +271,7 @@ export default function Comment({ comment, setComments }) {
                             </div>
                         }
                         title="Edit"
-                        className="bg-[#f0efef] p-2 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
+                        className="bg-[#f0efef] p-2 group rounded-full shadow-sm"
                     />
 
                     <Button
@@ -280,7 +282,7 @@ export default function Comment({ comment, setComments }) {
                             </div>
                         }
                         title="Delete"
-                        className="bg-[#f0efef] p-2 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
+                        className="bg-[#f0efef] p-2 group rounded-full shadow-sm"
                     />
                 </div>
             )}

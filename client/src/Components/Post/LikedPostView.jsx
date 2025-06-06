@@ -42,7 +42,7 @@ export default function LikedPostView({ likedPost, reference }) {
                             </div>
                         )
                     }
-                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-lg hover:bg-[#ebeaea]"
+                    className="bg-[#f0efef] p-3 group rounded-full shadow-sm hover:bg-[#ebeaea]"
                     onClick={toggleLike}
                 />
             </div>

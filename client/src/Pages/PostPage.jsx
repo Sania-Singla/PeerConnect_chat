@@ -255,7 +255,7 @@ export default function PostPage() {
                             </div>
 
                             {/* like/dislike btn */}
-                            <div className="bg-[#f0efef] rounded-full flex overflow-hidden shadow-sm hover:bg-[#ebeaea]">
+                            <div className="bg-[#f0efef] rounded-full flex overflow-hidden shadow-sm">
                                 <Button
                                     btnText={
                                         <div className="flex items-center justify-center gap-2">
@@ -264,7 +264,7 @@ export default function PostPage() {
                                                     post.isLiked
                                                         ? 'fill-[#4977ec] stroke-[#4977ec]'
                                                         : 'fill-none stroke-black'
-                                                } size-[18px]`}
+                                                } size-[16px]`}
                                             >
                                                 {icons.like}
                                             </div>
@@ -274,7 +274,7 @@ export default function PostPage() {
                                         </div>
                                     }
                                     onClick={toggleLike}
-                                    className="bg-[#f0efef] py-[7px] px-3 hover:bg-[#ebeaea] border-r-[0.1rem] border-[#e6e6e6]"
+                                    className="py-1 px-3 hover:bg-[#d4d4d4] border-r-[0.1rem] border-[#e6e6e6]"
                                 />
                                 <Button
                                     btnText={
@@ -284,7 +284,7 @@ export default function PostPage() {
                                                     post.isDisliked
                                                         ? 'fill-[#4977ec] stroke-[#4977ec]'
                                                         : 'fill-none stroke-black'
-                                                } size-[18px]`}
+                                                } size-[16px]`}
                                             >
                                                 {icons.dislike}
                                             </div>
@@ -296,7 +296,7 @@ export default function PostPage() {
                                         </div>
                                     }
                                     onClick={toggleDislike}
-                                    className="bg-[#f0efef] py-[7px] px-3 hover:bg-[#ebeaea]"
+                                    className="py-1 px-3 hover:bg-[#d4d4d4]"
                                 />
                             </div>
                         </div>
@@ -377,7 +377,8 @@ export default function PostPage() {
                                         onClick={() =>
                                             navigate(`/update/${post.post_id}`)
                                         }
-                                        className="rounded-md text-white py-[4px] px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
+                                        defaultStyles={true}
+                                        className="text-white py-1 px-4"
                                     />
                                 ) : (
                                     <div className="flex gap-2 sm:gap-4">
@@ -388,7 +389,8 @@ export default function PostPage() {
                                                     : 'Follow'
                                             }
                                             onClick={toggleFollow}
-                                            className="rounded-md py-[5px] px-3 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            defaultStyles={true}
+                                            className="py-[5px] px-3 sm:px-6 text-white"
                                         />
                                         <Button
                                             btnText={
@@ -405,7 +407,8 @@ export default function PostPage() {
                                                     : 'Connect'
                                             }
                                             onClick={handleCollab}
-                                            className="rounded-md py-[5px] px-3 sm:px-6 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
+                                            defaultStyles={true}
+                                            className="py-[5px] px-3 sm:px-6 text-white"
                                         />
                                     </div>
                                 )}

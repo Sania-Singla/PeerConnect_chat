@@ -83,25 +83,28 @@ export default function Comments() {
                     id="comment"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="placeholder-black w-full bg-transparent border-black border-[0.01rem] shadow-md shadow-gray-200 rounded-lg p-[5px] indent-2 text-black"
+                    className="placeholder-gray-500 w-full bg-transparent border-black border-[0.01rem] shadow-sm rounded-lg p-1 indent-2 text-black"
                 />
                 <div className="flex items-center gap-x-3">
                     <Button
                         type="reset"
                         btnText="Cancel"
                         onClick={(e) => setInput('')}
-                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-4 py-1 group rounded-full drop-shadow-md"
+                        defaultStyles={true}
+                        className="px-4 py-1 group text-white"
                     />
                     <Button
                         type="submit"
                         btnText={addingComment ? 'adding...' : 'Comment'}
                         disabled={addingComment}
-                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-3 py-1 group rounded-full drop-shadow-md"
+                        defaultStyles={true}
+                        className="px-3 py-1 group text-white"
                     />
                 </div>
             </form>
 
-            {/* // TODO: pagination */}
+            {/* // todo: pagination */}
+
             {comments.length > 0 ? (
                 <div className="">
                     <div className="mt-4 text-black">

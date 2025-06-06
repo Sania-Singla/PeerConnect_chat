@@ -150,7 +150,8 @@ export default function FriendsPopup() {
                             {members.length > 0 && (
                                 <Button
                                     btnText={adding ? 'Adding...' : 'Add'}
-                                    className="bg-green-500 mb-4 text-white rounded-md w-[80px]"
+                                    defaultStyles={true}
+                                    className="bg-green-500 mb-4 text-white w-[80px]"
                                     onClick={createGroup}
                                     disabled={loading}
                                 />

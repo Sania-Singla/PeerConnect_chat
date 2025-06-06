@@ -87,14 +87,14 @@ export default function PostCardView({
                         btnText={
                             <div className="flex items-center justify-center gap-3">
                                 <span>Read more</span>
-                                <div className="size-[20px] fill-white">
+                                <div className="size-[16px] fill-white">
                                     {icons.rightArrow}
                                 </div>
                             </div>
                         }
                         defaultStyles={true}
                         onClick={() => navigate(`/post/${post_id}`)}
-                        className="p-2 px-3"
+                        className="py-[5px] px-3 text-white"
                     />
                 </div>
             </div>

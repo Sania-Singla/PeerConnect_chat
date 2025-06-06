@@ -74,6 +74,8 @@ export default function DeleteAccount() {
                     onMouseOver={onMouseOver}
                     disabled={disabled}
                     onClick={handleClick}
+                    defaultStyles={true}
+                    className="text-white"
                     btnText={loading ? 'Deleting...' : 'Delete'}
                 />
             </div>

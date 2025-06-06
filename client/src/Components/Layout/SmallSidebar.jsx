@@ -188,7 +188,8 @@ export default function Sidebar() {
                                     onClick={() => navigate('/login')}
                                     btnText="Login"
                                     title="Login"
-                                    className="text-white rounded-md w-[75px] h-[32px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                                    defaultStyles={true}
+                                    className="w-[75px] h-[32px] text-white"
                                 />
                             )}
                         </div>

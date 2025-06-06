@@ -21,7 +21,8 @@ export default function Home() {
                     </p>
 
                     <Button
-                        className="text-white rounded-md py-2 mt-4 flex items-center justify-center text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                        defaultStyles={true}
+                        className="py-2 mt-4 text-lg text-white"
                         onClick={() => navigate('/interview/1')}
                         btnText={
                             <div className="flex items-center gap-2">

@@ -137,7 +137,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                     <Button
                         onClick={deletePost}
                         title="Delete"
-                        className="bg-[#ffffff] group p-2 rounded-full drop-shadow-md w-fit"
+                        className="bg-[#ffffff] group p-2 rounded-full shadow-sm w-fit"
                         btnText={
                             <div className="size-[20px] fill-black group-hover:fill-[#d42828]">
                                 {icons.delete}
@@ -147,7 +147,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                     <Button
                         title="Edit"
                         onClick={() => navigate(`/update/${post_id}`)}
-                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
+                        className="bg-[#ffffff] p-2 group rounded-full shadow-sm w-fit"
                         btnText={
                             <div className="size-[20px] fill-black group-hover:fill-[#2256db]">
                                 {icons.edit}

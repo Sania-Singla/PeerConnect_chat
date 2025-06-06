@@ -25,7 +25,7 @@ const TAILWIND_COLORS = [
 
 const IMAGES = {
     user: 'https://res.cloudinary.com/dddnbyltc/image/upload/v1741966812/aggldxme6x3lszagjypr.png',
-    logo: '/images/logo.png',
+    logo: '/images/logo.jpg',
     logoSvg: '/images/logo_without_bg.png',
     tech: '/images/tech.svg',
     robot: '/images/robot.png',

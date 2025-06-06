@@ -170,7 +170,8 @@ export default function AdminPage() {
                             </div>
                         }
                         onClick={() => navigate('/add')}
-                        className="text-white rounded-md p-2 w-full bg-[#4977ec] font-medium hover:bg-[#3b62c2]"
+                        defaultStyles={true}
+                        className="text-white p-2 w-full"
                     />
                 </div>
             </div>

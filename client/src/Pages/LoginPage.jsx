@@ -35,7 +35,7 @@ export default function LoginPage() {
                         to={'/'}
                         className="w-fit flex items-center justify-center hover:brightness-95 mb-6"
                     >
-                        <div className="size-[80px] shadow-sm">
+                        <div className="size-[80px]">
                             <img
                                 src={IMAGES.logoSvg}
                                 alt="peer connect logo"

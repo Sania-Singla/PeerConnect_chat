@@ -146,7 +146,7 @@ export default function RegisterPage() {
                     to={'/'}
                     className="w-fit flex items-center justify-center hover:brightness-95 mb-4"
                 >
-                    <div className="size-[80px] shadow-sm">
+                    <div className="size-[80px]">
                         <img
                             src={IMAGES.logoSvg}
                             alt="peer connect logo"
@@ -191,9 +191,10 @@ export default function RegisterPage() {
                         <div className="w-full">
                             <Button
                                 type="submit"
-                                className="text-white rounded-md py-2 mt-4 h-[45px] flex items-center justify-center text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                className="text-white py-2 mt-3 h-[40px] w-full"
                                 disabled={disabled}
                                 onMouseOver={onMouseOver}
+                                defaultStyles={true}
                                 btnText={
                                     loading ? (
                                         <div className="size-5 fill-white dark:text-[#c5d5ff]">

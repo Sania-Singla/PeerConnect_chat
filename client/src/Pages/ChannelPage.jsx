@@ -127,7 +127,7 @@ export default function ChannelPage() {
             to={path}
             end
             className={({ isActive }) =>
-                `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-black bg-[#f9f9f9] text-black'} drop-shadow-md hover:backdrop-brightness-90 rounded-t-md p-[3px] border-b-[0.1rem] w-full text-center text-lg font-medium`
+                `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-gray-300 bg-[#f9f9f9] text-black'} shadow-sm hover:backdrop-brightness-90 rounded-t-md p-2 border-b-3 w-full text-center font-medium`
             }
         >
             <div className="w-full text-center">{name}</div>
@@ -192,7 +192,7 @@ export default function ChannelPage() {
                         <Button
                             btnText="Edit"
                             onClick={() => navigate('/settings')}
-                            className="py-[5px] px-4"
+                            className="py-[5px] px-4 text-white"
                             defaultStyles={true}
                         />
                     </div>
@@ -201,7 +201,7 @@ export default function ChannelPage() {
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
-                            className="py-[5px] px-4"
+                            className="py-[5px] px-4 text-white"
                             defaultStyles={true}
                         />
                         <Button
@@ -219,7 +219,7 @@ export default function ChannelPage() {
                             }
                             onClick={handleCollab}
                             defaultStyles={true}
-                            className="py-[5px] px-4 sm:px-6"
+                            className="py-[5px] px-4 sm:px-6 text-white"
                         />
                     </div>
                 )}

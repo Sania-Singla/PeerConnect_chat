@@ -170,11 +170,13 @@ export default function Feedback() {
 
                 <div className="flex flex-row gap-4 mt-1 font-semibold">
                     <Button
-                        className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
+                        defaultStyles={true}
+                        className="py-2 w-full px-3 text-white"
                         btnText={<Link to="/interview">Back to dashboard</Link>}
                     />
                     <Button
-                        className="text-white rounded-md py-2 w-full px-3 flex items-center justify-center bg-[#4977ec] hover:bg-[#3b62c2] transition-shadow shadow-sm hover:shadow-sm"
+                        defaultStyles={true}
+                        className="py-2 w-full px-3 text-white"
                         btnText={
                             <Link to={`/interview/${id}`}>
                                 Retake Interview

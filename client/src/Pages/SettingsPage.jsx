@@ -20,7 +20,7 @@ export default function SettingsPage() {
             key={option.name}
             to={option.path}
             className={({ isActive }) =>
-                `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-black bg-[#f9f9f9] text-black'} drop-shadow-md hover:backdrop-brightness-90 rounded-t-md p-[3px] border-b-[0.1rem] w-full text-center text-lg font-medium`
+                `${isActive ? 'border-b-[#4977ec] bg-[#4977ec] text-white' : 'border-b-gray-300 bg-[#f9f9f9] text-black'} shadow-sm hover:backdrop-brightness-90 rounded-t-md p-2 border-b-3 w-full text-center font-medium`
             }
         >
             <div>{option.name}</div>
@@ -97,7 +97,7 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="flex items-center justify-evenly w-full gap-2">
+            <div className="flex flex-col sm:flex-row items-center justify-evenly w-full gap-2">
                 {tabElements}
             </div>
 

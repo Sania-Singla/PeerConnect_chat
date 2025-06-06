@@ -247,7 +247,8 @@ export default function UpdatePostPage() {
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-3 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className="text-white py-3 w-full"
                         />
                     </div>
                 </div>

@@ -93,7 +93,8 @@ export default function EditorLayout() {
                     <div className="flex md:flex-col gap-2">
                         <Button
                             onClick={copyRoomId}
-                            className="w-full bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
+                            defaultStyles={true}
+                            className="w-full bg-green-600 hover:bg-green-700 py-2 px-4 text-white"
                             btnText="Copy Room ID"
                         />
                         <Button
@@ -101,7 +102,8 @@ export default function EditorLayout() {
                                 socket.emit('leaveCode', roomId);
                                 navigate('/');
                             }}
-                            className="w-full bg-red-600 hover:bg-red-700 py-2 px-4 rounded"
+                            defaultStyles={true}
+                            className="w-full bg-red-600 hover:bg-red-700 py-2 px-4 text-white"
                             btnText="Leave Room"
                         />
                     </div>
@@ -123,15 +125,17 @@ export default function EditorLayout() {
                         </select>
 
                         <Button
-                            className="bg-[#4977ec] hover:bg-[#3b62c2] text-white px-4 py-1 rounded"
+                            defaultStyles={true}
+                            className="px-4 py-1 text-white"
                             onClick={() => setIsCompilerOpen((prev) => !prev)}
                             btnText={isCompilerOpen ? 'Close' : 'Compile'}
                         />
 
                         <Button
-                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-1"
                             onClick={() => downloadCodeFile(codeRef, language)}
                             btnText="Save File"
+                            defaultStyles={true}
                         />
                     </header>
 
@@ -156,15 +160,17 @@ export default function EditorLayout() {
                         </h5>
                         <div className="flex space-x-2">
                             <Button
-                                className="bg-green-600 hover:bg-green-700 px-4 h-[32px] rounded text-white"
+                                className="bg-green-600 hover:bg-green-700 px-4 h-[32px] text-white"
                                 onClick={runCode}
                                 disabled={isCompiling}
+                                defaultStyles={true}
                                 btnText={isCompiling ? 'Compiling...' : 'Run'}
                             />
                             <Button
-                                className="bg-gray-600 hover:bg-gray-700 px-4 h-[32px] rounded text-white"
+                                className="bg-gray-600 hover:bg-gray-700 px-4 h-[32px] text-white"
                                 onClick={() => setIsCompilerOpen(false)}
                                 btnText="Close"
+                                defaultStyles={true}
                             />
                         </div>
                     </div>

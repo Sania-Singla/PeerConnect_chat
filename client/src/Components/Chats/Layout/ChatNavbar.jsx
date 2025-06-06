@@ -39,7 +39,7 @@ export default function ChatNavbar() {
                     }
                     title="Show Sidebar"
                     onClick={() => setShowSideBar((prev) => !prev)}
-                    className="group cursor-pointer"
+                    className="group"
                 />
 
                 {/* logo */}

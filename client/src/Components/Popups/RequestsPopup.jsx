@@ -88,8 +88,9 @@ export default function RequestsPopup() {
                                 'Accept'
                             )
                         }
+                        defaultStyles={true}
                         onClick={() => acceptRequest(request_id)}
-                        className="text-green-600 rounded-md text-[15px] w-[60px] py-[3px] bg-[#00ff1517]"
+                        className="text-green-600 w-[60px] text-[15px] py-[3px] bg-[#00ff1517]"
                     />
                     <Button
                         btnText={
@@ -105,7 +106,8 @@ export default function RequestsPopup() {
                             )
                         }
                         onClick={() => rejectRequest(request_id)}
-                        className="text-red-600 rounded-md w-[60px] text-[15px] py-[3px] bg-[#ff000012]"
+                        defaultStyles={true}
+                        className="text-red-600 w-[60px] text-[15px] py-[3px] bg-[#ff000012]"
                     />
                 </div>
             </div>

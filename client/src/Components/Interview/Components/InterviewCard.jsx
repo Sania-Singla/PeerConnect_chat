@@ -59,7 +59,8 @@ export default function InterviewCard({ interview }) {
                     <DisplayTechIcons techStack={techstack} />
 
                     <Button
-                        className="text-white rounded-md py-[5px] w-fit px-3 flex items-center justify-center text-lg bg-[#4977ec] hover:bg-[#3b62c2]"
+                        defaultStyles={true}
+                        className="py-[5px] w-fit px-3 text-lg text-white"
                         btnText={
                             <Link
                                 to={

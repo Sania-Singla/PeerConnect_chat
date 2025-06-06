@@ -113,7 +113,11 @@ export default function UpdateAvatar() {
                                 )
                             }
                             disabled={disabled}
-                            className="text-white rounded-md w-[75px] h-[32px] bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className={`text-white w-[100px] h-[36px] ${
+                                disabled &&
+                                'bg-gray-400 cursor-not-allowed hover:bg-gray-500'
+                            }`}
                             onMouseOver={onMouseOver}
                             type="submit"
                         />

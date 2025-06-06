@@ -54,7 +54,7 @@ export default function Form() {
                     <Button
                         onClick={joinRoom}
                         defaultStyles={true}
-                        className="h-[40px] w-full mt-5"
+                        className="h-[40px] w-full mt-5 text-white"
                         btnText="JOIN"
                     />
                 </div>

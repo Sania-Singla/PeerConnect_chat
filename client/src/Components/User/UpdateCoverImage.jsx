@@ -117,10 +117,9 @@ export default function UpdateCoverImage() {
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             type="submit"
-                            className={`text-white rounded-md w-[100px] h-[36px] text-sm transition-all duration-200 ${
-                                disabled
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-[#4977ec] hover:bg-[#3b62c2]'
+                            defaultStyles={true}
+                            className={`text-white w-[100px] h-[36px] ${
+                                disabled && 'bg-gray-400 cursor-not-allowed hover:bg-gray-500'
                             }`}
                         />
                     </div>

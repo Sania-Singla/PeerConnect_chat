@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/Components';
 import { useState } from 'react';
 import { icons } from '@/Assets/icons';
-import { EMAIL, CONTACTNUMBER } from '@/Constants/constants';
+import { CONTACTS } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function ContactUsPage() {
@@ -24,12 +24,12 @@ export default function ContactUsPage() {
     }
 
     function copyEmail() {
-        window.navigator.clipboard.writeText(EMAIL);
+        window.navigator.clipboard.writeText(CONTACTS.email);
         toast.success('Email Copied to Clipboard 🤗');
     }
 
     function callNumber() {
-        window.location.href = `tel:${CONTACTNUMBER}`;
+        window.location.href = `tel:${CONTACTS.phone}`;
     }
 
     return (
@@ -110,7 +110,7 @@ export default function ContactUsPage() {
 
                                 <div className="flex items-center justify-center gap-2">
                                     <div className="cursor-pointer hover:text-[#2e5cd3] text-[15px]">
-                                        {EMAIL}
+                                        {CONTACTS.email}
                                     </div>
 
                                     <div
@@ -131,7 +131,7 @@ export default function ContactUsPage() {
                                     className="cursor-pointer hover:text-[#2e5cd3] text-[15px]"
                                     onClick={callNumber}
                                 >
-                                    {CONTACTNUMBER}
+                                    {CONTACTS.phone}
                                 </div>
                             </div>
                         </section>
@@ -203,7 +203,8 @@ export default function ContactUsPage() {
                                 type="submit"
                                 btnText="Submit Feedback"
                                 onClick={submitFeedback}
-                                className="w-full py-3 px-6 bg-[#4977ec] hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-md hover:shadow-lg"
+                                defaultStyles={true}
+                                className="w-full py-3 px-6 text-white"
                             >
                                 Submit Feedback
                             </Button>

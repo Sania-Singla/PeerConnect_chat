@@ -134,7 +134,7 @@ export default function UpdatePassword() {
 
     return (
         <div className="w-full py-2">
-            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 lg:px-8 pb-4">
+            <div className="rounded-xl shadow-sm m-1 flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 lg:px-8 pb-4">
                 <div className="w-full py-6">
                     <h3 className="text-2xl font-semibold">Change Password</h3>
                     <p className="mt-4">
@@ -158,16 +158,18 @@ export default function UpdatePassword() {
                                 disabled={loading}
                                 onClick={() => {
                                     setInputs(initialInputs);
-                                    setError(nullErrors);
+                                    setError({});
                                 }}
-                                className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                defaultStyles={true}
+                                className="w-full bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 py-1"
                             />
                             <Button
                                 btnText={loading ? 'Updating...' : 'Update'}
                                 type="submit"
                                 disabled={disabled}
                                 onMouseOver={onMouseOver}
-                                className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                defaultStyles={true}
+                                className="text-white py-2 w-full"
                             />
                         </div>
                     </form>

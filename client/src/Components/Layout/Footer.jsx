@@ -79,7 +79,7 @@ export default function Footer() {
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-lg overflow-hidden bg-white p-1 shadow-sm">
                                 <img
-                                    src={IMAGES.logo}
+                                    src={IMAGES.logoSvg}
                                     alt="Peer Connect logo"
                                     className="object-contain size-full"
                                 />
@@ -147,7 +147,8 @@ export default function Footer() {
                             <Button
                                 btnText="Submit"
                                 type="submit"
-                                className="w-full bg-[#4977ec] hover:bg-[#3b62c2] text-white py-2 rounded text-xs font-medium"
+                                defaultStyles={true}
+                                className="w-full py-2 text-xs text-white"
                             />
                         </form>
                     </div>

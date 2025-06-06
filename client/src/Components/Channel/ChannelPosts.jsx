@@ -70,14 +70,15 @@ export default function ChannelPosts() {
                         <Button
                             btnText={
                                 <div className="flex items-center justify-center gap-2">
-                                    <div className="size-[20px] fill-white">
+                                    <div className="size-[16px] fill-white">
                                         {icons.plus}
                                     </div>
                                     <div>New Post</div>
                                 </div>
                             }
+                            defaultStyles={true}
                             onClick={() => navigate('/add')}
-                            className="rounded-md text-white py-2 text-lg px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
+                            className="text-white py-2 px-4"
                         />
                     </div>
                 )}

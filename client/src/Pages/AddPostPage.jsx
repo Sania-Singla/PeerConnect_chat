@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fileRestrictions, verifyExpression } from '@/Utils';
 import { Button, RTE } from '@/Components';
 import { postService } from '@/Services';
 import { icons } from '@/Assets/icons';
-import { BASE_BACKEND_URL, MAX_FILE_SIZE } from '@/Constants/constants';
+import { MAX_FILE_SIZE } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function AddPostPage() {
@@ -194,7 +194,8 @@ export default function AddPostPage() {
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-3 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className="text-white py-3 w-full"
                         />
                     </div>
                 </div>

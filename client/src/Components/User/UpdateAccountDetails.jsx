@@ -136,7 +136,7 @@ export default function UpdateAccountDetails() {
 
     return (
         <div className="w-full py-2">
-            <div className="rounded-xl drop-shadow-md flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 pt-2 lg:px-8">
+            <div className="rounded-xl shadow-sm m-1 flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 pt-2 lg:px-8">
                 <div className="w-full py-6">
                     <h3 className="text-2xl font-semibold">
                         Update Personal Information
@@ -158,17 +158,19 @@ export default function UpdateAccountDetails() {
                             btnText="Cancel"
                             onClick={() => {
                                 setInputs(initialInputs);
-                                setError(nullErrors);
+                                setError({});
                             }}
                             disabled={loading}
-                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className="w-full bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 py-1"
                         />
                         <Button
                             btnText={loading ? 'Updating...' : 'Update'}
                             disabled={disabled}
                             type="submit"
                             onMouseOver={onMouseOver}
-                            className="text-white rounded-md py-2 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                            defaultStyles={true}
+                            className="text-white py-2 w-full"
                         />
                     </div>
                 </form>

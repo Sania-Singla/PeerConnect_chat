@@ -113,7 +113,7 @@ export default function Login() {
                 <div>
                     <Button
                         defaultStyles={true}
-                        className="py-2 mt-4 w-full h-[45px] text-lg"
+                        className="text-white py-2 mt-3 h-[40px] w-full"
                         onMouseOver={onMouseOver}
                         type="submit"
                         btnText={
