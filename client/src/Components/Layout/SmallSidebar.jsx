@@ -33,12 +33,6 @@ export default function Sidebar() {
         },
         {
             show: true,
-            path: '/practice',
-            name: 'Practice DSA',
-            icon: icons.practice,
-        },
-        {
-            show: true,
             path: '/chat',
             name: 'Messaging',
             icon: icons.chat,
