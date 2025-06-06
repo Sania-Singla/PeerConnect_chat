@@ -21,7 +21,7 @@ export default function InterviewCard({ interview }) {
             <div className="p-4 relative z-10">
                 <div>
                     {/* Type Badge */}
-                    <div className="text-white font-medium text-sm absolute top-4 right-4 w-fit px-4 py-1.5 rounded-lg bg-[#4977ec] drop-shadow-sm">
+                    <div className="text-[#4977ec] font-medium text-sm absolute top-4 right-4 w-fit px-3 py-1 rounded-full border border-[#4977ec] shadow-sm">
                         {type}
                     </div>
 
@@ -60,7 +60,7 @@ export default function InterviewCard({ interview }) {
 
                     <Button
                         defaultStyles={true}
-                        className="py-[5px] w-fit px-3 text-lg text-white"
+                        className="py-[5px] w-fit px-3 text-white"
                         btnText={
                             <Link
                                 to={

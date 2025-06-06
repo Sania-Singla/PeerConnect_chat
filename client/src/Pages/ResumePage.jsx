@@ -95,7 +95,7 @@ export default function ResumePage() {
                             <h3 className="text-lg font-medium text-gray-700">
                                 Add New Resume
                             </h3>
-                            <p className="text-gray-500 mb-4 text-sm">
+                            <p className="text-center text-gray-500 mb-4 text-sm">
                                 Get started by creating your first professional
                                 resume
                             </p>
@@ -117,7 +117,7 @@ export default function ResumePage() {
                         <h3 className="text-lg font-medium text-gray-700">
                             Add New Resume
                         </h3>
-                        <p className="text-gray-500 mb-4 text-sm">
+                        <p className="text-center text-gray-500 mb-4 text-sm">
                             Get started by creating your first professional
                             resume
                         </p>
