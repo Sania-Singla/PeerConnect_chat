@@ -17,127 +17,129 @@ io.use((socket, next) => {
     const req = socket.request;
     const res = {};
 
-    cookieParser()(
-        req,
-        res,
-        async (err) => await socketAuthenticator(req, err, socket, next)
-    );
+    cookieParser()(req, res, async (err) => {
+        await socketAuthenticator(req, err, socket, next);
+    });
 });
 
 io.on('connection', async (socket) => {
     try {
-        const user = socket.user,
-            userId = user?.user_id,
-            socketId = socket.id;
-        const coderKey = JSON.stringify({ ...user, socketId });
+        const user = socket.user;
+        const userId = user?.user_id;
+        const socketId = socket.id;
 
-        console.log('[USER CONNECTED]', { username: user.user_name, socketId });
+        console.log('[CONNECTED]', { username: user.user_name, socketId });
 
         // # ======================= register events first ========================
 
-        socket.on('typing', (chatId) =>
-            socket.to(chatId).emit('typing', { chatId, targetUser: user })
-        );
+        socket.on('typing', (chatId) => {
+            socket.to(`chat:${chatId}`).emit('typing', {
+                chatId,
+                targetUser: user,
+            });
+        });
 
-        socket.on('stoppedTyping', (chatId) =>
-            socket
-                .to(chatId)
-                .emit('stoppedTyping', { chatId, targetUser: user })
-        );
+        socket.on('stoppedTyping', (chatId) => {
+            socket.to(`chat:${chatId}`).emit('stoppedTyping', {
+                chatId,
+                targetUser: user,
+            });
+        });
 
         // Editor events
-        socket.on('syncCode', ({ socketId, code }) =>
-            socket.to(socketId).emit('syncCode', { code })
-        );
+        socket.on('codeChange', async ({ roomId, code }) => {
+            socket.to(`code:${roomId}`).emit('codeChange', { code });
 
-        socket.on('codeChange', ({ roomId, code }) =>
-            socket.to(`code:${roomId}`).emit('codeChange', { code })
-        );
+            await redisClient.setEx(
+                `script:${roomId}`,
+                86400, // 1 day
+                JSON.stringify(code || '')
+            );
+        });
 
         socket.on('leaveCode', async (roomId) => {
             socket.to(`code:${roomId}`).emit('userLeftCode', user);
-            await redisClient.sRem(`code:${roomId}`, coderKey);
-            socket.leave(`code:${roomId}`);
+            await redisClient.sRem(`code:${roomId}`, JSON.stringify(user));
+            await socket.leave(`code:${roomId}`);
         });
 
         socket.on('joinCode', async (roomId) => {
-            await socket.join(`code:${roomId}`);
-            await redisClient.sAdd(`code:${roomId}`, coderKey);
+            await Promise.all([
+                socket.join(`code:${roomId}`),
+                redisClient.sAdd(`code:${roomId}`, JSON.stringify(user)),
+            ]);
 
-            console.log('[JOINED CODE ROOM]', {
-                username: user.user_name,
-                roomId,
-                socketId,
-            });
+            const [members, code] = await Promise.all([
+                redisClient.sMembers(`code:${roomId}`),
+                redisClient.get(`script:${roomId}`),
+            ]);
 
-            // get the coders in the room
-            const members = await redisClient.sMembers(`code:${roomId}`);
+            if (!code) await redisClient.setEx(`script:${roomId}`, 86400, '');
+
             const coders = members.map((m) => JSON.parse(m));
 
-            socket.emit('userJoinedCode', { user, coders }); // Send to joining user
-            socket
-                .to(`code:${roomId}`)
-                .emit('userJoinedCode', { user, coders }); // Send to others
+            // Emit to current user only
+            socket.emit('syncCode', { code, coders });
+
+            // Emit to others in the room
+            socket.to(`code:${roomId}`).emit('userJoinedCode', user);
         });
 
         // disconnection
         socket.on('disconnect', async () => {
-            console.log('[USER DISCONNECTED]', {
+            console.log('[DISCONNECTED]', {
                 username: user.user_name,
                 socketId,
             });
 
-            // mark user offline
             await Promise.all([
                 redisClient.del(userId),
                 onlineUserObject.markUserOffline(userId),
             ]);
-            console.log('[MARKED OFFLINE]', { username: user.user_name });
 
-            // Notify others in rooms about us being offline in both chats and code rooms
-            const rooms = [...socket.rooms];
+            console.log('[OFFLINE]', { username: user.user_name });
 
-            rooms.forEach(async (room) => {
-                if (room.startsWith('code:')) {
-                    socket.to(room).emit('userLeftCode', user);
-                    await redisClient.sRem(room, coderKey);
-                } else {
-                    socket.to(room).emit('userStatusChange', {
+            const [chats, rooms] = await Promise.all([
+                chatObject.getMyChats(userId),
+                redisClient.keys('code:*'),
+            ]);
+
+            await Promise.all([
+                ...chats.map(async ({ chat_id }) => {
+                    socket.to(`chat:${chat_id}`).emit('userStatusChange', {
                         userId,
                         targetUser: user,
                         isOnline: false,
                     });
-                }
-            });
+                }),
+                ...rooms.map(async (room) => {
+                    socket.to(room).emit('userLeftCode', user);
+                    await redisClient.sRem(room, JSON.stringify(user));
+                }),
+            ]);
         });
 
         // # ======================= now start other async logic ========================
 
-        // mark user online
         await Promise.all([
-            redisClient.setEx(userId, 3600, socketId), // 1hr exp
+            redisClient.setEx(userId, 3600, socketId),
             onlineUserObject.markUserOnline(userId, socketId),
         ]);
-        console.log('[MARKED ONLINE]', { username: user.user_name });
+        console.log('[ONLINE]', { username: user.user_name });
 
-        // notify my chats
         const chats = await chatObject.getMyChats(userId);
 
-        chats.forEach(async ({ chat_id }) => {
-            await socket.join(chat_id);
-            socket.to(chat_id).emit('userStatusChange', {
+        for (const { chat_id } of chats) {
+            await socket.join(`chat:${chat_id}`);
+            socket.to(`chat:${chat_id}`).emit('userStatusChange', {
                 userId,
                 targetUser: user,
                 isOnline: true,
             });
-            console.log('[JOINED CHAT]', {
-                username: user.user_name,
-                chatId: chat_id,
-            });
-        });
+        }
     } catch (err) {
-        console.error('Error in socket:', err.message);
-        socket.disconnect();
+        console.error('Error in socket:', err);
+        process.exit(1);
     }
 });
 

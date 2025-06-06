@@ -143,10 +143,10 @@ const createGroup = tryCatch(
         const socketIds = await getSocketIds(memberIds);
         const sockets = io.sockets.sockets; // This is a Map of socketId => Socket // because socketId.join() is not a function
 
-        socketIds.forEach((socketId) => {
+        socketIds.forEach(async (socketId) => {
             const socket = sockets.get(socketId);
             if (socket) {
-                socket.join(chat.chat_id);
+                await socket.join(`chat:${chat.chat_id}`);
                 io.to(socketId).emit('newChat', transformedChat);
             }
         });
@@ -213,7 +213,7 @@ const removeMember = tryCatch(
         const socket = io.sockets.sockets.get(socketId); // This is a Map of socketId => Socket // necause socketId.join() is not a function
         if (socket) socket.leave(chatId);
 
-        socket.to(chatId).emit('memberRemoved', {
+        socket.to(`chat:${chatId}`).emit('memberRemoved', {
             chatId,
             userId,
         });
@@ -246,9 +246,9 @@ const makeAdmin = tryCatch('make admin', async (req, res, next) => {
         );
     }
 
-    const group = await chatObject.makeAdmin(chatId, userId);
+    await chatObject.makeAdmin(chatId, userId);
 
-    io.to(chatId).emit('memberPromoted', {
+    io.to(`chat:${chatId}`).emit('memberPromoted', {
         chatId,
         userId,
     });
@@ -282,7 +282,7 @@ const renameGroup = tryCatch('renaming the group', async (req, res, next) => {
 
     const result = await chatObject.renameGroup(chatId, newName);
 
-    io.to(chatId).emit('groupRenamed', {
+    io.to(`chat:${chatId}`).emit('groupRenamed', {
         chatId,
         newName,
     });
@@ -326,7 +326,7 @@ const leaveGroup = tryCatch('leave group', async (req, res, next) => {
     const socket = io.sockets.sockets.get(socketId);
     if (socket) socket.leave(chatId);
 
-    io.to(chatId).emit('memberRemoved', {
+    io.to(`chat:${chatId}`).emit('memberRemoved', {
         chatId,
         userId: memberLeaving,
     });
@@ -349,7 +349,7 @@ const deleteChat = tryCatch('delete chat', async (req, res, next) => {
 
     await chatObject.deleteChat(chatId);
 
-    io.to(chatId).emit('chatDeleted', chatId);
+    io.to(`chat:${chatId}`).emit('chatDeleted', chatId);
 
     return res.status(OK).json(chat);
 });
@@ -437,19 +437,15 @@ const addMembers = tryCatch('add members to group', async (req, res, next) => {
 
     const sockets = io.sockets.sockets;
 
-    oldSocketIds.forEach((socketId) => {
-        if (socketId) {
-            io.to(socketId).emit('membersAdded', {
-                chatId,
-                members: result.members,
-            });
-        }
+    io.to(oldSocketIds).emit('membersAdded', {
+        chatId,
+        members: result.members,
     });
 
-    newSocketIds.forEach((socketId) => {
+    newSocketIds.forEach(async (socketId) => {
         const socket = sockets.get(socketId);
         if (socket) {
-            socket.join(chatId);
+            await socket.join(`chat:${chatId}`);
             io.to(socketId).emit('newChat', result);
         }
     });

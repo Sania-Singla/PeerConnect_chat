@@ -20,18 +20,15 @@ export default function EditorLayout() {
     const codeRef = useRef(null);
 
     useEffect(() => {
-        socket.on('syncCode', ({ code }) => {
+        socket.on('syncCode', ({ code, coders }) => {
             codeRef.current = code;
+            setMembers(coders);
             setIsJoining(false);
         });
 
-        socket.on('userJoinedCode', ({ user, coders }) => {
-            setMembers(coders);
+        socket.on('userJoinedCode', (user) => {
+            setMembers((prev) => [...prev, user]);
             toast.success(`${user.user_name} joined the room`);
-            socket.emit('syncCode', {
-                socketId: user.socketId,
-                code: codeRef.current,
-            });
         });
 
         socket.on('userLeftCode', (user) => {

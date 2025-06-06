@@ -81,7 +81,7 @@ const sendMessage = tryCatch('send message', async (req, res, next) => {
         attachments: detailedAttachments,
     };
 
-    io.to(chatId).emit('newMessage', {
+    io.to(`chat:${chatId}`).emit('newMessage', {
         chatId,
         message: transformedMessage,
     });
