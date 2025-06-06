@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { useSocketContext } from '@/Context';
+import { BOILER_PLATE_CODES } from '@/Constants/constants';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
@@ -7,12 +9,12 @@ import 'codemirror/theme/dracula.css';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/lib/codemirror.css';
-import { useSocketContext } from '@/Context';
-import { BOILER_PLATE_CODES } from '@/Constants/constants';
+import { useParams } from 'react-router-dom';
 
-export default function Editor({ roomId, lang, onCodeChange }) {
-    const editorRef = useRef(null);
+export default function Editor({ language, onChange }) {
     const { socket } = useSocketContext();
+    const editorRef = useRef(null);
+    const { roomId } = useParams();
 
     useEffect(() => {
         const modeMap = {
@@ -26,7 +28,7 @@ export default function Editor({ roomId, lang, onCodeChange }) {
         const editor = CodeMirror.fromTextArea(
             document.getElementById('editor'),
             {
-                mode: modeMap[lang] || 'javascript',
+                mode: modeMap[language],
                 theme: 'dracula',
                 lineNumbers: true,
                 autoCloseTags: true,
@@ -38,31 +40,21 @@ export default function Editor({ roomId, lang, onCodeChange }) {
         );
 
         editor.setSize(null, '100%');
-        editor.setValue(BOILER_PLATE_CODES[lang] || '');
+        editor.setValue(BOILER_PLATE_CODES[language] || '');
         editorRef.current = editor;
 
         const handleChange = (instance) => {
             const code = instance.getValue();
-            onCodeChange(code);
-            socket?.emit('codeChange', { roomId, code });
+            onChange(code);
+            socket.emit('codeChange', { roomId, code });
         };
 
         editor.on('change', handleChange);
 
-        const handleCodeChange = ({ code }) => {
-            if (code !== editor.getValue()) {
-                editor.setValue(code);
-            }
-        };
+        socket.on('codeChange', ({ code }) => editor.setValue(code));
 
-        socket?.on('codeChange', handleCodeChange);
-
-        return () => {
-            editor.off('change', handleChange);
-            socket?.off('codeChange', handleCodeChange);
-            editor.toTextArea();
-        };
-    }, [lang, roomId, socket]);
+        return () => editor.toTextArea();
+    }, [language, roomId]);
 
     return (
         <div className="h-full">

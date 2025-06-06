@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useSocketContext } from '@/Context';
 import { icons } from '@/Assets/icons';
 import { Button } from '@/Components';
+import toast from 'react-hot-toast';
 
 export default function Form() {
     const [roomId, setRoomId] = useState('');
@@ -18,9 +18,7 @@ export default function Form() {
         }
 
         socket.emit('joinCode', roomId);
-
         navigate(`/editor/${roomId}`);
-
         toast.success('Room is created');
     }
 
