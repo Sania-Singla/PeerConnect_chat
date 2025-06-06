@@ -24,95 +24,121 @@ io.use((socket, next) => {
     );
 });
 
-// ! for editor ********************
-const userSocketMap = {};
-
-const getAllConnectedClients = (roomId) => {
-    return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-        (socketId) => {
-            return {
-                socketId,
-                username: userSocketMap[socketId],
-            };
-        }
-    );
-};
-// ! ******************************
-
 io.on('connection', async (socket) => {
-    const user = socket.user;
-    const userId = user?.user_id;
-
-    console.log('User connected:', socket.id);
-
-    // mark me online
     try {
-        await Promise.all([
-            redisClient.setEx(`user:${userId}`, 3600, socket.id), // 1hr exp
-            onlineUserObject.markUserOnline(userId, socket.id),
-        ]);
-        console.log(`User ${userId} marked as online.`);
-    } catch (err) {
-        return console.error('Error marking user as online:', err);
-    }
+        const user = socket.user,
+            userId = user?.user_id,
+            socketId = socket.id;
+        const coderKey = JSON.stringify({ ...user, socketId });
 
-    // notify others about you being online
+        console.log('[USER CONNECTED]', { username: user.user_name, socketId });
 
-    // get your chats
-    const chats = await chatObject.getMyChats(userId);
+        // # ======================= register events first ========================
 
-    // Join rooms for your chats
-    chats.forEach(({ chat_id }) => socket.join(`chat:${chat_id}`));
-    console.log(`User ${userId} joined rooms for his/her chats.`);
+        socket.on('typing', (chatId) =>
+            socket.to(chatId).emit('typing', { chatId, targetUser: user })
+        );
 
-    // Notify in rooms now
-    chats.forEach(({ chat_id }) =>
-        socket.to(`chat:${chat_id}`).emit('userStatusChange', {
-            userId,
-            targetUser: user,
-            isOnline: true,
-        })
-    );
+        socket.on('stoppedTyping', (chatId) =>
+            socket
+                .to(chatId)
+                .emit('stoppedTyping', { chatId, targetUser: user })
+        );
 
-    socket.on('typing', (chatId) =>
-        socket.to(`chat:${chatId}`).emit('typing', { chatId, targetUser: user })
-    );
+        // Editor events
+        socket.on('syncCode', ({ socketId, code }) =>
+            socket.to(socketId).emit('syncCode', { code })
+        );
 
-    socket.on('stoppedTyping', (chatId) =>
-        socket
-            .to(`chat:${chatId}`)
-            .emit('stoppedTyping', { chatId, targetUser: user })
-    );
+        socket.on('codeChange', ({ roomId, code }) =>
+            socket.to(`code:${roomId}`).emit('codeChange', { code })
+        );
 
-    // disconnection
-    socket.on('disconnect', async () => {
-        console.log('User disconnected:', socket.id);
+        socket.on('leaveCode', async (roomId) => {
+            socket.to(`code:${roomId}`).emit('userLeftCode', user);
+            await redisClient.sRem(`code:${roomId}`, coderKey);
+            socket.leave(`code:${roomId}`);
+        });
 
-        // mark me offline
-        try {
+        socket.on('joinCode', async (roomId) => {
+            await socket.join(`code:${roomId}`);
+            await redisClient.sAdd(`code:${roomId}`, coderKey);
+
+            console.log('[JOINED CODE ROOM]', {
+                username: user.user_name,
+                roomId,
+                socketId,
+            });
+
+            // get the coders in the room
+            const members = await redisClient.sMembers(`code:${roomId}`);
+            const coders = members.map((m) => JSON.parse(m));
+
+            socket.emit('userJoinedCode', { user, coders }); // Send to joining user
+            socket
+                .to(`code:${roomId}`)
+                .emit('userJoinedCode', { user, coders }); // Send to others
+        });
+
+        // disconnection
+        socket.on('disconnect', async () => {
+            console.log('[USER DISCONNECTED]', {
+                username: user.user_name,
+                socketId,
+            });
+
+            // mark user offline
             await Promise.all([
-                redisClient.del(`user:${userId}`),
+                redisClient.del(userId),
                 onlineUserObject.markUserOffline(userId),
             ]);
-            console.log(`User ${userId} marked as offline`);
-        } catch (err) {
-            return console.error('Error marking user offline:', err);
-        }
+            console.log('[MARKED OFFLINE]', { username: user.user_name });
 
+            // Notify others in rooms about us being offline in both chats and code rooms
+            const rooms = [...socket.rooms];
+
+            rooms.forEach(async (room) => {
+                if (room.startsWith('code:')) {
+                    socket.to(room).emit('userLeftCode', user);
+                    await redisClient.sRem(room, coderKey);
+                } else {
+                    socket.to(room).emit('userStatusChange', {
+                        userId,
+                        targetUser: user,
+                        isOnline: false,
+                    });
+                }
+            });
+        });
+
+        // # ======================= now start other async logic ========================
+
+        // mark user online
+        await Promise.all([
+            redisClient.setEx(userId, 3600, socketId), // 1hr exp
+            onlineUserObject.markUserOnline(userId, socketId),
+        ]);
+        console.log('[MARKED ONLINE]', { username: user.user_name });
+
+        // notify my chats
         const chats = await chatObject.getMyChats(userId);
 
-        // Although when a user disconnects, he automatically leave all the rooms he were part of
-        chats.forEach(({ chat_id }) => socket.leave(`chat:${chat_id}`));
-
-        // Notify others in rooms about us being offline
-        chats.forEach(({ chat_id }) =>
-            socket.to(`chat:${chat_id}`).emit('userStatusChange', {
+        chats.forEach(async ({ chat_id }) => {
+            await socket.join(chat_id);
+            socket.to(chat_id).emit('userStatusChange', {
                 userId,
                 targetUser: user,
-                isOnline: false,
-            })
-        );
-    });
+                isOnline: true,
+            });
+            console.log('[JOINED CHAT]', {
+                username: user.user_name,
+                chatId: chat_id,
+            });
+        });
+    } catch (err) {
+        console.error('Error in socket:', err.message);
+        socket.disconnect();
+    }
 });
 
 export { io, redisClient, http };

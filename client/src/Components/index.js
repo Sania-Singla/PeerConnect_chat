@@ -83,18 +83,6 @@ import ProjectContributionForm from './Project/ProjectContributionForm';
 import ProjectContributors from './Project/ProjectContributors';
 import ProjectRequests from './Project/ProjectRequests';
 
-// Practice components
-import QuestionCard from './Practice/QuestionCard';
-import TopicCard from './Practice/TopicCard';
-import QuestionDescription from './Practice/Layout/QuestionDescription';
-import QuestionDiscuss from './Practice/Layout/QuestionDiscuss';
-import QuestionEditorial from './Practice/Layout/QuestionEditorial';
-import QuestionLayout from './Practice/Layout/QuestionLayout';
-import QuestionSolutions from './Practice/Layout/QuestionSolution';
-import QuestionSubmissions from './Practice/Layout/QuestionSubmissions';
-import QuestionEditor from './Practice/Layout/QuestionEditor';
-import QuestionHeader from './Practice/Layout/QuestionHeader';
-
 // Editor components
 import Editor from './Editor/Editor';
 import EditorLayout from './Editor/EditorLayout';
@@ -185,7 +173,6 @@ export {
     FriendsPopup,
     RequestsPopup,
     ProjectCard,
-    QuestionLayout,
     ProjectDetail,
     ProjectHeader,
     ProjectLayout,
@@ -196,15 +183,6 @@ export {
     Editor,
     EditorLayout,
     Form,
-    QuestionCard,
-    TopicCard,
-    QuestionDescription,
-    QuestionDiscuss,
-    QuestionEditorial,
-    QuestionSolutions,
-    QuestionSubmissions,
-    QuestionEditor,
-    QuestionHeader,
     ResumeCardItem,
     ResumePreview,
     PersonalInfoForm,

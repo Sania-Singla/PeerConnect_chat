@@ -19,7 +19,13 @@ export const socketAuthenticator = async (req, err, socket, next) => {
             throw new Error('user with provided access token not found');
         }
 
-        socket.user = user;
+        socket.user = {
+            user_id: user.user_id,
+            user_name: user.user_name,
+            user_email: user.user_email,
+            user_avatar: user.user_avatar,
+            user_fullName: user.user_fullName,
+        };
         return next();
     } catch (err) {
         return next(

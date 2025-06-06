@@ -8,6 +8,7 @@ import { chatService } from './chatService';
 import { requestService } from './requestService';
 import { resumeService } from './resumeService';
 import { interviewService } from './interviewService';
+import { editorService } from './editorService';
 
 export {
     likeService,
@@ -20,4 +21,5 @@ export {
     requestService,
     resumeService,
     interviewService,
+    editorService,
 };

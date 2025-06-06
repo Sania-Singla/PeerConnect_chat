@@ -1,126 +1,91 @@
 import { useEffect, useRef, useState } from 'react';
 import { Editor, Button } from '@/Components';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { BASE_BACKEND_URL, LANGUAGES } from '@/Constants/constants';
+import { LANGUAGES } from '@/Constants/constants';
 import { useSocketContext } from '@/Context';
 import { downloadCodeFile } from '@/Utils';
-import Avatar from 'react-avatar';
+import { editorService } from '@/Services';
 
 export default function EditorLayout() {
-    const [clients, setClients] = useState([]);
+    const { roomId } = useParams();
+    const navigate = useNavigate();
+    const { socket } = useSocketContext();
+    const [members, setMembers] = useState([]);
     const [output, setOutput] = useState('');
-    const [isCompileWindowOpen, setIsCompileWindowOpen] = useState(false);
+    const [isCompilerOpen, setIsCompilerOpen] = useState(false);
     const [isCompiling, setIsCompiling] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState('cpp');
+    const [language, setLanguage] = useState('javascript');
     const [isJoining, setIsJoining] = useState(true);
     const codeRef = useRef(null);
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { roomId } = useParams();
-    const { socket } = useSocketContext();
 
     useEffect(() => {
-        if (!location.state?.username) {
-            navigate('/');
-            return;
-        }
-
-        socket.emit('join', {
-            roomId,
-            username: location.state.username,
-        });
-
-        socket.on('joined', ({ clients, username, socketId }) => {
-            if (username !== location.state?.username) {
-                toast.success(`${username} joined the room.`);
-            }
-            setClients(clients);
-            socket.emit('syncCode', {
-                code: codeRef.current,
-                socketId,
-            });
+        socket.on('syncCode', ({ code }) => {
+            codeRef.current = code;
             setIsJoining(false);
         });
 
-        socket.on('disconnected', ({ socketId, username }) => {
-            toast.success(`${username} left the room`);
-            setClients((prev) => prev.filter((c) => c.socketId !== socketId));
+        socket.on('userJoinedCode', ({ user, coders }) => {
+            setMembers(coders);
+            toast.success(`${user.user_name} joined the room`);
+            socket.emit('syncCode', {
+                socketId: user.socketId,
+                code: codeRef.current,
+            });
         });
 
-        return () => {
-            socket.emit('disconnected', {
-                socketId: socket.id,
-                username: location.state.username,
-            });
-        };
-    }, []);
+        socket.on('userLeftCode', (user) => {
+            setMembers((prev) =>
+                prev.filter((m) => m.user_id !== user.user_id)
+            );
+            toast.success(`${user.user_name} left the room`);
+        });
 
-    const copyRoomId = async () => {
-        try {
-            await navigator.clipboard.writeText(roomId);
-            toast.success(`Room ID copied`);
-        } catch (error) {
-            toast.error('Failed to copy Room ID');
-        }
-    };
+        socket.emit('joinCode', roomId);
 
-    const runCode = async () => {
-        setIsCompiling(true);
+        return () => socket.emit('leaveCode', roomId);
+    }, [roomId]);
+
+    async function copyRoomId() {
+        await navigator.clipboard.writeText(roomId);
+        toast.success(`Room ID copied`);
+    }
+
+    async function runCode() {
         try {
-            let res = await fetch(`${BASE_BACKEND_URL}/codes/compile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    code: codeRef.current,
-                    language: selectedLanguage,
-                }),
-            });
-            res = await res.json();
+            setIsCompiling(true);
+            const res = await editorService.compile(codeRef.current, language);
             setOutput(res.output || JSON.stringify(res));
         } catch (err) {
             setOutput('An error occurred while compiling.');
         } finally {
             setIsCompiling(false);
         }
-    };
-
-    if (isJoining) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-gray-900 text-white text-lg">
-                Joining room...
-            </div>
-        );
     }
 
-    return (
-        <div className="flex flex-col h-[calc(100vh-87px)] w-full">
-            <div className="flex flex-col md:flex-row flex-1">
+    return isJoining ? (
+        <div className="flex justify-center items-center h-[calc(100vh-92px)] bg-gray-900 text-white text-lg">
+            Joining room...
+        </div>
+    ) : (
+        <div className="flex flex-col h-[calc(100vh-92px)] w-full overflow-hidden">
+            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
                 {/* Sidebar */}
-                <aside className="bg-gray-900 text-white w-full md:w-[240px] border-r border-gray-700 p-4">
+                <aside className="bg-gray-900 text-white max-h-[230px] md:max-h-full w-full md:w-[240px] border-r border-gray-700 p-4 flex flex-col">
                     <span className="font-semibold block mb-3">Members</span>
-                    <div className="gap-4 max-h-[200px] md:max-h-full md:h-[calc(100%-160px)] overflow-y-auto flex flex-wrap md:flex-col">
-                        {clients.map((client, i) => (
+                    <div className="flex-1 overflow-y-auto gap-4 flex flex-wrap md:flex-nowrap md:flex-col">
+                        {members.map((m) => (
                             <div
-                                key={client.socketId}
-                                className="relative group cursor-pointer flex items-center gap-3"
+                                key={m.user_id}
+                                className="relative cursor-pointer flex items-center gap-3"
                             >
-                                {client.avatar ? (
-                                    <img
-                                        src={client.avatar}
-                                        alt={client.username}
-                                        className="rounded-full size- border border-gray-700"
-                                    />
-                                ) : (
-                                    <Avatar
-                                        name={client.username?.toString()}
-                                        size="36"
-                                        className="rounded-full text-sm"
-                                    />
-                                )}
-
+                                <img
+                                    src={m.user_avatar}
+                                    alt={m.user_name}
+                                    className="rounded-full size-9 border border-gray-700"
+                                />
                                 <span className="text-sm truncate">
-                                    {client.username}
+                                    {m.user_name}
                                 </span>
                             </div>
                         ))}
@@ -129,79 +94,68 @@ export default function EditorLayout() {
                     <hr className="my-4 border-gray-700" />
 
                     <div className="flex md:flex-col gap-2">
-                        <button
+                        <Button
                             onClick={copyRoomId}
                             className="w-full bg-green-600 hover:bg-green-700 py-2 px-4 rounded"
-                        >
-                            Copy Room ID
-                        </button>
-                        <button
+                            btnText="Copy Room ID"
+                        />
+                        <Button
                             onClick={() => {
-                                socket.emit('disconnected', {
-                                    socketId: socket.id,
-                                    username: location.state.username,
-                                });
+                                socket.emit('leaveCode', roomId);
                                 navigate('/');
                             }}
                             className="w-full bg-red-600 hover:bg-red-700 py-2 px-4 rounded"
-                        >
-                            Leave Room
-                        </button>
+                            btnText="Leave Room"
+                        />
                     </div>
                 </aside>
 
-                {/* Main Editor */}
-                <main className="flex flex-col flex-1 overflow-hidden">
-                    {/* Top Bar */}
-                    <div className="flex flex-wrap gap-2 items-center justify-end bg-gray-900 border-b border-gray-700 p-3">
+                {/* Right Section */}
+                <section className="flex flex-col flex-1 overflow-hidden">
+                    <header className="flex flex-wrap gap-2 items-center justify-end bg-gray-900 border-b border-gray-700 p-3">
                         <select
                             className="bg-gray-700 text-white px-2 py-1 rounded text-sm w-[100px]"
-                            value={selectedLanguage}
-                            onChange={(e) =>
-                                setSelectedLanguage(e.target.value)
-                            }
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
                         >
-                            {LANGUAGES.map((lang) => (
-                                <option key={lang} value={lang}>
-                                    {lang}
+                            {LANGUAGES.map((l) => (
+                                <option key={l} value={l}>
+                                    {l}
                                 </option>
                             ))}
                         </select>
 
                         <Button
                             className="bg-[#4977ec] hover:bg-[#3b62c2] text-white px-4 py-1 rounded"
-                            onClick={() =>
-                                setIsCompileWindowOpen(!isCompileWindowOpen)
-                            }
-                            btnText={isCompileWindowOpen ? 'Close' : 'Compile'}
+                            onClick={() => setIsCompilerOpen((prev) => !prev)}
+                            btnText={isCompilerOpen ? 'Close' : 'Compile'}
                         />
 
                         <Button
                             className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
-                            onClick={() =>
-                                downloadCodeFile(codeRef, selectedLanguage)
-                            }
+                            onClick={() => downloadCodeFile(codeRef, language)}
                             btnText="Save File"
                         />
-                    </div>
+                    </header>
 
-                    {/* Code Editor */}
-                    <div className="flex-1 overflow-auto">
-                        <Editor
-                            roomId={roomId}
-                            lang={selectedLanguage}
-                            onCodeChange={(code) => (codeRef.current = code)}
-                        />
-                    </div>
-                </main>
+                    {/* Editor */}
+                    <main className="flex-1 overflow-hidden">
+                        <div className="h-full overflow-auto">
+                            <Editor
+                                language={language}
+                                onChange={(code) => (codeRef.current = code)}
+                            />
+                        </div>
+                    </main>
+                </section>
             </div>
 
-            {/* Compiler Output */}
-            {isCompileWindowOpen && (
-                <div className="bg-gray-900 border-t border-gray-600 text-white p-4 h-[200px] overflow-auto">
-                    <div className="flex justify-between items-center mb-3">
+            {/* Compiler */}
+            {isCompilerOpen && (
+                <div className="bg-gray-900 border-t border-gray-600 text-white h-[200px] overflow-hidden">
+                    <div className="flex justify-between items-center px-4 py-2">
                         <h5 className="font-semibold">
-                            Compiler Output ({selectedLanguage})
+                            Compiler Output ({language})
                         </h5>
                         <div className="flex space-x-2">
                             <Button
@@ -212,13 +166,13 @@ export default function EditorLayout() {
                             />
                             <Button
                                 className="bg-gray-600 hover:bg-gray-700 px-4 h-[32px] rounded text-white"
-                                onClick={() => setIsCompileWindowOpen(false)}
+                                onClick={() => setIsCompilerOpen(false)}
                                 btnText="Close"
                             />
                         </div>
                     </div>
-                    <pre className="bg-gray-800 p-3 rounded whitespace-pre-wrap break-words h-[calc(100%-40px)] overflow-y-auto">
-                        {output || 'Output will appear here after compilation'}
+                    <pre className="bg-gray-800 px-4 py-3 rounded whitespace-pre-wrap break-words h-[calc(100%-56px)] overflow-y-auto">
+                        {output || 'Output will appear here...'}
                     </pre>
                 </div>
             )}

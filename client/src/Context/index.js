@@ -5,9 +5,10 @@ import { useSideBarContext, SideBarContextProvider } from './SideBarContext';
 import { useSearchContext, SearchContextProvider } from './SearchContext';
 import { ChatContextProvider, useChatContext } from './ChatContext';
 import { SocketContextProvider, useSocketContext } from './SocketContext';
-import { ProjectContext, useProjectContext } from './ProjectContext';
 import { ResumeContextProvider, useResumeContext } from './ResumeContext';
-import { QuestionContext, useQuestionContext } from './QuestionContext';
+import { EditorContextProvider, useEditorContext } from './EditorContext';
+
+import { ProjectContext, useProjectContext } from './ProjectContext';
 
 export {
     useChannelContext,
@@ -25,9 +26,9 @@ export {
     useSocketContext,
     SocketContextProvider,
     ResumeContextProvider,
+    EditorContextProvider,
+    useEditorContext,
     useResumeContext,
     ProjectContext,
     useProjectContext,
-    QuestionContext,
-    useQuestionContext,
 };
