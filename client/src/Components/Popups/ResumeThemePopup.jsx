@@ -26,14 +26,14 @@ export default function ResumeThemePopup() {
     return (
         <div className="bg-white p-6 rounded-lg shadow-sm">
             <Button
-                className="flex gap-2 items-center border-[#4977ec] text-[#4977ec]"
+                className=" border-[#4977ec] text-[#4977ec] mb-3"
                 btnText={
-                    <div>
+                    <div className="flex gap-2 items-center">
                         <LayoutGrid size={16} /> Theme
                     </div>
                 }
             />
-            <div className="border border-[#ddd] rounded-xl shadow-lg flex items-center flex-col justify-center">
+            <div className="border border-[#ddd] rounded-xl shadow-lg flex items-center flex-col justify-center p-5">
                 <h2 className="mb-4 font-bold">Select Theme</h2>
                 <div className="grid grid-cols-5 gap-4">
                     {RESUME_THEMES.map((color) => (
