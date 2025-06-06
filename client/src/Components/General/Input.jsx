@@ -55,7 +55,7 @@ export default function Input({
                         name={name}
                         value={value}
                         onChange={onChange}
-                        className={`mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none placeholder:text-sm`}
+                        className={`mt-1 block w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none placeholder:text-sm`}
                         placeholder={placeholder}
                         required={required}
                         {...props}
