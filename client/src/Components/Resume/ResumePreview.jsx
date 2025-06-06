@@ -14,14 +14,14 @@ export default function ResumePreview() {
 
     return (
         <div
-            className="w-full max-w-4xl shadow-sm rounded-lg overflow-hidden print:shadow-none border border-gray-200"
+            className="w-full max-w-4xl shadow-sm rounded-lg print:shadow-none border border-gray-200"
             style={{
                 borderTop: `8px solid ${resumeInfo?.themeColor}`,
                 fontFamily: 'Inter, sans-serif',
             }}
         >
             <header
-                className="p-6 border-b-2"
+                className="px-4 py-6 border-b"
                 style={{
                     backgroundColor: `${resumeInfo?.themeColor}10`,
                     borderColor: `${resumeInfo?.themeColor}10`,
@@ -115,9 +115,10 @@ export default function ResumePreview() {
             </main>
 
             <footer
-                className="p-4 text-center text-[11px] text-gray-400 border-t border-gray-100"
+                className="p-4 text-center text-[11px] border-t border-gray-100"
                 style={{
                     backgroundColor: `${resumeInfo?.themeColor}15`,
+                    color: `${resumeInfo?.themeColor}90`,
                 }}
             >
                 Generated with PeerConnect • {new Date().getFullYear()}

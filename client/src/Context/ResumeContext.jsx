@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 const ResumeContext = createContext();
 
 const ResumeContextProvider = ({ children }) => {
-    const [resumeInfo, setResumeInfo] = useState(null);
+    const [resumeInfo, setResumeInfo] = useState({});
     const [enableNext, setEnableNext] = useState(false);
 
     return (
