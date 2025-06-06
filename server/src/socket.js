@@ -79,7 +79,7 @@ io.on('connection', async (socket) => {
             const coders = members.map((m) => JSON.parse(m));
 
             // Emit to current user only
-            socket.emit('syncCode', { code, coders });
+            socket.emit('syncCode', { code: JSON.parse(code || ''), coders });
 
             // Emit to others in the room
             socket.to(`code:${roomId}`).emit('userJoinedCode', user);
