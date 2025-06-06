@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useChatContext, usePopupContext, useSideBarContext } from '@/Context';
-import { LOGO } from '@/Constants/constants';
+import { IMAGES } from '@/Constants/constants';
 import { Link, useNavigate } from 'react-router-dom';
 import { requestService } from '@/Services';
 import { useEffect } from 'react';
@@ -47,12 +47,8 @@ export default function ChatNavbar() {
                     to={'/'}
                     className="flex items-center justify-center gap-3 font-medium text-[17px]"
                 >
-                    <div className="overflow-hidden size-[34px]">
-                        <img
-                            src={LOGO}
-                            alt="peer connect logo"
-                            className="object-cover rounded-full hover:brightness-95 border-[0.09rem] border-[#e0e0e0]"
-                        />
+                    <div className="size-[34px]">
+                        <img src={IMAGES.logoSvg} alt="peer connect logo" />
                     </div>
                     <div className="hidden sm:block hover:text-[#4977ec] transition-all duration-200">
                         PeerConnect

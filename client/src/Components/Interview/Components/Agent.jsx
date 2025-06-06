@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { interviewer, vapi } from '../Lib/vapi';
 import { Button } from '@/Components';
 import toast from 'react-hot-toast';
-import { IMAGES, USER_AVATAR } from '@/Constants/constants';
+import { IMAGES } from '@/Constants/constants';
 import { useUserContext } from '@/Context';
 
 const CallStatus = {
@@ -138,7 +138,7 @@ export default function Agent({ userName, interview }) {
                     <div className="flex flex-col items-center justify-center gap-4 p-4">
                         <div>
                             <img
-                                src={user?.user_avatar || USER_AVATAR}
+                                src={user?.user_avatar || IMAGES.user}
                                 alt="User Avatar"
                                 className="size-30 rounded-full object-cover border-gray-200 border shadow-sm"
                             />

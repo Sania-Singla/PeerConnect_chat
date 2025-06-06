@@ -115,9 +115,9 @@ export default function EditorLayout() {
                             value={language}
                             onChange={(e) => setLanguage(e.target.value)}
                         >
-                            {LANGUAGES.map((l) => (
-                                <option key={l} value={l}>
-                                    {l}
+                            {LANGUAGES.map(({ label }) => (
+                                <option key={label} value={label}>
+                                    {label}
                                 </option>
                             ))}
                         </select>

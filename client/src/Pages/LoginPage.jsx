@@ -1,6 +1,6 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { Login } from '@/Components';
-import { LOGO_SVG } from '@/Constants/constants';
+import { IMAGES } from '@/Constants/constants';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext } from '@/Context';
@@ -35,11 +35,11 @@ export default function LoginPage() {
                         to={'/'}
                         className="w-fit flex items-center justify-center hover:brightness-95 mb-6"
                     >
-                        <div className="overflow-hidden rounded-full size-[80px] drop-shadow-sm">
+                        <div className="size-[80px] shadow-sm">
                             <img
-                                src={LOGO_SVG}
+                                src={IMAGES.logoSvg}
                                 alt="peer connect logo"
-                                className="object-cover size-full"
+                                className="size-full"
                             />
                         </div>
                     </Link>

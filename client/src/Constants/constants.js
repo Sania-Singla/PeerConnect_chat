@@ -1,16 +1,14 @@
-import LOGO from '/images/logo.jpg';
-import LOGO_SVG from '/images/logo_without_bg.png';
-
 const LIMIT = 10;
 const DEFAULT_RTE_TEXT = 'Welcome to Post Manager ⭐';
-const EMAIL = 'peerconnect@gmail.com';
-const CONTACTNUMBER = 'xxxxxxxxxx';
 const MAX_FILE_SIZE = 5;
 const BASE_BACKEND_URL = import.meta.env.VITE_BACKEND_BASE_URL + '/api';
 const SERVER_ERROR = 500;
 const BAD_REQUEST = 400;
-const USER_AVATAR =
-    'https://res.cloudinary.com/dddnbyltc/image/upload/v1741966812/aggldxme6x3lszagjypr.png';
+
+const CONTACTS = {
+    email: 'peerconnect@gmail.com',
+    phone: 'xxxxxxxxxx',
+};
 
 const TAILWIND_COLORS = [
     'text-blue-600',
@@ -26,6 +24,13 @@ const TAILWIND_COLORS = [
 ];
 
 const IMAGES = {
+    user: 'https://res.cloudinary.com/dddnbyltc/image/upload/v1741966812/aggldxme6x3lszagjypr.png',
+    logo: '/images/logo.png',
+    logoSvg: '/images/logo_without_bg.png',
+    tech: '/images/tech.svg',
+    robot: '/images/robot.png',
+    resume: '/images/resume.png',
+    resumeCover: '/images/resumeCover.png',
     contributors: {
         sania: '/images/sania.jpg',
         vasundhra: '/images/vasundhra.jpg',
@@ -45,17 +50,6 @@ const IMAGES = {
         '/images/companies/tiktok.png',
         '/images/companies/yahoo.png',
     ],
-    dsa: {
-        array: '/images/dsa/array.png',
-        string: '/images/dsa/string.png',
-        dp: '/images/dsa/dp.png',
-        graph: '/images/dsa/graph.png',
-        tree: '/images/dsa/tree.png',
-    },
-    tech: '/images/tech.svg',
-    robot: '/images/robot.png',
-    resume: '/images/resume.png',
-    resumeCover: '/images/resumeCover.png',
 };
 
 const RESUME_THEMES = [
@@ -123,67 +117,76 @@ const CONTRIBUTORS = [
     },
 ];
 
-const LANGUAGES = ['python3', 'java', 'cpp', 'javascript', 'c'];
-
-const BOILER_PLATE_CODES = {
-    python3: `
+const LANGUAGES = {
+    python3: {
+        label: 'Python',
+        mode: 'python',
+        boilerplate: `
 def main():
     # your code goes here
     pass
 
 if __name__ == "__main__":
     main()
-    `.trim(),
-
-    java: `
+        `.trim(),
+    },
+    java: {
+        label: 'Java',
+        mode: 'text/x-java',
+        boilerplate: `
 public class Main {
     public static void main(String[] args) {
         // your code goes here
     }
 }
-    `.trim(),
-
-    cpp: `
+        `.trim(),
+    },
+    cpp: {
+        label: 'C++',
+        mode: 'text/x-c++src',
+        boilerplate: `
 #include <iostream>
 int main() {
     // your code goes here
     return 0;
 }
-    `.trim(),
-
-    javascript: `
+        `.trim(),
+    },
+    javascript: {
+        label: 'JavaScript',
+        mode: 'javascript',
+        boilerplate: `
 function main() {
     // your code goes here
 }
 
 main();
-    `.trim(),
-
-    c: `
+        `.trim(),
+    },
+    c: {
+        label: 'C',
+        mode: 'text/x-csrc',
+        boilerplate: `
 #include <stdio.h>
 int main() {
     // your code goes here
     return 0;
 }
-    `.trim(),
+        `.trim(),
+    },
 };
 
 export {
     LIMIT,
     BASE_BACKEND_URL,
     DEFAULT_RTE_TEXT,
-    LOGO,
-    LOGO_SVG,
     SERVER_ERROR,
     BAD_REQUEST,
     MAX_FILE_SIZE,
     CONTRIBUTORS,
-    EMAIL,
-    CONTACTNUMBER,
+    CONTACTS,
     TAILWIND_COLORS,
-    BOILER_PLATE_CODES,
     IMAGES,
     LANGUAGES,
-    USER_AVATAR,
     RESUME_THEMES,
 };

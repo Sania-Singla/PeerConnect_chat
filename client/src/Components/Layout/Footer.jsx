@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { icons } from '@/Assets/icons';
 import { Button } from '@/Components';
 import { useState } from 'react';
-import { CONTRIBUTORS, LOGO } from '@/Constants/constants';
+import { CONTRIBUTORS, IMAGES } from '@/Constants/constants';
 import toast from 'react-hot-toast';
 
 export default function Footer() {
@@ -79,7 +79,7 @@ export default function Footer() {
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-lg overflow-hidden bg-white p-1 shadow-sm">
                                 <img
-                                    src={LOGO}
+                                    src={IMAGES.logo}
                                     alt="Peer Connect logo"
                                     className="object-contain size-full"
                                 />

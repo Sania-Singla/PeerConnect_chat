@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSocketContext } from '@/Context';
-import { BOILER_PLATE_CODES } from '@/Constants/constants';
+import { LANGUAGES } from '@/Constants/constants';
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
@@ -17,18 +17,10 @@ export default function Editor({ language, onChange }) {
     const { roomId } = useParams();
 
     useEffect(() => {
-        const modeMap = {
-            javascript: 'javascript',
-            python: 'python',
-            cpp: 'text/x-c++src',
-            java: 'text/x-java',
-            c: 'text/x-csrc',
-        };
-
         const editor = CodeMirror.fromTextArea(
             document.getElementById('editor'),
             {
-                mode: modeMap[language],
+                mode: LANGUAGES[language]?.mode,
                 theme: 'dracula',
                 lineNumbers: true,
                 autoCloseTags: true,
@@ -40,7 +32,7 @@ export default function Editor({ language, onChange }) {
         );
 
         editor.setSize(null, '100%');
-        editor.setValue(BOILER_PLATE_CODES[language] || '');
+        editor.setValue(LANGUAGES[language]?.boilerplate || '');
         editorRef.current = editor;
 
         const handleChange = (instance) => {
