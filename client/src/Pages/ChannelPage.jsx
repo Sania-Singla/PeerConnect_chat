@@ -165,20 +165,20 @@ export default function ChannelPage() {
                                 <img
                                     alt="user avatar"
                                     src={channel.user_avatar}
-                                    className="size-full object-cover drop-shadow-md"
+                                    className="size-full object-cover"
                                 />
                             </div>
                         </div>
 
                         {/* channel info*/}
                         <div className="flex flex-col items-start justify-center mt-6">
-                            <div className="text-3xl font-medium">
+                            <div className="text-2xl font-medium">
                                 {channel.user_fullName}
                             </div>
-                            <div className="text-lg text-[#151515]">
+                            <div className="text-lg mt-1 text-[#151515]">
                                 @{channel.user_name}
                             </div>
-                            <div className="flex gap-1 items-center justify-start text-[#3f3f3f] text-[16px]">
+                            <div className="flex gap-1 mt-1 items-center justify-start text-[#3f3f3f] text-[16px]">
                                 {channel.totalFollowers} followers &bull;
                                 {' ' + channel.totalViews} views
                             </div>
@@ -197,7 +197,7 @@ export default function ChannelPage() {
                         />
                     </div>
                 ) : (
-                    <div className="flex flex-col pb-14 sm:flex-row gap-2 sm:gap-4">
+                    <div className="flex flex-col pb-10 sm:flex-row gap-2 sm:gap-4">
                         <Button
                             btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}

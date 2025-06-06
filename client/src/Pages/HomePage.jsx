@@ -67,7 +67,7 @@ export default function HomePage() {
     return (
         <div>
             {postElements.length > 0 && (
-                <div className="py-4 px-8 sm:px-4">{postElements}</div>
+                <div className="py-4 px-8 sm:px-4 space-y-6">{postElements}</div>
             )}
 
             {loading ? (

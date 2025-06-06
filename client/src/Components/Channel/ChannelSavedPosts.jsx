@@ -77,7 +77,7 @@ export default function SavedPostsPage() {
                 <div
                     className={
                         postElements.length > 1
-                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6'
+                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6'
                             : 'w-[450px]'
                     }
                 >
