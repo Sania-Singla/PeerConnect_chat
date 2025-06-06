@@ -107,6 +107,28 @@ class ResumeService {
             throw err;
         }
     }
+
+    async updateTheme(resumeId, theme) {
+        try {
+            const res = await fetch(`${BASE_BACKEND_URL}/resumes/${resumeId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ theme }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === SERVER_ERROR) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error('error in updateTheme service', err);
+            throw err;
+        }
+    }
 }
 
 export const resumeService = new ResumeService();

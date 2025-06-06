@@ -65,7 +65,7 @@ export default function EditResume() {
                     {/* LEFT: form section */}
                     <div className="h-full bg-white p-4 rounded-2xl border border-gray-200 shadow-md">
                         <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                            Edit Your Resume Details
+                            Edit Your Resume
                         </h2>
                         <div className="h-full">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">

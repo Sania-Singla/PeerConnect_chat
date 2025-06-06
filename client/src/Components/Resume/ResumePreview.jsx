@@ -14,7 +14,7 @@ export default function ResumePreview() {
 
     return (
         <div
-            className="w-full max-w-4xl bg-white shadow-md rounded-lg overflow-hidden print:shadow-none border-2"
+            className="w-full max-w-4xl shadow-sm rounded-lg overflow-hidden print:shadow-none border border-gray-200"
             style={{
                 borderTop: `8px solid ${resumeInfo?.themeColor}`,
                 fontFamily: 'Inter, sans-serif',
@@ -115,7 +115,7 @@ export default function ResumePreview() {
             </main>
 
             <footer
-                className="p-4 text-center text-[11px] text-gray-500 border-t border-gray-100"
+                className="p-4 text-center text-[11px] text-gray-400 border-t border-gray-100"
                 style={{
                     backgroundColor: `${resumeInfo?.themeColor}15`,
                 }}
