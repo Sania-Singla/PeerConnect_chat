@@ -19,7 +19,7 @@ export default function PersonalInfoPreview() {
         phone,
         email,
         github,
-    } = resumeInfo || {};
+    } = resumeInfo;
 
     return (
         <div className="text-nowrap">
@@ -31,45 +31,45 @@ export default function PersonalInfoPreview() {
             </h2>
 
             <div
-                className="flex justify-evenly gap-6 items-end mt-4 text-[0.7rem] font-normal"
+                className="flex justify-evenly overflow-scroll gap-4 items-end mt-6 text-[11px] font-normal"
                 style={{ color: themeColor }}
             >
                 {address && (
                     <div
-                        className="flex items-center justify-center mt-1 font-normal"
+                        className="flex items-center justify-center font-normal"
                         style={{ color: themeColor }}
                     >
-                        <FaMapMarkerAlt className="mr-1" />
+                        <FaMapMarkerAlt className="mr-[5px] size-[10px]" />
                         <span>{address}</span>
                     </div>
                 )}
                 {phone && (
                     <div className="flex items-center">
-                        <FaPhoneAlt className="mr-1" />
+                        <FaPhoneAlt className="mr-[5px] size-[10px]" />
                         <span>{phone}</span>
                     </div>
                 )}
                 {email && (
                     <div className="flex items-center">
-                        <FaEnvelope className="mr-1" />
+                        <FaEnvelope className="mr-[5px] size-[10px]" />
                         <span>{email}</span>
                     </div>
                 )}
                 {linkedin && (
                     <div className="flex items-center">
-                        <FaLinkedin className="mr-1" />
+                        <FaLinkedin className="mr-[5px] size-[10px]" />
                         <span>{linkedin}</span>
                     </div>
                 )}
                 {github && (
                     <div className="flex items-center">
-                        <FaGithub className="mr-1" />
+                        <FaGithub className="mr-[5px] size-[10px]" />
                         <span>{github}</span>
                     </div>
                 )}
             </div>
 
-            <hr className="my-1" style={{ borderColor: themeColor }} />
+            <hr className="mt-[5px]" style={{ borderColor: themeColor }} />
         </div>
     );
 }

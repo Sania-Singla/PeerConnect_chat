@@ -32,7 +32,7 @@ export class ResumeModel {
 
     async deleteResume(resumeId) {
         try {
-            return await Resume.deleteOne({ resumeId }).lean();
+            return await Resume.findOneAndDelete({ resumeId }).lean();
         } catch (err) {
             throw err;
         }
