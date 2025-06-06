@@ -37,16 +37,16 @@ export default function PostCardView({
             </div>
 
             <div className="w-full">
-                <div className="hover:cursor-text text-wrap text-[15px] text-[#5a5a5a] text-end">
+                <div className="hover:cursor-text text-wrap text-sm text-[#5a5a5a] text-end">
                     {formatCount(totalViews)} views &bull;
                     {' ' + formatDateRelative(post_createdAt)}
                 </div>
 
-                <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
+                <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-3">
                     {post_title}
                 </div>
 
-                <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
+                <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis line-clamp-2 mt-4">
                     {parse(post_content)}
                 </div>
 
@@ -55,7 +55,7 @@ export default function PostCardView({
                     <Link
                         to={`/channel/${owner.user_id}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3 mt-4"
+                        className="flex items-start justify-start gap-3 mt-5"
                     >
                         {/* avatar */}
                         <div className="drop-shadow-md">

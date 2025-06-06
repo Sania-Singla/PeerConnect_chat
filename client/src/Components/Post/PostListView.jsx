@@ -45,16 +45,16 @@ const PostListView = memo(({ post, reference, children }) => {
                     />
                 </div>
 
-                <div className="w-[50%] pt-4 realtive flex flex-col items-start justify-start">
-                    <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                <div className="w-[50%] realtive flex flex-col items-start justify-start">
+                    <div className="hover:cursor-text text-sm text-[#5a5a5a] w-full text-end">
                         {formatCount(totalViews)} views &bull;
                         {' ' + formatDateRelative(post_createdAt)}
                     </div>
 
-                    <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-5">
+                    <div className="mt-2 hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1">
                         {post_title}
                     </div>
-                    <div className="hover:cursor-text text-[15px] text-gray-500 text-ellipsis line-clamp-2 mt-4">
+                    <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis line-clamp-2 mt-4">
                         {parse(post_content)}
                     </div>
 
@@ -62,7 +62,7 @@ const PostListView = memo(({ post, reference, children }) => {
                     <Link
                         to={`/channel/${user_id}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3 mt-6"
+                        className="flex items-start justify-start gap-3 mt-7"
                     >
                         {/* avatar */}
                         <div className="drop-shadow-md">
@@ -85,6 +85,7 @@ const PostListView = memo(({ post, reference, children }) => {
                             </div>
                         </div>
                     </Link>
+
                     <div className="absolute right-6 bottom-6 text-white">
                         <Button
                             btnText={
