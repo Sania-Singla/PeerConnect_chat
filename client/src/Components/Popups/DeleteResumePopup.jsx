@@ -2,8 +2,8 @@ import { Button } from '@/Components';
 import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { usePopupContext } from '@/Context';
-import { icons } from 'lucide-react';
 import { useState } from 'react';
+import { icons } from '@/Assets/icons';
 
 export default function DeleteResumePopup() {
     const { popupInfo, setShowPopup } = usePopupContext();
@@ -64,7 +64,7 @@ export default function DeleteResumePopup() {
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">
-                                <div className="size-7 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="size-5 fill-[white] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
                             </div>
