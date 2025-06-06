@@ -35,16 +35,17 @@ export default function EducationForm() {
     };
 
     const AddNewEducation = () => {
-        setEducationList((prev) =>
-            prev.push({
+        setEducationList((prev) => [
+            ...prev,
+            {
                 institution: '',
                 degree: '',
                 major: '',
                 startDate: '',
                 endDate: '',
                 description: '',
-            })
-        );
+            },
+        ]);
     };
     const RemoveEducation = () => {
         setEducationList((educationalList) => educationalList.slice(0, -1));
@@ -73,16 +74,16 @@ export default function EducationForm() {
     );
 
     return (
-        <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+        <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Education</h2>
-            <p className="text-gray-500 text-sm italic mt-1">
+            <p className="text-gray-400 text-sm italic mt-1">
                 Add Your educational details
             </p>
 
             <div>
                 {educationList?.map((item, i) => (
                     <div key={i}>
-                        <div className="grid grid-cols-2 gap-3 my-5">
+                        <div className="grid grid-cols-2 gap-5 my-5">
                             <div className="col-span-2">
                                 <Input
                                     label={'Institution Name'}
@@ -135,6 +136,7 @@ export default function EducationForm() {
                                 <Input
                                     type="textarea"
                                     label="Description"
+                                    rows={3}
                                     name="description"
                                     placeholder="Briefly describe your coursework, achievements, or activities"
                                     onChange={(e) => handleChange(e, index)}
@@ -145,20 +147,20 @@ export default function EducationForm() {
                     </div>
                 ))}
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-4">
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
                         onClick={AddNewEducation}
                         defaultStyles={true}
-                        className="text-primary py-[5px] px-4 text-white"
-                        btnText="+ Add More Education"
+                        className="text-[15px] py-[5px] px-4 text-white"
+                        btnText="+ Add More"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
                         defaultStyles={true}
-                        className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                        className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
@@ -166,10 +168,10 @@ export default function EducationForm() {
                     disabled={loading}
                     onClick={onSave}
                     defaultStyles={true}
-                    className="py-[5px] px-6 text-base text-white"
+                    className="py-[5px] w-[60px] text-[15px] text-white"
                     btnText={
                         loading ? (
-                            <div className="flex items-center justify-center my-2 w-full">
+                            <div className="flex items-center justify-center w-full">
                                 <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
