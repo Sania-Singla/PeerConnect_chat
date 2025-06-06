@@ -5,6 +5,7 @@ import { Button } from '@/Components';
 import { useNavigate } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext } from '@/Context';
+import Input from '../General/Input';
 
 export default function NewResumePopup() {
     const [resumeTitle, setResumeTitle] = useState('');
@@ -30,38 +31,31 @@ export default function NewResumePopup() {
     }
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="min-w-sm bg-white p-6 rounded-lg shadow-md">
             <div>
                 <h2 className="flex items-center gap-2">
                     <FileText className="w-5 h-5 text-[#4977ec]" />
                     Create New Resume
                 </h2>
 
-                <p className="mt-2 text-gray-600">
+                <p className="mt-1 text-sm text-gray-600">
                     Give your resume a title to get started
                 </p>
             </div>
 
-            <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                    <label
-                        htmlFor="resume-title"
-                        className="block text-sm font-medium text-gray-700"
-                    >
-                        Resume Title
-                    </label>
-                    <input
-                        id="resume-title"
-                        placeholder="e.g. Senior Frontend Developer Resume"
-                        className="w-full focus:border-[#4977ec] focus:ring-1 focus:ring-[#4977ec30]"
-                        value={resumeTitle}
-                        onChange={(e) => setResumeTitle(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && onCreate()}
-                    />
-                    <p className="text-xs text-gray-500">
-                        You can change this later
-                    </p>
-                </div>
+            <div className="py-4">
+                <Input
+                    label="Resume Title"
+                    id="resume-title"
+                    placeholder="e.g. Senior Frontend Developer Resume"
+                    className="w-full focus:border-[#4977ec] focus:ring-1 focus:ring-[#4977ec30]"
+                    value={resumeTitle}
+                    onChange={(e) => setResumeTitle(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && onCreate()}
+                />
+                <p className="text-xs mt-1 text-gray-500">
+                    You can change this later
+                </p>
             </div>
 
             <div className="flex items-center justify-end gap-3">

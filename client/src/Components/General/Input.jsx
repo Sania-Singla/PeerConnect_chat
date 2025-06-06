@@ -12,7 +12,7 @@ export default function Input({
     ...props
 }) {
     return (
-        <div key={name} className={`${className} space-y-2`}>
+        <div key={name} className={`${className} space-y-1`}>
             <label
                 htmlFor={name}
                 className="block text-sm font-medium text-gray-800"
