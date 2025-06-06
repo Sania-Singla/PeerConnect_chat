@@ -64,14 +64,14 @@ export default function NewResumePopup() {
                     disabled={loading}
                     btnText="Cancel"
                     defaultStyles={true}
-                    className="bg-gray-200 hover:bg-gray-300 w-full focus:ring-gray-500 text-black px-3 h-[35px]"
+                    className="bg-gray-200 hover:bg-gray-300 w-full focus:ring-gray-500 text-black px-3 h-[35px] text-[15px]"
                 />
 
                 <Button
                     onClick={onCreate}
                     disabled={!resumeTitle.trim() || loading}
                     defaultStyles={true}
-                    className="px-3 gap-2 h-[35px] w-full border text-white border-[#4977ec]"
+                    className="px-3 gap-2 text-[15px] h-[35px] w-full border text-white border-[#4977ec]"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center w-full">

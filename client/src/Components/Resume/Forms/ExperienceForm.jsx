@@ -25,19 +25,11 @@ export default function Experience() {
         );
     };
 
-    const handleRichTextEditor = (content, name, index) => {
-        setExperiences((prev) =>
-            prev.map((item, i) =>
-                i === index ? { ...item, [name]: content } : item
-            )
-        );
-    };
-
     const addNewExperience = () => {
         setExperiences((prev) => [
             ...prev,
             {
-                position: resumeInfo.experiences.position,
+                position: '',
                 company: '',
                 city: '',
                 state: '',
@@ -74,22 +66,22 @@ export default function Experience() {
     }
 
     return (
-        <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+        <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Professional Experience</h2>
-            <p className="text-gray-500 text-sm italic mt-1">
+            <p className="text-gray-400 text-sm italic mt-1">
                 Add your previous job experience
             </p>
 
             <form onSubmit={onSave}>
-                {experiences?.map((item, index) => (
-                    <div key={index} className="my-5 rounded-lg">
-                        <div className="grid grid-cols-2 gap-3">
+                {experiences?.map((item, i) => (
+                    <div key={i} className="my-5 rounded-lg">
+                        <div className="grid grid-cols-2 gap-5">
                             <Input
                                 label="Position"
                                 name="position"
                                 id="position"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.position}
                             />
 
@@ -98,7 +90,7 @@ export default function Experience() {
                                 name="company"
                                 id="company"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.company}
                             />
 
@@ -107,7 +99,7 @@ export default function Experience() {
                                 name="city"
                                 id="city"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.city}
                             />
 
@@ -116,7 +108,7 @@ export default function Experience() {
                                 name="state"
                                 id="state"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.state}
                             />
 
@@ -126,7 +118,7 @@ export default function Experience() {
                                 name="startDate"
                                 id="startDate"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.startDate}
                             />
 
@@ -136,7 +128,7 @@ export default function Experience() {
                                 id="endDate"
                                 name="endDate"
                                 required
-                                onChange={(e) => handleChange(index, e)}
+                                onChange={(e) => handleChange(i, e)}
                                 value={item?.endDate}
                             />
                             <div className="col-span">
@@ -145,14 +137,14 @@ export default function Experience() {
                                 </label>
 
                                 <div className="mt-2">
-                                    <RTE
-                                        onChange={() =>
-                                            handleRichTextEditor(
-                                                tinymce.activeEditor.getContent(),
-                                                'description',
-                                                index
-                                            )
-                                        }
+                                    <Input
+                                        type="textarea"
+                                        label="Description"
+                                        rows={3}
+                                        name="description"
+                                        placeholder="Briefly describe your coursework, achievements, or activities"
+                                        onChange={(e) => handleChange(e, i)}
+                                        value={item?.description}
                                     />
                                 </div>
                             </div>
@@ -166,15 +158,15 @@ export default function Experience() {
                             defaultStyles={true}
                             type="button"
                             variant="outline"
-                            className="text-primary px-4 py-[5px] text-white"
+                            className="text-[15px] px-4 py-[5px] text-white"
                             onClick={addNewExperience}
-                            btnText="+ Add More Experience"
+                            btnText="+ Add More"
                         />
                         <Button
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                            className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeExperience}
                             disabled={experiences.length === 0}
                             btnText="- Remove"
@@ -183,7 +175,7 @@ export default function Experience() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className=" px-4 py-[5px] text-base text-white"
+                        className="w-[60px] py-[5px] text-[15px] text-white"
                         disabled={loading}
                         btnText={
                             loading ? (
