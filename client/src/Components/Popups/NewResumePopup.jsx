@@ -65,13 +65,13 @@ export default function NewResumePopup() {
                     onClick={() => setShowPopup(false)}
                     disabled={loading}
                     btnText="Cancel"
-                    className="px-2 py-1"
+                    className="px-4 py-1"
                 />
                 <Button
                     defaultStyles={true}
                     onClick={onCreate}
                     disabled={!resumeTitle.trim() || loading}
-                    className="px-2 py-1"
+                    className="px-4 py-1"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">

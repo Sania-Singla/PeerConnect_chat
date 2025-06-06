@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -14,6 +14,7 @@ export default function AchievementsForm() {
         resumeInfo?.achievements || []
     );
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (index, event) => {
         setAchievements((prev) =>
@@ -60,15 +61,15 @@ export default function AchievementsForm() {
             <form onSubmit={onSave}>
                 <div className="space-y-4 mt-4">
                     {achievements.map((item, index) => (
-                            <Input
-                                label="Achievement #{index + 1}"
-                                type="text"
-                                required
-                                value={item}
-                                onChange={(e) => handleChange(index, e)}
-                                placeholder="e.g. Awarded 'Employee of the Year' in 2022"
-                                className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
-                            />
+                        <Input
+                            label="Achievement #{index + 1}"
+                            type="text"
+                            required
+                            value={item}
+                            onChange={(e) => handleChange(index, e)}
+                            placeholder="e.g. Awarded 'Employee of the Year' in 2022"
+                            className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
+                        />
                     ))}
                 </div>
 
@@ -77,14 +78,15 @@ export default function AchievementsForm() {
                         <Button
                             type="button"
                             variant="outline"
-                            className="text-primary"
+                            defaultStyles={true}
+                            className="text-primary px-4 py-1"
                             onClick={addNewAchievement}
                             btnText="+ Add Achievement"
                         />
                         <Button
                             type="button"
                             variant="outline"
-                            className="text-primary"
+                            className="text-primary bg-[#e14545] rounded-lg px-4 py-1 text-white"
                             onClick={removeAchievement}
                             disabled={achievements.length === 0}
                             btnText="- Remove"
@@ -92,7 +94,8 @@ export default function AchievementsForm() {
                     </div>
                     <Button
                         type="submit"
-                        className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
+                        defaultStyles={true}
+                        className="px-4 text-base py-1"
                         disabled={loading}
                         btnText={
                             loading ? (

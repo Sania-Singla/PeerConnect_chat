@@ -1,7 +1,7 @@
 import { Button, RTE } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -14,6 +14,7 @@ export default function Experience() {
         resumeInfo?.experiences || []
     );
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (index, event) => {
         const { name, value } = event.target;
@@ -33,17 +34,18 @@ export default function Experience() {
     };
 
     const addNewExperience = () => {
-        setExperiences((prev) =>
-            prev.push({
-                position: '',
+        setExperiences((prev) => [
+            ...prev,
+            {
+                position: resumeInfo.experiences.position,
                 company: '',
                 city: '',
                 state: '',
                 startDate: '',
                 endDate: '',
                 description: '',
-            })
-        );
+            },
+        ]);
     };
 
     const removeExperience = () => {
@@ -79,7 +81,7 @@ export default function Experience() {
             </p>
 
             <form onSubmit={onSave}>
-                {experiences.map((item, index) => (
+                {experiences?.map((item, index) => (
                     <div key={index} className="my-5 rounded-lg">
                         <div className="grid grid-cols-2 gap-3">
                             <Input
@@ -137,12 +139,12 @@ export default function Experience() {
                                 onChange={(e) => handleChange(index, e)}
                                 value={item?.endDate}
                             />
-                            <div>
-                                <label className="text-[14px] font-medium">
+                            <div className="col-span">
+                                <label className="block text-sm font-medium text-gray-800">
                                     Description
                                 </label>
 
-                                <div className="col-span-2">
+                                <div className="mt-2">
                                     <RTE
                                         onChange={() =>
                                             handleRichTextEditor(
@@ -161,16 +163,17 @@ export default function Experience() {
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex gap-2">
                         <Button
+                            defaultStyles={true}
                             type="button"
                             variant="outline"
-                            className="text-primary"
+                            className="text-primary px-4 py-1"
                             onClick={addNewExperience}
                             btnText="+ Add More Experience"
                         />
                         <Button
                             type="button"
                             variant="outline"
-                            className="text-primary"
+                            className="text-primary bg-[#e14545] text-white px-4 py-1 rounded-lg "
                             onClick={removeExperience}
                             disabled={experiences.length === 0}
                             btnText="- Remove"
@@ -179,7 +182,7 @@ export default function Experience() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className=" px-4 py-2 text-base"
+                        className=" px-4 py-1 text-base"
                         disabled={loading}
                         btnText={
                             loading ? (

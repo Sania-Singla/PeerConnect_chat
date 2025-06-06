@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -23,6 +23,7 @@ export default function EducationForm() {
             },
         ]
     );
+    const navigate = useNavigate();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -143,20 +144,22 @@ export default function EducationForm() {
                     <Button
                         variant="outline"
                         onClick={AddNewEducation}
-                        className="text-primary"
+                        defaultStyles={true}
+                        className="text-primary py-1 px-4"
                         btnText="+ Add More Education"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
-                        className="text-primary"
+                        className="text-primary bg-[#e14545] text-white py-1 px-4 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
                     disabled={loading}
                     onClick={onSave}
-                    className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
+                    defaultStyles={true}
+                    className="py-1 px-6 text-base"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">

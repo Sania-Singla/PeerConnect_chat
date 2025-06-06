@@ -79,7 +79,7 @@ export default function EditResume() {
                                 <Button
                                     defaultStyles={true}
                                     onClick={handleThemeClick}
-                                    className="py-1 px-2"
+                                    className="py-1 px-4"
                                     btnText={<>Change Theme</>}
                                 />
 
@@ -90,19 +90,18 @@ export default function EditResume() {
                                             key={i}
                                             className="flex items-center gap-1"
                                         >
-                                            <button
+                                            <Button
                                                 onClick={() =>
                                                     setActiveFormIndex(i)
                                                 }
-                                                className={`flex items-center cursor-pointer justify-center size-7 rounded-full text-sm font-medium 
+                                                className={` size-7 rounded-full 
                                     ${
                                         activeFormIndex === i
                                             ? 'bg-[#4977ec] text-white'
                                             : 'bg-white border border-[#4977ec20] text-[#555555]'
                                     }`}
-                                            >
-                                                {i}
-                                            </button>
+                                                btnText={i}
+                                            />
                                             {i < forms.length - 1 && (
                                                 <div className="w-5 h-[1px] bg-[#4977ec30]"></div>
                                             )}
@@ -124,7 +123,7 @@ export default function EditResume() {
                                     {activeFormIndex > 0 && (
                                         <Button
                                             defaultStyles={true}
-                                            className="px-2 py-1"
+                                            className="px-4 py-1"
                                             variant="outline"
                                             onClick={() =>
                                                 setActiveFormIndex(

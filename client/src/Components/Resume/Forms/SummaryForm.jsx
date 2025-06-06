@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { ai } from '@/Utils';
 import { useResumeContext } from '@/Context';
 import { resumeService } from '@/Services';
+import Input from '@/Components/General/Input';
 
 export default function SummaryForm() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
@@ -58,39 +59,40 @@ export default function SummaryForm() {
                     Write a compelling summary of your professional background
                 </p>
 
-                <form className="mt-5" onSubmit={onSave}>
-                    <div className="flex justify-between items-end">
-                        <label className="font-medium">Your Summary</label>
+                <form className="relative mt-8" onSubmit={onSave}>
+                    <div className="absolute -top-4 right-0 flex justify-between items-end">
                         <Button
                             disabled={loading}
                             type="button"
                             onClick={GenerateSummaryFromAI}
-                            className="hover:bg-blue-50 border-primary text-primary flex gap-2"
+                            className="hover:bg-blue-100 bg-blue-200 py-2 px-4 rounded-full border-primary flex justify-center gap-2"
                             btnText={
                                 <>
-                                    <Brain className="size-4" /> Generate from
-                                    AI
+                                    <Brain className="size-4 mt-1" /> Generate
+                                    from AI
                                 </>
                             }
                         />
                     </div>
-                    <textarea
+                    <Input
+                        label="Your Summary"
+                        type="textarea"
                         rows={5}
                         name="summary"
-                        id="summary"
                         autoComplete="off"
                         spellCheck="true"
-                        className="mt-5 min-h-[150px]"
                         required
                         placeholder="Example: Experienced software developer with 5+ years in web application development..."
                         value={summary}
+                        className="text-sm"
                         onChange={(e) => setSummary(e.target.value)}
                     />
                     <div className="mt-4 flex justify-end">
                         <Button
+                            defaultStyles={true}
                             type="submit"
                             disabled={saving}
-                            className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white hover:bg-[#3b62c2]"
+                            className="px-4 py-1 text-base"
                             btnText={
                                 saving ? (
                                     <div className="flex items-center justify-center my-2 w-full">
