@@ -33,7 +33,10 @@ export default function PersonalInfoForm() {
         // }
 
         setPersonalInfo({ ...personalInfo, [name]: value });
-        setResumeInfo({ ...resumeInfo, [name]: value });
+        setResumeInfo((prev) => ({
+            ...prev,
+            personal: { ...prev.personal, [name]: value },
+        }));
     };
 
     async function onSave(e) {

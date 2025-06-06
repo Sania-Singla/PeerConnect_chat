@@ -92,7 +92,7 @@ export default function EducationForm() {
                                     required
                                     placeholder="Enter the name of your college/university"
                                     value={item.institution}
-                                    onChange={(e) => handleChange(e, index)}
+                                    onChange={(e) => handleChange(e, i)}
                                 />
                             </div>
 
@@ -102,7 +102,7 @@ export default function EducationForm() {
                                 type="text"
                                 required
                                 placeholder="e.g., B.Tech, M.Sc, MBA"
-                                onChange={(e) => handleChange(e, index)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.degree}
                             />
 
@@ -112,7 +112,7 @@ export default function EducationForm() {
                                 required
                                 placeholder="e.g., Computer Science, Physics"
                                 type="text"
-                                onChange={(e) => handleChange(e, index)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.major}
                             />
 
@@ -121,7 +121,7 @@ export default function EducationForm() {
                                 type="date"
                                 name="startDate"
                                 placeholder="Select start date"
-                                onChange={(e) => handleChange(e, index)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.startDate}
                             />
                             <Input
@@ -129,7 +129,7 @@ export default function EducationForm() {
                                 type="date"
                                 name="endDate"
                                 placeholder="Select end date"
-                                onChange={(e) => handleChange(e, index)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.endDate}
                             />
                             <div className="col-span-2">
@@ -139,7 +139,7 @@ export default function EducationForm() {
                                     rows={3}
                                     name="description"
                                     placeholder="Briefly describe your coursework, achievements, or activities"
-                                    onChange={(e) => handleChange(e, index)}
+                                    onChange={(e) => handleChange(e, i)}
                                     value={item?.description}
                                 />
                             </div>

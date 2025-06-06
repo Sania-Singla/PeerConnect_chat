@@ -52,18 +52,34 @@ export class ResumeModel {
                 { resumeId },
                 {
                     $set: {
-                        personalInfo: {
+                        personal: {
                             firstName: data.firstName,
                             lastName: data.lastName,
                             email: data.email,
                             phone: data.phone,
                             address: {
-                                city: data.address.city,
                                 state: data.address.state,
                                 country: data.address.country,
                             },
                             linkedin: data.linkedin,
                             github: data.github,
+                        },
+                    },
+                },
+                { new: true }
+            ).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async saveSummary(resumeId, data) {
+        try {
+            return await Resume.findOneAndUpdate(
+                { resumeId },
+                {
+                    $set: {
+                        personal: {
                             summary: data.summary,
                         },
                     },

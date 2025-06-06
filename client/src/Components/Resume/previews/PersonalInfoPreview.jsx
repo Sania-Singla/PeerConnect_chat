@@ -3,23 +3,14 @@ import {
     FaMapMarkerAlt,
     FaPhoneAlt,
     FaEnvelope,
-    FaLinkedin,
     FaGithub,
+    FaLinkedinIn,
 } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export default function PersonalInfoPreview() {
     const { resumeInfo } = useResumeContext();
-
-    const {
-        themeColor,
-        firstName,
-        linkedin,
-        lastName,
-        address,
-        phone,
-        email,
-        github,
-    } = resumeInfo;
+    const { themeColor, personal } = resumeInfo;
 
     return (
         <div className="text-nowrap">
@@ -27,45 +18,51 @@ export default function PersonalInfoPreview() {
                 className="font-bold text-xl text-center"
                 style={{ color: themeColor }}
             >
-                {firstName} {lastName}
+                {personal?.firstName} {personal?.lastName}
             </h2>
 
             <div
                 className="flex justify-evenly overflow-scroll gap-4 items-end mt-6 text-[11px] font-normal"
                 style={{ color: themeColor }}
             >
-                {address && (
+                {personal?.address && (
                     <div
                         className="flex items-center justify-center font-normal"
                         style={{ color: themeColor }}
                     >
                         <FaMapMarkerAlt className="mr-[5px] size-[10px]" />
-                        <span>{address}</span>
+                        <span>{personal?.address}</span>
                     </div>
                 )}
-                {phone && (
+                {personal?.phone && (
                     <div className="flex items-center">
                         <FaPhoneAlt className="mr-[5px] size-[10px]" />
-                        <span>{phone}</span>
+                        <span>{personal?.phone}</span>
                     </div>
                 )}
-                {email && (
+                {personal?.email && (
                     <div className="flex items-center">
                         <FaEnvelope className="mr-[5px] size-[10px]" />
-                        <span>{email}</span>
+                        <span>{personal?.email}</span>
                     </div>
                 )}
-                {linkedin && (
-                    <div className="flex items-center">
-                        <FaLinkedin className="mr-[5px] size-[10px]" />
-                        <span>{linkedin}</span>
-                    </div>
+                {personal?.linkedin && (
+                    <Link
+                        className="flex items-center"
+                        to={`https://www.linkedin.com/in/${personal?.linkedin}`}
+                    >
+                        <FaLinkedinIn className="mr-[5px] size-[10px]" />
+                        <span>{personal?.linkedin}</span>
+                    </Link>
                 )}
-                {github && (
-                    <div className="flex items-center">
+                {personal?.github && (
+                    <Link
+                        className="flex items-center"
+                        to={`https://www.github.com/${personal?.github}`}
+                    >
                         <FaGithub className="mr-[5px] size-[10px]" />
-                        <span>{github}</span>
-                    </div>
+                        <span>{personal?.github}</span>
+                    </Link>
                 )}
             </div>
 

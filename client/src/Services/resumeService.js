@@ -61,15 +61,15 @@ class ResumeService {
         }
     }
 
-    async saveSection(sectionName, resumeId, data) {
+    async saveSection(sectionName, resumeId, inputs) {
         try {
             const res = await fetch(
-                `${BASE_BACKEND_URL}/resumes/save/${resumeId}?sectionName=${sectionName}`,
+                `${BASE_BACKEND_URL}/resumes/${resumeId}?sectionName=${sectionName}`,
                 {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({ data: inputs }),
                 }
             );
 

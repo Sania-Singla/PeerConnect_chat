@@ -4,20 +4,19 @@ import { v4 as uuid } from 'uuid';
 // Sub-Schemas
 
 const addressSchema = new Schema({
-    city: { type: String, required: false },
     state: { type: String, required: true },
     country: { type: String, required: true },
 });
 
 const personalSchema = new Schema({
     firstName: { type: String, required: true },
-    lastName: { type: String, required: false },
+    lastName: { type: String, required: false, default: '' },
     email: { type: String, required: true },
     phone: { type: String, required: true },
     address: addressSchema,
-    linkedin: { type: String, required: false },
-    github: { type: String, required: false },
-    summary: { type: String, required: false },
+    linkedin: { type: String, required: false, default: '' },
+    github: { type: String, required: false, default: '' },
+    summary: { type: String, required: false, default: '' },
 });
 
 const educationSchema = new Schema({
@@ -26,7 +25,7 @@ const educationSchema = new Schema({
     major: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    description: { type: String, required: false },
+    description: { type: String, required: false, default: '' },
 });
 
 const experienceSchema = new Schema({

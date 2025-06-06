@@ -25,7 +25,7 @@ export default function SummaryForm() {
         try {
             setLoading(true);
 
-            const PROMPT = `Job Title: ${resumeInfo.title}, Depends on job title give me list of summary for 3 experience level, Mid Level and Freasher level in 3-4 lines in array format, with summary and experienceLevel Field in JSON Format`;
+            const PROMPT = `Generate three professional summaries for the job title: "${resumeInfo.title}". Each summary should be for a different experience level: Entry Level, Mid Level, and Senior Level. Return an array of JSON objects, each with "level" and "summary" fields. Each summary should be 3-4 lines.`;
             const result = await ai.sendMessage(PROMPT);
             const parsed = JSON.parse(result.response.text());
             console.log('AI Generated Summary:', parsed);
@@ -42,7 +42,7 @@ export default function SummaryForm() {
         try {
             e.preventDefault();
             setSaving(true);
-            await resumeService.saveSection(resumeId, summary);
+            await resumeService.saveSection('summary', resumeId, { summary });
             toast.success('Details updated');
             setEnableNext(true);
         } catch (err) {
@@ -66,12 +66,18 @@ export default function SummaryForm() {
                             disabled={loading}
                             type="button"
                             onClick={GenerateSummaryFromAI}
-                            className="hover:bg-[#4977ec] hover:text-white transition-all duration-100 border border-[#4977ec] text-[#4977ec] py-1 px-2 text-sm font-medium rounded-md border-primary flex justify-center items-center gap-2"
+                            className="hover:bg-[#4977ec] w-[150px] hover:text-white transition-all duration-100 border border-[#4977ec] text-[#4977ec] h-[30px] text-sm font-medium rounded-md border-primary flex justify-center items-center gap-2"
                             btnText={
-                                <>
-                                    <Brain className="size-4" /> Generate from
-                                    AI
-                                </>
+                                loading ? (
+                                    <div className="size-4 fill-[#4977ec] dark:text-[#c5d5ff]">
+                                        {icons.loading}
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Brain className="size-4" /> Generate
+                                        from AI
+                                    </>
+                                )
                             }
                         />
                     </div>
@@ -120,7 +126,7 @@ export default function SummaryForm() {
                                 className="hover:bg-blue-50 p-4 border border-gray-200 rounded-lg cursor-pointer transition-colors"
                             >
                                 <h3 className="font-semibold text-primary">
-                                    {item?.experiencelevel} Level
+                                    {item?.level}
                                 </h3>
                                 <p className="text-sm mt-2 text-gray-700">
                                     {item?.summary}

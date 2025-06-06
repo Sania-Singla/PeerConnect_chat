@@ -10,7 +10,6 @@ export default function ResumeCardItem({ resume }) {
     const navigate = useNavigate();
     const { setShowPopup, setPopupInfo } = usePopupContext();
     const [showDropdown, setShowDropdown] = useState(false);
-
     const dropdownWrapperRef = useRef(null);
 
     useEffect(() => {
