@@ -9,6 +9,14 @@ export class ResumeModel {
         }
     }
 
+    async getResumes(userId) {
+        try {
+            return await Resume.find({ userId }).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async updateTheme(resumeId, theme) {
         try {
             return await Resume.findOneAndUpdate(
@@ -33,14 +41,6 @@ export class ResumeModel {
     async deleteResume(resumeId) {
         try {
             return await Resume.findOneAndDelete({ resumeId }).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async getResumes(userId) {
-        try {
-            return await Resume.find({ userId }).lean();
         } catch (err) {
             throw err;
         }
@@ -79,9 +79,7 @@ export class ResumeModel {
                 { resumeId },
                 {
                     $set: {
-                        personal: {
-                            summary: data.summary,
-                        },
+                        'personal.summary': data.summary,
                     },
                 },
                 { new: true }

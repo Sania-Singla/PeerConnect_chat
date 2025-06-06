@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -11,10 +11,11 @@ export default function AchievementsForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [achievements, setAchievements] = useState(
-        resumeInfo?.achievements || []
+        resumeInfo?.achievements?.length > 0
+            ? resumeInfo.achievements
+            : [{ title: '', description: '', date: '' }]
     );
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleChange = (index, event) => {
         setAchievements((prev) =>
@@ -23,7 +24,10 @@ export default function AchievementsForm() {
     };
 
     const addNewAchievement = () => {
-        setAchievements((prev) => [...prev, '']);
+        setAchievements((prev) => [
+            ...prev,
+            { title: '', description: '', date: '' },
+        ]);
     };
 
     const removeAchievement = () => {
@@ -39,13 +43,14 @@ export default function AchievementsForm() {
         try {
             e.preventDefault();
             setLoading(true);
-            const res = await resumeService.updateAchievements(
+            const res = await resumeService.saveSection(
+                'achievement',
                 resumeId,
                 achievements
             );
             if (res && !res.message) toast.success('Achievements updated!');
         } catch (err) {
-            navigate('/server-error');
+            toast.error('Failed to update achievements');
         } finally {
             setLoading(false);
         }
@@ -66,7 +71,7 @@ export default function AchievementsForm() {
                             label={`Achievement #${i + 1}`}
                             type="text"
                             required
-                            value={item}
+                            value={item.title}
                             onChange={(e) => handleChange(i, e)}
                             placeholder="e.g. Awarded 'Employee of the Year' in 2022"
                             className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
@@ -80,7 +85,7 @@ export default function AchievementsForm() {
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-[15px] px-4 py-[5px] text-white"
+                            className="text-[15px] px-4 h-[30px] text-white"
                             onClick={addNewAchievement}
                             btnText="+ Add More"
                         />
@@ -88,7 +93,7 @@ export default function AchievementsForm() {
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                            className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeAchievement}
                             disabled={achievements.length === 0}
                             btnText="- Remove"
@@ -97,12 +102,12 @@ export default function AchievementsForm() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className="w-[60px] text-[15px] py-[5px] text-white"
+                        className="w-[60px] text-[15px] h-[30px] text-white"
                         disabled={loading}
                         btnText={
                             loading ? (
-                                <div className="flex items-center justify-center my-2 w-full">
-                                    <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="flex items-center justify-center w-full">
+                                    <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                         {icons.loading}
                                     </div>
                                 </div>

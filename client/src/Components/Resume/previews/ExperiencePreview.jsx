@@ -3,12 +3,12 @@ import { useResumeContext } from '@/Context';
 export default function ExperiencePreview() {
     const { resumeInfo } = useResumeContext();
 
-    return resumeInfo.experiences.map((exp, index) => (
+    return resumeInfo.experience.map((exp, index) => (
         <div key={index} className="mb-6">
             <div className="flex justify-between items-center">
                 <h3
                     className="text-sm font-bold"
-                    style={{ color: resumeInfo?.themeColor }}
+                    style={{ color: resumeInfo.themeColor }}
                 >
                     {exp.position}
                 </h3>

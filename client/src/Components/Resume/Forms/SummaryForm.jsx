@@ -1,9 +1,9 @@
 import { Button } from '@/Components';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { icons } from '@/Assets/icons';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { ai } from '@/Utils';
 import { useResumeContext } from '@/Context';
 import { resumeService } from '@/Services';
@@ -11,11 +11,10 @@ import Input from '@/Components/General/Input';
 
 export default function SummaryForm() {
     const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
-    const [summary, setSummary] = useState(resumeInfo?.summary || '');
+    const [summary, setSummary] = useState(resumeInfo?.personal?.summary || '');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const { resumeId } = useParams();
-    const navigate = useNavigate();
     const [aiGeneratedSummaries, setAiGenerateSummaries] = useState();
 
     // for preview
@@ -46,10 +45,18 @@ export default function SummaryForm() {
             toast.success('Details updated');
             setEnableNext(true);
         } catch (err) {
-            navigate('/server-error');
+            toast.error('Failed to save summary');
         } finally {
             setSaving(false);
         }
+    }
+
+    function handleChange(value) {
+        setSummary(value);
+        setResumeInfo((prev) => ({
+            ...prev,
+            personal: { ...prev.personal, summary: value },
+        }));
     }
 
     return (
@@ -91,18 +98,18 @@ export default function SummaryForm() {
                         placeholder="Example: Experienced software developer with 5+ years in web application development..."
                         value={summary}
                         className="text-sm"
-                        onChange={(e) => setSummary(e.target.value)}
+                        onChange={(e) => handleChange(e.target.value)}
                     />
                     <div className="mt-5 flex justify-end">
                         <Button
                             defaultStyles={true}
                             type="submit"
                             disabled={saving}
-                            className="w-[60px] py-[5px] text-[15px] text-white"
+                            className="w-[60px] h-[30px] text-[15px] text-white"
                             btnText={
                                 saving ? (
-                                    <div className="flex items-center justify-center my-2 w-full">
-                                        <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                    <div className="flex items-center justify-center w-full">
+                                        <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                             {icons.loading}
                                         </div>
                                     </div>
@@ -122,7 +129,7 @@ export default function SummaryForm() {
                         {aiGeneratedSummaries?.map((item, index) => (
                             <div
                                 key={index}
-                                onClick={() => setSummary(item?.summary)}
+                                onClick={() => handleChange(item?.summary)}
                                 className="hover:bg-blue-50 p-4 border border-gray-200 rounded-lg cursor-pointer transition-colors"
                             >
                                 <h3 className="font-semibold text-primary">

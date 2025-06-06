@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/Components';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import { icons } from '@/Assets/icons';
@@ -11,10 +11,13 @@ import Input from '@/Components/General/Input';
 
 export default function Skills() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [skills, setSkills] = useState(resumeInfo?.skills || []);
+    const [skills, setSkills] = useState(
+        resumeInfo?.skills?.length > 0
+            ? resumeInfo.skills
+            : [{ name: '', rating: 0 }]
+    );
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleChange = (index, name, value) => {
         setSkills((prev) =>
@@ -35,10 +38,14 @@ export default function Skills() {
         try {
             e.preventDefault();
             setLoading(true);
-            const res = await resumeService.updateSkills(resumeId, skills);
+            const res = await resumeService.saveSection(
+                'skill',
+                resumeId,
+                skills
+            );
             if (res && !res.message) toast.success('Skills updated!');
         } catch (err) {
-            navigate('/server-error');
+            toast.error('Failed to update skills');
         } finally {
             setLoading(false);
         }
@@ -87,26 +94,26 @@ export default function Skills() {
                         variant="outline"
                         onClick={AddNewSkills}
                         defaultStyles={true}
-                        className="text-[15px] px-4 py-[5px] text-white"
+                        className="text-[15px] px-4 h-[30px] text-white"
                         btnText="+ Add More"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveSkills}
                         defaultStyles={true}
-                        className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                        className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
                     defaultStyles="true"
-                    className="w-[60px] py-[5px] text-[15px] text-white"
+                    className="w-[60px] h-[30px] text-[15px] text-white"
                     disabled={loading}
                     onClick={onSave}
                     btnText={
                         loading ? (
-                            <div className="flex items-center justify-center my-2 w-full">
-                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                            <div className="flex items-center justify-center w-full">
+                                <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
                             </div>

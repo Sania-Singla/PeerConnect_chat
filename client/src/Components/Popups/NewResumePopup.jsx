@@ -75,7 +75,7 @@ export default function NewResumePopup() {
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center w-full">
-                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
                             </div>

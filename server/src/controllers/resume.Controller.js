@@ -21,13 +21,13 @@ const saveSection = tryCatch('save personal info', async (req, res) => {
         case 'skills':
             model = resumeObject.saveSkills;
             break;
-        case 'achievements':
+        case 'achievement':
             model = resumeObject.saveAchievements;
             break;
-        case 'projects':
+        case 'project':
             model = resumeObject.saveProjects;
             break;
-        case 'personalInfo':
+        case 'personal':
             model = resumeObject.savePersonalInfo;
             break;
         case 'summary':

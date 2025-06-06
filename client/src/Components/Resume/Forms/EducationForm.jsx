@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -12,18 +12,19 @@ export default function EducationForm() {
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [educationList, setEducationList] = useState(
-        resumeInfo?.education || [
-            {
-                institution: '',
-                degree: '',
-                major: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-            },
-        ]
+        resumeInfo?.education.length > 0
+            ? resumeInfo.education
+            : [
+                  {
+                      institution: '',
+                      degree: '',
+                      major: '',
+                      startDate: '',
+                      endDate: '',
+                      description: '',
+                  },
+              ]
     );
-    const navigate = useNavigate();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -55,13 +56,14 @@ export default function EducationForm() {
         try {
             e.preventDefault();
             setLoading(true);
-            const res = await resumeService.updateEducation(
+            const res = await resumeService.saveSection(
+                'education',
                 resumeId,
                 educationList
             );
             if (res && !res.message) toast.success('Education List updated!');
         } catch (err) {
-            navigate('/server-error');
+            toast.error('Failed to update education list');
         } finally {
             setLoading(false);
         }
@@ -153,14 +155,14 @@ export default function EducationForm() {
                         variant="outline"
                         onClick={AddNewEducation}
                         defaultStyles={true}
-                        className="text-[15px] py-[5px] px-4 text-white"
+                        className="text-[15px] h-[30px] px-4 text-white"
                         btnText="+ Add More"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
                         defaultStyles={true}
-                        className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                        className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
@@ -168,11 +170,11 @@ export default function EducationForm() {
                     disabled={loading}
                     onClick={onSave}
                     defaultStyles={true}
-                    className="py-[5px] w-[60px] text-[15px] text-white"
+                    className="h-[30px] w-[60px] text-[15px] text-white"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center w-full">
-                                <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                     {icons.loading}
                                 </div>
                             </div>

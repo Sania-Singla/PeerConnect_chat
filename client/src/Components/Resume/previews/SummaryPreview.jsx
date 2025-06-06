@@ -5,7 +5,7 @@ export default function SummaryPreview() {
 
     return (
         <p className="text-xs leading-relaxed text-justify text-gray-800">
-            {resumeInfo.summary}
+            {resumeInfo.personal?.summary}
         </p>
     );
 }

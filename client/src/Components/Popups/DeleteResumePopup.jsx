@@ -9,15 +9,12 @@ export default function DeleteResumePopup() {
     const { popupInfo, setShowPopup } = usePopupContext();
     const [loading, setLoading] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
+
     async function deleteResume() {
         try {
             setLoading(true);
-            const response = await resumeService.deleteResume(
-                popupInfo.resume.resumeId
-            );
-            if (response.deletedCount) {
-                toast.success('Resume deleted successfully');
-            }
+            await resumeService.deleteResume(popupInfo.resume.resumeId);
+            toast.success('Resume deleted successfully');
         } catch (err) {
             toast.error('Failed to delete resume');
         } finally {
@@ -44,7 +41,7 @@ export default function DeleteResumePopup() {
                         <strong className="text-black">
                             {popupInfo.resume.title}
                         </strong>{' '}
-                        and cannot be undone.
+                        resume, changes cannot be undone.
                     </label>
                 </div>
             </div>
@@ -53,23 +50,23 @@ export default function DeleteResumePopup() {
                 <Button
                     onClick={() => setShowPopup(false)}
                     defaultStyles={true}
-                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 h-[35px] w-full"
+                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 h-[35px] text-[15px] w-full"
                     btnText="Cancel"
                 />
                 <Button
                     onClick={deleteResume}
                     disabled={!confirmed || loading}
                     defaultStyles={true}
-                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 h-[35px] w-full"
+                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 h-[35px] text-[15px] w-full"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">
-                                <div className="size-5 fill-[white] dark:text-[#f7f7f7]">
+                                <div className="size-4 fill-red-700 dark:text-red-300">
                                     {icons.loading}
                                 </div>
                             </div>
                         ) : (
-                            'Delete Resume'
+                            'Delete'
                         )
                     }
                 />

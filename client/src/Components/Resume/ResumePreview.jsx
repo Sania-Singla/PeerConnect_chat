@@ -31,7 +31,7 @@ export default function ResumePreview() {
             </header>
 
             <main className="flex flex-col p-4 space-y-10 text-gray-800">
-                {resumeInfo?.summary && (
+                {resumeInfo?.personal?.summary && (
                     <section>
                         <h2
                             className="font-semibold text-sm text-gray-900 tracking-wide mb-3 border-b border-gray-200 pb-1"

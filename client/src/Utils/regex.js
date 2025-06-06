@@ -75,7 +75,7 @@ function verifyUserName(name, value) {
     switch (name) {
         case 'linkedin':
         case 'github':
-        case 'leetcode':
+        case 'leetcode': {
             if (
                 value.startsWith('https://') ||
                 value.startsWith('http://') ||
@@ -83,9 +83,12 @@ function verifyUserName(name, value) {
                 value.includes('.com') ||
                 value.includes('/')
             ) {
-                toast.error('Please enter only the LinkedIn username.');
-            }
-            break;
+                return false;
+            } else return true;
+        }
+        default: {
+            return true;
+        }
     }
 }
 

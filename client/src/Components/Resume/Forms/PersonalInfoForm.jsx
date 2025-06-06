@@ -1,8 +1,8 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
@@ -11,28 +11,49 @@ import { verifyUserName } from '@/Utils/regex';
 export default function PersonalInfoForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
-    const [personalInfo, setPersonalInfo] = useState({});
+    const [personalInfo, setPersonalInfo] = useState(
+        resumeInfo?.personal || {}
+    );
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setPersonalInfo({ ...personalInfo, [name]: value });
-        setResumeInfo((prev) => ({
-            ...prev,
-            personal: { ...prev.personal, [name]: value },
-        }));
+        if (!verifyUserName(name, value)) {
+            toast.error('Invalid Username');
+            return;
+        }
+
+        if (name === 'state' || name === 'country') {
+            setPersonalInfo((prev) => ({
+                ...prev,
+                address: { ...prev.address, [name]: value },
+            }));
+
+            setResumeInfo((prev) => ({
+                ...prev,
+                personal: {
+                    ...prev.personal,
+                    address: { ...prev.personal.address, [name]: value },
+                },
+            }));
+            return;
+        } else {
+            setPersonalInfo((prev) => ({ ...prev, [name]: value }));
+
+            setResumeInfo((prev) => ({
+                ...prev,
+                personal: { ...prev.personal, [name]: value },
+            }));
+        }
     };
 
-    function handleBlur(e) {
-        const { name, value } = e.target;
-        verifyUserName(name, value);
-    }
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
-            const res = await resumeService.updatePersonalInfo(
+            console.log('Saving personal info:', personalInfo);
+            const res = await resumeService.saveSection(
+                'personal',
                 resumeId,
                 personalInfo
             );
@@ -41,7 +62,8 @@ export default function PersonalInfoForm() {
                 setEnableNext(true);
             }
         } catch (err) {
-            navigate('/server-error');
+            console.log(err);
+            toast.error('Failed to update personal info');
         } finally {
             setLoading(false);
         }
@@ -59,10 +81,9 @@ export default function PersonalInfoForm() {
                     <Input
                         label="First Name"
                         name="firstName"
-                        defaultValue={resumeInfo?.firstName}
+                        value={personalInfo.firstName}
                         required
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. John"
                     />
 
@@ -71,8 +92,7 @@ export default function PersonalInfoForm() {
                         name="lastName"
                         required
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        defaultValue={resumeInfo?.lastName}
+                        value={personalInfo.lastName}
                         placeholder="e.g. Doe"
                     />
 
@@ -80,18 +100,16 @@ export default function PersonalInfoForm() {
                         label="State"
                         name="state"
                         required
-                        defaultValue={resumeInfo?.address}
+                        value={personalInfo.address?.state}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. Chandigarh"
                     />
                     <Input
                         label="Country"
                         name="country"
                         required
-                        defaultValue={resumeInfo?.address}
+                        value={personalInfo.address?.country}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. India"
                     />
 
@@ -99,9 +117,8 @@ export default function PersonalInfoForm() {
                         label="Phone"
                         name="phone"
                         required
-                        defaultValue={resumeInfo?.phone}
+                        value={personalInfo.phone}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. +91 2345678901"
                     />
 
@@ -109,27 +126,24 @@ export default function PersonalInfoForm() {
                         label="Email"
                         name="email"
                         required
-                        defaultValue={resumeInfo?.email}
+                        value={personalInfo.email}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. john.doe@example.com"
                     />
 
                     <Input
                         label="LinkedIn Username"
                         name="linkedin"
-                        defaultValue={resumeInfo?.linkedin}
+                        value={personalInfo.linkedin}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. john-doe"
                     />
 
                     <Input
                         label="GitHub Username"
                         name="github"
-                        defaultValue={resumeInfo?.github}
+                        value={personalInfo.github}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
                         placeholder="e.g. johndoe123"
                     />
                 </div>
@@ -138,12 +152,12 @@ export default function PersonalInfoForm() {
                     <Button
                         defaultStyles={true}
                         type="submit"
-                        className="py-[5px] w-[60px] text-[15px] text-white "
+                        className="h-[30px] w-[60px] text-[15px] text-white "
                         disabled={loading}
                         btnText={
                             loading ? (
-                                <div className="flex items-center justify-center my-2 w-full">
-                                    <div className="size-5 fill-[#4977ec] dark:text-[#f7f7f7]">
+                                <div className="flex items-center justify-center w-full">
+                                    <div className="size-4 fill-[#4977ec] dark:text-[#f7f7f7]">
                                         {icons.loading}
                                     </div>
                                 </div>

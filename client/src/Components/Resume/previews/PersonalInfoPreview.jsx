@@ -31,7 +31,9 @@ export default function PersonalInfoPreview() {
                         style={{ color: themeColor }}
                     >
                         <FaMapMarkerAlt className="mr-[5px] size-[10px]" />
-                        <span>{personal?.address}</span>
+                        <span>
+                            {`${personal?.address.state}, ${personal?.address.country}`}
+                        </span>
                     </div>
                 )}
                 {personal?.phone && (
