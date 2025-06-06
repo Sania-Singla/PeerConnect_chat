@@ -189,7 +189,7 @@ export default function Sidebar() {
                                     btnText="Login"
                                     title="Login"
                                     defaultStyles={true}
-                                    className="w-[75px] h-[32px] text-white"
+                                    className="w-[75px] h-[32px] text-white text-[15px]"
                                 />
                             )}
                         </div>

@@ -40,7 +40,7 @@ export default function Logout() {
                 )
             }
             defaultStyles={true}
-            className="w-[75px] h-[32px] text-white"
+            className="w-[75px] h-[32px] text-white text-[15px]"
         />
     );
 }
