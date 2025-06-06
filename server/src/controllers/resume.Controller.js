@@ -51,6 +51,13 @@ const createResume = tryCatch('create new resume', async (req, res) => {
     return res.status(OK).json({ resumeId: resume.resumeId });
 });
 
+const updateTheme = tryCatch('update theme', async (req, res) => {
+    const { resumeId } = req.params;
+    const { theme } = req.body;
+    const resume = await resumeObject.updateTheme(resumeId, theme);
+    return res.status(OK).json(resume);
+});
+
 const getResume = tryCatch('get resume', async (req, res) => {
     const { resumeId } = req.params;
     const resume = await resumeObject.getResume(resumeId);
@@ -68,4 +75,11 @@ const getResumes = tryCatch('get resumes', async (req, res) => {
     return res.status(OK).json(resumes);
 });
 
-export { saveSection, deleteResume, getResume, getResumes, createResume };
+export {
+    saveSection,
+    deleteResume,
+    updateTheme,
+    getResume,
+    getResumes,
+    createResume,
+};

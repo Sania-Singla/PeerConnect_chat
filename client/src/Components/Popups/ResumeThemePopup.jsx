@@ -33,7 +33,7 @@ export default function ResumeThemePopup() {
                     </div>
                 }
             />
-            <div className="border border-[#ddd] rounded-xl shadow-lg flex items-center flex-col justify-center p-5">
+            <div className="border border-[#ddd] rounded-xl shadow-sm flex items-center flex-col justify-center p-5">
                 <h2 className="mb-4 font-bold">Select Theme</h2>
                 <div className="grid grid-cols-5 gap-4">
                     {RESUME_THEMES.map((color) => (

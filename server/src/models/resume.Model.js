@@ -9,6 +9,18 @@ export class ResumeModel {
         }
     }
 
+    async updateTheme(resumeId, theme) {
+        try {
+            return await Resume.findOneAndUpdate(
+                { resumeId },
+                { $set: { themeColor: theme } },
+                { new: true }
+            ).lean();
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async createResume(userId, title) {
         try {
             const resume = await Resume.create({ title, userId });

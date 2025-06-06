@@ -5,6 +5,7 @@ import {
     getResumes,
     saveSection,
     deleteResume,
+    updateTheme,
 } from '../controllers/resume.Controller.js';
 import { verifyJwt } from '../middlewares/auth.Middleware.js';
 export const resumeRouter = express.Router();
@@ -16,6 +17,7 @@ resumeRouter.route('/new').post(createResume);
 resumeRouter
     .route('/:resumeId')
     .get(getResume)
+    .patch(updateTheme)
     .post(saveSection)
     .delete(deleteResume);
 
