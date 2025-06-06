@@ -127,23 +127,24 @@ export default function EditResume() {
                                     {activeFormIndex > 0 && (
                                         <Button
                                             variant="outline"
-                                            className="border-[#4977ec] hover:bg-[#4977ec10] text-[#4977ec] gap-2"
+                                            className="border py-[5px] px-3 rounded-md border-[#4977ec] hover:bg-[#4977ec10] text-[#4977ec] gap-2"
                                             onClick={() =>
                                                 setActiveFormIndex(
                                                     activeFormIndex - 1
                                                 )
                                             }
                                             btnText={
-                                                <>
+                                                <div className="flex gap-2 items-center">
                                                     <ArrowLeft className="w-5 h-5" />{' '}
                                                     Previous
-                                                </>
+                                                </div>
                                             }
                                         />
                                     )}
                                 </div>
                                 <Button
-                                    className={`bg-[#4977ec] hover:bg-[#3b62c2] text-white gap-2 
+                                    defaultStyles="true"
+                                    className={` text-white gap-2 py-[5px] px-3
                         ${!enableNext ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     onClick={() =>
                                         setActiveFormIndex((prev) => prev + 1)
@@ -151,10 +152,10 @@ export default function EditResume() {
                                     disabled={!enableNext}
                                     btnText={
                                         activeFormIndex < forms.length ? (
-                                            <>
+                                            <div className="flex items-center gap-2">
                                                 Next
                                                 <ArrowRight className="w-5 h-5" />
-                                            </>
+                                            </div>
                                         ) : (
                                             'Finish & Preview'
                                         )
