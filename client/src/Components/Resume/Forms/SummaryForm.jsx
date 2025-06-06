@@ -65,7 +65,7 @@ export default function SummaryForm() {
                             disabled={loading}
                             type="button"
                             onClick={GenerateSummaryFromAI}
-                            className="hover:bg-blue-100 bg-blue-200 py-2 px-4 rounded-full border-primary flex justify-center gap-2"
+                            className="hover:bg-gray-100 bg-gray-200 py-[5px] px-3 rounded-lg border-primary flex justify-center gap-2"
                             btnText={
                                 <>
                                     <Brain className="size-4 mt-1" /> Generate
@@ -92,7 +92,7 @@ export default function SummaryForm() {
                             defaultStyles={true}
                             type="submit"
                             disabled={saving}
-                            className="px-4 py-1 text-base"
+                            className="px-4 py-[5px] text-base text-white"
                             btnText={
                                 saving ? (
                                     <div className="flex items-center justify-center my-2 w-full">

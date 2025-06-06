@@ -166,14 +166,15 @@ export default function Experience() {
                             defaultStyles={true}
                             type="button"
                             variant="outline"
-                            className="text-primary px-4 py-1"
+                            className="text-primary px-4 py-[5px] text-white"
                             onClick={addNewExperience}
                             btnText="+ Add More Experience"
                         />
                         <Button
                             type="button"
                             variant="outline"
-                            className="text-primary bg-[#e14545] text-white px-4 py-1 rounded-lg "
+                            defaultStyles={true}
+                            className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeExperience}
                             disabled={experiences.length === 0}
                             btnText="- Remove"
@@ -182,7 +183,7 @@ export default function Experience() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className=" px-4 py-1 text-base"
+                        className=" px-4 py-[5px] text-base text-white"
                         disabled={loading}
                         btnText={
                             loading ? (

@@ -86,19 +86,20 @@ export default function Skills() {
                         variant="outline"
                         onClick={AddNewSkills}
                         defaultStyles={true}
-                        className="text-primary px-4 py-1"
+                        className="text-primary px-4 py-1 text-white"
                         btnText="+ Add More Skill"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveSkills}
-                        className="text-primary bg-[#e14545] text-white px-4 py-1 rounded-lg"
+                        defaultStyles={true}
+                        className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
                     defaultStyles="true"
-                    className="px-4 py-1"
+                    className="px-4 py-[5px] text-base text-white"
                     disabled={loading}
                     onClick={onSave}
                     btnText={

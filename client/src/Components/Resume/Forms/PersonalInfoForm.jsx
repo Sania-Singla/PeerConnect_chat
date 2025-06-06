@@ -138,7 +138,7 @@ export default function PersonalInfoForm({ enabledNext }) {
                     <Button
                         defaultStyles={true}
                         type="submit"
-                        className=" px-4 py-1 text-base "
+                        className="py-[5px] px-4 text-base text-white "
                         disabled={loading}
                         btnText={
                             loading ? (
