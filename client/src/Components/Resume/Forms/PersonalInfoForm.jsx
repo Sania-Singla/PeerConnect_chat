@@ -8,15 +8,14 @@ import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
 import { verifyUserName } from '@/Utils/regex';
 
-export default function PersonalInfoForm({ enabledNext }) {
+export default function PersonalInfoForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
     const [personalInfo, setPersonalInfo] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
-        enabledNext(false);
         const { name, value } = e.target;
         setPersonalInfo({ ...personalInfo, [name]: value });
         setResumeInfo({ ...resumeInfo, [name]: value });
@@ -34,7 +33,10 @@ export default function PersonalInfoForm({ enabledNext }) {
                 resumeId,
                 personalInfo
             );
-            if (res && !res.message) toast.success('Personal Info updated!');
+            if (res && !res.message) {
+                toast.success('Personal Info updated!');
+                setEnableNext(true);
+            }
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -43,14 +45,14 @@ export default function PersonalInfoForm({ enabledNext }) {
     }
 
     return (
-        <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+        <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Personal Detail</h2>
-            <p className="text-gray-500 text-sm italic mt-1">
+            <p className="text-gray-400 text-sm italic mt-1">
                 Get Started with the basic information
             </p>
 
             <form onSubmit={onSave}>
-                <div className="grid grid-cols-2 mt-5 gap-3">
+                <div className="grid grid-cols-2 mt-5 gap-5">
                     <Input
                         label="First Name"
                         name="firstName"
@@ -130,11 +132,11 @@ export default function PersonalInfoForm({ enabledNext }) {
                     </div>
                 </div>
 
-                <div className="mt-3 flex justify-end">
+                <div className="mt-5 flex justify-end">
                     <Button
                         defaultStyles={true}
                         type="submit"
-                        className="py-[5px] px-4 text-base text-white "
+                        className="py-[5px] w-[60px] text-[15px] text-white "
                         disabled={loading}
                         btnText={
                             loading ? (

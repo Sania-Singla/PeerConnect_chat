@@ -11,9 +11,7 @@ import Input from '@/Components/General/Input';
 
 export default function Skills() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [skills, setSkills] = useState(
-        resumeInfo?.skills || [{ name: '', rating: 0 }]
-    );
+    const [skills, setSkills] = useState(resumeInfo?.skills || []);
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -27,7 +25,7 @@ export default function Skills() {
     };
 
     const AddNewSkills = () => {
-        setSkills((prev) => prev.push({ name: '', rating: 0 }));
+        setSkills((prev) => [...prev, { name: '', rating: 0 }]);
     };
     const RemoveSkills = () => {
         setSkills((skillsList) => skillsList.slice(0, -1));
@@ -50,15 +48,18 @@ export default function Skills() {
     useEffect(() => setResumeInfo({ ...resumeInfo, skills }), [skills]);
 
     return (
-        <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+        <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Skills</h2>
-            <p className="text-gray-500 text-sm italic mt-1">
+            <p className="text-gray-400 text-sm italic mt-1">
                 Add Your top professional key skills
             </p>
 
             <div>
-                {skills.map((item, index) => (
-                    <div className="flex justify-between items-center gap-4 my-5">
+                {skills.map((item, i) => (
+                    <div
+                        key={i}
+                        className="flex justify-between items-center gap-4 my-5"
+                    >
                         <div className="w-full">
                             <Input
                                 label="Name"
@@ -66,7 +67,7 @@ export default function Skills() {
                                 defaultValue={item.name}
                                 placeholder="Enter a skill (e.g., JavaScript)"
                                 onChange={(e) =>
-                                    handleChange(index, 'name', e.target.value)
+                                    handleChange(i, 'name', e.target.value)
                                 }
                             />
                         </div>
@@ -74,32 +75,32 @@ export default function Skills() {
                             style={{ maxWidth: 120 }}
                             value={item.rating}
                             className="h-fit relative top-2"
-                            onChange={(v) => handleChange(index, 'rating', v)}
+                            onChange={(v) => handleChange(i, 'rating', v)}
                         />
                     </div>
                 ))}
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-4">
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
                         onClick={AddNewSkills}
                         defaultStyles={true}
-                        className="text-primary px-4 py-1 text-white"
-                        btnText="+ Add More Skill"
+                        className="text-[15px] px-4 py-[5px] text-white"
+                        btnText="+ Add More"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveSkills}
                         defaultStyles={true}
-                        className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                        className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
                     defaultStyles="true"
-                    className="px-4 py-[5px] text-base text-white"
+                    className="w-[60px] py-[5px] text-[15px] text-white"
                     disabled={loading}
                     onClick={onSave}
                     btnText={

@@ -27,7 +27,7 @@ export default function Input({
                     name={name}
                     value={value}
                     onChange={onChange}
-                    className={`mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 placeholder:text-sm`}
+                    className={`block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 outline-none focus:ring-[#4977ec] focus:border-[#4977ec] placeholder:text-sm`}
                     placeholder={placeholder}
                     {...props}
                     required={required}
@@ -37,7 +37,7 @@ export default function Input({
                     id={name}
                     name={name}
                     onChange={onchange}
-                    className={`mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200`}
+                    className={`block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 outline-none focus:ring-[#4977ec] focus:border-[#4977ec] bg-white`}
                     required={required}
                     {...props}
                 >
@@ -55,7 +55,7 @@ export default function Input({
                         name={name}
                         value={value}
                         onChange={onChange}
-                        className={`mt-1 block w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 outline-none placeholder:text-sm`}
+                        className={`block w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#4977ec] focus:border-[#4977ec] outline-none placeholder:text-sm`}
                         placeholder={placeholder}
                         required={required}
                         {...props}
@@ -63,7 +63,7 @@ export default function Input({
                 </div>
             )}
             {errors?.[name] && (
-                <p className="text-sm text-red-600 mt-1 animate-pulse">
+                <p className="text-sm text-red-600 animate-pulse">
                     {errors[name]}
                 </p>
             )}

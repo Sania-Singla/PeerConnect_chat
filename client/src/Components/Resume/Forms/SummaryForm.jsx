@@ -10,7 +10,7 @@ import { resumeService } from '@/Services';
 import Input from '@/Components/General/Input';
 
 export default function SummaryForm() {
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
     const [summary, setSummary] = useState(resumeInfo?.summary || '');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -44,6 +44,7 @@ export default function SummaryForm() {
             setSaving(true);
             await resumeService.saveSection(resumeId, summary);
             toast.success('Details updated');
+            setEnableNext(true);
         } catch (err) {
             navigate('/server-error');
         } finally {
@@ -53,9 +54,9 @@ export default function SummaryForm() {
 
     return (
         <div>
-            <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+            <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
                 <h2 className="font-bold text-lg">Professional Summary</h2>
-                <p className="text-gray-500 text-sm italic mt-1">
+                <p className="text-gray-400 text-sm italic mt-1">
                     Write a compelling summary of your professional background
                 </p>
 
@@ -65,11 +66,11 @@ export default function SummaryForm() {
                             disabled={loading}
                             type="button"
                             onClick={GenerateSummaryFromAI}
-                            className="hover:bg-gray-100 bg-gray-200 py-[5px] px-3 rounded-lg border-primary flex justify-center gap-2"
+                            className="hover:bg-[#4977ec] hover:text-white transition-all duration-100 border border-[#4977ec] text-[#4977ec] py-1 px-2 text-sm font-medium rounded-md border-primary flex justify-center items-center gap-2"
                             btnText={
                                 <>
-                                    <Brain className="size-4 mt-1" /> Generate
-                                    from AI
+                                    <Brain className="size-4" /> Generate from
+                                    AI
                                 </>
                             }
                         />
@@ -81,18 +82,17 @@ export default function SummaryForm() {
                         name="summary"
                         autoComplete="off"
                         spellCheck="true"
-                        required
                         placeholder="Example: Experienced software developer with 5+ years in web application development..."
                         value={summary}
                         className="text-sm"
                         onChange={(e) => setSummary(e.target.value)}
                     />
-                    <div className="mt-4 flex justify-end">
+                    <div className="mt-5 flex justify-end">
                         <Button
                             defaultStyles={true}
                             type="submit"
                             disabled={saving}
-                            className="px-4 py-[5px] text-base text-white"
+                            className="w-[60px] py-[5px] text-[15px] text-white"
                             btnText={
                                 saving ? (
                                     <div className="flex items-center justify-center my-2 w-full">

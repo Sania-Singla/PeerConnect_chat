@@ -23,7 +23,7 @@ export default function AchievementsForm() {
     };
 
     const addNewAchievement = () => {
-        setAchievements((prev) => prev.push(''));
+        setAchievements((prev) => [...prev, '']);
     };
 
     const removeAchievement = () => {
@@ -52,21 +52,22 @@ export default function AchievementsForm() {
     }
 
     return (
-        <div className="p-5 shadow-lg rounded-lg border-t-[#4977ec] border-t-4">
+        <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Achievements</h2>
-            <p className="text-gray-500 text-sm italic mt-1">
+            <p className="text-gray-400 text-sm italic mt-1">
                 Add your notable achievements
             </p>
 
             <form onSubmit={onSave}>
                 <div className="space-y-4 mt-4">
-                    {achievements.map((item, index) => (
+                    {achievements.map((item, i) => (
                         <Input
-                            label="Achievement #{index + 1}"
+                            key={i}
+                            label={`Achievement #${i + 1}`}
                             type="text"
                             required
                             value={item}
-                            onChange={(e) => handleChange(index, e)}
+                            onChange={(e) => handleChange(i, e)}
                             placeholder="e.g. Awarded 'Employee of the Year' in 2022"
                             className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
                         />
@@ -79,15 +80,15 @@ export default function AchievementsForm() {
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-primary px-4 py-1 text-white"
+                            className="text-[15px] px-4 py-[5px] text-white"
                             onClick={addNewAchievement}
-                            btnText="+ Add Achievement"
+                            btnText="+ Add More"
                         />
                         <Button
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
+                            className="text-[15px] focus:ring-gray-500 text-black px-4 py-[5px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeAchievement}
                             disabled={achievements.length === 0}
                             btnText="- Remove"
@@ -96,7 +97,7 @@ export default function AchievementsForm() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className="px-4 text-base py-[5px] text-white"
+                        className="w-[60px] text-[15px] py-[5px] text-white"
                         disabled={loading}
                         btnText={
                             loading ? (
