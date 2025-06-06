@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { verifyUserName } from '@/Utils/regex';
 
 export default function PersonalInfoForm() {
     const { resumeId } = useParams();
@@ -16,22 +17,6 @@ export default function PersonalInfoForm() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
-        // move to a util
-        // if (name === 'linkedin' || name === 'github' || name === 'leetcode') {
-        //     // just prompt the user to enter the username only
-        //     if (
-        //         value.startsWith('https://') ||
-        //         value.startsWith('http://') ||
-        //         value.includes('www.') ||
-        //         value.includes('.com') ||
-        //         value.includes('/')
-        //     ) {
-        //         toast.error('Please enter only the LinkedIn username.');
-        //         return;
-        //     }
-        // }
-
         setPersonalInfo({ ...personalInfo, [name]: value });
         setResumeInfo((prev) => ({
             ...prev,
@@ -39,6 +24,10 @@ export default function PersonalInfoForm() {
         }));
     };
 
+    function handleBlur(e) {
+        const { name, value } = e.target;
+        verifyUserName(name, value);
+    }
     async function onSave(e) {
         try {
             e.preventDefault();
@@ -73,7 +62,8 @@ export default function PersonalInfoForm() {
                         defaultValue={resumeInfo?.firstName}
                         required
                         onChange={handleInputChange}
-                        placeholder="Enter your first name"
+                        onBlur={handleBlur}
+                        placeholder="e.g. John"
                     />
 
                     <Input
@@ -81,62 +71,67 @@ export default function PersonalInfoForm() {
                         name="lastName"
                         required
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
                         defaultValue={resumeInfo?.lastName}
-                        placeholder="Enter your last name"
+                        placeholder="e.g. Doe"
                     />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="Address"
-                            name="address"
-                            required
-                            defaultValue={resumeInfo?.address}
-                            onChange={handleInputChange}
-                            placeholder="Enter your full address"
-                        />
-                    </div>
+                    <Input
+                        label="State"
+                        name="state"
+                        required
+                        defaultValue={resumeInfo?.address}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. Chandigarh"
+                    />
+                    <Input
+                        label="Country"
+                        name="country"
+                        required
+                        defaultValue={resumeInfo?.address}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. India"
+                    />
 
-                    <div>
-                        <Input
-                            label="Phone"
-                            name="phone"
-                            required
-                            defaultValue={resumeInfo?.phone}
-                            onChange={handleInputChange}
-                            placeholder="Enter your phone number"
-                        />
-                    </div>
+                    <Input
+                        label="Phone"
+                        name="phone"
+                        required
+                        defaultValue={resumeInfo?.phone}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. +91 2345678901"
+                    />
 
-                    <div>
-                        <Input
-                            label="Email"
-                            name="email"
-                            required
-                            defaultValue={resumeInfo?.email}
-                            onChange={handleInputChange}
-                            placeholder="Enter your email address"
-                        />
-                    </div>
+                    <Input
+                        label="Email"
+                        name="email"
+                        required
+                        defaultValue={resumeInfo?.email}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. john.doe@example.com"
+                    />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="LinkedIn Username"
-                            name="linkedin"
-                            defaultValue={resumeInfo?.linkedin}
-                            onChange={handleInputChange}
-                            placeholder="Enter your LinkedIn username"
-                        />
-                    </div>
+                    <Input
+                        label="LinkedIn Username"
+                        name="linkedin"
+                        defaultValue={resumeInfo?.linkedin}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. john-doe"
+                    />
 
-                    <div className="col-span-2">
-                        <Input
-                            label="GitHub Username"
-                            name="github"
-                            defaultValue={resumeInfo?.github}
-                            onChange={handleInputChange}
-                            placeholder="Enter your GitHub username"
-                        />
-                    </div>
+                    <Input
+                        label="GitHub Username"
+                        name="github"
+                        defaultValue={resumeInfo?.github}
+                        onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        placeholder="e.g. johndoe123"
+                    />
                 </div>
 
                 <div className="mt-5 flex justify-end">

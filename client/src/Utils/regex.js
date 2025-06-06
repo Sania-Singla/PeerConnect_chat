@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 /**
  * Generic Utility to validate the regular expressions
  * @param {String} name - Key name to validate.
@@ -5,7 +6,7 @@
  * @param {Function} setError - State function to set the corresponding error or an empty string "".
  */
 
-export default function verifyExpression(name, value, setError) {
+function verifyExpression(name, value, setError) {
     if (value) {
         switch (name) {
             case 'email': {
@@ -69,3 +70,23 @@ export default function verifyExpression(name, value, setError) {
         }
     }
 }
+
+function verifyUserName(name, value) {
+    switch (name) {
+        case 'linkedin':
+        case 'github':
+        case 'leetcode':
+            if (
+                value.startsWith('https://') ||
+                value.startsWith('http://') ||
+                value.includes('www.') ||
+                value.includes('.com') ||
+                value.includes('/')
+            ) {
+                toast.error('Please enter only the LinkedIn username.');
+            }
+            break;
+    }
+}
+
+export { verifyExpression, verifyUserName };
