@@ -1,13 +1,14 @@
 import { Button, RTE } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 
 export default function Experience() {
     const { resumeId } = useParams();
+    const navigate = useNavigate();
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [experiences, setExperiences] = useState(
         resumeInfo?.experiences || []

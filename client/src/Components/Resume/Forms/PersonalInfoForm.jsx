@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -11,6 +11,7 @@ export default function PersonalInfoForm({ enabledNext }) {
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [personalInfo, setPersonalInfo] = useState({});
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         enabledNext(false);

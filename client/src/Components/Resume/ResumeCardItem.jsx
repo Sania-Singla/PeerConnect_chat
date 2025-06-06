@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { usePopupContext } from '@/Context';
 import { Button } from '..';
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ResumeCardItem({ resume }) {
     const navigate = useNavigate();
@@ -62,12 +63,12 @@ export default function ResumeCardItem({ resume }) {
                 </Link>
 
                 {/* Card Footer */}
-                <div className="relative bg-white p-4 flex items-center justify-between border-t border-gray-100 rounded-b-xl">
+                <div className="relative bg-white px-4 py-3 flex items-center justify-between border-t border-gray-100 rounded-b-xl">
                     <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-gray-900 truncate">
+                        <h3 className="font-medium text-gray-900 truncate">
                             {resume.title}
                         </h3>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 mt-1">
                             Last updated:{' '}
                             {new Date(resume.createdAt).toLocaleDateString()}
                         </p>
@@ -81,12 +82,14 @@ export default function ResumeCardItem({ resume }) {
                         />
 
                         {showDropdown && (
-                            <div
-                                style={{
-                                    border: `1px solid ${resume.themeColor}`,
-                                }}
-                                className="w-34 absolute bottom-10 -right-13 text-[14px] bg-white shadow-sm p-1 rounded-lg z-10"
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 8 }}
+                                transition={{ duration: 0.1, ease: 'easeOut' }}
+                                className="w-34 absolute bottom-9 right-2 text-[14px] border border-gray-300 bg-white shadow-sm p-1 rounded-lg z-10"
                             >
+                                {' '}
                                 <div
                                     onClick={() =>
                                         navigate(
@@ -127,7 +130,7 @@ export default function ResumeCardItem({ resume }) {
                                     <Trash2 className="size-4" />
                                     <span>Delete</span>
                                 </div>
-                            </div>
+                            </motion.div>
                         )}
                     </div>
                 </div>

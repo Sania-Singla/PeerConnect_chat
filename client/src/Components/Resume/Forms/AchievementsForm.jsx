@@ -1,7 +1,7 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -9,6 +9,7 @@ import { useResumeContext } from '@/Context';
 export default function AchievementsForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useResumeContext();
+    const navigate = useNavigate();
     const [achievements, setAchievements] = useState(
         resumeInfo?.achievements || []
     );

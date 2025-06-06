@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/Components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
@@ -15,6 +15,7 @@ export default function Skills() {
     );
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (index, name, value) => {
         setSkills((prev) =>

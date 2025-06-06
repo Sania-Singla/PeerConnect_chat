@@ -86,7 +86,7 @@ export default function ResumePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Add Resume Card */}
                         <div
-                            className="h-full flex flex-col items-center justify-center gap-3 p-6 
+                            className="h-full min-h-[200px] flex flex-col items-center justify-center gap-3 p-6 
                             border-2 border-dashed border-gray-300 rounded-xl bg-white hover:border-[#4977ec]
                             transition-all duration-300 cursor-pointer hover:shadow-md"
                             onClick={handleCreateResume}
@@ -95,6 +95,10 @@ export default function ResumePage() {
                             <h3 className="text-lg font-medium text-gray-700">
                                 Add New Resume
                             </h3>
+                            <p className="text-gray-500 mb-4 text-sm">
+                                Get started by creating your first professional
+                                resume
+                            </p>
                         </div>
 
                         {/* Existing Resumes */}
@@ -103,22 +107,21 @@ export default function ResumePage() {
                         ))}
                     </div>
                 ) : (
-                    <Button
+                    <div
+                        className="h-full min-h-[200px] flex flex-col items-center justify-center gap-3 p-6 
+                            border-2 border-dashed border-gray-300 rounded-xl bg-white hover:border-[#4977ec]
+                            transition-all duration-300 cursor-pointer hover:shadow-md"
                         onClick={handleCreateResume}
-                        className="bg-white hover:brightness-95 transition-all duration-200 shadow-sm rounded-xl flex flex-col items-center justify-center border border-gray-200 min-h-[200px]"
-                        btnText={
-                            <div>
-                                <PlusSquare className="size-8 mx-auto text-[#4977ec] mb-3" />
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    No Resumes Created Yet
-                                </h3>
-                                <p className="text-gray-500 mb-4 text-sm">
-                                    Get started by creating your first
-                                    professional resume
-                                </p>
-                            </div>
-                        }
-                    />
+                    >
+                        <PlusSquare className="size-8 text-[#4977ec]" />
+                        <h3 className="text-lg font-medium text-gray-700">
+                            Add New Resume
+                        </h3>
+                        <p className="text-gray-500 mb-4 text-sm">
+                            Get started by creating your first professional
+                            resume
+                        </p>
+                    </div>
                 )}
             </section>
         </div>
