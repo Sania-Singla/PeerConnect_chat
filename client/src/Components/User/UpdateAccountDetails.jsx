@@ -135,7 +135,7 @@ export default function UpdateAccountDetails() {
     );
 
     return (
-        <div className="w-full py-2">
+        <div className="w-full pt-2">
             <div className="rounded-xl shadow-sm m-1 flex flex-col sm:flex-row bg-[#f9f9f9] sm:gap-12 px-4 pt-2 lg:px-8">
                 <div className="w-full py-6">
                     <h3 className="text-2xl font-semibold">
