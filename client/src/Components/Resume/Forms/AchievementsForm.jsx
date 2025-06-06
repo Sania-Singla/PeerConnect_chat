@@ -79,14 +79,15 @@ export default function AchievementsForm() {
                             type="button"
                             variant="outline"
                             defaultStyles={true}
-                            className="text-primary px-4 py-1"
+                            className="text-primary px-4 py-1 text-white"
                             onClick={addNewAchievement}
                             btnText="+ Add Achievement"
                         />
                         <Button
                             type="button"
                             variant="outline"
-                            className="text-primary bg-[#e14545] rounded-lg px-4 py-1 text-white"
+                            defaultStyles={true}
+                            className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeAchievement}
                             disabled={achievements.length === 0}
                             btnText="- Remove"
@@ -95,7 +96,7 @@ export default function AchievementsForm() {
                     <Button
                         type="submit"
                         defaultStyles={true}
-                        className="px-4 text-base py-1"
+                        className="px-4 text-base py-[5px] text-white"
                         disabled={loading}
                         btnText={
                             loading ? (

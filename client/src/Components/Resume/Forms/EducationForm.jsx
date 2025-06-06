@@ -151,13 +151,14 @@ export default function EducationForm() {
                         variant="outline"
                         onClick={AddNewEducation}
                         defaultStyles={true}
-                        className="text-primary py-1 px-4"
+                        className="text-primary py-[5px] px-4 text-white"
                         btnText="+ Add More Education"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
-                        className="text-primary bg-[#e14545] text-white py-1 px-4 rounded-lg"
+                        defaultStyles={true}
+                        className="text-primary focus:ring-gray-500 text-black px-3 h-[35px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
@@ -165,7 +166,7 @@ export default function EducationForm() {
                     disabled={loading}
                     onClick={onSave}
                     defaultStyles={true}
-                    className="py-1 px-6 text-base"
+                    className="py-[5px] px-6 text-base text-white"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">

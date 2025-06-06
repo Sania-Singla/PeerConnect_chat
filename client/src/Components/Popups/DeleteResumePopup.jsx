@@ -23,13 +23,21 @@ export default function DeleteResumePopup() {
     }
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="w-[300px] md:w-sm bg-white p-6 rounded-lg grid gap-2 shadow-sm">
+            <h2 className="text-red-600 font-semibold mb-2">
+                Delete this resume?
+            </h2>
             <div>
-                <h2>Delete this resume?</h2>
-                <p>
-                    This will permanently delete "{popupInfo.resume.title}" and
-                    cannot be undone.
-                </p>
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                    <input type="checkbox" className="mt-1 size-5" />
+                    <span>
+                        This will permanently delete{' '}
+                        <strong className="text-black">
+                            {popupInfo.resume.title}
+                        </strong>{' '}
+                        and cannot be undone.
+                    </span>
+                </div>
             </div>
 
             <div className="flex items-center justify-center gap-3 mt-3">
