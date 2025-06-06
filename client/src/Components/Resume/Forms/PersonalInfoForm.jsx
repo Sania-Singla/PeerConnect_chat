@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
+import Input from '@/Components/General/Input';
 
 export default function PersonalInfoForm({ enabledNext }) {
     const { resumeId } = useParams();
@@ -61,78 +62,83 @@ export default function PersonalInfoForm({ enabledNext }) {
 
             <form onSubmit={onSave}>
                 <div className="grid grid-cols-2 mt-5 gap-3">
-                    <div>
-                        <label className="text-sm font-medium">
-                            First Name
-                        </label>
-                        <input
-                            name="firstName"
-                            defaultValue={resumeInfo?.firstName}
-                            required
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                    <div>
-                        <label className="text-sm font-medium">Last Name</label>
-                        <input
-                            name="lastName"
-                            required
-                            onChange={handleInputChange}
-                            defaultValue={resumeInfo?.lastName}
-                        />
-                    </div>
+                    <Input
+                        label="First Name"
+                        name="firstName"
+                        defaultValue={resumeInfo?.firstName}
+                        required
+                        onChange={handleInputChange}
+                        placeholder="Enter your first name"
+                    />
+
+                    <Input
+                        label="Last Name"
+                        name="lastName"
+                        required
+                        onChange={handleInputChange}
+                        defaultValue={resumeInfo?.lastName}
+                        placeholder="Enter your last name"
+                    />
+
                     <div className="col-span-2">
-                        <label className="text-sm font-medium">Address</label>
-                        <input
+                        <Input
+                            label="Address"
                             name="address"
                             required
                             defaultValue={resumeInfo?.address}
                             onChange={handleInputChange}
+                            placeholder="Enter your full address"
                         />
                     </div>
+
                     <div>
-                        <label className="text-sm font-medium">Phone</label>
-                        <input
+                        <Input
+                            label="Phone"
                             name="phone"
                             required
                             defaultValue={resumeInfo?.phone}
                             onChange={handleInputChange}
+                            placeholder="Enter your phone number"
                         />
                     </div>
+
                     <div>
-                        <label className="text-sm font-medium">Email</label>
-                        <input
+                        <Input
+                            label="Email"
                             name="email"
                             required
                             defaultValue={resumeInfo?.email}
                             onChange={handleInputChange}
+                            placeholder="Enter your email address"
                         />
                     </div>
+
                     <div className="col-span-2">
-                        <label className="text-sm font-medium">
-                            LinkedIn Username
-                        </label>
-                        <input
+                        <Input
+                            label="LinkedIn Username"
                             name="linkedin"
                             defaultValue={resumeInfo?.linkedin}
                             onChange={handleInputChange}
+                            placeholder="Enter your LinkedIn username"
                         />
                     </div>
+
                     <div className="col-span-2">
-                        <label className="text-sm font-medium">
-                            GitHub Username
-                        </label>
-                        <input
+                        <Input
+                            label="GitHub Username"
                             name="github"
                             defaultValue={resumeInfo?.github}
                             onChange={handleInputChange}
+                            placeholder="Enter your GitHub username"
                         />
                     </div>
                 </div>
+
                 <div className="mt-3 flex justify-end">
                     <Button
+                        defaultStyles={true}
                         type="submit"
-                        className="border-white border-1 rounded-lg px-6 text-base bg-[#4977ec] text-white"
+                        className=" px-4 py-1 text-base "
                         disabled={loading}
                         btnText={
                             loading ? (

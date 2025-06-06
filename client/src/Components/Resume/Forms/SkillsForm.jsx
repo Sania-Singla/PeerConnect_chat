@@ -7,6 +7,7 @@ import { useResumeContext } from '@/Context';
 import { icons } from '@/Assets/icons';
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
+import Input from '@/Components/General/Input';
 
 export default function Skills() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
@@ -59,10 +60,11 @@ export default function Skills() {
                 {skills.map((item, index) => (
                     <div className="flex justify-between items-center gap-4 my-5">
                         <div className="w-full">
-                            <label className="text-sm font-medium">Name</label>
-                            <input
+                            <Input
+                                label="Name"
                                 className="w-full sm:w-[70%]"
                                 defaultValue={item.name}
+                                placeholder="Enter a skill (e.g., JavaScript)"
                                 onChange={(e) =>
                                     handleChange(index, 'name', e.target.value)
                                 }
@@ -83,20 +85,22 @@ export default function Skills() {
                     <Button
                         variant="outline"
                         onClick={AddNewSkills}
-                        className="text-primary"
+                        defaultStyles={true}
+                        className="text-primary px-4 py-1"
                         btnText="+ Add More Skill"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveSkills}
-                        className="text-primary"
+                        className="text-primary bg-[#e14545] text-white px-4 py-1 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
+                    defaultStyles="true"
+                    className="px-4 py-1"
                     disabled={loading}
                     onClick={onSave}
-                    className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">

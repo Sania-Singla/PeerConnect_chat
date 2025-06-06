@@ -5,12 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
+import Input from '@/Components/General/Input';
 
 export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const navigate = useNavigate();
     const [educationList, setEducationList] = useState(
         resumeInfo?.education || [
             {
@@ -23,6 +23,7 @@ export default function EducationForm() {
             },
         ]
     );
+    const navigate = useNavigate();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -83,69 +84,59 @@ export default function EducationForm() {
                     <div key={i}>
                         <div className="grid grid-cols-2 gap-3 my-5">
                             <div className="col-span-2">
-                                <label className="text-sm font-medium">
-                                    Institution Name
-                                </label>
-                                <input
+                                <Input
+                                    label={'Institution Name'}
                                     name="institution"
                                     type="text"
                                     required
+                                    placeholder="Enter the name of your college/university"
                                     value={item.institution}
                                     onChange={(e) => handleChange(e, index)}
                                 />
                             </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Degree
-                                </label>
-                                <input
-                                    name="degree"
-                                    type="text"
-                                    required
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.degree}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Major
-                                </label>
-                                <input
-                                    name="major"
-                                    required
-                                    type="text"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.major}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    Start Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="startDate"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.startDate}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium">
-                                    End Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="endDate"
-                                    onChange={(e) => handleChange(e, index)}
-                                    value={item?.endDate}
-                                />
-                            </div>
+
+                            <Input
+                                label={'Degree'}
+                                name="degree"
+                                type="text"
+                                required
+                                placeholder="e.g., B.Tech, M.Sc, MBA"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.degree}
+                            />
+
+                            <Input
+                                label={'Major'}
+                                name="major"
+                                required
+                                placeholder="e.g., Computer Science, Physics"
+                                type="text"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.major}
+                            />
+
+                            <Input
+                                label={'Start Date'}
+                                type="date"
+                                name="startDate"
+                                placeholder="Select start date"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.startDate}
+                            />
+                            <Input
+                                label={'End date'}
+                                type="date"
+                                name="endDate"
+                                placeholder="Select end date"
+                                onChange={(e) => handleChange(e, index)}
+                                value={item?.endDate}
+                            />
                             <div className="col-span-2">
-                                <label className="text-sm font-medium">
-                                    Description
-                                </label>
-                                <textarea
+                                <Input
+                                    type="textarea"
+                                    label="Description"
                                     name="description"
+                                    placeholder="Briefly describe your coursework, achievements, or activities"
                                     onChange={(e) => handleChange(e, index)}
                                     value={item?.description}
                                 />
@@ -159,20 +150,22 @@ export default function EducationForm() {
                     <Button
                         variant="outline"
                         onClick={AddNewEducation}
-                        className="text-primary"
+                        defaultStyles={true}
+                        className="text-primary py-1 px-4"
                         btnText="+ Add More Education"
                     />
                     <Button
                         variant="outline"
                         onClick={RemoveEducation}
-                        className="text-primary"
+                        className="text-primary bg-[#e14545] text-white py-1 px-4 rounded-lg"
                         btnText="- Remove"
                     />
                 </div>
                 <Button
                     disabled={loading}
                     onClick={onSave}
-                    className="border-white rounded-lg px-6 text-base bg-[#4977ec] text-white"
+                    defaultStyles={true}
+                    className="py-1 px-6 text-base"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">
