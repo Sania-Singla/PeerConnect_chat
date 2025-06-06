@@ -33,7 +33,7 @@ const PostListView = memo(({ post, reference, children }) => {
             {/* LIST VIEW */}
             <div
                 onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
-                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
+                className="hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
             >
                 {/* post image */}
                 <div className="h-[250px] drop-shadow-md w-[50%] rounded-xl overflow-hidden">

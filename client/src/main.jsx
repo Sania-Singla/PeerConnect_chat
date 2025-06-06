@@ -3,7 +3,6 @@ import './Styles/index.css';
 import './Styles/resume.css';
 
 import { RouterProvider } from 'react-router-dom';
-
 import {
     UserContextProvider,
     PopupContextProvider,
@@ -13,7 +12,6 @@ import {
     ChatContextProvider,
     ResumeContextProvider,
 } from '@/Context';
-
 import { router } from '@/Router';
 
 function Wrapper() {
@@ -36,4 +34,9 @@ function Wrapper() {
     );
 }
 
-createRoot(document.getElementById('root')).render(<Wrapper />);
+const container = document.getElementById('root');
+
+// Ensure createRoot is only called once
+if (!container._reactRoot) container._reactRoot = createRoot(container);
+
+container._reactRoot.render(<Wrapper />);

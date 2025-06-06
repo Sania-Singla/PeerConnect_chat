@@ -13,7 +13,7 @@ import {
     Button,
     ResumePreview,
 } from '@/Components';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
 
 export default function EditResume() {
     const { resumeId } = useParams();
@@ -78,8 +78,12 @@ export default function EditResume() {
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                                 <Button
                                     onClick={handleThemeClick}
-                                    className=""
-                                    btnText={<>Change Theme</>}
+                                    className="flex gap-2 items-center border-[#4977ec] text-[#4977ec] border rounded-md px-2 py-1"
+                                    btnText={
+                                        <>
+                                            <LayoutGrid size={16} /> Theme
+                                        </>
+                                    }
                                 />
 
                                 {/* Progress Stepper */}
@@ -95,12 +99,12 @@ export default function EditResume() {
                                                 }
                                                 className={`flex items-center cursor-pointer justify-center size-7 rounded-full text-sm font-medium 
                                     ${
-                                        activeFormIndex === i 
+                                        activeFormIndex === i
                                             ? 'bg-[#4977ec] text-white'
                                             : 'bg-white border border-[#4977ec20] text-[#555555]'
                                     }`}
                                             >
-                                                {i }
+                                                {i}
                                             </button>
                                             {i < forms.length - 1 && (
                                                 <div className="w-5 h-[1px] bg-[#4977ec30]"></div>

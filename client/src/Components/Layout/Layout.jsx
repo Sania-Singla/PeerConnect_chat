@@ -7,7 +7,7 @@ export default function Layout() {
         <div className="h-screen w-full">
             <Header />
 
-            <div className="flex pt-[55px] h-full border-b-[0.09rem] border-[#e0e0e0]">
+            <div className="flex pt-[55px] h-full">
                 <div className="hidden lg:block">
                     <Sidebar />
                 </div>
@@ -15,7 +15,7 @@ export default function Layout() {
                     <SmallSidebar />
                 </div>
                 <main className="flex-1 overflow-auto h-full">
-                    <div className="min-h-[calc(100vh-92px)] overflow-scroll m-4">
+                    <div className="min-h-[calc(100vh-87px)] overflow-scroll m-4">
                         <Outlet />
                     </div>
                     <Footer />

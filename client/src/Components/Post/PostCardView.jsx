@@ -25,7 +25,7 @@ export default function PostCardView({
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="min-w-[300px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
+            className="min-w-[300px] flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
         >
             {/* post image */}
             <div className="h-[200px] drop-shadow-md w-full rounded-xl overflow-hidden">

@@ -104,7 +104,7 @@ export default function ChatSidebar() {
                                 {chat_name}
                             </p>
                             {lastMessage.time && (
-                                <p className="text-[10px] text-nowrap text-[#515151]">
+                                <p className="text-xs text-nowrap text-[#515151]">
                                     {formatTime(lastMessage.time)}
                                 </p>
                             )}
