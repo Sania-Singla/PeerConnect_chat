@@ -31,7 +31,7 @@ export default function NewResumePopup() {
     }
 
     return (
-        <div className="min-w-sm bg-white p-6 rounded-lg shadow-md">
+        <div className="w-[350px] md:w-[400px] bg-white p-6 rounded-lg shadow-md">
             <div>
                 <h2 className="flex items-center gap-2">
                     <FileText className="w-5 h-5 text-[#4977ec]" />
