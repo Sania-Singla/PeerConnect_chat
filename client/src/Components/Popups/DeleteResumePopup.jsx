@@ -36,14 +36,14 @@ export default function DeleteResumePopup() {
                 <Button
                     onClick={() => setShowPopup(false)}
                     defaultStyles={true}
-                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 py-1"
+                    className="bg-gray-200 hover:bg-gray-300 focus:ring-gray-500 text-black px-3 h-[35px] w-full"
                     btnText="Cancel"
                 />
                 <Button
                     onClick={deleteResume}
                     disabled={loading}
                     defaultStyles={true}
-                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 py-1"
+                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white px-3 h-[35px] w-full"
                     btnText={
                         loading ? (
                             <div className="flex items-center justify-center my-2 w-full">

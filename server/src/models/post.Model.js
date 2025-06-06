@@ -1,4 +1,4 @@
-import { Post, PostView } from '../schemas/index.js';
+import { Post, PostView, SavedPost } from '../schemas/index.js';
 import { getPipeline1 } from '../helpers/index.js';
 
 export class PostModel {
