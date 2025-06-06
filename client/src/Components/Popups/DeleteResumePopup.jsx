@@ -9,15 +9,15 @@ export default function DeleteResumePopup() {
     const { popupInfo, setShowPopup } = usePopupContext();
     const [loading, setLoading] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
-
     async function deleteResume() {
         try {
             setLoading(true);
             const response = await resumeService.deleteResume(
-                popupInfo.resumeId
+                popupInfo.resume.resumeId
             );
-            console.log(response);
-            toast.success('Resume deleted successfully');
+            if (response.deletedCount) {
+                toast.success('Resume deleted successfully');
+            }
         } catch (err) {
             toast.error('Failed to delete resume');
         } finally {
@@ -25,7 +25,6 @@ export default function DeleteResumePopup() {
             setShowPopup(false);
         }
     }
-
 
     return (
         <div className="w-[300px] md:w-sm bg-white p-6 rounded-lg grid gap-2 shadow-sm">
@@ -35,17 +34,18 @@ export default function DeleteResumePopup() {
             <div>
                 <div className="flex items-start gap-2 text-sm text-gray-700">
                     <input
+                        id="check"
                         type="checkbox"
                         className="mt-1 size-5"
                         onChange={(e) => setConfirmed(e.target.checked)}
                     />
-                    <span>
+                    <label htmlFor="check">
                         This will permanently delete{' '}
                         <strong className="text-black">
                             {popupInfo.resume.title}
                         </strong>{' '}
                         and cannot be undone.
-                    </span>
+                    </label>
                 </div>
             </div>
 
