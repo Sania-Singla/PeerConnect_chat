@@ -41,7 +41,7 @@ export default function AchievementsForm() {
             e.preventDefault();
             setLoading(true);
             const res = await resumeService.saveSection(
-                'achievement',
+                'achievements',
                 resumeId,
                 resumeInfo.achievements
             );

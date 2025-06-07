@@ -40,7 +40,7 @@ export default function ProjectForm() {
             e.preventDefault();
             setLoading(true);
             const res = await resumeService.saveSection(
-                'project',
+                'projects',
                 resumeId,
                 resumeInfo.projects
             );
