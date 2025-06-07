@@ -30,7 +30,7 @@ export default function ResumePreview() {
                 <PersonalInfoPreview />
             </header>
 
-            <main className="flex flex-col p-4 space-y-3 text-gray-800">
+            <main className="flex flex-col p-4 text-gray-800">
                 {resumeInfo?.personal?.summary && (
                     <section>
                         <h2
