@@ -151,15 +151,17 @@ export default function Experience() {
                             />
 
                             <div className="col-span-2">
-                                <Input
-                                    type="textarea"
-                                    label="Description"
-                                    rows={3}
-                                    name="description"
-                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
-                                    onChange={(e) => handleChange(i, e)}
-                                    value={item?.description}
-                                />
+                                <div className="mt-2">
+                                    <Input
+                                        type="textarea"
+                                        label="Description"
+                                        rows={3}
+                                        name="description"
+                                        placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
+                                        onChange={(e) => handleChange(i, e)}
+                                        value={item?.description}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
