@@ -38,7 +38,7 @@ export default function ResumePage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="p-4 themed bg-transparent">
+        <div className="p-4 bg-transparent">
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
                 <div className="flex flex-col gap-6 max-w-lg relative z-10">

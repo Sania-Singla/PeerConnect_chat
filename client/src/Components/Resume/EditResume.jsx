@@ -128,9 +128,7 @@ export default function EditResume() {
 
                             {/* Form */}
                             <div className="bg-white rounded-xl mb-6">
-                                {forms[activeFormIndex]?.component || (
-                                    <Navigate to={`/resume/${resumeId}/view`} />
-                                )}
+                                {forms[activeFormIndex]?.component}
                             </div>
 
                             {/* Navigation Buttons */}
@@ -154,24 +152,33 @@ export default function EditResume() {
                                         />
                                     )}
                                 </div>
-                                <Button
-                                    defaultStyles="true"
-                                    className={`text-white gap-2 py-[5px] px-3 ${!enableNext && 'opacity-70 cursor-not-allowed'}`}
-                                    onClick={() =>
-                                        setActiveFormIndex((prev) => prev + 1)
-                                    }
-                                    disabled={!enableNext}
-                                    btnText={
-                                        activeFormIndex < forms.length ? (
+                                {activeFormIndex < forms.length - 1 ? (
+                                    <Button
+                                        defaultStyles="true"
+                                        className={`text-white gap-2 py-[5px] px-3 ${!enableNext && 'opacity-70 cursor-not-allowed'}`}
+                                        onClick={() =>
+                                            setActiveFormIndex(
+                                                (prev) => prev + 1
+                                            )
+                                        }
+                                        disabled={!enableNext}
+                                        btnText={
                                             <div className="flex items-center gap-2">
                                                 Next
                                                 <ArrowRight className="size-5" />
                                             </div>
-                                        ) : (
-                                            'Finish & Preview'
-                                        )
-                                    }
-                                />
+                                        }
+                                    />
+                                ) : (
+                                    <Button
+                                        defaultStyles="true"
+                                        className="text-white gap-2 py-[5px] px-3"
+                                        onClick={() =>
+                                            navigate(`/resume/${resumeId}/view`)
+                                        }
+                                        btnText="Finish & Preview"
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

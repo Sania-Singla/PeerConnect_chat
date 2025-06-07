@@ -4,12 +4,12 @@ export default function SkillsPreview() {
     const { resumeInfo } = useResumeContext();
 
     return (
-        <div className="grid grid-cols-2 my-2 gap-y-4 gap-x-8 mb-[5px] text-gray-800 px-2 py-[5px]">
+        <div className="grid grid-cols-2 mt-2 gap-y-4 gap-x-8 mb-[5px] text-gray-800 px-2 py-[5px]">
             {resumeInfo.skills.map(
                 (s, i) =>
                     s.name && (
                         <div key={i}>
-                            <div className="flex justify-between text-xs font-medium">
+                            <div className="flex justify-between text-[12px] font-medium">
                                 <span>{s.name}</span>
                                 <span>{s.rating}/5</span>
                             </div>

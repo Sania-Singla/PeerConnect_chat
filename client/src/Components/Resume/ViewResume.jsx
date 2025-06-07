@@ -1,5 +1,5 @@
 import { ResumePreview, Button } from '@/Components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RWebShare } from 'react-web-share';
 import { resumeService } from '@/Services';
@@ -10,11 +10,12 @@ export default function ViewResume() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const { resumeId } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         (async function () {
             try {
-                const res = resumeService.getResume(resumeId);
+                const res = await resumeService.getResume(resumeId);
                 if (res && !res.message) {
                     setResumeInfo(res);
                 } else {
@@ -23,26 +24,33 @@ export default function ViewResume() {
                 }
             } catch (err) {
                 navigate('/server-error');
+            } finally {
+                setLoading(false);
             }
         })();
     }, []);
 
-    return (
-        <div>
+    return loading ? (
+        <div>loading...</div>
+    ) : (
+        <div className="themed max-w-3xl mx-auto space-y-10 py-10">
             <div id="no-print">
-                <div className="my-10 mx-10 md:mx-20 lg:mx-36">
+                <div>
                     <h2 className="text-center text-2xl font-semibold">
                         Congrats! Your Ultimate AI generates Resume is ready !
                     </h2>
-                    <p className="text-center mt-3 text-gray-400">
+                    <p className="text-center mt-3 text-gray-500">
                         Now you are ready to download your resume & share it
                         with your friends and family
                     </p>
-                    <div className="flex justify-between px-44 w-full my-8 gap-6">
+                    <div className="flex w-full my-8 gap-5">
                         <Button
                             onClick={() => window.print()}
-                            defaultStyles="true"
+                            defaultStyles={true}
                             className="w-full text-white py-[5px] px-3"
+                            style={{
+                                backgroundColor: resumeInfo?.themeColor,
+                            }}
                             btnText="Download"
                         />
                         <RWebShare
@@ -56,7 +64,10 @@ export default function ViewResume() {
                                 onClick={() =>
                                     toast.success('shared successfully!')
                                 }
-                                defaultStyles="true"
+                                defaultStyles={true}
+                                style={{
+                                    backgroundColor: resumeInfo?.themeColor,
+                                }}
                                 className="w-full text-white py-[5px] px-3"
                                 btnText="Share"
                             />
@@ -64,10 +75,7 @@ export default function ViewResume() {
                     </div>
                 </div>
             </div>
-            <div
-                className="my-10 mx-10 md:mx-20 lg:mx-36 h-full"
-                id="print-area"
-            >
+            <div id="print-area">
                 <ResumePreview />
             </div>
         </div>

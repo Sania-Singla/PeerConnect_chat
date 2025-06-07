@@ -9,7 +9,7 @@ export default function ProjectsPreview() {
     return resumeInfo?.projects?.map((project, i) => (
         <div key={i} className="px-2 py-[5px] mb-[5px] text-gray-800">
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-xs font-bold">{project.title}</h3>
+                <h3 className="text-sm font-bold">{project.title}</h3>
 
                 {project.link && (
                     <div className="flex gap-[5px] max-w-[40%] items-center justify-center">
@@ -33,16 +33,17 @@ export default function ProjectsPreview() {
                 )}
             </div>
 
-            <div className="text-[11px] leading-relaxed">
-                <div className="mt-1 description">
-                    {parse(project.description)}
-                </div>
+            <div className="text-[12px] leading-relaxed">
+                <p className="mt-1 description">{parse(project.description)}</p>
 
                 {project.technologies.length > 0 && (
-                    <p className="mt-[2px] pl-3">
-                        <span className="font-semibold">Technologies: </span>
+                    <div className="mt-[2px] ml-3">
+                        <span className="font-semibold">
+                            <span className="mr-[6px]">&bull;</span>
+                            Technologies:{' '}
+                        </span>
                         {project.technologies}
-                    </p>
+                    </div>
                 )}
             </div>
         </div>
