@@ -26,9 +26,9 @@ export default function EducationPreview() {
             )}
 
             {edu.description && (
-                <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
+                <div className="description text-[11px] mt-1 text-gray-800 leading-relaxed">
                     {parse(edu.description)}
-                </p>
+                </div>
             )}
         </div>
     ));

@@ -1,4 +1,4 @@
-import { Button } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -92,15 +92,15 @@ export default function ProjectForm() {
                                 value={item.link}
                             />
 
-                            <div className="col-span-2">
-                                <Input
-                                    label="Description"
+                            <div className="col-span-2 space-y-1">
+                                <label className="block text-sm font-medium text-gray-800">
+                                    Description
+                                </label>
+                                <BasicRTE
                                     name="description"
-                                    type="textarea"
-                                    required
-                                    placeholder="Briefly describe the project's purpose, features, and outcome"
+                                    value={item?.description}
                                     onChange={(e) => handleChange(e, i)}
-                                    value={item.description}
+                                    placeholder="Briefly describe the project's purpose, features, and outcome"
                                 />
                             </div>
                         </div>

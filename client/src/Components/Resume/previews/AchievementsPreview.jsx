@@ -1,5 +1,6 @@
 import { useResumeContext } from '@/Context';
 import { formatDateMonth } from '@/Utils';
+import parse from 'html-react-parser';
 
 export default function AchievementsPreview() {
     const { resumeInfo } = useResumeContext();
@@ -16,9 +17,9 @@ export default function AchievementsPreview() {
                 )}
             </div>
 
-            <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
-                {a.description}
-            </p>
+            <div className="description text-[11px] mt-1 text-gray-800 leading-relaxed">
+                {parse(a.description)}
+            </div>
         </div>
     ));
 }

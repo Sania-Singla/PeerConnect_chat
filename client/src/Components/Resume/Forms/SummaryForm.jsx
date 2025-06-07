@@ -1,4 +1,4 @@
-import { Button } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
@@ -85,18 +85,19 @@ export default function SummaryForm() {
                             }
                         />
                     </div>
-                    <Input
-                        label="Your Summary"
-                        type="textarea"
-                        rows={5}
-                        name="summary"
-                        autoComplete="off"
-                        spellCheck="true"
-                        placeholder="Example: Experienced software developer with 5+ years in web application development..."
-                        value={resumeInfo?.personal?.summary || ''}
-                        className="text-sm"
-                        onChange={(e) => handleChange(e.target.value)}
-                    />
+
+                    <div className="col-span-2 space-y-1">
+                        <label className="block text-sm font-medium text-gray-800">
+                            Your Summary
+                        </label>
+                        <BasicRTE
+                            name="summary"
+                            value={resumeInfo?.personal?.summary || ''}
+                            onChange={(e) => handleChange(e.target.value)}
+                            placeholder="Example: Experienced software developer with 5+ years in web application development..."
+                        />
+                    </div>
+
                     <div className="mt-5 flex justify-end">
                         <Button
                             defaultStyles={true}

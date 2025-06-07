@@ -1,4 +1,4 @@
-import { Button } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,8 +12,8 @@ export default function AchievementsForm() {
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (index, event) => {
-        const { name, value } = event.target;
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
         setResumeInfo((prev) => ({
             ...prev,
             achievements: prev.achievements.map((item, i) =>
@@ -69,7 +69,7 @@ export default function AchievementsForm() {
                             type="text"
                             required
                             value={item?.title}
-                            onChange={(e) => handleChange(i, e)}
+                            onChange={(e) => handleChange(e, i)}
                             placeholder="e.g. Best Innovator Award"
                         />
                         <Input
@@ -78,17 +78,17 @@ export default function AchievementsForm() {
                             type="date"
                             required
                             value={item?.date}
-                            onChange={(e) => handleChange(i, e)}
+                            onChange={(e) => handleChange(e, i)}
                             placeholder="Select date"
                         />
-                        <div className="col-span-2">
-                            <Input
-                                label="Description"
-                                type="text"
-                                name="descriptions"
-                                required
+                        <div className="col-span-2 space-y-1">
+                            <label className="block text-sm font-medium text-gray-800">
+                                Description
+                            </label>
+                            <BasicRTE
+                                name="description"
                                 value={item?.description}
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 placeholder="e.g. Recognized for outstanding innovation and leadership in AI projects."
                             />
                         </div>

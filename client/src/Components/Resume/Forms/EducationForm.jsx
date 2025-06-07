@@ -123,7 +123,7 @@ export default function EducationForm() {
                                     name="description"
                                     value={item?.description}
                                     onChange={(e) => handleChange(e, i)}
-                                    defaultValue="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
+                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
                                 />
                             </div>
                         </div>

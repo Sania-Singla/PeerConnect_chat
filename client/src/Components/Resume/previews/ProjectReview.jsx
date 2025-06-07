@@ -1,6 +1,7 @@
 import { useResumeContext } from '@/Context';
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
+import parse from 'html-react-parser';
 
 export default function ProjectsPreview() {
     const { resumeInfo } = useResumeContext();
@@ -32,11 +33,13 @@ export default function ProjectsPreview() {
                 )}
             </div>
 
-            <div className="pl-3 text-[11px] leading-relaxed">
-                <div className="mt-1">{project.description}</div>
+            <div className="text-[11px] leading-relaxed">
+                <div className="mt-1 description">
+                    {parse(project.description)}
+                </div>
 
                 {project.technologies.length > 0 && (
-                    <p className="mt-[2px]">
+                    <p className="mt-[2px] pl-3">
                         <span className="font-semibold">Technologies: </span>
                         {project.technologies}
                     </p>

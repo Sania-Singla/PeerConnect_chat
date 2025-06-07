@@ -34,9 +34,9 @@ export default function ExperiencePreview() {
                 )}
             </div>
 
-            <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
+            <div className="description text-[11px] mt-1 text-gray-800 leading-relaxed">
                 {parse(exp?.description)}
-            </p>
+            </div>
         </div>
     ));
 }

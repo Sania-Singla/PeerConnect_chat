@@ -135,7 +135,7 @@ export default function Experience() {
                                     name="description"
                                     value={item?.description}
                                     onChange={(e) => handleChange(e, i)}
-                                    defaultValue="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
+                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
                                 />
                             </div>
                         </div>

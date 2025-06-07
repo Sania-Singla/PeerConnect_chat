@@ -12,14 +12,15 @@ import {
     EditorProvider,
 } from 'react-simple-wysiwyg';
 
-export default function BasicRTE({ value, onChange, name, defaultValue = '' }) {
+export default function BasicRTE({ value, onChange, name, placeholder = '' }) {
     return (
         <EditorProvider>
             <Editor
                 value={value}
-                defaultValue={defaultValue}
+                placeholder={placeholder}
                 onChange={onChange}
                 name={name}
+                className="basic-rte text-sm"
             >
                 <Toolbar>
                     <BtnBold />
