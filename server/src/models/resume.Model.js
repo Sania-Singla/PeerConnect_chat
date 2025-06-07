@@ -60,7 +60,7 @@ export class ResumeModel {
                     updates.education = data;
                     break;
                 case 'experience':
-                    updates.experiences = data;
+                    updates.experience = data;
                     break;
                 case 'skills':
                     updates.skills = data;
