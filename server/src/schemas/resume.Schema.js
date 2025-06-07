@@ -48,6 +48,7 @@ const projectSchema = new Schema({
     description: { type: String, required: true },
     technologies: { type: [String], required: true },
     github: { type: String, required: false },
+    demoLink: { type: String, required: false },
 });
 
 const achievementSchema = new Schema({
