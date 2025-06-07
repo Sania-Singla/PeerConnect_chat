@@ -1,4 +1,4 @@
-import { Button } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,8 +12,8 @@ export default function Experience() {
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (index, event) => {
-        const { name, value } = event.target;
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
         setResumeInfo((prev) => ({
             ...prev,
             experience: prev.experience.map((item, i) =>
@@ -71,7 +71,7 @@ export default function Experience() {
                                 id="position"
                                 required
                                 placeholder="e.g., Software Engineer, Marketing Intern"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.position}
                             />
 
@@ -81,7 +81,7 @@ export default function Experience() {
                                 id="company"
                                 required
                                 placeholder="e.g., Infosys, Google, Deloitte"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.company}
                             />
 
@@ -91,7 +91,7 @@ export default function Experience() {
                                 id="city"
                                 required
                                 placeholder="e.g., Bangalore, New York"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.city}
                             />
 
@@ -101,7 +101,7 @@ export default function Experience() {
                                 id="state"
                                 required
                                 placeholder="e.g., Karnataka, California"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.state}
                             />
 
@@ -112,7 +112,7 @@ export default function Experience() {
                                 id="startDate"
                                 required
                                 placeholder="Select start date"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.startDate}
                             />
 
@@ -123,19 +123,19 @@ export default function Experience() {
                                 name="endDate"
                                 required
                                 placeholder="Select end date"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.endDate}
                             />
 
-                            <div className="col-span-2">
-                                <Input
-                                    type="textarea"
-                                    label="Description"
-                                    rows={3}
+                            <div className="col-span-2 space-y-1">
+                                <label className="block text-sm font-medium text-gray-800">
+                                    Description
+                                </label>
+                                <BasicRTE
                                     name="description"
-                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
-                                    onChange={(e) => handleChange(i, e)}
                                     value={item?.description}
+                                    onChange={(e) => handleChange(e, i)}
+                                    defaultValue="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
                                 />
                             </div>
                         </div>

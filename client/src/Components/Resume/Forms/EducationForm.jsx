@@ -1,4 +1,4 @@
-import { Button } from '@/Components';
+import { Button, BasicRTE } from '@/Components';
 import { icons } from '@/Assets/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,8 +12,8 @@ export default function EducationForm() {
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
-    const handleChange = (event, index) => {
-        const { name, value } = event.target;
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
         setResumeInfo((prev) => ({
             ...prev,
             education: prev.education.map((item, i) =>
@@ -115,15 +115,15 @@ export default function EducationForm() {
                                 value={item?.endDate}
                             />
 
-                            <div className="col-span-2">
-                                <Input
-                                    type="textarea"
-                                    label="Description"
-                                    rows={3}
+                            <div className="col-span-2 space-y-1">
+                                <label className="block text-sm font-medium text-gray-800">
+                                    Description
+                                </label>
+                                <BasicRTE
                                     name="description"
-                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
-                                    onChange={(e) => handleChange(e, i)}
                                     value={item?.description}
+                                    onChange={(e) => handleChange(e, i)}
+                                    defaultValue="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
                                 />
                             </div>
                         </div>

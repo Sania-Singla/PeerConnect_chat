@@ -1,5 +1,6 @@
 import { useResumeContext } from '@/Context';
 import { formatDateMonth } from '@/Utils';
+import parse from 'html-react-parser';
 
 export default function EducationPreview() {
     const { resumeInfo } = useResumeContext();
@@ -26,7 +27,7 @@ export default function EducationPreview() {
 
             {edu.description && (
                 <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
-                    {edu.description}
+                    {parse(edu.description)}
                 </p>
             )}
         </div>
