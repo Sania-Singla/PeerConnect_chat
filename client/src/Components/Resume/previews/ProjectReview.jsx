@@ -8,7 +8,7 @@ export default function ProjectsPreview() {
     return resumeInfo?.projects?.map((project, i) => (
         <div key={i} className="px-2 py-[5px] mb-[5px] text-gray-800">
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-xs font-bold ">{project.title}</h3>
+                <h3 className="text-xs font-bold">{project.title}</h3>
 
                 {project.link && (
                     <div className="flex gap-[5px] max-w-[40%] items-center justify-center">

@@ -7,7 +7,7 @@ export default function EducationPreview() {
     return resumeInfo?.education.map((edu, index) => (
         <div key={index} className="px-2 py-[5px] mb-[5px]">
             <div className="flex justify-between items-center">
-                <h3 className="text-xs font-bold text-color-800">
+                <h3 className="text-xs font-bold text-gray-800">
                     {edu.institution}
                 </h3>
 

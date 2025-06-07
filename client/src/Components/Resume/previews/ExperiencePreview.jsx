@@ -4,10 +4,10 @@ import { formatDateMonth } from '@/Utils';
 export default function ExperiencePreview() {
     const { resumeInfo } = useResumeContext();
 
-    return resumeInfo.experience.map((exp, index) => (
-        <div key={index} className="px-2 py-[5px] mb-[5px]">
+    return resumeInfo.experience.map((exp, i) => (
+        <div key={i} className="px-2 py-[5px] mb-[5px]">
             <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-color-800">
+                <h3 className="text-xs font-bold text-gray-800">
                     {exp.position}
                 </h3>
 
