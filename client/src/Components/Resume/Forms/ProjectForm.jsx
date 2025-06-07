@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -11,41 +11,36 @@ export default function ProjectForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [projectList, setProjectList] = useState(
-        resumeInfo?.projects.length > 0
-            ? resumeInfo.projects
-            : [
-                  {
-                      title: '',
-                      description: '',
-                      technologies: '',
-                      link: '',
-                  },
-              ]
-    );
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
-        setProjectList((prev) =>
-            prev.map((item, i) =>
+        setResumeInfo((prev) => ({
+            ...prev,
+            projects: prev.projects.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
-            )
-        );
+            ),
+        }));
     };
 
     const AddNewProject = () => {
-        setProjectList((prev) => [
+        setResumeInfo((prev) => ({
             ...prev,
-            {
-                title: '',
-                description: '',
-                technologies: '',
-                link: '',
-            },
-        ]);
+            projects: [
+                ...prev.projects,
+                {
+                    title: '',
+                    description: '',
+                    technologies: '',
+                    link: '',
+                },
+            ],
+        }));
     };
     const RemoveProject = () => {
-        setProjectList((projectList) => projectList.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            projects: prev.projects.slice(0, -1),
+        }));
     };
 
     async function onSave(e) {
@@ -55,7 +50,7 @@ export default function ProjectForm() {
             const res = await resumeService.saveSection(
                 'project',
                 resumeId,
-                projectList
+                resumeInfo.projects
             );
             if (res && !res.message) toast.success('Project List updated!');
         } catch (err) {
@@ -65,12 +60,6 @@ export default function ProjectForm() {
         }
     }
 
-    // for preview
-    useEffect(
-        () => setResumeInfo({ ...resumeInfo, projects: projectList }),
-        [projectList]
-    );
-
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Projects</h2>
@@ -79,7 +68,7 @@ export default function ProjectForm() {
             </p>
 
             <div>
-                {projectList?.map((item, i) => (
+                {resumeInfo.projects?.map((item, i) => (
                     <div key={i}>
                         <div className="grid grid-cols-2 gap-5 my-5">
                             <Input
@@ -139,6 +128,7 @@ export default function ProjectForm() {
                         variant="outline"
                         onClick={RemoveProject}
                         defaultStyles={true}
+                        disabled={resumeInfo.projects.length === 0}
                         className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />

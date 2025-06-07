@@ -11,9 +11,6 @@ import { verifyUserName } from '@/Utils/regex';
 export default function PersonalInfoForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
-    const [personalInfo, setPersonalInfo] = useState(
-        resumeInfo?.personal || {}
-    );
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
@@ -24,11 +21,6 @@ export default function PersonalInfoForm() {
         }
 
         if (name === 'state' || name === 'country') {
-            setPersonalInfo((prev) => ({
-                ...prev,
-                address: { ...prev.address, [name]: value },
-            }));
-
             setResumeInfo((prev) => ({
                 ...prev,
                 personal: {
@@ -38,8 +30,6 @@ export default function PersonalInfoForm() {
             }));
             return;
         } else {
-            setPersonalInfo((prev) => ({ ...prev, [name]: value }));
-
             setResumeInfo((prev) => ({
                 ...prev,
                 personal: { ...prev.personal, [name]: value },
@@ -51,18 +41,16 @@ export default function PersonalInfoForm() {
         try {
             e.preventDefault();
             setLoading(true);
-            console.log('Saving personal info:', personalInfo);
             const res = await resumeService.saveSection(
                 'personal',
                 resumeId,
-                personalInfo
+                resumeInfo.personal
             );
             if (res && !res.message) {
                 toast.success('Personal Info updated!');
                 setEnableNext(true);
             }
         } catch (err) {
-            console.log(err);
             toast.error('Failed to update personal info');
         } finally {
             setLoading(false);
@@ -81,7 +69,7 @@ export default function PersonalInfoForm() {
                     <Input
                         label="First Name"
                         name="firstName"
-                        value={personalInfo.firstName}
+                        value={resumeInfo?.personal?.firstName}
                         required
                         onChange={handleInputChange}
                         placeholder="e.g. John"
@@ -92,7 +80,7 @@ export default function PersonalInfoForm() {
                         name="lastName"
                         required
                         onChange={handleInputChange}
-                        value={personalInfo.lastName}
+                        value={resumeInfo?.personal?.lastName}
                         placeholder="e.g. Doe"
                     />
 
@@ -100,7 +88,7 @@ export default function PersonalInfoForm() {
                         label="State"
                         name="state"
                         required
-                        value={personalInfo.address?.state}
+                        value={resumeInfo?.personal?.address?.state}
                         onChange={handleInputChange}
                         placeholder="e.g. Chandigarh"
                     />
@@ -108,7 +96,7 @@ export default function PersonalInfoForm() {
                         label="Country"
                         name="country"
                         required
-                        value={personalInfo.address?.country}
+                        value={resumeInfo?.personal?.address?.country}
                         onChange={handleInputChange}
                         placeholder="e.g. India"
                     />
@@ -117,7 +105,7 @@ export default function PersonalInfoForm() {
                         label="Phone"
                         name="phone"
                         required
-                        value={personalInfo.phone}
+                        value={resumeInfo?.personal?.phone}
                         onChange={handleInputChange}
                         placeholder="e.g. +91 2345678901"
                     />
@@ -126,7 +114,7 @@ export default function PersonalInfoForm() {
                         label="Email"
                         name="email"
                         required
-                        value={personalInfo.email}
+                        value={resumeInfo?.personal?.email}
                         onChange={handleInputChange}
                         placeholder="e.g. john.doe@example.com"
                     />
@@ -134,7 +122,7 @@ export default function PersonalInfoForm() {
                     <Input
                         label="LinkedIn Username"
                         name="linkedin"
-                        value={personalInfo.linkedin}
+                        value={resumeInfo?.personal?.linkedin}
                         onChange={handleInputChange}
                         placeholder="e.g. john-doe"
                     />
@@ -142,7 +130,7 @@ export default function PersonalInfoForm() {
                     <Input
                         label="GitHub Username"
                         name="github"
-                        value={personalInfo.github}
+                        value={resumeInfo?.personal?.github}
                         onChange={handleInputChange}
                         placeholder="e.g. johndoe123"
                     />

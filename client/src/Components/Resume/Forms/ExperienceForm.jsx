@@ -1,6 +1,6 @@
-import { Button, RTE } from '@/Components';
+import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -10,55 +10,43 @@ import Input from '@/Components/General/Input';
 export default function Experience() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [experiences, setExperiences] = useState(
-        resumeInfo?.experience.length > 0
-            ? resumeInfo.experience
-            : [
-                  {
-                      position: '',
-                      company: '',
-                      city: '',
-                      state: '',
-                      startDate: '',
-                      endDate: '',
-                      description: '',
-                  },
-              ]
-    );
     const [loading, setLoading] = useState(false);
 
     const handleChange = (index, event) => {
         const { name, value } = event.target;
-        setExperiences((prev) =>
-            prev.map((item, i) =>
+        setResumeInfo((prev) => ({
+            ...prev,
+            experience: prev.experience.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
-            )
-        );
+            ),
+        }));
     };
 
     const addNewExperience = () => {
-        setExperiences((prev) => [
+        setResumeInfo((prev) => ({
             ...prev,
-            {
-                position: '',
-                company: '',
-                city: '',
-                state: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-            },
-        ]);
+            experience: [
+                ...prev.experience,
+                {
+                    position: '',
+                    company: '',
+                    city: '',
+                    state: '',
+                    startDate: '',
+                    endDate: '',
+                    description: '',
+                },
+            ],
+        }));
+        setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };
 
     const removeExperience = () => {
-        setExperiences(experiences.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            experience: prev.experience.slice(0, -1),
+        }));
     };
-
-    useEffect(
-        () => setResumeInfo({ ...resumeInfo, experience: experiences }),
-        [experiences]
-    );
 
     async function onSave(e) {
         try {
@@ -67,7 +55,7 @@ export default function Experience() {
             const res = await resumeService.saveSection(
                 'experience',
                 resumeId,
-                experiences
+                resumeInfo.experience
             );
             if (res && !res.message) toast.success('Experience updated!');
         } catch (err) {
@@ -85,7 +73,7 @@ export default function Experience() {
             </p>
 
             <form onSubmit={onSave}>
-                {experiences?.map((item, i) => (
+                {resumeInfo.experience?.map((item, i) => (
                     <div key={i} className="my-5 rounded-lg">
                         <div className="grid grid-cols-2 gap-5">
                             <Input
@@ -181,7 +169,7 @@ export default function Experience() {
                             defaultStyles={true}
                             className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeExperience}
-                            disabled={experiences.length === 0}
+                            disabled={resumeInfo.experience.length === 0}
                             btnText="- Remove"
                         />
                     </div>

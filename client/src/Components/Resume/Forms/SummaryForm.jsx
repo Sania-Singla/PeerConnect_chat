@@ -1,5 +1,5 @@
 import { Button } from '@/Components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { icons } from '@/Assets/icons';
@@ -11,14 +11,10 @@ import Input from '@/Components/General/Input';
 
 export default function SummaryForm() {
     const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
-    const [summary, setSummary] = useState(resumeInfo?.personal?.summary || '');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const { resumeId } = useParams();
     const [aiGeneratedSummaries, setAiGenerateSummaries] = useState();
-
-    // for preview
-    useEffect(() => setResumeInfo({ ...resumeInfo, summary }), [summary]);
 
     const GenerateSummaryFromAI = async () => {
         try {
@@ -52,7 +48,6 @@ export default function SummaryForm() {
     }
 
     function handleChange(value) {
-        setSummary(value);
         setResumeInfo((prev) => ({
             ...prev,
             personal: { ...prev.personal, summary: value },
@@ -96,7 +91,7 @@ export default function SummaryForm() {
                         autoComplete="off"
                         spellCheck="true"
                         placeholder="Example: Experienced software developer with 5+ years in web application development..."
-                        value={summary}
+                        value={resumeInfo?.personal?.summary || ''}
                         className="text-sm"
                         onChange={(e) => handleChange(e.target.value)}
                     />
@@ -126,9 +121,9 @@ export default function SummaryForm() {
                 <div className="my-5 p-5 bg-gray-50 rounded-lg">
                     <h2 className="font-bold text-lg mb-4">AI Suggestions</h2>
                     <div className="space-y-4">
-                        {aiGeneratedSummaries?.map((item, index) => (
+                        {aiGeneratedSummaries?.map((item, i) => (
                             <div
-                                key={index}
+                                key={i}
                                 onClick={() => handleChange(item?.summary)}
                                 className="hover:bg-blue-50 p-4 border border-gray-200 rounded-lg cursor-pointer transition-colors"
                             >
