@@ -9,36 +9,7 @@ const saveSection = tryCatch('save personal info', async (req, res) => {
     const { sectionName } = req.query;
     const { data } = req.body;
 
-    let model;
-
-    switch (sectionName) {
-        case 'education':
-            model = resumeObject.saveEducation;
-            break;
-        case 'experience':
-            model = resumeObject.saveExperience;
-            break;
-        case 'skills':
-            model = resumeObject.saveSkills;
-            break;
-        case 'achievement':
-            model = resumeObject.saveAchievements;
-            break;
-        case 'project':
-            model = resumeObject.saveProjects;
-            break;
-        case 'personal':
-            model = resumeObject.savePersonalInfo;
-            break;
-        case 'summary':
-            model = resumeObject.saveSummary;
-            break;
-        default:
-            throw new Error('Invalid section name');
-    }
-
-    const resume = await model(resumeId, data);
-
+    const resume = await resumeObject.saveSection(sectionName, resumeId, data);
     return res.status(OK).json(resume);
 });
 

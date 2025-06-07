@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -10,25 +10,7 @@ import Input from '@/Components/General/Input';
 export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-
-    useEffect(() => {
-        if (!resumeInfo.education?.length) {
-            setResumeInfo((prev) => ({
-                ...prev,
-                education: [
-                    {
-                        institution: '',
-                        degree: '',
-                        major: '',
-                        startDate: '',
-                        endDate: '',
-                        description: '',
-                    },
-                ],
-            }));
-        }
-    }, []);
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -43,17 +25,7 @@ export default function EducationForm() {
     const AddNewEducation = () => {
         setResumeInfo((prev) => ({
             ...prev,
-            education: [
-                ...prev.education,
-                {
-                    institution: '',
-                    degree: '',
-                    major: '',
-                    startDate: '',
-                    endDate: '',
-                    description: '',
-                },
-            ],
+            education: [...prev.education, emptyResume.education[0]],
         }));
         setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };

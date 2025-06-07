@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/Components';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -10,23 +10,9 @@ import '@smastrom/react-rating/style.css';
 import Input from '@/Components/General/Input';
 
 export default function Skills() {
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (!resumeInfo.skills?.length) {
-            setResumeInfo((prev) => ({
-                ...prev,
-                skills: [
-                    {
-                        name: '',
-                        rating: 0,
-                    },
-                ],
-            }));
-        }
-    }, []);
 
     const handleChange = (index, name, value) => {
         setResumeInfo((prev) => ({
@@ -40,7 +26,7 @@ export default function Skills() {
     const AddNewSkills = () => {
         setResumeInfo((prev) => ({
             ...prev,
-            skills: [...prev.skills, { name: '', rating: 0 }],
+            skills: [...prev.skills, emptyResume.skills[0]],
         }));
     };
     const RemoveSkills = () => {

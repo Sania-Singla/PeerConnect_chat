@@ -1,5 +1,5 @@
 import { Button } from '@/Components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { icons } from '@/Assets/icons';
@@ -15,15 +15,6 @@ export default function SummaryForm() {
     const [saving, setSaving] = useState(false);
     const { resumeId } = useParams();
     const [aiGeneratedSummaries, setAiGenerateSummaries] = useState();
-
-    useEffect(() => {
-        if (!resumeInfo?.personal?.summary) {
-            setResumeInfo((prev) => ({
-                ...prev,
-                personal: { ...prev.personal, summary: '' },
-            }));
-        }
-    }, []);
 
     const GenerateSummaryFromAI = async () => {
         try {

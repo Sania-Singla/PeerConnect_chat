@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -10,23 +10,7 @@ import Input from '@/Components/General/Input';
 export default function ProjectForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-
-    useEffect(() => {
-        if (!resumeInfo.projects?.length) {
-            setResumeInfo((prev) => ({
-                ...prev,
-                projects: [
-                    {
-                        title: '',
-                        description: '',
-                        technologies: '',
-                        link: '',
-                    },
-                ],
-            }));
-        }
-    }, []);
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -41,15 +25,7 @@ export default function ProjectForm() {
     const AddNewProject = () => {
         setResumeInfo((prev) => ({
             ...prev,
-            projects: [
-                ...prev.projects,
-                {
-                    title: '',
-                    description: '',
-                    technologies: '',
-                    link: '',
-                },
-            ],
+            projects: [...prev.projects, emptyResume.projects[0]],
         }));
     };
     const RemoveProject = () => {

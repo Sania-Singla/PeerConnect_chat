@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -9,23 +9,8 @@ import Input from '@/Components/General/Input';
 
 export default function AchievementsForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (!resumeInfo.achievements?.length) {
-            setResumeInfo((prev) => ({
-                ...prev,
-                achievements: [
-                    {
-                        title: '',
-                        description: '',
-                        date: '',
-                    },
-                ],
-            }));
-        }
-    }, []);
 
     const handleChange = (index, event) => {
         const { name, value } = event.target;
@@ -40,14 +25,7 @@ export default function AchievementsForm() {
     const addNewAchievement = () => {
         setResumeInfo((prev) => ({
             ...prev,
-            achievements: [
-                ...prev.achievements,
-                {
-                    title: '',
-                    date: '',
-                    description: '',
-                },
-            ],
+            achievements: [...prev.achievements, emptyResume.achievements[0]],
         }));
     };
 

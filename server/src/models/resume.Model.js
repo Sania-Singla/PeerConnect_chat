@@ -17,18 +17,6 @@ export class ResumeModel {
         }
     }
 
-    async updateTheme(resumeId, theme) {
-        try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                { $set: { themeColor: theme } },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
     async createResume(userId, title) {
         try {
             const resume = await Resume.create({ title, userId });
@@ -46,26 +34,11 @@ export class ResumeModel {
         }
     }
 
-    async savePersonalInfo(resumeId, data) {
+    async updateTheme(resumeId, theme) {
         try {
             return await Resume.findOneAndUpdate(
                 { resumeId },
-                {
-                    $set: {
-                        personal: {
-                            firstName: data.firstName,
-                            lastName: data.lastName,
-                            email: data.email,
-                            phone: data.phone,
-                            address: {
-                                state: data.address.state,
-                                country: data.address.country,
-                            },
-                            linkedin: data.linkedin,
-                            github: data.github,
-                        },
-                    },
-                },
+                { $set: { themeColor: theme } },
                 { new: true }
             ).lean();
         } catch (err) {
@@ -73,126 +46,38 @@ export class ResumeModel {
         }
     }
 
-    async saveSummary(resumeId, data) {
+    async saveSection(sectionName, resumeId, data) {
         try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                {
-                    $set: {
-                        'personal.summary': data.summary,
-                    },
-                },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
+            const updates = {};
+            switch (sectionName) {
+                case 'personal':
+                    updates.personal = data;
+                    break;
+                case 'summary':
+                    updates['personal.summary'] = data.summary;
+                    break;
+                case 'education':
+                    updates.education = data;
+                    break;
+                case 'experience':
+                    updates.experiences = data;
+                    break;
+                case 'skills':
+                    updates.skills = data;
+                    break;
+                case 'achievements':
+                    updates.achievements = data;
+                    break;
+                case 'projects':
+                    updates.projects = data;
+                    break;
+                default:
+                    throw new Error('Invalid section');
+            }
 
-    async saveEducation(resumeId, data) {
-        try {
             return await Resume.findOneAndUpdate(
                 { resumeId },
-                {
-                    $set: {
-                        education: {
-                            institution: data.institution,
-                            degree: data.degree,
-                            major: data.major,
-                            description: data.description,
-                            startDate: data.startDate,
-                            endDate: data.endDate,
-                        },
-                    },
-                },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async saveExperience(resumeId, data) {
-        try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                {
-                    $set: {
-                        experiences: {
-                            position: data.position,
-                            company: data.company,
-                            address: {
-                                city: data.address.city,
-                                state: data.address.state,
-                                country: data.address.country,
-                            },
-                            startDate: data.startDate,
-                            currentlyWorking: data.currentlyWorking,
-                            endDate: data.endDate,
-                            description: data.description,
-                        },
-                    },
-                },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async saveSkills(resumeId, data) {
-        try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                {
-                    $set: {
-                        skills: data.map((skill) => ({
-                            name: skill.name,
-                            rating: skill.rating,
-                        })),
-                    },
-                },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async saveAchievements(resumeId, data) {
-        try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                {
-                    $set: {
-                        achievements: data.map((achievement) => ({
-                            title: achievement.title,
-                            description: achievement.description,
-                            date: achievement.date,
-                        })),
-                    },
-                },
-                { new: true }
-            ).lean();
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async saveProjects(resumeId, data) {
-        try {
-            return await Resume.findOneAndUpdate(
-                { resumeId },
-                {
-                    $set: {
-                        projects: data.map((project) => ({
-                            title: project.title,
-                            description: project.description,
-                            technologies: project.technologies,
-                            github: project.github,
-                        })),
-                    },
-                },
+                { $set: updates },
                 { new: true }
             ).lean();
         } catch (err) {
