@@ -10,8 +10,10 @@ const ResumeContextProvider = ({ children }) => {
             {
                 position: '',
                 company: '',
-                city: '',
-                state: '',
+                address: {
+                    country: '',
+                    state: '',
+                },
                 startDate: '',
                 endDate: '',
                 description: '',

@@ -37,7 +37,14 @@ export default function Experience() {
                 : value;
             setResumeInfo((prev) => ({
                 ...prev,
-                experience: { ...prev.experience, [name]: processedValue },
+                experience: prev.experience.map((item, i) =>
+                    i === index
+                        ? {
+                              ...item,
+                              [name]: processedValue,
+                          }
+                        : item
+                ),
             }));
         }
     };
@@ -112,7 +119,7 @@ export default function Experience() {
                                 required
                                 placeholder="e.g., Panjab, California"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.state}
+                                value={item?.address.state}
                             />
 
                             <Input
@@ -122,7 +129,7 @@ export default function Experience() {
                                 required
                                 placeholder="e.g., India, USA"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.country}
+                                value={item?.address.country}
                             />
 
                             <Input
