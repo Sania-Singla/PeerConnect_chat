@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext, useResumeContext } from '@/Context';
 import toast from 'react-hot-toast';
@@ -18,7 +18,7 @@ import ProjectForm from './Forms/ProjectForm';
 
 export default function EditResume() {
     const { resumeId } = useParams();
-    const { setResumeInfo, emptyResume, enableNext } = useResumeContext();
+    const { setResumeInfo, emptyResume } = useResumeContext();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [activeFormIndex, setActiveFormIndex] = useState(0);
@@ -155,13 +155,12 @@ export default function EditResume() {
                                 {activeFormIndex < forms.length - 1 ? (
                                     <Button
                                         defaultStyles="true"
-                                        className={`text-white gap-2 py-[5px] px-3 ${!enableNext && 'opacity-70 cursor-not-allowed'}`}
+                                        className="text-white gap-2 py-[5px] px-3"
                                         onClick={() =>
                                             setActiveFormIndex(
                                                 (prev) => prev + 1
                                             )
                                         }
-                                        disabled={!enableNext}
                                         btnText={
                                             <div className="flex items-center gap-2">
                                                 Next
