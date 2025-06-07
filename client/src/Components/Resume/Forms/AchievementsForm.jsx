@@ -18,8 +18,11 @@ export default function AchievementsForm() {
     const [loading, setLoading] = useState(false);
 
     const handleChange = (index, event) => {
+        const { name, value } = event.target;
         setAchievements((prev) =>
-            prev.map((item, i) => (i === index ? event.target.value : item))
+            prev.map((item, i) =>
+                i === index ? { ...item, [name]: value } : item
+            )
         );
     };
 
@@ -64,20 +67,39 @@ export default function AchievementsForm() {
             </p>
 
             <form onSubmit={onSave}>
-                <div className="space-y-4 mt-4">
-                    {achievements.map((item, i) => (
+                {achievements?.map((item, i) => (
+                    <div key={i} className="grid grid-cols-2 gap-5 my-5">
                         <Input
-                            key={i}
-                            label={`Achievement #${i + 1}`}
+                            label="Title"
+                            name="title"
                             type="text"
                             required
-                            value={item.title}
+                            value={item?.title}
                             onChange={(e) => handleChange(i, e)}
-                            placeholder="e.g. Awarded 'Employee of the Year' in 2022"
-                            className="shadow-sm shadow-[#f7f7f7] py-3 rounded-[5px] placeholder:text-sm placeholder:text-gray-400 indent-3 w-full border-[0.01rem] border-gray-500 bg-transparent"
+                            placeholder="e.g. Best Innovator Award"
                         />
-                    ))}
-                </div>
+                        <Input
+                            label="Date"
+                            name="date"
+                            type="date"
+                            required
+                            value={item?.date}
+                            onChange={(e) => handleChange(i, e)}
+                            placeholder="Select date"
+                        />
+                        <div className="col-span-2">
+                            <Input
+                                label="Description"
+                                type="text"
+                                name="descriptions"
+                                required
+                                value={item?.description}
+                                onChange={(e) => handleChange(i, e)}
+                                placeholder="e.g. Recognized for outstanding innovation and leadership in AI projects."
+                            />
+                        </div>
+                    </div>
+                ))}
 
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex gap-2">

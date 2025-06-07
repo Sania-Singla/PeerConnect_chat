@@ -7,49 +7,47 @@ import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
 
-export default function EducationForm() {
+export default function ProjectForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [educationList, setEducationList] = useState(
-        resumeInfo?.education.length > 0
-            ? resumeInfo.education
+    const [projectList, setProjectList] = useState(
+        resumeInfo?.projects.length > 0
+            ? resumeInfo.projects
             : [
                   {
-                      institution: '',
-                      degree: '',
-                      major: '',
-                      startDate: '',
-                      endDate: '',
+                      title: '',
                       description: '',
+                      technologies: '',
+                      gitub: '',
+                      demoLink: '',
                   },
               ]
     );
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
-        setEducationList((prev) =>
+        setProjectList((prev) =>
             prev.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
             )
         );
     };
 
-    const AddNewEducation = () => {
-        setEducationList((prev) => [
+    const AddNewProject = () => {
+        setProjectList((prev) => [
             ...prev,
             {
-                institution: '',
-                degree: '',
-                major: '',
-                startDate: '',
-                endDate: '',
+                title: '',
                 description: '',
+                technologies: '',
+                gitub: '',
+                demoLink: '',
             },
         ]);
     };
-    const RemoveEducation = () => {
-        setEducationList((educationalList) => educationalList.slice(0, -1));
+    const RemoveProject = () => {
+        setProjectList((projectList) => projectList.slice(0, -1));
     };
 
     async function onSave(e) {
@@ -57,13 +55,13 @@ export default function EducationForm() {
             e.preventDefault();
             setLoading(true);
             const res = await resumeService.saveSection(
-                'education',
+                'project',
                 resumeId,
-                educationList
+                projectList
             );
-            if (res && !res.message) toast.success('Education List updated!');
+            if (res && !res.message) toast.success('Project List updated!');
         } catch (err) {
-            toast.error('Failed to update education list');
+            toast.error('Failed to update project list');
         } finally {
             setLoading(false);
         }
@@ -71,80 +69,68 @@ export default function EducationForm() {
 
     // for preview
     useEffect(
-        () => setResumeInfo({ ...resumeInfo, education: educationList }),
-        [educationList]
+        () => setResumeInfo({ ...resumeInfo, projects: projectList }),
+        [projectList]
     );
 
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
-            <h2 className="font-bold text-lg">Education</h2>
+            <h2 className="font-bold text-lg">Projects</h2>
             <p className="text-gray-400 text-sm italic mt-1">
-                Add Your educational details
+                Add Your Project details
             </p>
 
             <div>
-                {educationList?.map((item, i) => (
+                {projectList?.map((item, i) => (
                     <div key={i}>
                         <div className="grid grid-cols-2 gap-5 my-5">
-                            <div className="col-span-2">
-                                <Input
-                                    label="Institution Name"
-                                    name="institution"
-                                    type="text"
-                                    required
-                                    placeholder="e.g., UIET, Panjab University"
-                                    value={item.institution}
-                                    onChange={(e) => handleChange(e, i)}
-                                />
-                            </div>
-
                             <Input
-                                label="Degree"
-                                name="degree"
+                                label="Title"
+                                name="title"
                                 type="text"
                                 required
-                                placeholder="e.g., B.Tech, M.Sc, MBA"
+                                placeholder="e.g. AI Chatbot, Portfolio Website"
+                                value={item.title}
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.degree}
                             />
 
                             <Input
-                                label="Major"
-                                name="major"
+                                label="Technologies"
+                                name="technologies"
                                 required
-                                placeholder="e.g., Computer Science, Physics"
+                                placeholder="e.g. React, Node.js, Python"
                                 type="text"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.major}
+                                value={item.technologies}
                             />
 
                             <Input
-                                label="Start Date"
-                                type="date"
-                                name="startDate"
-                                placeholder="Select start date"
+                                label="Github URL"
+                                type="text"
+                                name="github"
+                                placeholder="e.g. https://github.com/username/project"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.startDate}
+                                value={item.github}
                             />
 
                             <Input
-                                label="End Date"
-                                type="date"
-                                name="endDate"
-                                placeholder="Select end date"
+                                label="Demo URL"
+                                type="text"
+                                name="demo"
+                                placeholder="e.g. https://project-demo.com"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.endDate}
+                                value={item.demoLink}
                             />
 
                             <div className="col-span-2">
                                 <Input
-                                    type="textarea"
                                     label="Description"
-                                    rows={3}
                                     name="description"
-                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
+                                    type="textarea"
+                                    required
+                                    placeholder="Briefly describe the project's purpose, features, and outcome"
                                     onChange={(e) => handleChange(e, i)}
-                                    value={item?.description}
+                                    value={item.description}
                                 />
                             </div>
                         </div>
@@ -155,14 +141,14 @@ export default function EducationForm() {
                 <div className="flex gap-2">
                     <Button
                         variant="outline"
-                        onClick={AddNewEducation}
+                        onClick={AddNewProject}
                         defaultStyles={true}
                         className="text-[15px] h-[30px] px-4 text-white"
                         btnText="+ Add More"
                     />
                     <Button
                         variant="outline"
-                        onClick={RemoveEducation}
+                        onClick={RemoveProject}
                         defaultStyles={true}
                         className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
