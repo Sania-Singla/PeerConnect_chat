@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { formatDateField } from '@/Utils';
 
 export default function EducationForm() {
     const { resumeId } = useParams();
@@ -14,10 +15,17 @@ export default function EducationForm() {
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
+        const isDateField = name === 'startDate' || name === 'endDate';
+        const processedValue = isDateField
+            ? value
+                ? new Date(value).toISOString()
+                : ''
+            : value;
+
         setResumeInfo((prev) => ({
             ...prev,
             education: prev.education.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
+                i === index ? { ...item, [name]: processedValue } : item
             ),
         }));
     };
@@ -103,7 +111,7 @@ export default function EducationForm() {
                                 name="startDate"
                                 placeholder="Select start date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.startDate}
+                                value={formatDateField(item?.startDate)}
                             />
 
                             <Input
@@ -112,7 +120,7 @@ export default function EducationForm() {
                                 name="endDate"
                                 placeholder="Select end date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.endDate}
+                                value={formatDateField(item?.endDate)}
                             />
 
                             <div className="col-span-2 space-y-1">

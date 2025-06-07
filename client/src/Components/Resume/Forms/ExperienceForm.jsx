@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { formatDateField } from '@/Utils';
 
 export default function Experience() {
     const { resumeId } = useParams();
@@ -14,12 +15,31 @@ export default function Experience() {
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
-        setResumeInfo((prev) => ({
-            ...prev,
-            experience: prev.experience.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
-            ),
-        }));
+
+        if (name === 'state' || name === 'country') {
+            setResumeInfo((prev) => ({
+                ...prev,
+                experience: prev.experience.map((item, i) =>
+                    i === index
+                        ? {
+                              ...item,
+                              address: { ...item.address, [name]: value },
+                          }
+                        : item
+                ),
+            }));
+        } else {
+            const isDateField = name === 'startDate' || name === 'endDate';
+            const processedValue = isDateField
+                ? value
+                    ? new Date(value).toISOString()
+                    : ''
+                : value;
+            setResumeInfo((prev) => ({
+                ...prev,
+                experience: { ...prev.experience, [name]: processedValue },
+            }));
+        }
     };
 
     const addNewExperience = () => {
@@ -86,23 +106,23 @@ export default function Experience() {
                             />
 
                             <Input
-                                label="City"
-                                name="city"
-                                id="city"
-                                required
-                                placeholder="e.g., Bangalore, New York"
-                                onChange={(e) => handleChange(e, i)}
-                                value={item?.city}
-                            />
-
-                            <Input
                                 label="State"
                                 name="state"
                                 id="state"
                                 required
-                                placeholder="e.g., Karnataka, California"
+                                placeholder="e.g., Panjab, California"
                                 onChange={(e) => handleChange(e, i)}
                                 value={item?.state}
+                            />
+
+                            <Input
+                                label="Country"
+                                name="country"
+                                id="country"
+                                required
+                                placeholder="e.g., India, USA"
+                                onChange={(e) => handleChange(e, i)}
+                                value={item?.country}
                             />
 
                             <Input
@@ -113,7 +133,7 @@ export default function Experience() {
                                 required
                                 placeholder="Select start date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.startDate}
+                                value={formatDateField(item?.startDate)}
                             />
 
                             <Input
@@ -124,7 +144,7 @@ export default function Experience() {
                                 required
                                 placeholder="Select end date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.endDate}
+                                value={formatDateField(item?.endDate)}
                             />
 
                             <div className="col-span-2 space-y-1">

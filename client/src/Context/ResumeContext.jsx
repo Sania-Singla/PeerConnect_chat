@@ -15,6 +15,7 @@ const ResumeContextProvider = ({ children }) => {
                 startDate: '',
                 endDate: '',
                 description: '',
+                currentlyWorking: false,
             },
         ],
         education: [

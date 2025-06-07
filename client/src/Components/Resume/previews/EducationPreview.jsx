@@ -12,7 +12,7 @@ export default function EducationPreview() {
                     {edu.institution}
                 </h3>
 
-                {edu.startDate && (
+                {edu.startDate && edu.endDate && (
                     <div className="text-[10px] italic">
                         {`${formatDateMonth(edu.startDate)} - ${formatDateMonth(edu.endDate)}`}
                     </div>
