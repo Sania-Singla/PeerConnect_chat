@@ -14,6 +14,7 @@ import {
     ResumePreview,
 } from '@/Components';
 import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
+import ProjectForm from './Forms/ProjectForm';
 
 export default function EditResume() {
     const { resumeId } = useParams();
@@ -48,6 +49,7 @@ export default function EditResume() {
         { title: 'Education', component: <EducationForm /> },
         { title: 'Experience', component: <ExperienceForm /> },
         { title: 'Skills', component: <SkillsForm /> },
+        { title: 'Projects', component: <ProjectForm /> },
         { title: 'Achievements', component: <AchievementsForm /> },
     ];
 

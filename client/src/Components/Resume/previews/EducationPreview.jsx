@@ -10,7 +10,7 @@ export default function EducationPreview() {
                     className="text-sm font-bold"
                     style={{ color: resumeInfo?.themeColor }}
                 >
-                    {edu.Institution}
+                    {edu.institution}
                 </h3>
                 <span className="text-[11px] text-gray-500">
                     {edu.startDate} - {edu.endDate}

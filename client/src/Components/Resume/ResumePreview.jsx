@@ -8,6 +8,7 @@ import {
 } from '@/Components';
 import { useResumeContext } from '@/Context';
 import { Award, Star } from 'lucide-react';
+import ProjectReview from './previews/ProjectReview';
 
 export default function ResumePreview() {
     const { resumeInfo } = useResumeContext();
@@ -45,7 +46,7 @@ export default function ResumePreview() {
                     </section>
                 )}
 
-                {resumeInfo?.experiences?.length > 0 && (
+                {resumeInfo?.experience?.length > 0 && (
                     <section>
                         <h2
                             className="font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b border-gray-200 pb-1"
@@ -59,7 +60,21 @@ export default function ResumePreview() {
                     </section>
                 )}
 
-                {resumeInfo?.educationList?.length > 0 && (
+                {resumeInfo?.projects?.length > 0 && (
+                    <section>
+                        <h2
+                            className="font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b border-gray-200 pb-1"
+                            style={{
+                                borderColor: `${resumeInfo?.themeColor}40`,
+                            }}
+                        >
+                            Projects
+                        </h2>
+                        <ProjectReview />
+                    </section>
+                )}
+
+                {resumeInfo?.education?.length > 0 && (
                     <section>
                         <h2
                             className="font-semibold text-sm text-gray-900 tracking-wide mb-4 border-b border-gray-200 pb-1"

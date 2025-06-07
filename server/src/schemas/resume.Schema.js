@@ -49,6 +49,7 @@ const projectSchema = new Schema({
     technologies: { type: [String], required: true },
     demo: { type: String, required: false },
     github: { type: String, required: false },
+    demoLink: { type: String, required: false },
 });
 
 const achievementSchema = new Schema({

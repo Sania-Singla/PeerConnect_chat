@@ -56,7 +56,7 @@ export default function Experience() {
     };
 
     useEffect(
-        () => setResumeInfo({ ...resumeInfo, experiences }),
+        () => setResumeInfo({ ...resumeInfo, experience: experiences }),
         [experiences]
     );
 
@@ -93,6 +93,7 @@ export default function Experience() {
                                 name="position"
                                 id="position"
                                 required
+                                placeholder="e.g., Software Engineer, Marketing Intern"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.position}
                             />
@@ -102,15 +103,17 @@ export default function Experience() {
                                 name="company"
                                 id="company"
                                 required
+                                placeholder="e.g., Infosys, Google, Deloitte"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.company}
                             />
 
                             <Input
-                                label="Ciy"
+                                label="City"
                                 name="city"
                                 id="city"
                                 required
+                                placeholder="e.g., Bangalore, New York"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.city}
                             />
@@ -120,6 +123,7 @@ export default function Experience() {
                                 name="state"
                                 id="state"
                                 required
+                                placeholder="e.g., Karnataka, California"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.state}
                             />
@@ -130,6 +134,7 @@ export default function Experience() {
                                 name="startDate"
                                 id="startDate"
                                 required
+                                placeholder="Select start date"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.startDate}
                             />
@@ -140,25 +145,21 @@ export default function Experience() {
                                 id="endDate"
                                 name="endDate"
                                 required
+                                placeholder="Select end date"
                                 onChange={(e) => handleChange(i, e)}
                                 value={item?.endDate}
                             />
-                            <div className="col-span">
-                                <label className="block text-sm font-medium text-gray-800">
-                                    Description
-                                </label>
 
-                                <div className="mt-2">
-                                    <Input
-                                        type="textarea"
-                                        label="Description"
-                                        rows={3}
-                                        name="description"
-                                        placeholder="Briefly describe your coursework, achievements, or activities"
-                                        onChange={(e) => handleChange(e, i)}
-                                        value={item?.description}
-                                    />
-                                </div>
+                            <div className="col-span-2">
+                                <Input
+                                    type="textarea"
+                                    label="Description"
+                                    rows={3}
+                                    name="description"
+                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
+                                    onChange={(e) => handleChange(i, e)}
+                                    value={item?.description}
+                                />
                             </div>
                         </div>
                     </div>
