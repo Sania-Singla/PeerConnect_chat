@@ -13,28 +13,23 @@
         visibility: hidden;
     }
 
-    .themed #print-area,
-    .themed #print-area * {
-        visibility: visible;
+    #print-area,
+    #print-area * {
+        visibility: visible !important;
     }
 
-    .themed #print-area {
+    #print-area {
         position: absolute;
         left: 0;
         top: 0;
-        width: 95%;
-        margin: auto;
-        border-radius: 16px;
-        overflow: hidden;
-        background: white;
-        padding: 20px;
+        width: 100%;
+        height: 100%;
+        margin: 0;
         box-sizing: border-box;
-
-        /* Shadow for print */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        background: white;
     }
 
-    .themed #no-print {
+    .no-print {
         display: none !important;
     }
 }

@@ -38,7 +38,7 @@ export default function ViewResume() {
         <div>loading...</div>
     ) : (
         <div className="themed max-w-3xl mx-auto space-y-10 py-10 print:py-0 print:max-w-full">
-            <div className="no-print">
+            <div id="no-print">
                 <div>
                     <h2 className="text-center text-2xl font-semibold">
                         Congrats! Your Ultimate AI generates Resume is ready !
@@ -79,7 +79,7 @@ export default function ViewResume() {
                     </div>
                 </div>
             </div>
-            <div className="print-area">
+            <div id="print-area">
                 <ResumePreview />
             </div>
         </div>
