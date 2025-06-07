@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -11,6 +11,24 @@ export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const { resumeInfo, setResumeInfo } = useResumeContext();
+
+    useEffect(() => {
+        if (!resumeInfo.education?.length) {
+            setResumeInfo((prev) => ({
+                ...prev,
+                education: [
+                    {
+                        institution: '',
+                        degree: '',
+                        major: '',
+                        startDate: '',
+                        endDate: '',
+                        description: '',
+                    },
+                ],
+            }));
+        }
+    }, []);
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;

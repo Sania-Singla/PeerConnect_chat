@@ -1,6 +1,6 @@
 import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -11,6 +11,25 @@ export default function Experience() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!resumeInfo.experience?.length) {
+            setResumeInfo((prev) => ({
+                ...prev,
+                experience: [
+                    {
+                        position: '',
+                        company: '',
+                        city: '',
+                        state: '',
+                        startDate: '',
+                        endDate: '',
+                        description: '',
+                    },
+                ],
+            }));
+        }
+    }, []);
 
     const handleChange = (index, event) => {
         const { name, value } = event.target;

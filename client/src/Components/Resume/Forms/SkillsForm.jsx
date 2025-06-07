@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/Components';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -13,6 +13,20 @@ export default function Skills() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!resumeInfo.skills?.length) {
+            setResumeInfo((prev) => ({
+                ...prev,
+                skills: [
+                    {
+                        name: '',
+                        rating: 0,
+                    },
+                ],
+            }));
+        }
+    }, []);
 
     const handleChange = (index, name, value) => {
         setResumeInfo((prev) => ({
