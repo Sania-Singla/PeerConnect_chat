@@ -35,7 +35,7 @@ export default function ProjectsPreview() {
             <div className="pl-3 text-[11px] leading-relaxed">
                 <div className="mt-1">{project.description}</div>
 
-                <p className="mt-2">
+                <p className="mt-[2px]">
                     <span className="font-semibold">Technologies: </span>
                     {project.technologies}
                 </p>
