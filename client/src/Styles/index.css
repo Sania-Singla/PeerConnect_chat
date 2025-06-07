@@ -4,6 +4,34 @@
     display: none;
 }
 
+.basic-rte ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+}
+
+.basic-rte ol {
+    list-style-type: decimal;
+    margin-left: 1.5rem;
+}
+
+.basic-rte li {
+    margin-bottom: 0.1rem;
+}
+
+.description p {
+    padding-left: 12px;
+}
+
+.description ol {
+    list-style-type: decimal;
+    margin-left: 12px;
+}
+
+.description ul {
+    list-style-type: disc;
+    margin-left: 12px;
+}
+
 .rich-text {
     @apply text-black text-base leading-relaxed;
 

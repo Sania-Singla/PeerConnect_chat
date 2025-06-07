@@ -18,7 +18,7 @@ import ProjectForm from './Forms/ProjectForm';
 
 export default function EditResume() {
     const { resumeId } = useParams();
-    const { setResumeInfo, enableNext } = useResumeContext();
+    const { setResumeInfo, emptyResume, enableNext } = useResumeContext();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [activeFormIndex, setActiveFormIndex] = useState(0);
@@ -30,7 +30,24 @@ export default function EditResume() {
                 setLoading(true);
                 const res = await resumeService.getResume(resumeId);
                 if (res && !res.message) {
-                    setResumeInfo(res);
+                    setResumeInfo({
+                        ...res,
+                        experience: res.experience.length
+                            ? res.experience
+                            : emptyResume.experience,
+                        education: res.education.length
+                            ? res.education
+                            : emptyResume.education,
+                        projects: res.projects.length
+                            ? res.projects
+                            : emptyResume.projects,
+                        achievements: res.achievements.length
+                            ? res.achievements
+                            : emptyResume.achievements,
+                        skills: res.skills.length
+                            ? res.skills
+                            : emptyResume.skills,
+                    });
                 } else {
                     toast.error('Resume not found!');
                     navigate('/resume');

@@ -1,14 +1,15 @@
 import { useResumeContext } from '@/Context';
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
+import parse from 'html-react-parser';
 
 export default function ProjectsPreview() {
     const { resumeInfo } = useResumeContext();
 
-    return resumeInfo?.projects?.map((project, index) => (
-        <div key={index} className="px-2 py-[5px] mb-[5px] text-gray-800">
+    return resumeInfo?.projects?.map((project, i) => (
+        <div key={i} className="px-2 py-[5px] mb-[5px] text-gray-800">
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-xs font-bold ">{project.title}</h3>
+                <h3 className="text-xs font-bold">{project.title}</h3>
 
                 {project.link && (
                     <div className="flex gap-[5px] max-w-[40%] items-center justify-center">
@@ -32,13 +33,17 @@ export default function ProjectsPreview() {
                 )}
             </div>
 
-            <div className="pl-3 text-[11px] leading-relaxed">
-                <div className="mt-1">{project.description}</div>
+            <div className="text-[11px] leading-relaxed">
+                <div className="mt-1 description">
+                    {parse(project.description)}
+                </div>
 
-                <p className="mt-[2px]">
-                    <span className="font-semibold">Technologies: </span>
-                    {project.technologies}
-                </p>
+                {project.technologies.length > 0 && (
+                    <p className="mt-[2px] pl-3">
+                        <span className="font-semibold">Technologies: </span>
+                        {project.technologies}
+                    </p>
+                )}
             </div>
         </div>
     ));

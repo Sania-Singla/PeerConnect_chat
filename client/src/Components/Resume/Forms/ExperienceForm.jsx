@@ -1,64 +1,68 @@
-import { Button, RTE } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { formatDateField } from '@/Utils';
 
 export default function Experience() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [experiences, setExperiences] = useState(
-        resumeInfo?.experience.length > 0
-            ? resumeInfo.experience
-            : [
-                  {
-                      position: '',
-                      company: '',
-                      city: '',
-                      state: '',
-                      startDate: '',
-                      endDate: '',
-                      description: '',
-                  },
-              ]
-    );
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (index, event) => {
-        const { name, value } = event.target;
-        setExperiences((prev) =>
-            prev.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
-            )
-        );
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
+
+        if (name === 'state' || name === 'country') {
+            setResumeInfo((prev) => ({
+                ...prev,
+                experience: prev.experience.map((item, i) =>
+                    i === index
+                        ? {
+                              ...item,
+                              address: { ...item.address, [name]: value },
+                          }
+                        : item
+                ),
+            }));
+        } else {
+            const isDateField = name === 'startDate' || name === 'endDate';
+            const processedValue = isDateField
+                ? value
+                    ? new Date(value).toISOString()
+                    : ''
+                : value;
+            setResumeInfo((prev) => ({
+                ...prev,
+                experience: prev.experience.map((item, i) =>
+                    i === index
+                        ? {
+                              ...item,
+                              [name]: processedValue,
+                          }
+                        : item
+                ),
+            }));
+        }
     };
 
     const addNewExperience = () => {
-        setExperiences((prev) => [
+        setResumeInfo((prev) => ({
             ...prev,
-            {
-                position: '',
-                company: '',
-                city: '',
-                state: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-            },
-        ]);
+            experience: [...prev.experience, emptyResume.experience[0]],
+        }));
+        setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };
 
     const removeExperience = () => {
-        setExperiences(experiences.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            experience: prev.experience.slice(0, -1),
+        }));
     };
-
-    useEffect(
-        () => setResumeInfo({ ...resumeInfo, experience: experiences }),
-        [experiences]
-    );
 
     async function onSave(e) {
         try {
@@ -67,7 +71,7 @@ export default function Experience() {
             const res = await resumeService.saveSection(
                 'experience',
                 resumeId,
-                experiences
+                resumeInfo.experience
             );
             if (res && !res.message) toast.success('Experience updated!');
         } catch (err) {
@@ -85,7 +89,7 @@ export default function Experience() {
             </p>
 
             <form onSubmit={onSave}>
-                {experiences?.map((item, i) => (
+                {resumeInfo.experience?.map((item, i) => (
                     <div key={i} className="my-5 rounded-lg">
                         <div className="grid grid-cols-2 gap-5">
                             <Input
@@ -94,7 +98,7 @@ export default function Experience() {
                                 id="position"
                                 required
                                 placeholder="e.g., Software Engineer, Marketing Intern"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.position}
                             />
 
@@ -104,18 +108,8 @@ export default function Experience() {
                                 id="company"
                                 required
                                 placeholder="e.g., Infosys, Google, Deloitte"
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 value={item?.company}
-                            />
-
-                            <Input
-                                label="City"
-                                name="city"
-                                id="city"
-                                required
-                                placeholder="e.g., Bangalore, New York"
-                                onChange={(e) => handleChange(i, e)}
-                                value={item?.city}
                             />
 
                             <Input
@@ -123,9 +117,19 @@ export default function Experience() {
                                 name="state"
                                 id="state"
                                 required
-                                placeholder="e.g., Karnataka, California"
-                                onChange={(e) => handleChange(i, e)}
-                                value={item?.state}
+                                placeholder="e.g., Panjab, California"
+                                onChange={(e) => handleChange(e, i)}
+                                value={item?.address.state}
+                            />
+
+                            <Input
+                                label="Country"
+                                name="country"
+                                id="country"
+                                required
+                                placeholder="e.g., India, USA"
+                                onChange={(e) => handleChange(e, i)}
+                                value={item?.address.country}
                             />
 
                             <Input
@@ -135,8 +139,8 @@ export default function Experience() {
                                 id="startDate"
                                 required
                                 placeholder="Select start date"
-                                onChange={(e) => handleChange(i, e)}
-                                value={item?.startDate}
+                                onChange={(e) => handleChange(e, i)}
+                                value={formatDateField(item?.startDate)}
                             />
 
                             <Input
@@ -146,19 +150,19 @@ export default function Experience() {
                                 name="endDate"
                                 required
                                 placeholder="Select end date"
-                                onChange={(e) => handleChange(i, e)}
-                                value={item?.endDate}
+                                onChange={(e) => handleChange(e, i)}
+                                value={formatDateField(item?.endDate)}
                             />
 
-                            <div className="col-span-2">
-                                <Input
-                                    type="textarea"
-                                    label="Description"
-                                    rows={3}
+                            <div className="col-span-2 space-y-1">
+                                <label className="block text-sm font-medium text-gray-800">
+                                    Description
+                                </label>
+                                <BasicRTE
                                     name="description"
-                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
-                                    onChange={(e) => handleChange(i, e)}
                                     value={item?.description}
+                                    onChange={(e) => handleChange(e, i)}
+                                    placeholder="e.g., Worked on full-stack development, led a team of 3 interns, improved system performance by 20%"
                                 />
                             </div>
                         </div>
@@ -181,7 +185,7 @@ export default function Experience() {
                             defaultStyles={true}
                             className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeExperience}
-                            disabled={experiences.length === 0}
+                            disabled={resumeInfo.experience.length === 0}
                             btnText="- Remove"
                         />
                     </div>

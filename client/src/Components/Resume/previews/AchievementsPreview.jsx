@@ -1,25 +1,25 @@
 import { useResumeContext } from '@/Context';
+import { formatDateMonth } from '@/Utils';
+import parse from 'html-react-parser';
 
 export default function AchievementsPreview() {
     const { resumeInfo } = useResumeContext();
 
-    return (
-        <div className="my-6 px-3">
-            <ul className="list-disc list-inside space-y-1 text-xs text-gray-700 pl-1">
-                {resumeInfo.achievements.map((item, i) => (
-                    <div  key={i}>
-                        <li key={i} className="leading-snug mb-1">
-                            {item?.title}
-                        </li>
-                        <li key={i} className="leading-snug mb-1">
-                            {item?.date}
-                        </li>
-                        <li key={i} className="leading-snug mb-1">
-                            {item?.description}
-                        </li>
-                    </div>
-                ))}
-            </ul>
+    return resumeInfo.achievements.map((a, i) => (
+        <div key={i} className="px-2 py-[5px] mb-[5px]">
+            <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-gray-800">{a.title}</h3>
+
+                {a.date && (
+                    <p className="text-[10px] italic">
+                        {formatDateMonth(a.date)}
+                    </p>
+                )}
+            </div>
+
+            <div className="description text-[11px] mt-1 text-gray-800 leading-relaxed">
+                {parse(a.description)}
+            </div>
         </div>
-    );
+    ));
 }
