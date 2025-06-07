@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/Components';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -10,28 +10,30 @@ import '@smastrom/react-rating/style.css';
 import Input from '@/Components/General/Input';
 
 export default function Skills() {
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [skills, setSkills] = useState(
-        resumeInfo?.skills?.length > 0
-            ? resumeInfo.skills
-            : [{ name: '', rating: 0 }]
-    );
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
 
     const handleChange = (index, name, value) => {
-        setSkills((prev) =>
-            prev.map((item, i) =>
+        setResumeInfo((prev) => ({
+            ...prev,
+            skills: prev.skills.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
-            )
-        );
+            ),
+        }));
     };
 
     const AddNewSkills = () => {
-        setSkills((prev) => [...prev, { name: '', rating: 0 }]);
+        setResumeInfo((prev) => ({
+            ...prev,
+            skills: [...prev.skills, emptyResume.skills[0]],
+        }));
     };
     const RemoveSkills = () => {
-        setSkills((skillsList) => skillsList.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            skills: prev.skills.slice(0, -1),
+        }));
     };
 
     async function onSave(e) {
@@ -41,7 +43,7 @@ export default function Skills() {
             const res = await resumeService.saveSection(
                 'skill',
                 resumeId,
-                skills
+                resumeInfo.skills
             );
             if (res && !res.message) toast.success('Skills updated!');
         } catch (err) {
@@ -51,9 +53,6 @@ export default function Skills() {
         }
     }
 
-    // for preview
-    useEffect(() => setResumeInfo({ ...resumeInfo, skills }), [skills]);
-
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Skills</h2>
@@ -62,7 +61,7 @@ export default function Skills() {
             </p>
 
             <div>
-                {skills.map((item, i) => (
+                {resumeInfo?.skills.map((s, i) => (
                     <div
                         key={i}
                         className="flex justify-between items-center gap-4 my-5"
@@ -71,7 +70,7 @@ export default function Skills() {
                             <Input
                                 label="Name"
                                 className="w-full sm:w-[70%]"
-                                defaultValue={item.name}
+                                defaultValue={s.name}
                                 placeholder="Enter a skill (e.g., JavaScript)"
                                 onChange={(e) =>
                                     handleChange(i, 'name', e.target.value)
@@ -80,7 +79,7 @@ export default function Skills() {
                         </div>
                         <Rating
                             style={{ maxWidth: 120 }}
-                            value={item.rating}
+                            value={s.rating}
                             className="h-fit relative top-2"
                             onChange={(v) => handleChange(i, 'rating', v)}
                         />
@@ -101,6 +100,7 @@ export default function Skills() {
                         variant="outline"
                         onClick={RemoveSkills}
                         defaultStyles={true}
+                        disabled={resumeInfo.skills.length === 0}
                         className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />

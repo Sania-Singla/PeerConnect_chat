@@ -1,6 +1,6 @@
-import { Button } from '@/Components';
+import { BasicRTE, Button } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
@@ -9,38 +9,32 @@ import Input from '@/Components/General/Input';
 
 export default function AchievementsForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [achievements, setAchievements] = useState(
-        resumeInfo?.achievements?.length > 0
-            ? resumeInfo.achievements
-            : [{ title: '', description: '', date: '' }]
-    );
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (index, event) => {
-        const { name, value } = event.target;
-        setAchievements((prev) =>
-            prev.map((item, i) =>
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
+        setResumeInfo((prev) => ({
+            ...prev,
+            achievements: prev.achievements.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
-            )
-        );
+            ),
+        }));
     };
 
     const addNewAchievement = () => {
-        setAchievements((prev) => [
+        setResumeInfo((prev) => ({
             ...prev,
-            { title: '', description: '', date: '' },
-        ]);
+            achievements: [...prev.achievements, emptyResume.achievements[0]],
+        }));
     };
 
     const removeAchievement = () => {
-        setAchievements(achievements.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            achievements: prev.achievements.slice(0, -1),
+        }));
     };
-
-    // for preview
-    useEffect(() => {
-        setResumeInfo({ ...resumeInfo, achievements });
-    }, [achievements]);
 
     async function onSave(e) {
         try {
@@ -49,7 +43,7 @@ export default function AchievementsForm() {
             const res = await resumeService.saveSection(
                 'achievement',
                 resumeId,
-                achievements
+                resumeInfo.achievements
             );
             if (res && !res.message) toast.success('Achievements updated!');
         } catch (err) {
@@ -67,7 +61,7 @@ export default function AchievementsForm() {
             </p>
 
             <form onSubmit={onSave}>
-                {achievements?.map((item, i) => (
+                {resumeInfo.achievements?.map((item, i) => (
                     <div key={i} className="grid grid-cols-2 gap-5 my-5">
                         <Input
                             label="Title"
@@ -75,7 +69,7 @@ export default function AchievementsForm() {
                             type="text"
                             required
                             value={item?.title}
-                            onChange={(e) => handleChange(i, e)}
+                            onChange={(e) => handleChange(e, i)}
                             placeholder="e.g. Best Innovator Award"
                         />
                         <Input
@@ -84,17 +78,17 @@ export default function AchievementsForm() {
                             type="date"
                             required
                             value={item?.date}
-                            onChange={(e) => handleChange(i, e)}
+                            onChange={(e) => handleChange(e, i)}
                             placeholder="Select date"
                         />
-                        <div className="col-span-2">
-                            <Input
-                                label="Description"
-                                type="text"
-                                name="descriptions"
-                                required
+                        <div className="col-span-2 space-y-1">
+                            <label className="block text-sm font-medium text-gray-800">
+                                Description
+                            </label>
+                            <BasicRTE
+                                name="description"
                                 value={item?.description}
-                                onChange={(e) => handleChange(i, e)}
+                                onChange={(e) => handleChange(e, i)}
                                 placeholder="e.g. Recognized for outstanding innovation and leadership in AI projects."
                             />
                         </div>
@@ -117,7 +111,7 @@ export default function AchievementsForm() {
                             defaultStyles={true}
                             className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                             onClick={removeAchievement}
-                            disabled={achievements.length === 0}
+                            disabled={resumeInfo.achievements.length === 0}
                             btnText="- Remove"
                         />
                     </div>

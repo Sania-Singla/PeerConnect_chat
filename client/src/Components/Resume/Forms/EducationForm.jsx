@@ -1,55 +1,48 @@
-import { Button } from '@/Components';
+import { Button, BasicRTE } from '@/Components';
 import { icons } from '@/Assets/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
+import { formatDateField } from '@/Utils';
 
 export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
-    const { resumeInfo, setResumeInfo } = useResumeContext();
-    const [educationList, setEducationList] = useState(
-        resumeInfo?.education.length > 0
-            ? resumeInfo.education
-            : [
-                  {
-                      institution: '',
-                      degree: '',
-                      major: '',
-                      startDate: '',
-                      endDate: '',
-                      description: '',
-                  },
-              ]
-    );
+    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
-    const handleChange = (event, index) => {
-        const { name, value } = event.target;
-        setEducationList((prev) =>
-            prev.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
-            )
-        );
+    const handleChange = (e, index) => {
+        const { name, value } = e.target;
+        const isDateField = name === 'startDate' || name === 'endDate';
+        const processedValue = isDateField
+            ? value
+                ? new Date(value).toISOString()
+                : ''
+            : value;
+
+        setResumeInfo((prev) => ({
+            ...prev,
+            education: prev.education.map((item, i) =>
+                i === index ? { ...item, [name]: processedValue } : item
+            ),
+        }));
     };
 
     const AddNewEducation = () => {
-        setEducationList((prev) => [
+        setResumeInfo((prev) => ({
             ...prev,
-            {
-                institution: '',
-                degree: '',
-                major: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-            },
-        ]);
+            education: [...prev.education, emptyResume.education[0]],
+        }));
+        setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };
     const RemoveEducation = () => {
-        setEducationList((educationalList) => educationalList.slice(0, -1));
+        setResumeInfo((prev) => ({
+            ...prev,
+            education: prev.education.slice(0, -1),
+        }));
+        setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };
 
     async function onSave(e) {
@@ -59,7 +52,7 @@ export default function EducationForm() {
             const res = await resumeService.saveSection(
                 'education',
                 resumeId,
-                educationList
+                resumeInfo.education
             );
             if (res && !res.message) toast.success('Education List updated!');
         } catch (err) {
@@ -69,12 +62,6 @@ export default function EducationForm() {
         }
     }
 
-    // for preview
-    useEffect(
-        () => setResumeInfo({ ...resumeInfo, education: educationList }),
-        [educationList]
-    );
-
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Education</h2>
@@ -83,7 +70,7 @@ export default function EducationForm() {
             </p>
 
             <div>
-                {educationList?.map((item, i) => (
+                {resumeInfo.education?.map((item, i) => (
                     <div key={i}>
                         <div className="grid grid-cols-2 gap-5 my-5">
                             <div className="col-span-2">
@@ -124,7 +111,7 @@ export default function EducationForm() {
                                 name="startDate"
                                 placeholder="Select start date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.startDate}
+                                value={formatDateField(item?.startDate)}
                             />
 
                             <Input
@@ -133,18 +120,18 @@ export default function EducationForm() {
                                 name="endDate"
                                 placeholder="Select end date"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.endDate}
+                                value={formatDateField(item?.endDate)}
                             />
 
-                            <div className="col-span-2">
-                                <Input
-                                    type="textarea"
-                                    label="Description"
-                                    rows={3}
+                            <div className="col-span-2 space-y-1">
+                                <label className="block text-sm font-medium text-gray-800">
+                                    Description
+                                </label>
+                                <BasicRTE
                                     name="description"
-                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
-                                    onChange={(e) => handleChange(e, i)}
                                     value={item?.description}
+                                    onChange={(e) => handleChange(e, i)}
+                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
                                 />
                             </div>
                         </div>
@@ -164,6 +151,7 @@ export default function EducationForm() {
                         variant="outline"
                         onClick={RemoveEducation}
                         defaultStyles={true}
+                        disabled={resumeInfo.education.length === 0}
                         className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />

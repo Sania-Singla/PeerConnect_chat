@@ -8,6 +8,7 @@ import { formatDistanceToNow, parseISO, format } from 'date-fns';
  */
 
 function formatDateRelative(timeStamp) {
+    if (!timeStamp) return '';
     return formatDistanceToNow(parseISO(timeStamp), { addSuffix: true });
 }
 
@@ -19,17 +20,32 @@ function formatDateRelative(timeStamp) {
  */
 
 function formatDateExact(timeStamp) {
+    if (!timeStamp) return '';
     const date = new Date(timeStamp);
     return format(date, 'dd/MM/yyyy');
+}
+
+/**
+ * Formats the provided timeStamp
+ * @param {TimeStamp} timeStamp - timeStamp to format
+ * @returns {String} Formatted date in yyyy-MM-dd format
+ * @example - 2019-08-10
+ */
+
+function formatDateField(timeStamp) {
+    if (!timeStamp) return '';
+    const date = new Date(timeStamp);
+    return format(date, 'yyyy-MM-dd');
 }
 
 /**
  * Formats the provided timeStamp to show month and year
  * @param {TimeStamp} timeStamp - timeStamp to format
  * @returns {String} Formatted date in MMMM yyyy format
- * @example - Aug 2019
+ * @example - August 2019
  */
 function formatDateMonth(timeStamp) {
+    if (!timeStamp) return '';
     const date = new Date(timeStamp);
     return format(date, 'MMM yyyy');
 }
@@ -42,6 +58,7 @@ function formatDateMonth(timeStamp) {
  */
 
 function formatTime(timeStamp) {
+    if (!timeStamp) return '';
     const date = new Date(timeStamp);
     return format(date, 'hh:mm a');
 }
@@ -90,4 +107,5 @@ export {
     formatCount,
     formatFileSize,
     formatDateMonth,
+    formatDateField,
 };

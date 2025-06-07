@@ -7,6 +7,7 @@ import SmallSidebar from './Layout/SmallSidebar';
 
 // General components
 import RTE from './General/RTE';
+import BasicRTE from './General/BasicRTE';
 import Button from './General/Button';
 import ContributorCard from './General/ContributorCard';
 
@@ -122,6 +123,7 @@ export {
     Layout,
     Button,
     RTE,
+    BasicRTE,
     ContributorCard,
     LoginPopup,
     DeleteAccountPopup,
