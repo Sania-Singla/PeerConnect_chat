@@ -19,8 +19,7 @@ export default function ProjectForm() {
                       title: '',
                       description: '',
                       technologies: '',
-                      gitub: '',
-                      demoLink: '',
+                      link: '',
                   },
               ]
     );
@@ -41,8 +40,7 @@ export default function ProjectForm() {
                 title: '',
                 description: '',
                 technologies: '',
-                gitub: '',
-                demoLink: '',
+                link: '',
             },
         ]);
     };
@@ -105,21 +103,12 @@ export default function ProjectForm() {
                             />
 
                             <Input
-                                label="Github URL"
+                                label="Link"
                                 type="text"
-                                name="github"
+                                name="link"
                                 placeholder="e.g. https://github.com/username/project"
                                 onChange={(e) => handleChange(e, i)}
-                                value={item.github}
-                            />
-
-                            <Input
-                                label="Demo URL"
-                                type="text"
-                                name="demo"
-                                placeholder="e.g. https://project-demo.com"
-                                onChange={(e) => handleChange(e, i)}
-                                value={item.demoLink}
+                                value={item.link}
                             />
 
                             <div className="col-span-2">

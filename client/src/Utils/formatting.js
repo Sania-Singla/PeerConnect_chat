@@ -24,6 +24,17 @@ function formatDateExact(timeStamp) {
 }
 
 /**
+ * Formats the provided timeStamp to show month and year
+ * @param {TimeStamp} timeStamp - timeStamp to format
+ * @returns {String} Formatted date in MMMM yyyy format
+ * @example - Aug 2019
+ */
+function formatDateMonth(timeStamp) {
+    const date = new Date(timeStamp);
+    return format(date, 'MMM yyyy');
+}
+
+/**
  * Formats the provided timeStamp
  * @param {TimeStamp} timeStamp - timeStamp to format
  * @returns {String} Formatted time in hh:mm a format
@@ -78,4 +89,5 @@ export {
     formatTime,
     formatCount,
     formatFileSize,
+    formatDateMonth,
 };

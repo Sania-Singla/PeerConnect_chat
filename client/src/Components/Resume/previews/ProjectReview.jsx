@@ -1,46 +1,44 @@
 import { useResumeContext } from '@/Context';
+import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 
 export default function ProjectsPreview() {
     const { resumeInfo } = useResumeContext();
 
     return resumeInfo?.projects?.map((project, index) => (
-        <div key={index} className="mb-6">
-            <h3
-                className="text-sm font-bold mb-1"
-                style={{ color: resumeInfo.themeColor }}
-            >
-                {project.title}
-            </h3>
+        <div key={index} className="px-2 py-[5px] mb-[5px] text-gray-800">
+            <div className="flex items-center justify-between gap-4">
+                <h3 className="text-xs font-bold ">{project.title}</h3>
 
-            <p className="text-xs text-gray-700 italic mb-2">
-                {project.technologies}
-            </p>
-
-            <div className="text-xs mt-2 ml-4 text-gray-800 leading-relaxed">
-                {project.description}
+                {project.link && (
+                    <div className="flex gap-[5px] max-w-[40%] items-center justify-center">
+                        <Link
+                            to={project.link}
+                            target="_blank"
+                            className="hover:underline truncate text-[0.7rem]"
+                            style={{ color: resumeInfo?.themeColor }}
+                        >
+                            {project.link}
+                        </Link>
+                        <div>
+                            <ExternalLink
+                                size={12}
+                                color={resumeInfo?.themeColor}
+                                strokeWidth={2.5}
+                                className="mb-[2px]"
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
 
-            <div className="flex gap-4 mt-3 text-xs">
-                {project.github && (
-                    <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline"
-                    >
-                        GitHub
-                    </a>
-                )}
-                {project.demoLink && (
-                    <a
-                        href={project.demoLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline"
-                    >
-                        Live Demo
-                    </a>
-                )}
+            <div className="pl-3 text-[11px] leading-relaxed">
+                <div className="mt-1">{project.description}</div>
+
+                <p className="mt-2">
+                    <span className="font-semibold">Technologies: </span>
+                    {project.technologies}
+                </p>
             </div>
         </div>
     ));

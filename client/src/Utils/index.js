@@ -5,6 +5,7 @@ import {
     formatTime,
     formatFileSize,
     formatCount,
+    formatDateMonth,
 } from './formatting';
 import { verifyExpression } from './regex';
 import { verifyUserName } from './regex';
@@ -19,6 +20,7 @@ export {
     formatFileSize,
     formatDateRelative,
     formatTime,
+    formatDateMonth,
     verifyExpression,
     verifyUserName,
     paginate,

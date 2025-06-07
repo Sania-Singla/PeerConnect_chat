@@ -1,29 +1,41 @@
 import { useResumeContext } from '@/Context';
+import { formatDateMonth } from '@/Utils';
 
 export default function ExperiencePreview() {
     const { resumeInfo } = useResumeContext();
 
     return resumeInfo.experience.map((exp, index) => (
-        <div key={index} className="mb-6">
-            <div className="flex justify-between items-center">
-                <h3
-                    className="text-sm font-bold"
-                    style={{ color: resumeInfo.themeColor }}
-                >
+        <div key={index} className="px-2 py-[5px] mb-[5px]">
+            <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-color-800">
                     {exp.position}
                 </h3>
-                <span className="text-[11px] text-gray-500">
-                    {exp.startDate} -{' '}
-                    {exp.currentlyWorking ? 'Present' : exp.endDate}
-                </span>
+
+                {exp.address && (
+                    <p className="text-gray-700 text-[10px] italic">
+                        {exp.address.state}, {exp.address.country}
+                    </p>
+                )}
             </div>
-            <p className="text-xs text-gray-700 mt-0.5 italic">
-                {exp.company}, {exp.city}, {exp.state}
+
+            <div className="flex items-center text-gray-700 justify-between">
+                <p className="text-[11px] italic">{exp.company}</p>
+
+                {exp.startDate && (
+                    <p className="text-[10px] italic">
+                        {`${formatDateMonth(exp.startDate)} - 
+                        ${
+                            exp.currentlyWorking
+                                ? 'Present'
+                                : formatDateMonth(exp.endDate)
+                        }`}
+                    </p>
+                )}
+            </div>
+
+            <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
+                {exp?.description}
             </p>
-            <div
-                className="text-xs mt-2 ml-4 text-gray-800 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: exp?.description }}
-            />
         </div>
     ));
 }

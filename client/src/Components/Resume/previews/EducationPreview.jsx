@@ -1,26 +1,33 @@
 import { useResumeContext } from '@/Context';
+import { formatDateMonth } from '@/Utils';
 
 export default function EducationPreview() {
     const { resumeInfo } = useResumeContext();
 
     return resumeInfo?.education.map((edu, index) => (
-        <div key={index} className="mb-6">
+        <div key={index} className="px-2 py-[5px] mb-[5px]">
             <div className="flex justify-between items-center">
-                <h3
-                    className="text-sm font-bold"
-                    style={{ color: resumeInfo?.themeColor }}
-                >
+                <h3 className="text-xs font-bold text-color-800">
                     {edu.institution}
                 </h3>
-                <span className="text-[11px] text-gray-500">
-                    {edu.startDate} - {edu.endDate}
-                </span>
+
+                {edu.startDate && (
+                    <div className="text-[10px] italic">
+                        {`${formatDateMonth(edu.startDate)} - ${formatDateMonth(edu.endDate)}`}
+                    </div>
+                )}
             </div>
-            <p className="text-xs italic text-gray-700 mt-0.5">
-                {edu.degree} in {edu.major}
-            </p>
+
+            {edu.degree && (
+                <p className="text-[11px] italic text-gray-700">
+                    {edu.degree} in {edu.major}
+                </p>
+            )}
+
             {edu.description && (
-                <p className="text-xs mt-2 text-gray-800">{edu.description}</p>
+                <p className="text-[11px] mt-1 ml-3 text-gray-800 leading-relaxed">
+                    {edu.description}
+                </p>
             )}
         </div>
     ));

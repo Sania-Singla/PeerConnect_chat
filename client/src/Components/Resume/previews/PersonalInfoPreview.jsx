@@ -22,7 +22,7 @@ export default function PersonalInfoPreview() {
             </h2>
 
             <div
-                className="flex justify-evenly overflow-scroll gap-4 items-end mt-6 text-[11px] font-normal"
+                className="flex justify-evenly overflow-scroll gap-4 items-end mt-5 text-[11px] font-normal"
                 style={{ color: themeColor }}
             >
                 {personal?.address && (
