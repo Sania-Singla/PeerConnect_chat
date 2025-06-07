@@ -5,12 +5,13 @@ import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { resumeService } from '@/Services';
 import { RESUME_THEMES } from '@/Constants/constants';
-import { useResumeContext } from '@/Context';
+import { usePopupContext, useResumeContext } from '@/Context';
 
 export default function ResumeThemePopup() {
     const { resumeInfo, setResumeInfo } = useResumeContext();
     const [selectedColor, setSelectedColor] = useState(resumeInfo?.themeColor);
     const { resumeId } = useParams();
+    const { setShowPopup } = usePopupContext();
 
     async function onColorSelect(color) {
         try {
@@ -18,6 +19,7 @@ export default function ResumeThemePopup() {
             setResumeInfo({ ...resumeInfo, themeColor: color });
             await resumeService.updateTheme(resumeId, color);
             toast.success('Theme Updated');
+            setShowPopup(false);
         } catch (err) {
             toast.error('Failed to update theme color');
         }
