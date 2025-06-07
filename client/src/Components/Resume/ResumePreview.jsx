@@ -12,19 +12,6 @@ import ProjectReview from './previews/ProjectReview';
 export default function ResumePreview() {
     const { resumeInfo } = useResumeContext();
 
-    resumeInfo.achievements = [
-        {
-            title: 'Best Employee of the Year',
-            date: '01-02-2023',
-            description: 'Awarded for outstanding performance and dedication.',
-        },
-        {
-            title: 'Hackathon Winner',
-            date: '01-02-2022',
-            description: 'Won first place in the annual company hackathon.',
-        },
-    ];
-
     return (
         <div
             className="w-full max-w-4xl shadow-sm rounded-lg print:shadow-none border-t-[8px]"
