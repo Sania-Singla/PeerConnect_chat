@@ -41,7 +41,7 @@ export default function Skills() {
             e.preventDefault();
             setLoading(true);
             const res = await resumeService.saveSection(
-                'skill',
+                'skills',
                 resumeId,
                 resumeInfo.skills
             );
