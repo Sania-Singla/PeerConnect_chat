@@ -7,10 +7,9 @@ import toast from 'react-hot-toast';
 import { ai } from '@/Utils';
 import { useResumeContext } from '@/Context';
 import { resumeService } from '@/Services';
-import Input from '@/Components/General/Input';
 
 export default function SummaryForm() {
-    const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
+    const { resumeInfo, setResumeInfo,  } = useResumeContext();
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const { resumeId } = useParams();
@@ -41,7 +40,6 @@ export default function SummaryForm() {
                 summary: resumeInfo.personal.summary,
             });
             toast.success('Details updated');
-            setEnableNext(true);
         } catch (err) {
             toast.error('Failed to save summary');
         } finally {

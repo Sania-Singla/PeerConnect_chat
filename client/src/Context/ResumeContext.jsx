@@ -4,7 +4,6 @@ const ResumeContext = createContext();
 
 const ResumeContextProvider = ({ children }) => {
     const [resumeInfo, setResumeInfo] = useState({});
-    const [enableNext, setEnableNext] = useState(false);
     const [emptyResume, setEmptyResume] = useState({
         experience: [
             {
@@ -44,14 +43,7 @@ const ResumeContextProvider = ({ children }) => {
 
     return (
         <ResumeContext.Provider
-            value={{
-                resumeInfo,
-                setResumeInfo,
-                enableNext,
-                setEnableNext,
-                emptyResume,
-                setEmptyResume,
-            }}
+            value={{ resumeInfo, setResumeInfo, emptyResume, setEmptyResume }}
         >
             {children}
         </ResumeContext.Provider>
