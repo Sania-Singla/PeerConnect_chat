@@ -12,6 +12,7 @@ export default function PersonalInfoForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
     const [disabled, setDisabled] = useState(false);
+
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {

@@ -11,8 +11,12 @@ export default function ViewResume() {
     const { resumeId } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [shareUrl, setShareUrl] = useState('');
 
     useEffect(() => {
+        // Set the share URL once when component mounts
+        setShareUrl(`${window.location.origin}/resume/${resumeId}/view`);
+
         (async function () {
             try {
                 const res = await resumeService.getResume(resumeId);
@@ -28,12 +32,12 @@ export default function ViewResume() {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [resumeId, navigate, setResumeInfo]);
 
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="themed max-w-3xl mx-auto space-y-10 py-10">
+        <div className="themed max-w-3xl mx-auto space-y-10 py-10 print:py-0 print:max-w-full">
             <div id="no-print">
                 <div>
                     <h2 className="text-center text-2xl font-semibold">
@@ -55,15 +59,15 @@ export default function ViewResume() {
                         />
                         <RWebShare
                             data={{
-                                text: 'Hello Everyone, This is my resume please visit the url to see it',
-                                url: `${import.meta.env.VITE_FRONTEND_BASE_URL}/resume/${resumeId}/view`,
-                                title: `${resumeInfo?.firstName} ${resumeInfo?.lastName} resume`,
+                                text: 'Check out my resume',
+                                url: shareUrl, // Use the pre-constructed URL
+                                title: `${resumeInfo?.firstName} ${resumeInfo?.lastName}'s Resume`,
                             }}
+                            onClick={() =>
+                                toast.success('Opening share options...')
+                            }
                         >
                             <Button
-                                onClick={() =>
-                                    toast.success('shared successfully!')
-                                }
                                 defaultStyles={true}
                                 style={{
                                     backgroundColor: resumeInfo?.themeColor,

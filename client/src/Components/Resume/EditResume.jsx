@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { resumeService } from '@/Services';
 import { usePopupContext, useResumeContext } from '@/Context';
 import toast from 'react-hot-toast';

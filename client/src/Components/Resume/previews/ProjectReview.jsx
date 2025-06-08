@@ -33,7 +33,7 @@ export default function ProjectsPreview() {
                 )}
             </div>
 
-            <div className="text-[12px] leading-relaxed">
+            <div className="text-[12px]">
                 <p className="mt-1 description">{parse(project.description)}</p>
 
                 {project.technologies.length > 0 && (
