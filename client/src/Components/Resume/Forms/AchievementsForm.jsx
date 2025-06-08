@@ -9,6 +9,7 @@ import Input from '@/Components/General/Input';
 
 export default function AchievementsForm() {
     const { resumeId } = useParams();
+    const [disabled, setDisabled] = useState(false);
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
@@ -36,9 +37,24 @@ export default function AchievementsForm() {
         }));
     };
 
+    function handleMouseOver(e) {
+        if (
+            resumeInfo.achievements.some((ach) =>
+                Object.entries(ach).some(
+                    ([key, value]) => !value && key !== 'description'
+                )
+            )
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function onSave(e) {
         try {
             e.preventDefault();
+            setDisabled(true);
             setLoading(true);
             const res = await resumeService.saveSection(
                 'achievements',
@@ -50,6 +66,7 @@ export default function AchievementsForm() {
             toast.error('Failed to update achievements');
         } finally {
             setLoading(false);
+            setDisabled(false);
         }
     }
 
@@ -118,8 +135,9 @@ export default function AchievementsForm() {
                     <Button
                         type="submit"
                         defaultStyles={true}
+                        onMouseOver={handleMouseOver}
                         className="w-[60px] text-[15px] h-[30px] text-white"
-                        disabled={loading}
+                        disabled={disabled}
                         btnText={
                             loading ? (
                                 <div className="flex items-center justify-center w-full">

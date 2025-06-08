@@ -10,6 +10,7 @@ import Input from '@/Components/General/Input';
 export default function ProjectForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false);
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
     const handleChange = (event, index) => {
@@ -35,10 +36,27 @@ export default function ProjectForm() {
         }));
     };
 
+    const allowedEmptyFields = ['description', 'link'];
+    function handleMouseOver() {
+        if (
+            resumeInfo.projects.some((project) =>
+                Object.entries(project).some(
+                    ([key, value]) =>
+                        !value && !allowedEmptyFields.includes(key)
+                )
+            )
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
+            setDisabled(true);
             const res = await resumeService.saveSection(
                 'projects',
                 resumeId,
@@ -49,6 +67,7 @@ export default function ProjectForm() {
             toast.error('Failed to update project list');
         } finally {
             setLoading(false);
+            setDisabled(true);
         }
     }
 
@@ -126,9 +145,10 @@ export default function ProjectForm() {
                     />
                 </div>
                 <Button
-                    disabled={loading}
+                    disabled={disabled}
                     onClick={onSave}
                     defaultStyles={true}
+                    onMouseOver={handleMouseOver}
                     className="h-[30px] w-[60px] text-[15px] text-white"
                     btnText={
                         loading ? (

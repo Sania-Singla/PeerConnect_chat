@@ -11,6 +11,7 @@ import { formatDateField } from '@/Utils';
 export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false);
     const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
 
     const handleChange = (e, index) => {
@@ -45,10 +46,25 @@ export default function EducationForm() {
         setResumeInfo((prev) => ({ ...prev, enableNext: true }));
     };
 
+    function handleMouseOver() {
+        if (
+            resumeInfo.education.some((edu) =>
+                Object.entries(edu).some(
+                    ([key, value]) => !value && key !== 'description'
+                )
+            )
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
+            setDisabled(true);
             const res = await resumeService.saveSection(
                 'education',
                 resumeId,
@@ -59,6 +75,7 @@ export default function EducationForm() {
             toast.error('Failed to update education list');
         } finally {
             setLoading(false);
+            setDisabled(false);
         }
     }
 
@@ -109,6 +126,7 @@ export default function EducationForm() {
                                 label="Start Date"
                                 type="date"
                                 name="startDate"
+                                required
                                 placeholder="Select start date"
                                 onChange={(e) => handleChange(e, i)}
                                 value={formatDateField(item?.startDate)}
@@ -118,6 +136,7 @@ export default function EducationForm() {
                                 label="End Date"
                                 type="date"
                                 name="endDate"
+                                required
                                 placeholder="Select end date"
                                 onChange={(e) => handleChange(e, i)}
                                 value={formatDateField(item?.endDate)}
@@ -157,8 +176,9 @@ export default function EducationForm() {
                     />
                 </div>
                 <Button
-                    disabled={loading}
+                    disabled={disabled}
                     onClick={onSave}
+                    onMouseOver={handleMouseOver}
                     defaultStyles={true}
                     className="h-[30px] w-[60px] text-[15px] text-white"
                     btnText={
