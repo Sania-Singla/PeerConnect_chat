@@ -18,7 +18,7 @@ import ProjectForm from './Forms/ProjectForm';
 
 export default function EditResume() {
     const { resumeId } = useParams();
-    const { setResumeInfo, emptyResume, enableNext } = useResumeContext();
+    const { setResumeInfo, emptyResume, sectionSaved } = useResumeContext();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [activeFormIndex, setActiveFormIndex] = useState(0);
@@ -61,7 +61,7 @@ export default function EditResume() {
     }, [resumeId]);
 
     const forms = [
-        { title: 'Personal Details', component: <PersonalInfoForm /> },
+        { title: 'Personal', component: <PersonalInfoForm /> },
         { title: 'Summary', component: <SummaryForm /> },
         { title: 'Education', component: <EducationForm /> },
         { title: 'Experience', component: <ExperienceForm /> },
@@ -155,13 +155,19 @@ export default function EditResume() {
                                 {activeFormIndex < forms.length - 1 ? (
                                     <Button
                                         defaultStyles="true"
-                                        className={`text-white gap-2 py-[5px] px-3 ${!enableNext && 'opacity-70 cursor-not-allowed'}`}
+                                        className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
                                         onClick={() =>
                                             setActiveFormIndex(
                                                 (prev) => prev + 1
                                             )
                                         }
-                                        disabled={!enableNext}
+                                        disabled={
+                                            !sectionSaved[
+                                                forms[
+                                                    activeFormIndex
+                                                ].title.toLowerCase()
+                                            ]
+                                        }
                                         btnText={
                                             <div className="flex items-center gap-2">
                                                 Next
@@ -172,7 +178,14 @@ export default function EditResume() {
                                 ) : (
                                     <Button
                                         defaultStyles="true"
-                                        className="text-white gap-2 py-[5px] px-3"
+                                        className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
+                                        disabled={
+                                            !sectionSaved[
+                                                forms[
+                                                    activeFormIndex
+                                                ].title.toLowerCase()
+                                            ]
+                                        }
                                         onClick={() =>
                                             navigate(`/resume/${resumeId}/view`)
                                         }

@@ -12,7 +12,7 @@ export default function EducationForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume, setSectionSaved } = useResumeContext();
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
@@ -70,7 +70,10 @@ export default function EducationForm() {
                 resumeId,
                 resumeInfo.education
             );
-            if (res && !res.message) toast.success('Education List updated!');
+            if (res && !res.message) {
+                toast.success('Education List updated!');
+                setSectionSaved((prev) => ({ ...prev, education: true }));
+            }
         } catch (err) {
             toast.error('Failed to update education list');
         } finally {

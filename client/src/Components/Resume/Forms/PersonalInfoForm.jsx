@@ -10,7 +10,7 @@ import { verifyUserName } from '@/Utils/regex';
 
 export default function PersonalInfoForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo, setEnableNext } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -63,7 +63,7 @@ export default function PersonalInfoForm() {
             );
             if (res && !res.message) {
                 toast.success('Personal Info updated!');
-                setEnableNext(true);
+                setSectionSaved((prev) => ({ ...prev, personal: true }));
             }
         } catch (err) {
             toast.error('Failed to update personal info');

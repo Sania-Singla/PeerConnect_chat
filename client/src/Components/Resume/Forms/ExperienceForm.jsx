@@ -10,7 +10,8 @@ import { formatDateField } from '@/Utils';
 
 export default function Experience() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume, setSectionSaved } =
+        useResumeContext();
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -95,7 +96,10 @@ export default function Experience() {
                 resumeId,
                 resumeInfo.experience
             );
-            if (res && !res.message) toast.success('Experience updated!');
+            if (res && !res.message) {
+                toast.success('Experience updated!');
+                setSectionSaved((prev) => ({ ...prev, experience: true }));
+            }
         } catch (err) {
             toast.error('Failed to update experience.');
         } finally {

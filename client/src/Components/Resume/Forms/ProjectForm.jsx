@@ -11,7 +11,7 @@ export default function ProjectForm() {
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume, setSectionSaved } = useResumeContext();
 
     const handleChange = (event, index) => {
         const { name, value } = event.target;
@@ -62,7 +62,10 @@ export default function ProjectForm() {
                 resumeId,
                 resumeInfo.projects
             );
-            if (res && !res.message) toast.success('Project List updated!');
+            if (res && !res.message) {
+                toast.success('Project List updated!');
+                setSectionSaved((prev) => ({ ...prev, projects: true }));
+            }
         } catch (err) {
             toast.error('Failed to update project list');
         } finally {

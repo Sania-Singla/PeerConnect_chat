@@ -10,7 +10,7 @@ import '@smastrom/react-rating/style.css';
 import Input from '@/Components/General/Input';
 
 export default function Skills() {
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
     const [skills, setSkills] = useState(
         resumeInfo?.skills?.length > 0
             ? resumeInfo.skills
@@ -53,7 +53,10 @@ export default function Skills() {
                 resumeId,
                 skills
             );
-            if (res && !res.message) toast.success('Skills updated!');
+            if (res && !res.message) {
+                toast.success('Skills updated!');
+                setSectionSaved((prev) => ({ ...prev, skills: true }));
+            }
         } catch (err) {
             toast.error('Failed to update skills');
         } finally {

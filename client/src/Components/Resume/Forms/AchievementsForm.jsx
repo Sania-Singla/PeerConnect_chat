@@ -10,7 +10,7 @@ import Input from '@/Components/General/Input';
 export default function AchievementsForm() {
     const { resumeId } = useParams();
     const [disabled, setDisabled] = useState(false);
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume, setSectionSaved } = useResumeContext();
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e, index) => {
@@ -61,7 +61,10 @@ export default function AchievementsForm() {
                 resumeId,
                 resumeInfo.achievements
             );
-            if (res && !res.message) toast.success('Achievements updated!');
+            if (res && !res.message) {
+                toast.success('Achievements updated!');
+                setSectionSaved((prev) => ({ ...prev, achievements: true }));
+            }
         } catch (err) {
             toast.error('Failed to update achievements');
         } finally {
