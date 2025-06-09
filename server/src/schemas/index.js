@@ -8,6 +8,7 @@ import { Message, Attachment } from './message.Schema.js';
 import { OnlineUser } from './onlineUser.Schema.js';
 import { Request } from './request.Schema.js';
 import { Resume } from './resume.Schema.js';
+import { Editor } from './editor.Schema.js';
 
 export {
     User,
@@ -24,4 +25,5 @@ export {
     OnlineUser,
     Request,
     Resume,
+    Editor,
 };
