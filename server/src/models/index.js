@@ -8,6 +8,7 @@ import { MessageModel } from './message.Model.js';
 import { OnlineUserModel } from './onlineUser.Model.js';
 import { RequestModel } from './request.Model.js';
 import { ResumeModel } from './resume.Model.js';
+import { EditorModel } from './editor.Model.js';
 
 export {
     UserModel,
@@ -20,4 +21,5 @@ export {
     OnlineUserModel,
     RequestModel,
     ResumeModel,
+    EditorModel,
 };
