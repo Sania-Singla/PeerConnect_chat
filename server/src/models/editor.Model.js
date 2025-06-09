@@ -23,13 +23,14 @@ export class EditorModel {
                               accessType: 'edit',
                           },
                       ];
-            return await Editor.create({
+            const room = await Editor.create({
                 ownerId,
                 roomId,
                 roomType,
                 members: initialMembers,
                 code, //send boiler plate code OR set in default
             });
+            return room.toObject();
         } catch (err) {
             throw err;
         }
@@ -46,7 +47,7 @@ export class EditorModel {
                     },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -60,7 +61,7 @@ export class EditorModel {
                     $pull: { members: { memberId } },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -77,7 +78,7 @@ export class EditorModel {
                         code,
                     },
                 }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -97,7 +98,7 @@ export class EditorModel {
                     },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -114,7 +115,7 @@ export class EditorModel {
                     },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -133,7 +134,7 @@ export class EditorModel {
                     },
                 },
                 { new: true }
-            );
+            ).lean();
         } catch (err) {
             throw err;
         }
@@ -141,7 +142,7 @@ export class EditorModel {
 
     async deleteRoom(roomId) {
         try {
-            return await Editor.findOneAndDelete({ roomId });
+            return await Editor.findOneAndDelete({ roomId }).lean();
         } catch (err) {
             throw err;
         }
