@@ -1,4 +1,4 @@
-import { Editor } from '../schemas';
+import { Editor } from '../schemas/index.js';
 // WE NEED TO WORK ON CURSOR DUDE, amd history of code per member and all, will do this later
 export class EditorModel {
     // we need to create seperate functions for create amd save, as

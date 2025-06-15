@@ -5,8 +5,8 @@ import parse from 'html-react-parser';
 export default function EducationPreview() {
     const { resumeInfo } = useResumeContext();
 
-    return resumeInfo?.education.map((edu, index) => (
-        <div key={index} className="px-2 py-[5px] mb-[5px]">
+    return resumeInfo?.education.map((edu, i) => (
+        <div key={i} className="px-2 py-[5px] mb-[5px]">
             <div className="flex justify-between items-center">
                 <h3 className="text-sm font-bold text-gray-800">
                     {edu.institution}

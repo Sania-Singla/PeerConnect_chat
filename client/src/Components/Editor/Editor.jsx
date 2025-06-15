@@ -43,7 +43,13 @@ export default function Editor({ language, onChange }) {
 
         editor.on('change', handleChange);
 
-        socket.on('codeChange', ({ code }) => editor.setValue(code));
+        socket.on('codeChange', ({ code }) => {
+            if (editor.getValue() !== code) {
+                const cursor = editor.getCursor(); // save cursor position
+                editor.setValue(code);
+                editor.setCursor(cursor); // restore cursor
+            }
+        });
 
         return () => editor.toTextArea();
     }, [language, roomId]);

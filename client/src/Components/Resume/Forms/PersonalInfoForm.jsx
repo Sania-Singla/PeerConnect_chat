@@ -12,7 +12,6 @@ export default function PersonalInfoForm() {
     const { resumeId } = useParams();
     const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
     const [disabled, setDisabled] = useState(false);
-
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
@@ -39,10 +38,10 @@ export default function PersonalInfoForm() {
         }
     };
 
-    const allowedEmptyFields = ['linkedin', 'github'];
+    const allowedEmptyFields = ['linkedin', 'github', 'lastName'];
     function handleMouseOver(e) {
         if (
-            Object.entries(resumeInfo.personal).some(
+            Object.entries(resumeInfo?.personal)?.some(
                 ([key, value]) => !value && !allowedEmptyFields.includes(key)
             )
         ) {
@@ -95,7 +94,6 @@ export default function PersonalInfoForm() {
                     <Input
                         label="Last Name"
                         name="lastName"
-                        required
                         onChange={handleInputChange}
                         value={resumeInfo?.personal?.lastName}
                         placeholder="e.g. Doe"
