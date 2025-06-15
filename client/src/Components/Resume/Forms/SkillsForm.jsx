@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/Components';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -10,48 +10,62 @@ import '@smastrom/react-rating/style.css';
 import Input from '@/Components/General/Input';
 
 export default function Skills() {
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
+    const [skills, setSkills] = useState(
+        resumeInfo?.skills?.length > 0
+            ? resumeInfo.skills
+            : [{ name: '', rating: 0 }]
+    );
     const { resumeId } = useParams();
     const [loading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const handleChange = (index, name, value) => {
-        setResumeInfo((prev) => ({
-            ...prev,
-            skills: prev.skills.map((item, i) =>
+        setSkills((prev) =>
+            prev.map((item, i) =>
                 i === index ? { ...item, [name]: value } : item
-            ),
-        }));
+            )
+        );
     };
 
     const AddNewSkills = () => {
-        setResumeInfo((prev) => ({
-            ...prev,
-            skills: [...prev.skills, emptyResume.skills[0]],
-        }));
+        setSkills((prev) => [...prev, { name: '', rating: 0 }]);
     };
     const RemoveSkills = () => {
-        setResumeInfo((prev) => ({
-            ...prev,
-            skills: prev.skills.slice(0, -1),
-        }));
+        setSkills((skillsList) => skillsList.slice(0, -1));
     };
+
+    function handleMouseOver(e) {
+        if (resumeInfo.skills.some((skill) => !skill.name || !skill.rating)) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
 
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
+            setDisabled(true);
             const res = await resumeService.saveSection(
                 'skills',
                 resumeId,
-                resumeInfo.skills
+                skills
             );
-            if (res && !res.message) toast.success('Skills updated!');
+            if (res && !res.message) {
+                toast.success('Skills updated!');
+                setSectionSaved((prev) => ({ ...prev, skills: true }));
+            }
         } catch (err) {
             toast.error('Failed to update skills');
         } finally {
             setLoading(false);
         }
     }
+
+    // for preview
+    useEffect(() => setResumeInfo({ ...resumeInfo, skills }), [skills]);
 
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
@@ -61,7 +75,7 @@ export default function Skills() {
             </p>
 
             <div>
-                {resumeInfo?.skills.map((s, i) => (
+                {skills.map((item, i) => (
                     <div
                         key={i}
                         className="flex justify-between items-center gap-4 my-5"
@@ -70,7 +84,7 @@ export default function Skills() {
                             <Input
                                 label="Name"
                                 className="w-full sm:w-[70%]"
-                                defaultValue={s.name}
+                                defaultValue={item.name}
                                 placeholder="Enter a skill (e.g., JavaScript)"
                                 onChange={(e) =>
                                     handleChange(i, 'name', e.target.value)
@@ -79,7 +93,7 @@ export default function Skills() {
                         </div>
                         <Rating
                             style={{ maxWidth: 120 }}
-                            value={s.rating}
+                            value={item.rating}
                             className="h-fit relative top-2"
                             onChange={(v) => handleChange(i, 'rating', v)}
                         />
@@ -100,7 +114,6 @@ export default function Skills() {
                         variant="outline"
                         onClick={RemoveSkills}
                         defaultStyles={true}
-                        disabled={resumeInfo.skills.length === 0}
                         className="text-[15px] focus:ring-gray-500 text-black px-4 h-[30px] bg-gray-200 hover:bg-gray-300 rounded-lg"
                         btnText="- Remove"
                     />
@@ -108,7 +121,8 @@ export default function Skills() {
                 <Button
                     defaultStyles="true"
                     className="w-[60px] h-[30px] text-[15px] text-white"
-                    disabled={loading}
+                    disabled={disabled}
+                    onMouseOver={handleMouseOver}
                     onClick={onSave}
                     btnText={
                         loading ? (

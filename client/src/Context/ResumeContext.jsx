@@ -4,6 +4,15 @@ const ResumeContext = createContext();
 
 const ResumeContextProvider = ({ children }) => {
     const [resumeInfo, setResumeInfo] = useState({});
+    const [sectionSaved, setSectionSaved] = useState({
+        personal: false,
+        summary: true,
+        education: false,
+        experience: false,
+        skills: false,
+        projects: false,
+        achievements: false,
+    });
     const [emptyResume, setEmptyResume] = useState({
         experience: [
             {
@@ -43,7 +52,14 @@ const ResumeContextProvider = ({ children }) => {
 
     return (
         <ResumeContext.Provider
-            value={{ resumeInfo, setResumeInfo, emptyResume, setEmptyResume }}
+            value={{
+                resumeInfo,
+                setResumeInfo,
+                sectionSaved,
+                setSectionSaved,
+                emptyResume,
+                setEmptyResume,
+            }}
         >
             {children}
         </ResumeContext.Provider>

@@ -10,7 +10,9 @@ import { verifyUserName } from '@/Utils/regex';
 
 export default function PersonalInfoForm() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo } = useResumeContext();
+    const { resumeInfo, setResumeInfo, setSectionSaved } = useResumeContext();
+    const [disabled, setDisabled] = useState(false);
+
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
@@ -37,10 +39,24 @@ export default function PersonalInfoForm() {
         }
     };
 
+    const allowedEmptyFields = ['linkedin', 'github'];
+    function handleMouseOver(e) {
+        if (
+            Object.entries(resumeInfo.personal).some(
+                ([key, value]) => !value && !allowedEmptyFields.includes(key)
+            )
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
+            setDisabled(true);
             const res = await resumeService.saveSection(
                 'personal',
                 resumeId,
@@ -48,11 +64,13 @@ export default function PersonalInfoForm() {
             );
             if (res && !res.message) {
                 toast.success('Personal Info updated!');
+                setSectionSaved((prev) => ({ ...prev, personal: true }));
             }
         } catch (err) {
             toast.error('Failed to update personal info');
         } finally {
             setLoading(false);
+            setDisabled(false);
         }
     }
 
@@ -140,7 +158,8 @@ export default function PersonalInfoForm() {
                         defaultStyles={true}
                         type="submit"
                         className="h-[30px] w-[60px] text-[15px] text-white "
-                        disabled={loading}
+                        disabled={disabled}
+                        onMouseOver={handleMouseOver}
                         btnText={
                             loading ? (
                                 <div className="flex items-center justify-center w-full">

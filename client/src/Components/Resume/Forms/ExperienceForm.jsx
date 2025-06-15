@@ -10,7 +10,9 @@ import { formatDateField } from '@/Utils';
 
 export default function Experience() {
     const { resumeId } = useParams();
-    const { resumeInfo, setResumeInfo, emptyResume } = useResumeContext();
+    const { resumeInfo, setResumeInfo, emptyResume, setSectionSaved } =
+        useResumeContext();
+    const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e, index) => {
@@ -64,20 +66,45 @@ export default function Experience() {
         }));
     };
 
+    const requiredFields = ['position', 'company', 'startDate', 'endDate'];
+    function handleMouseOver() {
+        if (
+            resumeInfo.experience.some((exp) => {
+                const hasEmptyRequiredFields = Object.entries(exp).some(
+                    ([key, value]) => !value && requiredFields.includes(key)
+                );
+                const isAddressValid =
+                    !exp.address ||
+                    !exp.address?.state ||
+                    !exp.address?.country;
+                return isAddressValid || hasEmptyRequiredFields;
+            })
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function onSave(e) {
         try {
             e.preventDefault();
             setLoading(true);
+            setDisabled(true);
             const res = await resumeService.saveSection(
                 'experience',
                 resumeId,
                 resumeInfo.experience
             );
-            if (res && !res.message) toast.success('Experience updated!');
+            if (res && !res.message) {
+                toast.success('Experience updated!');
+                setSectionSaved((prev) => ({ ...prev, experience: true }));
+            }
         } catch (err) {
             toast.error('Failed to update experience.');
         } finally {
             setLoading(false);
+            setDisabled(false);
         }
     }
 
@@ -193,7 +220,8 @@ export default function Experience() {
                         type="submit"
                         defaultStyles={true}
                         className="w-[60px] h-[30px] text-[15px] text-white"
-                        disabled={loading}
+                        disabled={disabled}
+                        onMouseOver={handleMouseOver}
                         btnText={
                             loading ? (
                                 <div className="flex items-center justify-center w-full">
