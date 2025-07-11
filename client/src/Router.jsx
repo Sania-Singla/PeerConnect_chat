@@ -52,8 +52,6 @@ import {
     ProjectTasks,
     ProjectContributors,
     ProjectContributionForm,
-
-    // interview components
     InterviewDetails,
     Home,
     Feedback,
