@@ -7,7 +7,6 @@ import { ChatContextProvider, useChatContext } from './ChatContext';
 import { SocketContextProvider, useSocketContext } from './SocketContext';
 import { ResumeContextProvider, useResumeContext } from './ResumeContext';
 import { EditorContextProvider, useEditorContext } from './EditorContext';
-
 import { ProjectContext, useProjectContext } from './ProjectContext';
 
 export {
