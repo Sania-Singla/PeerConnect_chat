@@ -12,9 +12,9 @@ import {
     PersonalInfoForm,
     Button,
     ResumePreview,
+    ProjectForm,
 } from '@/Components';
 import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
-import ProjectForm from './Forms/ProjectForm';
 
 export default function EditResume() {
     const { resumeId } = useParams();

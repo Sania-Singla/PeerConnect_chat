@@ -95,6 +95,7 @@ import EducationForm from './Resume/Forms/EducationForm';
 import ExperienceForm from './Resume/Forms/ExperienceForm';
 import SkillsForm from './Resume/Forms/SkillsForm';
 import AchievementsForm from './Resume/Forms/AchievementsForm';
+import ProjectForm from './Resume/Forms/ProjectForm';
 import SummaryForm from './Resume/Forms/SummaryForm';
 import ViewResume from './Resume/ViewResume';
 import EditResume from './Resume/EditResume';
@@ -106,6 +107,7 @@ import ExperiencePreview from './Resume/Previews/ExperiencePreview';
 import SkillsPreview from './Resume/Previews/SkillsPreview';
 import AchievementsPreview from './Resume/Previews/AchievementsPreview';
 import SummaryPreview from './Resume/Previews/SummaryPreview';
+import ProjectPreview from './Resume/Previews/ProjectPreview';
 
 // Interview components
 import Home from './Interview/Pages/Home';
@@ -150,6 +152,7 @@ export {
     Comments,
     LikedPostView,
     SavedPostView,
+    ProjectForm,
     Popup,
     ShowFilePopup,
     AddMembersPopup,
@@ -173,6 +176,7 @@ export {
     Members,
     Settings,
     FriendsPopup,
+    ProjectPreview,
     RequestsPopup,
     ProjectCard,
     ProjectDetail,

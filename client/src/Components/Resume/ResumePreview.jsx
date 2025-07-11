@@ -5,9 +5,9 @@ import {
     SkillsPreview,
     AchievementsPreview,
     SummaryPreview,
+    ProjectPreview,
 } from '@/Components';
 import { useResumeContext } from '@/Context';
-import ProjectReview from './previews/ProjectReview';
 
 export default function ResumePreview() {
     const { resumeInfo } = useResumeContext();
@@ -102,7 +102,7 @@ export default function ResumePreview() {
                         >
                             Projects
                         </h2>
-                        <ProjectReview />
+                        <ProjectPreview />
                     </section>
                 )}
 
