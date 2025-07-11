@@ -11,7 +11,8 @@ import {
     SocketContextProvider,
     ChatContextProvider,
     ResumeContextProvider,
-} from '@/Context';
+} from './Context';
+
 import { router } from '@/Router';
 
 function Wrapper() {
