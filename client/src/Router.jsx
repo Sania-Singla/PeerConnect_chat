@@ -62,12 +62,22 @@ import {
 } from '@/Components';
 
 import { ChannelContextProvider } from '@/Context';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />}>
             <Route path="" element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
+            <Route
+                path="login"
+                element={
+                    <GoogleOAuthProvider
+                        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+                    >
+                        <LoginPage />
+                    </GoogleOAuthProvider>
+                }
+            />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
 

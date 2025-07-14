@@ -27,13 +27,13 @@ class AuthService {
         }
     }
 
-    async loginWithGoogle(credential) {
+    async loginWithGoogle({ code }) {
         try {
             const res = await fetch(`${BASE_BACKEND_URL}/users/google/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ credential }),
+                body: JSON.stringify({ code }),
             });
 
             const data = await res.json();
