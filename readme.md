@@ -4,7 +4,7 @@
 
 ---
 
-🔗 <b>*Visit the URL to Interact with the website:*</b> [peer-connect-linksters.vercel.app](https://peer-connect-linksters.vercel.app/)
+🔗 <b>*Visit the URL to Interact with the website:*</b> [peer-connect-chat.vercel.app](https://peer-connect-chat.vercel.app/)
 
 ---
 
