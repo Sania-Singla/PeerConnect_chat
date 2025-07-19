@@ -73,6 +73,15 @@ export default function AchievementsForm() {
         }
     }
 
+    const handleApplySuggestions = (suggestions, index) => {
+        setResumeInfo((prev) => ({
+                ...prev,
+                achievements: prev.achievements.map((item, i) =>
+                    i === index ? {...item, description: suggestions.improved} : item
+                ),
+            }));
+    };
+    
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Achievements</h2>
@@ -105,6 +114,13 @@ export default function AchievementsForm() {
                             <label className="block text-sm font-medium text-gray-800">
                                 Description
                             </label>
+                            <div className="absolute -top-2 right-0 flex justify-between items-end">
+                                <ReviewButton 
+                                    sectionName="achievement description"
+                                    content={item?.description || ''}
+                                    onReviewComplete={(suggestions)=>handleApplySuggestions(suggestions, index)}
+                                />
+                            </div>
                             <BasicRTE
                                 name="description"
                                 value={item?.description}

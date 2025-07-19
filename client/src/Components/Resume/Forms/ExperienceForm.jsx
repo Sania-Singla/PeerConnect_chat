@@ -109,7 +109,7 @@ export default function Experience() {
         }
     }
 
-     const handleApplySuggestions = (suggestions, index) => {
+    const handleApplySuggestions = (suggestions, index) => {
         setResumeInfo((prev) => ({
                 ...prev,
                 experience: prev.experience.map((item, i) =>
@@ -197,7 +197,7 @@ export default function Experience() {
                                 </label>
                                 <div className="absolute -top-2 right-0 flex justify-between items-end">
                                     <ReviewButton 
-                                        sectionName="education description"
+                                        sectionName="experience description"
                                         content={item?.description || ''}
                                         onReviewComplete={(suggestions)=>handleApplySuggestions(suggestions, index)}
                                     />
