@@ -7,6 +7,7 @@ import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
 import { formatDateField } from '@/Utils';
+import ReviewButton from '../ReviewButton';
 
 export default function Experience() {
     const { resumeId } = useParams();
@@ -108,6 +109,15 @@ export default function Experience() {
         }
     }
 
+     const handleApplySuggestions = (suggestions, index) => {
+        setResumeInfo((prev) => ({
+                ...prev,
+                experience: prev.experience.map((item, i) =>
+                    i === index ? {...item, description: suggestions.improved} : item
+                ),
+            }));
+    };
+
     return (
         <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
             <h2 className="font-bold text-lg">Professional Experience</h2>
@@ -181,10 +191,17 @@ export default function Experience() {
                                 value={formatDateField(item?.endDate)}
                             />
 
-                            <div className="col-span-2 space-y-1">
+                            <div className="relative col-span-2 space-y-1">
                                 <label className="block text-sm font-medium text-gray-800">
                                     Description
                                 </label>
+                                <div className="absolute -top-2 right-0 flex justify-between items-end">
+                                    <ReviewButton 
+                                        sectionName="education description"
+                                        content={item?.description || ''}
+                                        onReviewComplete={(suggestions)=>handleApplySuggestions(suggestions, index)}
+                                    />
+                                </div>
                                 <BasicRTE
                                     name="description"
                                     value={item?.description}
