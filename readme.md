@@ -194,3 +194,5 @@ npm run dev
 🌱 It empowers early learners and advanced contributors **alike**.  
 
 We aren’t just solving for placements — **We’re building a culture of collaboration, contribution, and confidence.**
+
+Thankyou
