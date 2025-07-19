@@ -38,6 +38,12 @@ export default function Sidebar() {
             name: 'Text Editor',
             icon: icons.code,
         },
+        {
+            show: true,
+            path: 'recommend-projects',
+            name: 'Recommended Projects',
+            icon: icons.description
+        }
     ];
 
     const systemItems = [

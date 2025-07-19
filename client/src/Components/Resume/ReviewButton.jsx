@@ -66,7 +66,7 @@ export default function ReviewButton({ sectionName, content, onReviewComplete })
             </div>
           ) : (
             <>
-              {icons.review} Review
+              {icons.description} Review
             </>
           )
         }

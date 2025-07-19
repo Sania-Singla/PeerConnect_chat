@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Recommendations = () => {
+const RecommendationsPage = () => {
   const [inputTitle, setInputTitle] = useState('');
   const [techStack, setTechStack] = useState([]);
   const [domain, setDomain] = useState([]);
@@ -447,4 +447,4 @@ const Recommendations = () => {
   );
 };
 
-export default Recommendations;
+export default RecommendationsPage;
