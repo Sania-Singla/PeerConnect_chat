@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { icons } from '@/Assets/icons';
 import toast from 'react-hot-toast';
+import ReviewButton from '../ReviewButton';
 import { ai } from '@/Utils';
 import { useResumeContext } from '@/Context';
 import { resumeService } from '@/Services';
@@ -54,6 +55,13 @@ export default function SummaryForm() {
         }));
     }
 
+    const handleApplySuggestions = (suggestions) => {
+        setResumeInfo(prev => ({
+        ...prev,
+        personal: { ...prev.personal, summary: suggestions.improved }
+        }));
+    };
+
     return (
         <div>
             <div className="p-5 shadow-sm rounded-lg border-t-[#4977ec] border-t-4 border border-gray-200">
@@ -64,11 +72,16 @@ export default function SummaryForm() {
 
                 <form className="relative mt-8" onSubmit={onSave}>
                     <div className="absolute -top-4 right-0 flex justify-between items-end">
+                        <ReviewButton 
+                            sectionName="professional summary"
+                            content={resumeInfo?.personal?.summary || ''}
+                            onReviewComplete={handleApplySuggestions}
+                        />
                         <Button
                             disabled={loading}
                             type="button"
                             onClick={GenerateSummaryFromAI}
-                            className="hover:bg-[#4977ec] w-[150px] hover:text-white transition-all duration-100 border border-[#4977ec] text-[#4977ec] h-[30px] text-sm font-medium rounded-md border-primary flex justify-center items-center gap-2"
+                            className="hover:bg-[#4977ec] w-[150px] hover:text-white transition-all duration-100 border border-[#4977ec] text-[#4977ec] h-[30px] text-sm font-medium rounded-md border-primary ml-2 flex justify-center items-center gap-2"
                             btnText={
                                 loading ? (
                                     <div className="size-4 fill-[#4977ec] dark:text-[#c5d5ff]">
