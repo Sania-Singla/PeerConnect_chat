@@ -15,20 +15,22 @@ export default function ProjectsPreview() {
                     <div className="flex gap-[5px] max-w-[40%] items-center justify-center">
                         <Link
                             to={project.link}
+                            // absolute link (no appending)
+                            
                             target="_blank"
                             className="hover:underline truncate text-[0.7rem]"
                             style={{ color: resumeInfo?.themeColor }}
                         >
-                            {project.link}
+                            <div>
+                                <ExternalLink
+                                    size={12}
+                                    color={resumeInfo?.themeColor}
+                                    strokeWidth={2.5}
+                                    className="mb-[2px]"
+                                />
+                                {project.link}
+                            </div>
                         </Link>
-                        <div>
-                            <ExternalLink
-                                size={12}
-                                color={resumeInfo?.themeColor}
-                                strokeWidth={2.5}
-                                className="mb-[2px]"
-                            />
-                        </div>
                     </div>
                 )}
             </div>

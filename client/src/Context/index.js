@@ -7,28 +7,27 @@ import { ChatContextProvider, useChatContext } from './ChatContext';
 import { SocketContextProvider, useSocketContext } from './SocketContext';
 import { ResumeContextProvider, useResumeContext } from './ResumeContext';
 import { EditorContextProvider, useEditorContext } from './EditorContext';
-
 import { ProjectContext, useProjectContext } from './ProjectContext';
 
 export {
     useChannelContext,
-    useUserContext,
-    usePopupContext,
-    useSideBarContext,
-    useSearchContext,
-    SideBarContextProvider,
-    PopupContextProvider,
     ChannelContextProvider,
+    useUserContext,
     UserContextProvider,
+    usePopupContext,
+    PopupContextProvider,
+    useSideBarContext,
+    SideBarContextProvider,
+    useSearchContext,
     SearchContextProvider,
     ChatContextProvider,
     useChatContext,
-    useSocketContext,
     SocketContextProvider,
+    useSocketContext,
     ResumeContextProvider,
+    useResumeContext,
     EditorContextProvider,
     useEditorContext,
-    useResumeContext,
     ProjectContext,
     useProjectContext,
 };

@@ -13,8 +13,6 @@ import {
 
 export const userObject = getServiceObject('User');
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 const registerUser = tryCatch('register user', async (req, res, next) => {
     try {
         const { userName, email, fullName, password } = req.body;
@@ -54,60 +52,71 @@ const registerUser = tryCatch('register user', async (req, res, next) => {
 const loginWithGoogle = tryCatch(
     'login user with google token',
     async (req, res, next) => {
-        const { credential } = req.body;
+        const { code } = req.body;
+        console.log('Received code:', code);
 
-        if (!credential)
-            return next(
-                new ErrorHandler('No credential provided', BAD_REQUEST)
-            );
-
-        const ticket = await client.verifyIdToken({
-            idToken: credential,
-            audience: process.env.GOOGLE_CLIENT_ID,
-        });
-
-        const payload = ticket.getPayload();
-
-        const { email, name, picture } = payload;
-
-        if (!email || !name)
-            return next(
-                new ErrorHandler('Invalid Google payload', BAD_REQUEST)
-            );
-
-        let user = await userObject.getUser(email);
-
-        if (!user) {
-            const userName = email.split('@')[0];
-            const newUserData = {
-                userName,
-                fullName: name,
-                email,
-                avatar: picture || USER_AVATAR,
-                password: null, // indicate Google-auth user
-                authProvider: 'google',
-            };
-
-            user = await userObject.createUser(newUserData);
+        if (!code) {
+            return next(new ErrorHandler('No code provided', BAD_REQUEST));
         }
 
-        const { accessToken, refreshToken } = await generateTokens(user);
+        const client = new OAuth2Client(
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
+            'postmessage' // required!
+        );
 
-        await userObject.loginUser(user.user_id, refreshToken);
+        try {
+            const { tokens } = await client.getToken(code); // code exchange
+            const ticket = await client.verifyIdToken({
+                idToken: tokens.id_token,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
 
-        const { user_password, refresh_token, ...loggedInUser } = user; // for mongo
+            const payload = ticket.getPayload();
+            const { email, name, picture } = payload;
 
-        return res
-            .status(OK)
-            .cookie('peerConnect_accessToken', accessToken, {
-                ...COOKIE_OPTIONS,
-                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
-            })
-            .cookie('peerConnect_refreshToken', refreshToken, {
-                ...COOKIE_OPTIONS,
-                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
-            })
-            .json(loggedInUser);
+            if (!email || !name)
+                return next(
+                    new ErrorHandler('Invalid Google payload', BAD_REQUEST)
+                );
+
+            let user = await userObject.getUser(email);
+
+            if (!user) {
+                const userName = email.split('@')[0];
+                const newUserData = {
+                    userName,
+                    fullName: name,
+                    email,
+                    avatar: picture || USER_AVATAR,
+                    password: null,
+                    authProvider: 'google',
+                };
+                user = await userObject.createUser(newUserData);
+            }
+
+            const { accessToken, refreshToken } = await generateTokens(user);
+            await userObject.loginUser(user.user_id, refreshToken);
+
+            const { user_password, refresh_token, ...loggedInUser } = user;
+
+            return res
+                .status(OK)
+                .cookie('peerConnect_accessToken', accessToken, {
+                    ...COOKIE_OPTIONS,
+                    maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
+                })
+                .cookie('peerConnect_refreshToken', refreshToken, {
+                    ...COOKIE_OPTIONS,
+                    maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
+                })
+                .json(loggedInUser);
+        } catch (err) {
+            console.error('Google login error:', err);
+            return next(
+                new ErrorHandler('Google login failed: ' + err.message, 500)
+            );
+        }
     }
 );
 
