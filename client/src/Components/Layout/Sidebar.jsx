@@ -43,7 +43,13 @@ export default function Sidebar() {
             path: 'recommend-projects',
             name: 'Recommended Projects',
             icon: icons.description
-        }
+        },
+        {
+            show: true,
+            path: '/bot',
+            name: 'Query Bot',
+            icon: icons.robot,
+        },
     ];
 
     const systemItems = [

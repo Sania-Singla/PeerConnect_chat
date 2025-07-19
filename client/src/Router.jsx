@@ -29,6 +29,7 @@ import {
     InterviewPage,
     ResumePage,
     RecommendationsPage,
+    BotPage,
 } from '@/Pages';
 
 import {
@@ -97,6 +98,8 @@ export const router = createBrowserRouter(
                 <Route path="liked-posts" element={<ChannelLikedPosts />} />
                 <Route path="projects" element={<ChannelProjects />} />
             </Route>
+
+            <Route path="bot" element={<BotPage />} />
 
             {/* projects */}
             <Route path="projects" element={<ProjectsPage />} />
