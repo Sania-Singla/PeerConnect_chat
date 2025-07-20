@@ -106,7 +106,7 @@ export default function Agent({ userName, interview }) {
     }
 
     return (
-        <div className="bg-[#f6f6f6] text-gray-800 rounded-xl w-full flex flex-col gap-6">
+        <div className="text-gray-800 rounded-xl w-full flex flex-col gap-6">
             <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-8">
                 {/* AI Interviewer */}
                 <div
