@@ -34,7 +34,7 @@ const RecommendationsPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://127.0.0.1:5000/getProjects', {
+      const response = await fetch(`${process.env.VITE_RECOMMEND_BACKEND_URL}/getProjects`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
