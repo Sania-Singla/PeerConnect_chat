@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { botService } from '@/Services'; // Your API service to get bot response
-import { Button } from '@/Components'; // Your button component
+import { botService } from '@/Services'; 
+import { Button } from '@/Components'; 
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
