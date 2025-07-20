@@ -27,6 +27,7 @@ export default function SummaryForm() {
 
             setAiGenerateSummaries(parsed);
         } catch (error) {
+            console.log(error);
             toast.error('Failed to generate summary from AI');
         } finally {
             setLoading(false);
