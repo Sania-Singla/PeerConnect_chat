@@ -23,6 +23,7 @@ import {
     editorRouter,
     resumeRouter,
     interviewRouter,
+    botRouter,
 } from './routes/index.js';
 import { errorMiddleware } from './middlewares/index.js';
 
@@ -37,6 +38,7 @@ app.use('/api/requests', requestRouter);
 app.use('/api/editors', editorRouter);
 app.use('/api/resumes', resumeRouter);
 app.use('/api/interviews', interviewRouter);
+app.use('/api/bot', botRouter);
 
 app.get('/', (req, res) => res.send('Welcome to PeerConnect Server'));
 
