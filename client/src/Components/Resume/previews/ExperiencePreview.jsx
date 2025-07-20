@@ -9,7 +9,7 @@ export default function ExperiencePreview() {
         <div key={i} className="px-2 py-[5px] mb-[5px]">
             {exp.position && (
                 <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-gray-800">
+                    <h3 className="text-xs font-semibold text-gray-800">
                         {exp.position}
                     </h3>
 
@@ -23,7 +23,7 @@ export default function ExperiencePreview() {
 
             {exp.company && (
                 <div className="flex items-center text-gray-700 justify-between">
-                    <p className="text-[12px] italic">{exp.company}</p>
+                    <p className="text-[11px] italic">{exp.company}</p>
 
                     {exp.startDate && exp.endDate && (
                         <p className="text-[11px] italic">
@@ -39,7 +39,7 @@ export default function ExperiencePreview() {
             )}
 
             {exp.description && (
-                <div className="description text-[12px] mt-1 text-gray-800">
+                <div className="description text-[0.73rem] mt-1 text-gray-800">
                     {parse(exp?.description)}
                 </div>
             )}

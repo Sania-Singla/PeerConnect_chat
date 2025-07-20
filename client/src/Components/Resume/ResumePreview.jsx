@@ -34,7 +34,7 @@ export default function ResumePreview() {
                 {resumeInfo?.personal?.summary && (
                     <section>
                         <h2
-                            className="font-bold text-[15px] tracking-wide border-b"
+                            className="font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo.themeColor}40`,
                                 color: resumeInfo?.themeColor,
@@ -49,7 +49,7 @@ export default function ResumePreview() {
                 {resumeInfo?.education?.length > 0 && (
                     <section>
                         <h2
-                            className="font-bold text-[15px] tracking-wide border-b"
+                            className="font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo?.themeColor}40`,
                                 color: resumeInfo?.themeColor,
@@ -64,7 +64,7 @@ export default function ResumePreview() {
                 {resumeInfo?.experience?.length > 0 && (
                     <section>
                         <h2
-                            className="font-bold text-[15px] tracking-wide border-b"
+                            className="font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo?.themeColor}40`,
                                 color: resumeInfo?.themeColor,
@@ -79,7 +79,7 @@ export default function ResumePreview() {
                 {resumeInfo?.skills?.length > 0 && (
                     <section>
                         <h2
-                            className="flex items-center gap-[5px] font-bold text-[15px] tracking-wide border-b"
+                            className="flex items-center gap-[5px] font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo?.themeColor}40`,
                                 color: resumeInfo?.themeColor,
@@ -94,7 +94,7 @@ export default function ResumePreview() {
                 {resumeInfo?.projects?.length > 0 && (
                     <section>
                         <h2
-                            className="font-bold text-[15px] tracking-wide border-b"
+                            className="font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo?.themeColor}40`,
                                 color: resumeInfo?.themeColor,
@@ -109,7 +109,7 @@ export default function ResumePreview() {
                 {resumeInfo?.achievements?.length > 0 && (
                     <section>
                         <h2
-                            className="flex gap-[5px] items-center font-bold text-[15px] tracking-wide border-b"
+                            className="flex gap-[5px] items-center font-bold text-[14px] tracking-wide border-b"
                             style={{
                                 borderColor: `${resumeInfo?.themeColor}40`,
                                 color: resumeInfo?.themeColor,
