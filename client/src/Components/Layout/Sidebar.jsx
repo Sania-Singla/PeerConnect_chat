@@ -27,6 +27,12 @@ export default function Sidebar() {
         },
         {
             show: true,
+            path: 'recommend-projects',
+            name: 'Recommendations',
+            icon: icons.description
+        },
+        {
+            show: true,
             path: '/chat',
             name: 'Messaging',
             icon: icons.chat,
@@ -37,6 +43,12 @@ export default function Sidebar() {
             path: '/editor',
             name: 'Text Editor',
             icon: icons.code,
+        },
+        {
+            show: true,
+            path: '/bot',
+            name: 'Query Bot',
+            icon: icons.robot,
         },
     ];
 

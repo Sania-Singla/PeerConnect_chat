@@ -7,6 +7,7 @@ import { resumeService } from '@/Services';
 import { useResumeContext } from '@/Context';
 import Input from '@/Components/General/Input';
 import { formatDateField } from '@/Utils';
+import ReviewButton from '../ReviewButton';
 
 export default function EducationForm() {
     const { resumeId } = useParams();
@@ -60,6 +61,16 @@ export default function EducationForm() {
         }
     }
 
+    const handleApplySuggestions = (suggestions, index) => {
+        setResumeInfo((prev) => ({
+            ...prev,
+            education: prev.education.map((item, i) =>
+                i === index ? { ...item, description: suggestions.improved } : item
+            ),
+        }));
+    };
+    
+
     async function onSave(e) {
         try {
             e.preventDefault();
@@ -88,78 +99,82 @@ export default function EducationForm() {
             <p className="text-gray-400 text-sm italic mt-1">
                 Add Your educational details
             </p>
-
-            <div>
-                {resumeInfo.education?.map((item, i) => (
-                    <div key={i}>
-                        <div className="grid grid-cols-2 gap-5 my-5">
-                            <div className="col-span-2">
-                                <Input
-                                    label="Institution Name"
-                                    name="institution"
-                                    type="text"
-                                    required
-                                    placeholder="e.g., UIET, Panjab University"
-                                    value={item.institution}
-                                    onChange={(e) => handleChange(e, i)}
-                                />
-                            </div>
-
+            {resumeInfo.education?.map((item, i) => (
+                <div key={i}>
+                    <div className="grid grid-cols-2 gap-5 my-5">
+                        <div className="col-span-2">
                             <Input
-                                label="Degree"
-                                name="degree"
+                                label="Institution Name"
+                                name="institution"
                                 type="text"
                                 required
-                                placeholder="e.g., B.Tech, M.Sc, MBA"
+                                placeholder="e.g., UIET, Panjab University"
+                                value={item.institution}
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.degree}
                             />
+                        </div>
 
-                            <Input
-                                label="Major"
-                                name="major"
-                                required
-                                placeholder="e.g., Computer Science, Physics"
-                                type="text"
+                        <Input
+                            label="Degree"
+                            name="degree"
+                            type="text"
+                            required
+                            placeholder="e.g., B.Tech, M.Sc, MBA"
+                            onChange={(e) => handleChange(e, i)}
+                            value={item?.degree}
+                        />
+
+                        <Input
+                            label="Major"
+                            name="major"
+                            required
+                            placeholder="e.g., Computer Science, Physics"
+                            type="text"
+                            onChange={(e) => handleChange(e, i)}
+                            value={item?.major}
+                        />
+
+                        <Input
+                            label="Start Date"
+                            type="date"
+                            name="startDate"
+                            required
+                            placeholder="Select start date"
+                            onChange={(e) => handleChange(e, i)}
+                            value={formatDateField(item?.startDate)}
+                        />
+
+                        <Input
+                            label="End Date"
+                            type="date"
+                            name="endDate"
+                            required
+                            placeholder="Select end date"
+                            onChange={(e) => handleChange(e, i)}
+                            value={formatDateField(item?.endDate)}
+                        />
+
+                        <div className="relative col-span-2 space-y-1">
+                            <label className="block text-sm font-medium text-gray-800">
+                                Description
+                            </label>
+                                <div className="absolute -top-2 right-0 flex justify-between items-end">
+                                    <ReviewButton 
+                                        sectionName="education description"
+                                        content={item?.description || ''}
+                                        onReviewComplete={(suggestions) => handleApplySuggestions(suggestions, i)}
+                                    />
+                                </div>
+                            <BasicRTE
+                                name="description"
+                                value={item?.description}
                                 onChange={(e) => handleChange(e, i)}
-                                value={item?.major}
+                                placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
                             />
-
-                            <Input
-                                label="Start Date"
-                                type="date"
-                                name="startDate"
-                                required
-                                placeholder="Select start date"
-                                onChange={(e) => handleChange(e, i)}
-                                value={formatDateField(item?.startDate)}
-                            />
-
-                            <Input
-                                label="End Date"
-                                type="date"
-                                name="endDate"
-                                required
-                                placeholder="Select end date"
-                                onChange={(e) => handleChange(e, i)}
-                                value={formatDateField(item?.endDate)}
-                            />
-
-                            <div className="col-span-2 space-y-1">
-                                <label className="block text-sm font-medium text-gray-800">
-                                    Description
-                                </label>
-                                <BasicRTE
-                                    name="description"
-                                    value={item?.description}
-                                    onChange={(e) => handleChange(e, i)}
-                                    placeholder="e.g., Completed key coursework in Data Structures, won coding competitions, served as tech club president"
-                                />
-                            </div>
                         </div>
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
             <div className="flex justify-between mt-4">
                 <div className="flex gap-2">
                     <Button

@@ -20,6 +20,8 @@ import ProjectsPage from './ProjectsPage';
 import InterviewPage from './InterviewPage';
 import ResumePage from './ResumePage';
 import EditorPage from './EditorPage';
+import RecommendationsPage from './Recommendations';
+import BotPage from './BotPage';
 
 export {
     AboutUsPage,
@@ -44,4 +46,6 @@ export {
     InterviewPage,
     ResumePage,
     EditorPage,
+    RecommendationsPage,
+    BotPage,
 };

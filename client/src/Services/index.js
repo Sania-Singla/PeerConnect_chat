@@ -9,6 +9,7 @@ import { requestService } from './requestService';
 import { resumeService } from './resumeService';
 import { interviewService } from './interviewService';
 import { editorService } from './editorService';
+import { botService } from './botService';
 
 export {
     likeService,
@@ -22,4 +23,5 @@ export {
     resumeService,
     interviewService,
     editorService,
+    botService,
 };
