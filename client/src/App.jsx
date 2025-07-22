@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from '@/Components';
 import { useSideBarContext, useUserContext, usePopupContext } from '@/Context';
 import { authService } from '@/Services';
-import { icons } from '@/Assets/icons';
 
 export default function App() {
     const { setUser } = useUserContext();
@@ -39,7 +38,7 @@ export default function App() {
         // on window resize
         window.addEventListener('resize', handleResize);
 
-        // on location/route change
+        // on route change
         setShowSideBar(false);
         setShowPopup(false);
 
@@ -49,16 +48,12 @@ export default function App() {
     return (
         <div className="bg-white h-screen w-screen">
             {loading ? (
-                <div className="text-black h-full w-full flex flex-col items-center justify-center">
-                    <div className="size-[33px] fill-[#4977ec] dark:text-[#ececec]">
-                        {icons.loading}
-                    </div>
-                    <p className="mt-2 text-2xl font-semibold">
-                        Please Wait...
-                    </p>
-                    <p className="text-[16px] mt-1">
-                        Please refresh the page, if it takes too long
-                    </p>
+                <div className="h-full w-full flex items-center justify-center">
+                    <img
+                        src="images/logo.jpg"
+                        alt="peer connect logo"
+                        className="size-24 animate-pulse"
+                    />
                 </div>
             ) : (
                 <Layout />
