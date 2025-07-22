@@ -48,7 +48,7 @@ export default function App() {
     return (
         <div className="bg-white h-screen w-screen">
             {loading ? (
-                <div className="h-full w-full flex items-center justify-center">
+                <div className="h-full flex items-center justify-center">
                     <img
                         src="images/logo.jpg"
                         alt="peer connect logo"
