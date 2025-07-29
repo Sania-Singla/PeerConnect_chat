@@ -29,7 +29,7 @@ export default function Sidebar() {
             show: true,
             path: 'recommend-projects',
             name: 'Recommendations',
-            icon: icons.description
+            icon: icons.description,
         },
         {
             show: true,
@@ -79,8 +79,8 @@ export default function Sidebar() {
             to={item.path}
         >
             <div className="flex items-center justify-start gap-4">
-                <div className="size-[17px] fill-[#2b2b2b]">{item.icon}</div>
-                <div>{item.name}</div>
+                <div className="size-4 fill-[#2b2b2b]">{item.icon}</div>
+                <div className="text-[15px]">{item.name}</div>
             </div>
         </NavLink>
     ));
@@ -94,8 +94,8 @@ export default function Sidebar() {
             }
         >
             <div className="flex items-center justify-start gap-4">
-                <div className="size-[17px] fill-[#2b2b2b]">{item.icon}</div>
-                <div>{item.name}</div>
+                <div className="size-4 fill-[#2b2b2b]">{item.icon}</div>
+                <div className="text-[15px]">{item.name}</div>
             </div>
         </NavLink>
     ));

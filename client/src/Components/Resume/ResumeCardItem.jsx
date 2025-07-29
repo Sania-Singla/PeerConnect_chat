@@ -46,7 +46,7 @@ export default function ResumeCardItem({ resume }) {
                     className="block rounded-t-xl overflow-hidden"
                 >
                     <div
-                        className="h-64 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center relative"
+                        className="h-50 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center relative"
                         style={{
                             borderTop: `10px solid ${resume.themeColor}40`,
                             borderBottom: `1px solid ${resume.themeColor}20`,

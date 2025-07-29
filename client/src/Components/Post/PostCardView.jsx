@@ -25,74 +25,73 @@ export default function PostCardView({
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="min-w-[300px] flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
+            className="flex flex-col items-start justify-start relative cursor-pointer w-full"
         >
-            {/* post image */}
-            <div className="h-[200px] drop-shadow-md w-full rounded-xl overflow-hidden">
-                <img
-                    alt="post image"
-                    src={post_image}
-                    className="h-full object-cover w-full"
-                />
-            </div>
+            <div className="w-full relative rounded-lg overflow-hidden">
+                {/* post image */}
+                <div className="h-[180px] aspect-auto drop-shadow-sm w-full rounded- overflow-hidden">
+                    <img
+                        alt="post image"
+                        src={post_image}
+                        className="h-full object-cover w-full"
+                    />
+                </div>
 
-            <div className="w-full">
-                <div className="hover:cursor-text text-wrap text-sm text-[#5a5a5a] text-end">
+                <div className="absolute top-2 right-2 hover:cursor-text text-[11px] bg-white rounded-full px-2 py-[2px] drop-shadow-sm text-[#4977ec] font-medium">
                     {formatCount(totalViews)} views &bull;
                     {' ' + formatDateRelative(post_createdAt)}
                 </div>
+            </div>
 
-                <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1 mt-3">
-                    {post_title}
-                </div>
+            <div className="hover:cursor-text text-lg font-medium text-black text-ellipsis line-clamp-2 mt-[5px]">
+                {post_title}
+            </div>
 
-                <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis line-clamp-2 mt-4">
-                    {parse(post_content)}
-                </div>
+            <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis leading-5 line-clamp-2 mt-1">
+                {parse(post_content)}
+            </div>
 
-                {/* show owner info if home page */}
+            <div className="flex items-center justify-between w-full mt-3">
                 {showOwnerInfo && owner && (
                     <Link
                         to={`/channel/${owner.user_id}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3 mt-5"
+                        className="flex gap-2"
                     >
                         {/* avatar */}
-                        <div className="drop-shadow-md">
-                            <div className="size-[50px]">
-                                <img
-                                    alt="post owner avatar"
-                                    src={owner.user_avatar}
-                                    loading="lazy"
-                                    className="size-full object-cover rounded-full hover:brightness-90"
-                                />
-                            </div>
+                        <div className="size-11">
+                            <img
+                                alt="post owner avatar"
+                                src={owner.user_avatar}
+                                loading="lazy"
+                                className="size-full object-cover rounded-full hover:brightness-90 drop-shadow-sm"
+                            />
                         </div>
 
                         {/* channel info */}
-                        <div className="">
-                            <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
+                        <div className="space-y-[1px] relative -top-[2px]">
+                            <div className="text-nowrap text-base hover:text-[#5c5c5c] font-medium text-black w-fit">
                                 {owner.user_fullName}
                             </div>
 
-                            <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
+                            <div className="text-black hover:text-[#5c5c5c] text-xs w-fit">
                                 @{owner.user_name}
                             </div>
                         </div>
                     </Link>
                 )}
-
-                <div className="w-full flex items-center justify-end text-white mt-3">
+                <div className="w-full flex items-center justify-end text-white">
                     <Button
                         btnText={
-                            <div className="flex items-center justify-center gap-3">
-                                <span>Read more</span>
-                                <div className="size-[16px] fill-white">
-                                    {icons.rightArrow}
+                            <div className="text-[#4977ec] flex items-center justify-center gap-[2px]">
+                                <span className="text-[14px] font-medium pb-[2px]">
+                                    Read more
+                                </span>
+                                <div className="size-[13px] fill-[#4977ec]">
+                                    {icons.chevronRight}
                                 </div>
                             </div>
                         }
-                        defaultStyles={true}
                         onClick={() => navigate(`/post/${post_id}`)}
                         className="py-[5px] px-3 text-white"
                     />

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { formatCount, formatDateRelative } from '@/Utils';
-import { Button, PostCardView } from '@/Components';
+import { Button } from '@/Components';
 import { icons } from '@/Assets/icons';
 import parse from 'html-react-parser';
 import { memo } from 'react';
@@ -20,91 +20,84 @@ const PostListView = memo(({ post, reference, children }) => {
     const navigate = useNavigate();
 
     return (
-        <div ref={reference}>
-            {/* CARD VIEW */}
-            <div className="sm:hidden">
-                <PostCardView
-                    post={post}
-                    showOwnerInfo={true}
-                    children={children}
-                />
-            </div>
-
-            {/* LIST VIEW */}
-            <div
-                onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
-                className="hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
-            >
+        <div
+            ref={reference}
+            onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
+            className="hidden relative cursor-pointer gap-x-4"
+        >
+            <div className="w-full relative">
                 {/* post image */}
-                <div className="h-[250px] drop-shadow-md w-[50%] rounded-xl overflow-hidden">
+                <div className="h-[200px] drop-shadow-sm w-full rounded- overflow-hidden">
                     <img
                         alt="post image"
                         src={post_image}
-                        loading="lazy"
                         className="h-full object-cover w-full"
                     />
                 </div>
 
-                <div className="w-[50%] realtive flex flex-col items-start justify-start">
-                    <div className="hover:cursor-text text-sm text-[#5a5a5a] w-full text-end">
-                        {formatCount(totalViews)} views &bull;
-                        {' ' + formatDateRelative(post_createdAt)}
-                    </div>
+                <div className="absolute top-2 right-2 hover:cursor-text text-xs bg-white rounded-full px-3 py-1 drop-shadow-sm text-[#4977ec] font-medium">
+                    {formatCount(totalViews)} views &bull;
+                    {' ' + formatDateRelative(post_createdAt)}
+                </div>
+            </div>
 
-                    <div className="mt-2 hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-1">
-                        {post_title}
-                    </div>
-                    <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis line-clamp-2 mt-4">
-                        {parse(post_content)}
-                    </div>
+            <div className="w-full">
+                <div className="hover:cursor-text text-xl font-medium text-black text-ellipsis line-clamp-2 mt-[5px]">
+                    {post_title}
+                </div>
 
-                    {/* user info */}
+                <div className="hover:cursor-text text-sm text-gray-500 text-ellipsis leading-5 line-clamp-2 mt-1">
+                    {parse(post_content)}
+                </div>
+
+                <div className="flex items-center justify-between mt-3">
                     <Link
                         to={`/channel/${user_id}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3 mt-7"
+                        className="flex gap-2"
                     >
                         {/* avatar */}
-                        <div className="drop-shadow-md">
-                            <div className="size-[50px]">
-                                <img
-                                    alt="post owner avatar"
-                                    src={user_avatar}
-                                    className="size-full object-cover rounded-full hover:brightness-90"
-                                />
-                            </div>
+                        <div className="size-11">
+                            <img
+                                alt="post owner avatar"
+                                src={user_avatar}
+                                loading="lazy"
+                                className="size-full object-cover rounded-full hover:brightness-90 drop-shadow-sm"
+                            />
                         </div>
 
-                        <div>
-                            <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
+                        {/* channel info */}
+                        <div className="space-y-[1px] relative -top-[2px]">
+                            <div className="text-nowrap text-base hover:text-[#5c5c5c] font-medium text-black w-fit">
                                 {user_fullName}
                             </div>
 
-                            <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
+                            <div className="text-black hover:text-[#5c5c5c] text-xs w-fit">
                                 @{user_name}
                             </div>
                         </div>
                     </Link>
 
-                    <div className="absolute right-6 bottom-6 text-white">
+                    <div className="w-full flex items-center justify-end text-white">
                         <Button
                             btnText={
-                                <div className="flex items-center justify-center gap-3">
-                                    <span>Read more</span>
-                                    <div className="size-[16px] fill-white">
-                                        {icons.rightArrow}
+                                <div className="text-[#4977ec] flex items-center justify-center gap-[2px]">
+                                    <span className="text-[14px] font-medium pb-[2px]">
+                                        Read more
+                                    </span>
+                                    <div className="size-[13px] fill-[#4977ec]">
+                                        {icons.chevronRight}
                                     </div>
                                 </div>
                             }
-                            defaultStyles={true}
                             onClick={() => navigate(`/post/${post_id}`)}
                             className="py-[5px] px-3 text-white"
                         />
                     </div>
                 </div>
-
-                {children}
             </div>
+
+            {children}
         </div>
     );
 });

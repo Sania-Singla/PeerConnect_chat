@@ -11,7 +11,7 @@ export default function Header() {
     const { search, setSearch } = useSearchContext();
 
     return (
-        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] border-b-[0.09rem] border-[#e0e0e0] text-black h-[55px] px-4 font-medium flex items-center justify-between gap-4">
+        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] border-b-[0.09rem] border-[#e0e0e0] text-black h-[55px] px-4 font-medium flex items-center justify-between gap-6">
             <div className="flex items-center justify-center gap-4">
                 {/* hamburgur menu btn */}
                 <Button
@@ -74,7 +74,7 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-inherit">
+                            <div className="size-3 group-hover:fill-[#4977ec] fill-inherit">
                                 {icons.edit}
                             </div>
                         }
@@ -95,7 +95,7 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-inherit">
+                            <div className="size-3 group-hover:fill-[#4977ec] fill-inherit">
                                 {icons.projects}
                             </div>
                         }
@@ -116,7 +116,7 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[15px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
+                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
                                 {icons.chat}
                             </div>
                         }

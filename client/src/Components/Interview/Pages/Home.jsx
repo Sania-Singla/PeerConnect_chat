@@ -8,12 +8,11 @@ export default function Home() {
     const navigate = useNavigate();
 
     return (
-        <div className="p-4">
+        <div className="p-2">
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200">
                 <div className="flex flex-col gap-6 max-w-lg relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
-                        Prepare for Tech Interviews with AI-Driven Practice
-                        Sessions
+                        Prepare for Your Next Interview
                     </h2>
                     <p className="text-gray-500">
                         Tackle authentic interview questions specific to the

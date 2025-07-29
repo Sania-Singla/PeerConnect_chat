@@ -15,7 +15,7 @@ export default function Footer() {
                 key={platform}
                 to={url}
                 target="_blank"
-                className="size-6 hover:scale-110 transition-transform duration-200 hover:fill-[#4977ec] fill-[#282828]"
+                className="size-5 hover:scale-110 transition-transform duration-200 hover:fill-[#4977ec] fill-[#282828]"
             >
                 {icons[platform]}
             </Link>
@@ -70,29 +70,34 @@ export default function Footer() {
     };
 
     return (
-        <footer className="px-6 py-6 bg-[#f6f6f6] border-t border-gray-200">
+        <footer className="px-6 py-5 bg-[#f6f6f6] border-t border-gray-200">
             <div className="max-w-7xl mx-auto">
                 {/* Main Footer Content - Horizontal Layout */}
-                <div className="flex flex-col lg:flex-row gap-8 pb-6">
+                <div className="flex flex-col lg:flex-row gap-8 pb-5">
                     {/* Brand and Social */}
                     <div className="lg:w-1/4 space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-lg overflow-hidden bg-white p-1 shadow-sm">
-                                <img
-                                    src={IMAGES.logoSvg}
-                                    alt="Peer Connect logo"
-                                    className="object-contain size-full"
-                                />
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="size-10">
+                                    <img
+                                        src={IMAGES.logoSvg}
+                                        alt="Peer Connect logo"
+                                        className="object-contain size-full"
+                                    />
+                                </div>
+                                <h3 className="text-lg font-semibold text-gray-800">
+                                    PeerConnect
+                                </h3>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-800">
-                                Peer Connect
-                            </h3>
+                            <div className="lg:hidden flex items-center gap-4">
+                                {socialElements}
+                            </div>
                         </div>
                         <p className="text-gray-600 text-xs">
                             Stay Social, Stay Organized. Connecting peers
                             through shared knowledge.
                         </p>
-                        <div className="flex items-center gap-5 mt-8">
+                        <div className="hidden lg:flex items-center gap-4 mt-6">
                             {socialElements}
                         </div>
                     </div>
@@ -137,11 +142,10 @@ export default function Footer() {
                                 required
                             />
                             <textarea
-                                placeholder="Quick feedback..."
+                                placeholder="Help us improve..."
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
-                                className="w-full px-3 py-2 rounded border border-gray-300 focus:border-[#4977ec] text-xs h-16"
-                                rows="2"
+                                className="w-full px-3 py-2 rounded border min-h-[80px] border-gray-300 focus:border-[#4977ec] text-xs h-16"
                                 required
                             />
                             <Button
@@ -173,6 +177,8 @@ export default function Footer() {
                         >
                             Accessibility
                         </Link>
+                        <p>&bull;</p>
+                        <p>Made with love ❤️</p>
                     </div>
                 </div>
             </div>

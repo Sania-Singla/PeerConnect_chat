@@ -72,7 +72,7 @@ export default function InterviewCard({ interview }) {
                             >
                                 {feedback?.finalAssessment
                                     ? 'View Feedback'
-                                    : 'View Interview'}
+                                    : 'Take Interview'}
                                 <div className="fill-white size-3 ml-1">
                                     {icons.rightArrow}
                                 </div>

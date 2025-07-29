@@ -38,7 +38,7 @@ export default function ResumePage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="p-4 bg-transparent">
+        <div className="p-2 bg-transparent">
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
                 <div className="flex flex-col gap-6 max-w-lg relative z-10">
@@ -83,7 +83,7 @@ export default function ResumePage() {
                 <h2 className="text-xl font-semibold">Your Resumes</h2>
 
                 {resumes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {/* Add Resume Card */}
                         <div
                             className="h-full min-h-[200px] flex flex-col items-center justify-center gap-3 p-6 

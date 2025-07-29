@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PostListView } from '@/Components';
+import { PostCardView } from '@/Components';
 import { postService } from '@/Services';
 import { paginate } from '@/Utils';
 import { icons } from '@/Assets/icons';
@@ -53,9 +53,10 @@ export default function HomePage() {
             if (!search) return post;
         })
         .map((post, index) => (
-            <PostListView
+            <PostCardView
                 key={post.post_id}
                 post={post}
+                showOwnerInfo={true}
                 reference={
                     index + 1 === posts.length && postsInfo?.hasNextPage
                         ? paginateRef
@@ -67,7 +68,9 @@ export default function HomePage() {
     return (
         <div>
             {postElements.length > 0 && (
-                <div className="py-4 px-8 sm:px-4 space-y-6">{postElements}</div>
+                <div className="p-2 grid gap-x-8 gap-y-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                    {postElements}
+                </div>
             )}
 
             {loading ? (
