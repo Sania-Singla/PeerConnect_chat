@@ -14,10 +14,9 @@ export default function ResumePreview() {
 
     return (
         <div
-            className="w-full max-w-4xl shadow-sm rounded-lg print:shadow-none border-t-[8px]"
+            className="w-full max-w-4xl font-serif shadow-sm rounded-lg print:shadow-none border-t-[8px]"
             style={{
                 borderColor: resumeInfo?.themeColor,
-                fontFamily: 'Inter, sans-serif',
             }}
         >
             <header

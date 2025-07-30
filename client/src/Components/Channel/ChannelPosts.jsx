@@ -64,7 +64,7 @@ export default function ChannelPosts() {
 
     return (
         <div className="w-full">
-            <div className="w-full">
+            {/* <div className="w-full">
                 {user?.user_name === channel.user_name && (
                     <div className="w-full flex items-center justify-center my-8">
                         <Button
@@ -82,14 +82,14 @@ export default function ChannelPosts() {
                         />
                     </div>
                 )}
-            </div>
+            </div> */}
 
             {postElements.length > 0 && (
                 <div
                     className={
                         postElements.length > 1
-                            ? 'grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-6'
-                            : 'w-[450px]'
+                            ? 'grid gap-x-6 gap-y-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'
+                            : 'w-[400px]'
                     }
                 >
                     {postElements}

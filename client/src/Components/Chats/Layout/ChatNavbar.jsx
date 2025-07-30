@@ -58,7 +58,7 @@ export default function ChatNavbar() {
 
             <div className="flex items-center justify-center gap-5 lg:gap-7">
                 <div
-                    className="group relative flex flex-col items-center gap-[3px] cursor-pointer justify-center"
+                    className="group relative flex flex-col items-center gap-[2px] cursor-pointer justify-center"
                     onClick={() => {
                         setShowPopup(true);
                         setPopupInfo({ type: 'requests' });
@@ -66,7 +66,7 @@ export default function ChatNavbar() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
+                            <div className="size-3 group-hover:fill-[#4977ec] fill-[#2b2b2b]">
                                 {icons.bell}
                             </div>
                         }
@@ -86,11 +86,11 @@ export default function ChatNavbar() {
                         setShowPopup(true);
                         setPopupInfo({ type: 'friends' });
                     }}
-                    className="group flex flex-col items-center gap-[3px] cursor-pointer justify-center"
+                    className="group flex flex-col items-center gap-[2px] cursor-pointer justify-center"
                 >
                     <Button
                         btnText={
-                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
+                            <div className="size-3 group-hover:fill-[#4977ec] fill-[#2b2b2b]">
                                 {icons.group}
                             </div>
                         }

@@ -43,7 +43,7 @@ export default function ChatHeader() {
                                         loading="lazy"
                                         src={url}
                                         alt="avatar"
-                                        className="object-cover size-full rounded-full"
+                                        className="object-cover size-full bg-[#f6f6f6] rounded-full"
                                     />
                                 </div>
                             ))}

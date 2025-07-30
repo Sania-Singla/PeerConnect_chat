@@ -41,7 +41,7 @@ export default function ResumePage() {
         <div className="p-2 bg-transparent">
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
-                <div className="flex flex-col gap-6 max-w-lg relative z-10">
+                <div className="flex flex-col gap-6 max-w-md relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
                         Build Your Professional Resume
                     </h2>

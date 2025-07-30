@@ -6,7 +6,7 @@ import { chatService } from '@/Services';
 
 export default function ChatLayout() {
     const { chatId } = useParams();
-    const { setSelectedChat } = useChatContext();
+    const { setSelectedChat, setMessages } = useChatContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -35,6 +35,7 @@ export default function ChatLayout() {
 
             return () => {
                 setSelectedChat(null);
+                setMessages([]);
                 controller.abort();
             };
         })();

@@ -65,21 +65,21 @@ export default function ChatSidebar() {
                             {avatar.map((url, i) => (
                                 <div
                                     key={i}
-                                    className="size-[40px] border border-[#434343] rounded-full overflow-hidden"
+                                    className="size-10 border border-[#434343] rounded-full overflow-hidden"
                                     style={{ zIndex: avatar.length - i }}
                                 >
                                     <img
                                         loading="lazy"
                                         src={url}
                                         alt="avatar"
-                                        className="object-cover size-full rounded-full"
+                                        className="object-cover size-full bg-[#f6f6f6] rounded-full"
                                     />
                                 </div>
                             ))}
                         </div>
                     ) : (
                         <div className="relative">
-                            <div className="size-[40px] border border-[#434343] rounded-full overflow-hidden">
+                            <div className="size-10 border border-[#434343] rounded-full overflow-hidden">
                                 <img
                                     loading="lazy"
                                     src={avatar}
@@ -98,7 +98,7 @@ export default function ChatSidebar() {
                     )}
 
                     {/* User Info */}
-                    <div className="overflow-hidden flex-1 space-y-[1px]">
+                    <div className="overflow-hidden flex-1 relative -top-[2px]">
                         <div className="flex items-center justify-between gap-4">
                             <p className="text-[15px] font-semibold text-gray-900 truncate">
                                 {chat_name}
@@ -138,7 +138,7 @@ export default function ChatSidebar() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search or start new chat"
-                    className="placeholder:text-[14px] font-normal placeholder:text-[#8e8e8e] border-gray-200 border-b-[0.15rem] border-[0.06rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
+                    className="placeholder:text-[14px] font-normal placeholder:text-[#8e8e8e] border-gray-200 border-b-[0.15rem] border-[0.06rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-1 bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
                 />
                 <div className="size-[15px] rotate-90 fill-[#bfbdcf9d] absolute left-3 top-[50%] transform translate-y-[-50%]">
                     {icons.search}

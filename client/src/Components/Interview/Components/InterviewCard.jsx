@@ -12,7 +12,7 @@ export default function InterviewCard({ interview }) {
     );
 
     return (
-        <div className="relative min-w-[280px] max-sm:w-full min-h-90 bg-[#f9f9f9] rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+        <div className="relative min-w-[280px] max-sm:w-full bg-[#f9f9f9] rounded-xl overflow-hidden border border-gray-200 shadow-sm">
             {/* Decorative elements */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#4977ec] to-blue-700"></div>
             <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-blue-500/10 blur-xl"></div>
@@ -26,17 +26,14 @@ export default function InterviewCard({ interview }) {
                     </div>
 
                     {/* Cover Image */}
-                    <div className="relative">
-                        <div className="absolute -z-10 size-[80px] rounded-full bg-blue-500/20 blur-sm"></div>
-                        <img
-                            src={getRandomInterviewCover()}
-                            alt="cover-image"
-                            className="rounded-full object-cover size-[80px] border-2 border-gray-200 shadow-sm"
-                        />
-                    </div>
+                    <img
+                        src={getRandomInterviewCover()}
+                        alt="cover-image"
+                        className="rounded-full object-cover size-16 drop-shadow-sm"
+                    />
 
                     {/* Interview Role */}
-                    <h3 className="mt-5 capitalize text-gray-800 font-semibold text-xl">
+                    <h3 className="mt-4 capitalize text-gray-800 font-semibold text-xl">
                         {role} Interview
                     </h3>
 
@@ -55,7 +52,7 @@ export default function InterviewCard({ interview }) {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mt-6 border-t-[0.09rem] border-gray-200 pt-6">
+                <div className="flex justify-between items-center mt-4 border-t-[0.09rem] border-gray-200 pt-4">
                     <DisplayTechIcons techStack={techstack} />
 
                     <Button

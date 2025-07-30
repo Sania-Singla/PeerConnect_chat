@@ -10,13 +10,13 @@ export default function SupportPage() {
     return (
         <div className="h-full w-full text-black flex flex-col pt-5 justify-start items-center gap-6">
             <div className="flex items-center justify-center flex-col gap-3">
-                <div className="rounded-full size-[90px] p-4 bg-[#f9f9f9] overflow-hidden drop-shadow-sm hover:brightness-105 w-fit">
+                <div className="rounded-full size-20 p-4 bg-[#f9f9f9] overflow-hidden drop-shadow-sm hover:brightness-105 w-fit">
                     <div className="size-full fill-[#3a67d8]">
                         {icons.support}
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-bold w-full text-center mb-1">
+                <h1 className="text-2xl font-bold w-full text-center mb-1">
                     Connect for any Issue or Support
                 </h1>
 
@@ -27,7 +27,7 @@ export default function SupportPage() {
                 </p>
             </div>
 
-            <div className="flex flex-wrap items-start justify-center gap-10 w-full">
+            <div className="flex flex-wrap items-start justify-center gap-8 w-full">
                 {contributorElements}
             </div>
         </div>

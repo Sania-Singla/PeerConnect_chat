@@ -20,12 +20,14 @@ export default function ProjectsPreview() {
                             style={{ color: resumeInfo?.themeColor }}
                         >
                             <div className="flex gap-[2px] items-center">
-                                <ExternalLink
-                                    size={12}
-                                    color={resumeInfo?.themeColor}
-                                    strokeWidth={2.5}
-                                    className="mb-[2px]"
-                                />
+                                <div>
+                                    <ExternalLink
+                                        size={12}
+                                        color={resumeInfo?.themeColor}
+                                        strokeWidth={2.5}
+                                        className="mb-[2px]"
+                                    />
+                                </div>
                                 {project.link}
                             </div>
                         </Link>

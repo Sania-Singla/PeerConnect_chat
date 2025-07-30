@@ -3,31 +3,31 @@ import { Link } from 'react-router-dom';
 
 function FeatureCard({ title, description }) {
     return (
-        <div className="bg-white shadow-md rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-gray-700 mt-2">{description}</p>
+        <div className="bg-white shadow-sm rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-md font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-700 mt-2 text-sm">{description}</p>
         </div>
     );
 }
 
 function PrivacyCard({ title, description }) {
     return (
-        <div className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-gray-700 mt-2">{description}</p>
+        <div className="bg-white shadow-sm rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+            <h3 className="text-md font-semibold text-gray-900">{title}</h3>
+            <p className="text-gray-700 text-sm mt-2">{description}</p>
         </div>
     );
 }
 
 export default function AboutUsPage() {
     return (
-        <div className="w-full min-h-screen sm:p-4">
+        <div className="w-full min-h-screen p-2">
             {/* Hero Section */}
-            <section className="w-full bg-[#fbfbfb] shadow-md rounded-xl p-8 md:px-10">
-                <h1 className="text-[35px] font-bold text-gray-900">
+            <section className="w-full bg-[#fbfbfb] shadow-sm rounded-xl p-8 md:px-10">
+                <h1 className="text-2xl font-bold text-gray-900">
                     About Peer Connect
                 </h1>
-                <p className="mt-4 text-gray-700">
+                <p className="mt-4 text-gray-700 text-[15px]">
                     Welcome to <strong>Peer Connect</strong>, a platform created
                     by students for students. We aim to provide a space where
                     peers can share their thoughts, experiences, and ideas while
@@ -39,10 +39,10 @@ export default function AboutUsPage() {
             <div className="w-full px-8 md:px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Mission */}
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-gray-900">
                         Our Mission
                     </h2>
-                    <p className="text-gray-700 mt-3">
+                    <p className="text-gray-700 mt-3 text-sm">
                         Our mission is to create a digital space that encourages
                         collaboration, learning, and fun through writing.
                         Whether it's about the latest campus event, personal
@@ -54,10 +54,10 @@ export default function AboutUsPage() {
 
                 {/* Why We Started */}
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-gray-900">
                         Why We Started
                     </h2>
-                    <p className="text-gray-700 mt-3">
+                    <p className="text-gray-700 mt-3 text-sm">
                         As college students, we wanted a place where we could
                         freely share our ideas and engage with others. We
                         realized that many students have great stories to tell,
@@ -70,7 +70,7 @@ export default function AboutUsPage() {
 
             {/* Features Section */}
             <section className="w-full px-8 md:px-10 py-10 bg-gray-100 rounded-xl">
-                <h2 className="text-2xl font-bold text-gray-900 text-center">
+                <h2 className="text-xl font-bold text-gray-900 text-center">
                     What We Offer
                 </h2>
 
@@ -104,10 +104,10 @@ export default function AboutUsPage() {
 
             {/* Meet the Team */}
             <section className="w-full px-8 md:px-10 py-12 text-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-gray-900">
                     Meet the Team
                 </h2>
-                <p className="text-gray-700 mt-3">
+                <p className="text-gray-700 mt-3 text-sm">
                     Our team consists of passionate students who are eager to
                     make a difference in the college community. We come from
                     different backgrounds, but we share a common goal: to build
@@ -120,7 +120,7 @@ export default function AboutUsPage() {
                                 key={contributor.name}
                                 className="flex flex-col items-center"
                             >
-                                <div className="size-24 rounded-full overflow-hidden shadow-sm hover:brightness-90 transition duration-300">
+                                <div className="size-16 rounded-full overflow-hidden drop-shadow-sm">
                                     <img
                                         src={contributor.image}
                                         alt={contributor.name}
@@ -138,8 +138,8 @@ export default function AboutUsPage() {
             </section>
 
             {/* Privacy & Security */}
-            <section className="w-full px-8 md:px-10 py-12 bg-gray-100 rounded-xl">
-                <h2 className="text-2xl font-bold text-gray-900 text-center">
+            <section className="w-full px-8 md:px-10 py-10 bg-gray-100 rounded-xl">
+                <h2 className="text-xl font-bold text-gray-900 text-center">
                     Privacy Policy
                 </h2>
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -172,10 +172,10 @@ export default function AboutUsPage() {
 
             {/* Contact Section */}
             <section className="w-full px-8 md:px-10 py-12 text-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-gray-900">
                     Get In Touch
                 </h2>
-                <p className="text-md text-gray-700 mt-3">
+                <p className="text-sm text-gray-700 mt-3">
                     Have questions or want to collaborate? Connect with us on{' '}
                     <Link
                         to="https://discord.com/channels/@sania_singla"

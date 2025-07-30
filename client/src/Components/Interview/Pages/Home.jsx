@@ -10,7 +10,7 @@ export default function Home() {
     return (
         <div className="p-2">
             <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200">
-                <div className="flex flex-col gap-6 max-w-lg relative z-10">
+                <div className="flex flex-col gap-6 max-w-md relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
                         Prepare for Your Next Interview
                     </h2>
@@ -50,9 +50,15 @@ export default function Home() {
             </section>
 
             <section className="flex flex-col gap-6 mt-8">
-                <h2 className="text-xl font-semibold">Take Interviews</h2>
+                <div className="flex items-center gap-2 w-full">
+                    <hr className="w-full text-gray-300" />
+                    <h2 className="text-xl font-medium text-gray-800 text-nowrap">
+                        Take Interviews
+                    </h2>
+                    <hr className="w-full text-gray-300" />
+                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     {interviews.map((interview) => (
                         <InterviewCard
                             key={interview.id}

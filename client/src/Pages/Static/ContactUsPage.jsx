@@ -33,35 +33,35 @@ export default function ContactUsPage() {
     }
 
     return (
-        <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 md:p-8">
+        <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-4">
             {/* Hero Section */}
-            <section className="text-center mb-10">
-                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
+            <section className="text-center mb-8">
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">
                     Contact Us
                 </h1>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                <p className="text-[15px] text-gray-600 max-w-3xl mx-auto">
                     We're here to help you make the most of your experience!
                     Whether you have feedback, need support, or are looking for
                     guidance, our team is ready to assist you.
                 </p>
             </section>
 
-            <div className="flex flex-col lg:flex-row gap-8 md:gap-12">
+            <div className="flex flex-col lg:flex-row gap-5">
                 {/* Left Column - Support Info */}
-                <div className="flex-1 space-y-8">
+                <div className="flex-1 space-y-5">
                     {/* Technical Support Card */}
                     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="text-2xl">👥</div>
-                            <h2 className="text-xl font-semibold text-gray-800">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="text-xl pb-1">👥</div>
+                            <h2 className="text-lg font-semibold text-gray-800">
                                 Technical Support
                             </h2>
                         </div>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-gray-600 mb-3 text-[15px]">
                             Need help navigating{' '}
                             <Link
                                 to="/"
-                                className="text-blue-600 hover:underline font-medium"
+                                className="text-[#4977ec] hover:underline font-medium"
                             >
                                 Peer Connect
                             </Link>{' '}
@@ -69,7 +69,7 @@ export default function ContactUsPage() {
                         </p>
                         <Link
                             to="/support"
-                            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                            className="inline-flex items-center text-[#4977ec] hover:brightness-75 font-medium"
                         >
                             Visit Support Page
                             <span className="ml-1">→</span>
@@ -78,19 +78,19 @@ export default function ContactUsPage() {
 
                     {/* FAQs Card */}
                     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="text-2xl">📚</div>
-                            <h2 className="text-xl font-semibold text-gray-800">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="text-xl">📚</div>
+                            <h2 className="text-lg font-semibold text-gray-800">
                                 FAQs
                             </h2>
                         </div>
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-gray-600 mb-3 hover:brightness-75">
                             Find answers to common questions in our
                             comprehensive FAQ section.
                         </p>
                         <Link
                             to="/faqs"
-                            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                            className="inline-flex items-center text-[#4977ec] hover:brightness-75 font-medium"
                         >
                             Browse FAQs
                             <span className="ml-1">→</span>
@@ -99,12 +99,15 @@ export default function ContactUsPage() {
 
                     {/* Contact Info Card */}
                     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                            Direct Contact
-                        </h3>
-                        <section className="mt-4 flex flex-col gap-4 items-start justify-start bg-[#fdfdfd] drop-shadow-md rounded-md p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="text-xl">📞</div>
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                Direct Contact
+                            </h2>
+                        </div>
+                        <section className="mt-4 flex flex-col gap-4 items-start justify-start bg-[#fdfdfd] drop-shadow-sm rounded-md p-4">
                             <div className="flex items-center justify-start gap-3">
-                                <div className="size-[16px] cursor-pointer hover:fill-[#4977ec] fill-[#202020]">
+                                <div className="size-4 cursor-pointer hover:fill-[#4977ec] fill-[#202020]">
                                     {icons.email}
                                 </div>
 
@@ -114,7 +117,7 @@ export default function ContactUsPage() {
                                     </div>
 
                                     <div
-                                        className="size-[15px] hover:fill-[#2e5cd3] cursor-pointer fill-[#4977ec]"
+                                        className="size-4 hover:fill-[#2e5cd3] cursor-pointer fill-[#4977ec]"
                                         onClick={copyEmail}
                                     >
                                         {icons.clipboard}
@@ -123,7 +126,7 @@ export default function ContactUsPage() {
                             </div>
 
                             <div className="flex items-center justify-start gap-3">
-                                <div className="size-[16px] cursor-pointer hover:fill-[#4977ec] fill-[#202020]">
+                                <div className="size-4 cursor-pointer hover:fill-[#4977ec] fill-[#202020]">
                                     {icons.contact}
                                 </div>
 
@@ -141,20 +144,20 @@ export default function ContactUsPage() {
                 {/* Right Column - Feedback Form */}
                 <div className="flex-1">
                     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="text-2xl">🌟</div>
-                            <h2 className="text-xl font-semibold text-gray-800">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="text-xl">🌟</div>
+                            <h2 className="text-lg font-semibold text-gray-800">
                                 Feedback & Suggestions
                             </h2>
                         </div>
-                        <p className="text-gray-600 mb-6">
+                        <p className="text-gray-600 mb-4 text-[15px]">
                             Have ideas on how we can improve? We'd love to hear
                             from you! Your feedback helps us make{' '}
                             <span className="font-medium">Peer Connect</span>{' '}
                             better for everyone.
                         </p>
 
-                        <form onSubmit={submitFeedback} className="space-y-6">
+                        <form onSubmit={submitFeedback} className="space-y-4">
                             <div className="space-y-1">
                                 <label
                                     htmlFor="email"
@@ -170,10 +173,10 @@ export default function ContactUsPage() {
                                     value={inputs.email}
                                     onChange={handleChange}
                                     placeholder="your@email.com"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    className="w-full px-4 text-[15px] py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                                     required
                                 />
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500">
                                     We'll only use this email to respond to your
                                     feedback
                                 </p>
@@ -193,8 +196,7 @@ export default function ContactUsPage() {
                                     value={inputs.feedback}
                                     onChange={handleChange}
                                     placeholder="Let us know how we're doing!"
-                                    rows="5"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    className="w-full px-4 py-2 text-[15px] min-h-30 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                                     required
                                 />
                             </div>
@@ -204,7 +206,7 @@ export default function ContactUsPage() {
                                 btnText="Submit Feedback"
                                 onClick={submitFeedback}
                                 defaultStyles={true}
-                                className="w-full py-3 px-6 text-white"
+                                className="w-full py-2 text-white"
                             >
                                 Submit Feedback
                             </Button>

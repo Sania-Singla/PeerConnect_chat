@@ -68,7 +68,7 @@ export default function HomePage() {
     return (
         <div>
             {postElements.length > 0 && (
-                <div className="p-2 grid gap-x-8 gap-y-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                <div className="p-2 grid gap-x-6 gap-y-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                     {postElements}
                 </div>
             )}

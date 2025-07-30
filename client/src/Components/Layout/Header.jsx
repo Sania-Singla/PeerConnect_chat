@@ -46,21 +46,21 @@ export default function Header() {
                     placeholder="Search here"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="placeholder:text-[14px] font-normal placeholder:text-[#8e8e8e] border-gray-200 border-b-[0.15rem] border-[0.06rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-[4px] bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
+                    className="placeholder:text-[14px] font-normal placeholder:text-gray-400 border-gray-200 border-b-[0.15rem] border-[0.06rem] focus:border-b-[#4977ec] w-full indent-9 pr-3 py-1 bg-[#fbfbfb] focus:bg-white rounded-md focus:outline-none"
                 />
-                <div className="size-[16px] fill-[#5a5a5a] group-focus-within:fill-[#4977ec] absolute top-[50%] translate-y-[-50%] left-2">
+                <div className="size-[16px] fill-gray-500 group-focus-within:fill-[#4977ec] absolute top-[50%] translate-y-[-50%] left-2">
                     {icons.search}
                 </div>
 
                 <Button
                     btnText={
-                        <div className="size-[16px] stroke-[#2b2b2b]">
+                        <div className="size-[16px] stroke-gray-600">
                             {icons.cross}
                         </div>
                     }
                     title="Close"
                     onClick={() => setSearch('')}
-                    className="p-1 rounded-full cursor-pointer bg-transparent hover:backdrop-brightness-95 flex items-center justify-center absolute right-1 top-[50%] translate-y-[-50%]"
+                    className="p-1 rounded-full cursor-pointer bg-transparent hover:bg-gray-100 flex items-center justify-center absolute right-1 top-[50%] translate-y-[-50%]"
                 />
             </div>
 
@@ -69,7 +69,7 @@ export default function Header() {
                 <NavLink
                     to={'/add'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[2px] justify-center`
                     }
                 >
                     <Button
@@ -90,7 +90,7 @@ export default function Header() {
                 <NavLink
                     to={'/projects'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[2px] justify-center`
                     }
                 >
                     <Button
@@ -111,7 +111,7 @@ export default function Header() {
                 <NavLink
                     to={'/chat'}
                     className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex flex-col w-[60px] cursor-pointer items-center group gap-[3px] justify-center`
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[2px] justify-center`
                     }
                 >
                     <Button

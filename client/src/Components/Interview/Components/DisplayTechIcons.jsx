@@ -16,7 +16,7 @@ export default function DisplayTechIcons({ techStack }) {
             {techIcons.slice(0, 3).map(({ tech, url }, i) => (
                 <div
                     key={tech}
-                    className={`relative rounded-full border border-gray-200 bg-white shadow-md p-[5px] hover:scale-105 transition-transform duration-200 ${i > 0 && '-ml-1'}`}
+                    className={`relative rounded-full border border-gray-200 bg-white shadow-sm p-[5px] hover:scale-105 transition-transform duration-200 ${i > 0 && '-ml-3'}`}
                 >
                     <img
                         src={url}

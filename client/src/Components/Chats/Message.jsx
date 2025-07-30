@@ -44,10 +44,10 @@ const Message = memo(({ message, reference }) => {
             }`}
         >
             <div
-                className={`w-fit max-w-[600px] p-2 pb-[3px] flex flex-col gap-1 rounded-lg rounded-br-none ${
+                className={`w-fit max-w-[600px] p-2 pb-[3px] flex flex-col gap-1 rounded-lg ${
                     isSender
-                        ? 'bg-[#4977ec] text-white self-end'
-                        : 'bg-gray-200 text-gray-800 self-start'
+                        ? 'bg-[#4977ec] text-white self-end rounded-br-none'
+                        : 'bg-gray-200 text-gray-800 self-start rounded-tl-none'
                 }`}
             >
                 {/* sender name */}
@@ -82,7 +82,7 @@ const Message = memo(({ message, reference }) => {
                                     ).map((attachment, i) => (
                                         <div
                                             key={i}
-                                            className="h-[100px] w-full"
+                                            className="aspect-auto w-full"
                                         >
                                             <FilePreview
                                                 attachment={attachment}

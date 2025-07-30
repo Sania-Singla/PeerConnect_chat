@@ -7,7 +7,8 @@ import { paginate } from '@/Utils';
 import { icons } from '@/Assets/icons';
 
 export default function Chat() {
-    const { setMessages, messages, selectedChat } = useChatContext();
+    const { setMessages, messages, selectedChat, setSelectedChat } =
+        useChatContext();
     const [messagesInfo, setMessagesInfo] = useState({});
     const { chatId } = useParams();
     const [page, setPage] = useState(1);
@@ -111,7 +112,7 @@ export default function Chat() {
             )}
 
             {messages.length > 0 ? (
-                <div className="flex flex-col-reverse gap-4">
+                <div className="flex flex-col-reverse gap-2">
                     {messageElements}
                 </div>
             ) : (

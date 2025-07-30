@@ -92,19 +92,6 @@ const CONTRIBUTORS = [
             instagram: 'https://www.instagram.com/vasundhragupta962',
         },
     },
-    {
-        image: IMAGES.contributors.seerat,
-        role: 'Aspiring Full-Stack Developer',
-        bio: 'Passionate about coding and building real-world projects with a strong foundation in Java, C++, HTML, CSS , js.',
-        name: 'Seerat Grover',
-        socials: {
-            linkedIn: 'https://www.linkedin.com/in/seerat-grover-105233344 ',
-            discord: '',
-            gitHub: 'https://github.com/Grover-Seerat',
-            threads: '',
-            instagram: '',
-        },
-    },
 ];
 
 const LANGUAGES = {

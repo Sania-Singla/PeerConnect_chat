@@ -43,15 +43,17 @@ export default function FAQpage() {
     return (
         <div className="w-full flex items-start justify-center">
             <div className="w-full p-6">
-                <h1 className="text-3xl border-gray-200 border-b-[0.09rem] pb-5 font-bold text-center text-gray-800 mb-6">
+                <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
                     Frequently Asked Questions
                 </h1>
+
+                <hr className="w-full text-gray-200 mb-6" />
 
                 <div className="space-y-6 max-w-5xl mx-auto">
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            className="bg-white p-6 rounded-lg shadow-md cursor-pointer"
+                            className="bg-white p-6 rounded-lg drop-shadow-sm cursor-pointer"
                             onClick={() => toggleExpand(index)}
                         >
                             <div className="flex items-center justify-between">
@@ -62,7 +64,7 @@ export default function FAQpage() {
                                     animate={{
                                         rotate: expanded === index ? 45 : 0,
                                     }}
-                                    transition={{ duration: 0.3 }}
+                                    transition={{ duration: 0.2 }}
                                     className="flex items-center justify-center"
                                 >
                                     <div className="bg-[#f6f6f6] p-2 rounded-full w-fit shadow-sm hover:brightness-90">
@@ -82,7 +84,7 @@ export default function FAQpage() {
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{
                                             opacity: { duration: 0.2 },
-                                            height: { duration: 0.3 },
+                                            height: { duration: 0.2 },
                                         }}
                                     >
                                         <p className="mt-2 text-gray-600">
