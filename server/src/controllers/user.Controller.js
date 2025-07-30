@@ -1,5 +1,10 @@
 import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
+import {
+    OK,
+    BAD_REQUEST,
+    NOT_FOUND,
+    SERVER_ERROR,
+} from '../constants/errorCodes.js';
 import { COOKIE_OPTIONS } from '../constants/options.js';
 import { USER_AVATAR } from '../constants/files.js';
 import bcrypt from 'bcrypt';
@@ -14,46 +19,41 @@ import {
 export const userObject = getServiceObject('User');
 
 const registerUser = tryCatch('register user', async (req, res, next) => {
-    try {
-        const { userName, email, fullName, password } = req.body;
-        const data = {
-            userName,
-            fullName,
-            email,
-            password,
-            avatar: USER_AVATAR,
-        };
+    const { userName, email, fullName, password } = req.body;
+    const data = {
+        userName,
+        fullName,
+        email,
+        password,
+        avatar: USER_AVATAR,
+    };
 
-        for (const [key, value] of Object.entries(data)) {
-            if (value && key !== 'avatar' && !verifyExpression(key, value)) {
-                return next(new ErrorHandler(`${key} is invalid`, BAD_REQUEST));
-            }
+    for (const [key, value] of Object.entries(data)) {
+        if (value && key !== 'avatar' && !verifyExpression(key, value)) {
+            return next(new ErrorHandler(`${key} is invalid`, BAD_REQUEST));
         }
-
-        let existingUser = await userObject.getUser(data.email);
-        if (!existingUser) {
-            existingUser = await userObject.getUser(data.userName);
-        }
-
-        if (existingUser) {
-            return next(new ErrorHandler('user already exists', BAD_REQUEST));
-        }
-
-        data.password = await bcrypt.hash(data.password, 10); // hash the password
-
-        const user = await userObject.createUser(data);
-
-        return res.status(OK).json(user);
-    } catch (err) {
-        throw err;
     }
+
+    let existingUser = await userObject.getUser(data.email);
+    if (!existingUser) {
+        existingUser = await userObject.getUser(data.userName);
+    }
+
+    if (existingUser) {
+        return next(new ErrorHandler('user already exists', BAD_REQUEST));
+    }
+
+    data.password = await bcrypt.hash(data.password, 10); // hash the password
+
+    const user = await userObject.createUser(data);
+
+    return res.status(OK).json(user);
 });
 
 const loginWithGoogle = tryCatch(
     'login user with google token',
     async (req, res, next) => {
         const { code } = req.body;
-        console.log('Received code:', code);
 
         if (!code) {
             return next(new ErrorHandler('No code provided', BAD_REQUEST));
@@ -72,7 +72,7 @@ const loginWithGoogle = tryCatch(
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
 
-            const payload = ticket.getPayload();
+            const payload = await ticket.getPayload();
             const { email, name, picture } = payload;
 
             if (!email || !name)
@@ -112,9 +112,11 @@ const loginWithGoogle = tryCatch(
                 })
                 .json(loggedInUser);
         } catch (err) {
-            console.error('Google login error:', err);
             return next(
-                new ErrorHandler('Google login failed: ' + err.message, 500)
+                new ErrorHandler(
+                    'Google login failed: ' + err.message,
+                    SERVER_ERROR
+                )
             );
         }
     }
