@@ -27,7 +27,7 @@ export default function Layout() {
         <div className="h-screen w-full overflow-hidden" ref={layoutRef}>
             <Header />
 
-            <div className="flex pt-[55px] h-[calc(100vh-55px)]">
+            <div className="flex pt-[55px] h-full">
                 <div className="hidden lg:block">
                     <Sidebar />
                 </div>
