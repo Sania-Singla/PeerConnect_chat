@@ -57,6 +57,14 @@ io.on('connection', async (socket) => {
             );
         });
 
+        socket.on('cursorChange', ({ roomId, cursor }) => {
+            socket.to(`code:${roomId}`).emit('cursorChange', {
+                cursor,
+                userId,
+                name: user.user_fullName,
+            });
+        });
+
         socket.on('leaveCode', async (roomId) => {
             socket.to(`code:${roomId}`).emit('userLeftCode', user);
             await redisClient.sRem(`code:${roomId}`, JSON.stringify(user));
@@ -69,20 +77,21 @@ io.on('connection', async (socket) => {
                 redisClient.sAdd(`code:${roomId}`, JSON.stringify(user)),
             ]);
 
-            const [members, code] = await Promise.all([
+            let [members, code] = await Promise.all([
                 redisClient.sMembers(`code:${roomId}`),
                 redisClient.get(`script:${roomId}`),
             ]);
 
-            if (!code) await redisClient.setEx(`script:${roomId}`, 86400, '');
-
+            if (!code) {
+                await redisClient.setEx(`script:${roomId}`, 86400, '');
+                code = '';
+            } else {
+                code = JSON.parse(code);
+            }
             const coders = members.map((m) => JSON.parse(m));
 
             // Emit to current user only
-            socket.emit('syncCode', {
-                code: code ? JSON.parse(code) : '',
-                coders,
-            });
+            socket.emit('syncCode', { code, coders });
 
             // Emit to others in the room
             socket.to(`code:${roomId}`).emit('userJoinedCode', user);

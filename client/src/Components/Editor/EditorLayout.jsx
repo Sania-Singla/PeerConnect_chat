@@ -17,10 +17,12 @@ export default function EditorLayout() {
     const [isCompiling, setIsCompiling] = useState(false);
     const [language, setLanguage] = useState('javascript');
     const [isJoining, setIsJoining] = useState(true);
-    const codeRef = useRef(null);
+    const [initialCode, setInitialCode] = useState('');
+    const codeRef = useRef('');
 
     useEffect(() => {
         socket.on('syncCode', ({ code, coders }) => {
+            setInitialCode(code);
             codeRef.current = code;
             setMembers(coders);
             setIsJoining(false);
@@ -144,6 +146,7 @@ export default function EditorLayout() {
                         <div className="h-full overflow-auto">
                             <Editor
                                 language={language}
+                                initialCode={initialCode}
                                 onChange={(code) => (codeRef.current = code)}
                             />
                         </div>
