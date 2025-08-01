@@ -72,7 +72,7 @@ export default function FriendsPopup() {
             >
                 <input
                     type="checkbox"
-                    className="size-4"
+                    className="size-4 cursor-pointer"
                     id={user_id}
                     checked={members.includes(user_id)}
                     onChange={(e) => {
@@ -89,11 +89,11 @@ export default function FriendsPopup() {
                         <img
                             src={user_avatar}
                             alt="user avatar"
-                            className="rounded-full size-[40px] border object-cover"
+                            className="rounded-full size-10 border object-cover"
                         />
                     </div>
                     <div className="flex-1">
-                        <p className="truncate font-medium leading-tight text-gray-800">
+                        <p className="truncate font-medium text-[15px] leading-tight text-gray-800">
                             {user_fullName}
                         </p>
                         <p className="text-xs leading-tight text-gray-700">

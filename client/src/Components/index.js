@@ -3,7 +3,6 @@ import Header from './Layout/Header';
 import Footer from './Layout/Footer';
 import Layout from './Layout/Layout';
 import Sidebar from './Layout/Sidebar';
-import SmallSidebar from './Layout/SmallSidebar';
 
 // General components
 import RTE from './General/RTE';
@@ -121,7 +120,6 @@ export {
     Header,
     Footer,
     Sidebar,
-    SmallSidebar,
     Layout,
     Button,
     RTE,

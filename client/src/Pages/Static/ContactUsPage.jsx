@@ -33,7 +33,7 @@ export default function ContactUsPage() {
     }
 
     return (
-        <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-4">
+        <div className="w-full p-6">
             {/* Hero Section */}
             <section className="text-center mb-8">
                 <h1 className="text-2xl font-bold text-gray-900 mb-4">

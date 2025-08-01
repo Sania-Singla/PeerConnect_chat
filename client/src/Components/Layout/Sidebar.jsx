@@ -1,9 +1,15 @@
-import { NavLink } from 'react-router-dom';
-import { useUserContext } from '@/Context';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useSideBarContext, useUserContext } from '@/Context';
 import { icons } from '@/Assets/icons';
+import { Button, Logout } from '..';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function Sidebar() {
     const { user } = useUserContext();
+    const navigate = useNavigate();
+    const { setShowSideBar, showSideBar } = useSideBarContext();
+    const sideBarRef = useRef();
 
     const items = [
         { show: true, path: '/', name: 'Home', icon: icons.home },
@@ -79,7 +85,7 @@ export default function Sidebar() {
             to={item.path}
         >
             <div className="flex items-center justify-start gap-4">
-                <div className="size-4 fill-[#2b2b2b]">{item.icon}</div>
+                <div className="size-[15px] fill-[#2b2b2b]">{item.icon}</div>
                 <div className="text-[15px]">{item.name}</div>
             </div>
         </NavLink>
@@ -94,20 +100,118 @@ export default function Sidebar() {
             }
         >
             <div className="flex items-center justify-start gap-4">
-                <div className="size-4 fill-[#2b2b2b]">{item.icon}</div>
+                <div className="size-[15px] fill-[#2b2b2b]">{item.icon}</div>
                 <div className="text-[15px]">{item.name}</div>
             </div>
         </NavLink>
     ));
 
+    const sideBarVariants = {
+        beginning: {
+            x: '-100vw',
+        },
+        end: {
+            x: 0,
+            transition: {
+                type: 'tween',
+                duration: 0.2,
+            },
+        },
+        exit: {
+            x: '-100vw',
+            transition: {
+                type: 'tween',
+                duration: 0.2,
+            },
+        },
+    };
+
+    const backdropVariants = {
+        visible: {
+            backdropFilter: 'brightness(0.65)',
+            transition: {
+                duration: 0.2,
+            },
+        },
+        hidden: {
+            backdropFilter: 'brightness(1)',
+            transition: {
+                duration: 0.2,
+            },
+        },
+    };
+
     return (
-        <aside className="h-full w-[250px] p-2 bg-[#f6f6f6] border-r-[0.09rem] border-[#e0e0e0] flex flex-col items-start justify-between overflow-auto">
-            <div className="w-full flex flex-col gap-1 items-start justify-start">
-                {itemElements}
-            </div>
-            <div className="w-full flex border-t-[0.09rem] border-t-[#e0e0e0] pt-3 flex-col gap-1 items-start justify-start">
-                {systemItemElements}
-            </div>
-        </aside>
+        <AnimatePresence>
+            {showSideBar && (
+                <motion.div
+                    ref={sideBarRef}
+                    onClick={() => setShowSideBar(false)}
+                    className="fixed inset-0 z-[1000]"
+                    variants={backdropVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                >
+                    <motion.aside
+                        variants={sideBarVariants}
+                        initial="beginning"
+                        animate="end"
+                        exit="exit"
+                        className="fixed top-0 z-[1] h-full w-[250px] px-2 bg-[#f6f6f6] border-r-[0.01rem] border-r-[#e0e0e0]"
+                    >
+                        <div className="h-[55px] w-full flex items-center pl-4 pr-3 justify-between border-b-[0.09rem] border-[#e0e0e0]">
+                            {/* hamburgur menu btn */}
+                            <Button
+                                btnText={
+                                    <div className="size-[18px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
+                                        {icons.hamburgur}
+                                    </div>
+                                }
+                                title="Show Sidebar"
+                                onClick={() => setShowSideBar((prev) => !prev)}
+                                className="group cursor-pointer"
+                            />
+
+                            {user ? (
+                                <div className="w-full h-full py-3 flex items-center justify-end gap-4">
+                                    <div onClick={() => setShowSideBar(false)}>
+                                        <Logout />
+                                    </div>
+
+                                    <Link to={`/channel/${user?.user_id}`}>
+                                        <div className="size-[34px] rounded-full overflow-hidden">
+                                            <img
+                                                src={user?.user_avatar}
+                                                alt="user avatar"
+                                                className="size-full object-cover border-[0.09rem] border-[#e0e0e0] hover:brightness-90 rounded-full"
+                                            />
+                                        </div>
+                                    </Link>
+                                </div>
+                            ) : (
+                                <Button
+                                    onClick={() => navigate('/login')}
+                                    btnText="Login"
+                                    title="Login"
+                                    defaultStyles={true}
+                                    className="w-[75px] h-[32px] text-white text-[15px]"
+                                />
+                            )}
+                        </div>
+
+                        <div className="py-2 flex flex-col items-start justify-between overflow-auto h-[calc(100%-55px)]">
+                            <div className="w-full flex flex-col gap-1 items-start justify-start">
+                                {itemElements}
+                            </div>
+
+                            <div className="w-full flex border-t-[0.09rem] border-t-[#e0e0e0] pt-3 flex-col gap-1 items-start justify-start">
+                                {systemItemElements}
+                            </div>
+                        </div>
+                    </motion.aside>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }

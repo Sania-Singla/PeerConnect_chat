@@ -41,9 +41,7 @@ export default function HomePage() {
             }
         })();
 
-        return () => {
-            controller.abort();
-        };
+        return () => controller.abort();
     }, [page]);
 
     const postElements = posts
@@ -66,9 +64,9 @@ export default function HomePage() {
         ));
 
     return (
-        <div>
+        <div className="p-4">
             {postElements.length > 0 && (
-                <div className="p-2 grid gap-x-6 gap-y-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+                <div className="grid grid-flow-dense gap-x-4 gap-y-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
                     {postElements}
                 </div>
             )}

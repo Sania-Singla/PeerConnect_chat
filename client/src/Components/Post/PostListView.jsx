@@ -57,7 +57,7 @@ const PostListView = memo(({ post, reference, children }) => {
                         className="flex gap-2"
                     >
                         {/* avatar */}
-                        <div className="size-11">
+                        <div className="size-10">
                             <img
                                 alt="post owner avatar"
                                 src={user_avatar}
@@ -67,8 +67,8 @@ const PostListView = memo(({ post, reference, children }) => {
                         </div>
 
                         {/* channel info */}
-                        <div className="space-y-[1px] relative -top-[2px]">
-                            <div className="text-nowrap text-base hover:text-[#5c5c5c] font-medium text-black w-fit">
+                        <div className="relative -top-[2px]">
+                            <div className="text-nowrap text-[15px] hover:text-[#5c5c5c] font-medium text-black w-fit">
                                 {user_fullName}
                             </div>
 

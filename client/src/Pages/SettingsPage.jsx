@@ -29,9 +29,9 @@ export default function SettingsPage() {
 
     return (
         <div className="w-full h-full overflow-scroll">
-            <div className="w-full p-1">
+            <div className="w-full">
                 {/* coverImage */}
-                <div className="shadow-sm w-full relative rounded-xl overflow-hidden">
+                <div className="drop-shadow-sm w-full relative">
                     <div className="h-[180px] w-full">
                         {user.user_coverImage && (
                             <img
@@ -59,7 +59,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* avatar */}
-                <div className="relative -top-8 flex gap-2 items-center justify-start">
+                <div className="relative -top-8 left-10 flex gap-2 items-center justify-start">
                     <div className="relative">
                         <div className="rounded-full overflow-hidden size-[140px] shadow-sm">
                             <img
@@ -97,11 +97,11 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-evenly w-full gap-2">
+            <div className="px-6 flex flex-col sm:flex-row items-center justify-evenly w-full gap-2">
                 {tabElements}
             </div>
 
-            <hr className="mt-4 mb-2" />
+            <hr className="mx-6 mt-4 mb-2 text-gray-200" />
 
             <Outlet />
         </div>

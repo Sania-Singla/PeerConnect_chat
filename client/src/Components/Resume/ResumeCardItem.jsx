@@ -38,12 +38,15 @@ export default function ResumeCardItem({ resume }) {
     }
 
     return (
-        <div className="group relative rounded-xl shadow-sm transition-all duration-300">
-            <div>
+        <div className="flex justify-center w-full">
+            <div
+                onClick={() => navigate(`/post/${post_id}`)}
+                className="rounded-xl shadow-sm cursor-pointer relative group w-full transition-all duration-300 max-w-[400px]"
+            >
                 {/* Card Content */}
                 <Link
                     to={`/resume/${resume.resumeId}/edit`}
-                    className="block rounded-t-xl overflow-hidden"
+                    className="block rounded-t-xl overflow-hidden w-full"
                 >
                     <div
                         className="h-50 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center relative"
@@ -62,7 +65,7 @@ export default function ResumeCardItem({ resume }) {
                 </Link>
 
                 {/* Card Footer */}
-                <div className="relative bg-white px-4 py-3 flex items-center justify-between border-t border-gray-100 rounded-b-xl">
+                <div className="relative w-full bg-white px-4 py-3 flex items-center justify-between border-t border-t-gray-100 rounded-b-xl">
                     <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 truncate">
                             {resume.title}
@@ -85,7 +88,10 @@ export default function ResumeCardItem({ resume }) {
                                 initial={{ opacity: 0, scale: 0.95, y: 8 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 8 }}
-                                transition={{ duration: 0.1, ease: 'easeOut' }}
+                                transition={{
+                                    duration: 0.1,
+                                    ease: 'easeOut',
+                                }}
                                 className="w-34 absolute bottom-9 right-2 text-[14px] border border-gray-300 bg-white shadow-sm p-1 rounded-lg z-10"
                             >
                                 {' '}

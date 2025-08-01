@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { botService } from '@/Services'; 
-import { Button } from '@/Components'; 
+import { botService } from '@/Services';
+import { Button } from '@/Components';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -51,7 +51,7 @@ export default function BotPage() {
     }, [chats]);
 
     return (
-        <div className="w-full overflow-hidden rounded-md flex flex-col h-[calc(100vh-87px)] drop-shadow-sm">
+        <div className="flex flex-col h-[calc(100vh-55px)]">
             {/* Header */}
             <div className="bg-[#668cf4] p-3 text-center">
                 <h2 className="text-xl font-bold text-white">Quick Bot 💬</h2>

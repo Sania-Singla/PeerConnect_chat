@@ -44,7 +44,7 @@ export default function ResumeThemePopup() {
                             onClick={() => onColorSelect(color)}
                             className={`size-8 rounded-full cursor-pointer transition-all border-2 ${
                                 selectedColor === color
-                                    ? 'border-black scale-110'
+                                    ? 'border-black scale-125'
                                     : 'border-transparent'
                             }`}
                             style={{ background: color }}

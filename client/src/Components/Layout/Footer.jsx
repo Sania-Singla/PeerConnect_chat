@@ -70,8 +70,8 @@ export default function Footer() {
     };
 
     return (
-        <footer className="px-6 py-5 bg-[#f6f6f6] border-t border-gray-200">
-            <div className="max-w-7xl mx-auto">
+        <footer className="p-5 bg-[#f6f6f6] border-t border-gray-200">
+            <div>
                 {/* Main Footer Content - Horizontal Layout */}
                 <div className="flex flex-col lg:flex-row gap-8 pb-5">
                     {/* Brand and Social */}

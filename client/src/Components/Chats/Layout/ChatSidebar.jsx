@@ -55,7 +55,7 @@ export default function ChatSidebar() {
                         setShowSidebar(false);
                     }}
                     className={({ isActive }) =>
-                        `cursor-pointer flex align-items-center gap-3 py-2 px-3 rounded-md transition-all duration-200 
+                        `cursor-pointer flex align-items-center gap-3 py-2 px-2 rounded-md transition-all duration-200 
                     hover:backdrop-brightness-95 ${isActive && 'backdrop-brightness-95'} w-full text-left`
                     }
                 >
@@ -130,7 +130,7 @@ export default function ChatSidebar() {
         );
 
     return (
-        <div className="w-full border-r-[0.01rem] border-r-[#e6e6e6] h-full px-2 bg-[#f6f6f6] flex flex-col">
+        <div className="w-full border-r-[0.01rem] border-r-[#e6e6e6] h-full px-3 bg-[#f6f6f6] flex flex-col">
             {/* Search Bar */}
             <div className="relative my-3">
                 <input

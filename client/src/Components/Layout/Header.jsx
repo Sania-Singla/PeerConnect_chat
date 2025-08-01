@@ -11,7 +11,7 @@ export default function Header() {
     const { search, setSearch } = useSearchContext();
 
     return (
-        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] border-b-[0.09rem] border-[#e0e0e0] text-black h-[55px] px-4 font-medium flex items-center justify-between gap-6">
+        <header className="fixed top-0 z-[1] w-full bg-[#f6f6f6] border-b-[0.01rem] border-b-[#e0e0e0] text-black h-[55px] px-6 font-medium flex items-center justify-between gap-4">
             <div className="flex items-center justify-center gap-4">
                 {/* hamburgur menu btn */}
                 <Button
@@ -22,7 +22,7 @@ export default function Header() {
                     }
                     title="Show Sidebar"
                     onClick={() => setShowSideBar((prev) => !prev)}
-                    className="lg:hidden group cursor-pointer"
+                    className="group cursor-pointer"
                 />
 
                 {/* logo */}
@@ -64,7 +64,28 @@ export default function Header() {
                 />
             </div>
 
-            <div className="flex items-center gap-2 lg:gap-4">
+            <div className="flex items-center gap-2">
+                {/* bot btn */}
+                <NavLink
+                    to={'/bot'}
+                    className={({ isActive }) =>
+                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[2px] justify-center`
+                    }
+                >
+                    <Button
+                        btnText={
+                            <div className="size-3 group-hover:fill-[#4977ec] fill-inherit">
+                                {icons.robot}
+                            </div>
+                        }
+                        title="Explore"
+                        className="flex items-center justify-center"
+                    />
+                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
+                        Explore
+                    </p>
+                </NavLink>
+
                 {/* add post btn */}
                 <NavLink
                     to={'/add'}
@@ -86,27 +107,6 @@ export default function Header() {
                     </p>
                 </NavLink>
 
-                {/* projects btn */}
-                <NavLink
-                    to={'/projects'}
-                    className={({ isActive }) =>
-                        `${isActive ? 'text-[#4977ec] fill-[#4977ec]' : 'text-[#2b2b2b] fill-[#2b2b2b]'} flex-col w-[60px] hidden sm:flex cursor-pointer items-center group gap-[2px] justify-center`
-                    }
-                >
-                    <Button
-                        btnText={
-                            <div className="size-3 group-hover:fill-[#4977ec] fill-inherit">
-                                {icons.projects}
-                            </div>
-                        }
-                        title="Add Post"
-                        className="flex items-center justify-center"
-                    />
-                    <p className="text-xs group-hover:text-[#4977ec] font-normal">
-                        Projects
-                    </p>
-                </NavLink>
-
                 {/* chats btn */}
                 <NavLink
                     to={'/chat'}
@@ -116,7 +116,7 @@ export default function Header() {
                 >
                     <Button
                         btnText={
-                            <div className="size-[14px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
+                            <div className="size-3 mr-[1px] group-hover:fill-[#4977ec] fill-[#2b2b2b]">
                                 {icons.chat}
                             </div>
                         }
@@ -132,7 +132,7 @@ export default function Header() {
                 <div className="hidden lg:flex ml-2">
                     {user ? (
                         <div className="w-full h-full py-3 flex items-center justify-end gap-5">
-                            <Logout />
+                            {/* <Logout /> */}
 
                             <Link to={`/channel/${user?.user_id}`}>
                                 <div className="size-[34px] rounded-full overflow-hidden">

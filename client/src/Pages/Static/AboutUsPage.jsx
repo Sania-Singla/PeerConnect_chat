@@ -21,7 +21,7 @@ function PrivacyCard({ title, description }) {
 
 export default function AboutUsPage() {
     return (
-        <div className="w-full min-h-screen p-2">
+        <div className="w-full p-6">
             {/* Hero Section */}
             <section className="w-full bg-[#fbfbfb] shadow-sm rounded-xl p-8 md:px-10">
                 <h1 className="text-2xl font-bold text-gray-900">

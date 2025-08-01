@@ -8,8 +8,8 @@ export default function Home() {
     const navigate = useNavigate();
 
     return (
-        <div className="p-2">
-            <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200">
+        <div>
+            <section className="relative overflow-hidden bg-[#f9f9f9] p-8 shadow-sm">
                 <div className="flex flex-col gap-6 max-w-md relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
                         Prepare for Your Next Interview
@@ -21,7 +21,7 @@ export default function Home() {
 
                     <Button
                         defaultStyles={true}
-                        className="py-2 mt-4 text-lg text-white"
+                        className="py-2 mt-4 text-white"
                         onClick={() => navigate('/interview/1')}
                         btnText={
                             <div className="flex items-center gap-2">
@@ -49,7 +49,7 @@ export default function Home() {
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-600 opacity-15 rounded-full translate-y-1/2 -translate-x-1/2"></div>
             </section>
 
-            <section className="flex flex-col gap-6 mt-8">
+            <section className="flex flex-col gap-6 mt-8 p-4 pt-0">
                 <div className="flex items-center gap-2 w-full">
                     <hr className="w-full text-gray-300" />
                     <h2 className="text-xl font-medium text-gray-800 text-nowrap">
@@ -58,7 +58,7 @@ export default function Home() {
                     <hr className="w-full text-gray-300" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-flow-dense gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
                     {interviews.map((interview) => (
                         <InterviewCard
                             key={interview.id}

@@ -14,6 +14,7 @@ import {
     ResumePreview,
     ProjectForm,
 } from '@/Components';
+import { Resizable } from 're-resizable';
 import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
 
 export default function EditResume() {
@@ -76,30 +77,36 @@ export default function EditResume() {
     }
 
     return (
-        <div className="h-full p-1 overflow-hidden">
+        <div className="h-full p-4 overflow-hidden">
             {loading ? (
                 <div>loading...</div>
             ) : (
-                <div className="h-full mx-auto grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    {/* LEFT: form section */}
-                    <div className="h-full bg-white p-4 rounded-2xl border border-gray-200 shadow-md">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                            Edit Your Resume
-                        </h2>
-                        <div className="h-full">
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                                <Button
-                                    onClick={handleThemeClick}
-                                    className="flex gap-2 shadow-sm items-center border-[#4977ec] text-[#4977ec] hover:bg-[#4977ec] hover:text-white transition-all duration-100 border rounded-md px-2 py-1"
-                                    btnText={
-                                        <>
-                                            <LayoutGrid size={16} /> Theme
-                                        </>
-                                    }
-                                />
+                <div className="h-full flex flex-col lg:flex-row overflow-hidden">
+                    {/* LEFT: resizable form section*/}
+                    <Resizable
+                        defaultSize={{ height: '100%' }}
+                        enable={{ right: true }}
+                        className="w-full min-w-[40%] lg:max-w-[70%] h-full lg:border-r-[0.01rem] border-r-gray-200"
+                    >
+                        <div className="h-full w-full bg-white p-4 space-y-4">
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <Button
+                                        onClick={handleThemeClick}
+                                        className="flex gap-2 shadow-sm items-center border-[#4977ec] text-[#4977ec] hover:bg-[#4977ec] hover:text-white transition-all duration-100 border rounded-md p-1"
+                                        btnText={
+                                            <>
+                                                <LayoutGrid size={16} />
+                                            </>
+                                        }
+                                    />
+                                    <h2 className="text-xl font-semibold text-gray-800">
+                                        Edit Resume
+                                    </h2>
+                                </div>
 
                                 {/* Progress Stepper */}
-                                <div className="flex items-center gap-1 py-2">
+                                <div className="flex items-center gap-1">
                                     {forms.map((_, i) => (
                                         <div
                                             key={i}
@@ -126,80 +133,84 @@ export default function EditResume() {
                                 </div>
                             </div>
 
-                            {/* Form */}
-                            <div className="bg-white rounded-xl mb-6">
-                                {forms[activeFormIndex]?.component}
-                            </div>
+                            <div className="h-full">
+                                {/* Form */}
+                                <div className="bg-white rounded-xl mb-6">
+                                    {forms[activeFormIndex]?.component}
+                                </div>
 
-                            {/* Navigation Buttons */}
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    {activeFormIndex > 0 && (
+                                {/* Navigation Buttons */}
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        {activeFormIndex > 0 && (
+                                            <Button
+                                                variant="outline"
+                                                className="border py-[5px] px-3 rounded-md border-[#4977ec] hover:bg-[#4977ec] hover:text-white transition-all duration-100 text-[#4977ec] gap-2"
+                                                onClick={() =>
+                                                    setActiveFormIndex(
+                                                        activeFormIndex - 1
+                                                    )
+                                                }
+                                                btnText={
+                                                    <div className="flex gap-2 items-center">
+                                                        <ArrowLeft className="w-5 h-5" />{' '}
+                                                        Previous
+                                                    </div>
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                    {activeFormIndex < forms.length - 1 ? (
                                         <Button
-                                            variant="outline"
-                                            className="border py-[5px] px-3 rounded-md border-[#4977ec] hover:bg-[#4977ec] hover:text-white transition-all duration-100 text-[#4977ec] gap-2"
+                                            defaultStyles="true"
+                                            className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
                                             onClick={() =>
                                                 setActiveFormIndex(
-                                                    activeFormIndex - 1
+                                                    (prev) => prev + 1
                                                 )
                                             }
+                                            disabled={
+                                                !sectionSaved[
+                                                    forms[
+                                                        activeFormIndex
+                                                    ].title.toLowerCase()
+                                                ]
+                                            }
                                             btnText={
-                                                <div className="flex gap-2 items-center">
-                                                    <ArrowLeft className="w-5 h-5" />{' '}
-                                                    Previous
+                                                <div className="flex items-center gap-2">
+                                                    Next
+                                                    <ArrowRight className="size-5" />
                                                 </div>
                                             }
                                         />
+                                    ) : (
+                                        <Button
+                                            defaultStyles="true"
+                                            className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
+                                            disabled={
+                                                !sectionSaved[
+                                                    forms[
+                                                        activeFormIndex
+                                                    ].title.toLowerCase()
+                                                ]
+                                            }
+                                            onClick={() =>
+                                                navigate(
+                                                    `/resume/${resumeId}/view`
+                                                )
+                                            }
+                                            btnText="Finish & Preview"
+                                        />
                                     )}
                                 </div>
-                                {activeFormIndex < forms.length - 1 ? (
-                                    <Button
-                                        defaultStyles="true"
-                                        className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
-                                        onClick={() =>
-                                            setActiveFormIndex(
-                                                (prev) => prev + 1
-                                            )
-                                        }
-                                        disabled={
-                                            !sectionSaved[
-                                                forms[
-                                                    activeFormIndex
-                                                ].title.toLowerCase()
-                                            ]
-                                        }
-                                        btnText={
-                                            <div className="flex items-center gap-2">
-                                                Next
-                                                <ArrowRight className="size-5" />
-                                            </div>
-                                        }
-                                    />
-                                ) : (
-                                    <Button
-                                        defaultStyles="true"
-                                        className={`text-white gap-2 py-[5px] px-3 ${!sectionSaved[forms[activeFormIndex].title.toLowerCase()] && 'opacity-70 cursor-not-allowed'}`}
-                                        disabled={
-                                            !sectionSaved[
-                                                forms[
-                                                    activeFormIndex
-                                                ].title.toLowerCase()
-                                            ]
-                                        }
-                                        onClick={() =>
-                                            navigate(`/resume/${resumeId}/view`)
-                                        }
-                                        btnText="Finish & Preview"
-                                    />
-                                )}
                             </div>
                         </div>
-                    </div>
+                    </Resizable>
 
                     {/* RIGHT: preview section */}
-                    <div className="print:bg-white print:p-0 h-full bg-white p-4 rounded-2xl shadow-md border border-gray-200">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                            Live Resume Preview
+                    <div className="print:bg-white min-w-[40%] w-full print:p-0 bg-white p-4 flex-1 h-full">
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center sm:text-left">
+                            Live Preview
                         </h2>
                         <ResumePreview />
                     </div>

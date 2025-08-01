@@ -62,7 +62,7 @@ export default function RequestsPopup() {
                     to={`/channel/${user_id}`}
                     className="flex items-center gap-3 overflow-hidden"
                 >
-                    <div className="size-[45px]">
+                    <div className="size-10">
                         <img
                             src={user_avatar}
                             alt="user avatar"
@@ -70,8 +70,8 @@ export default function RequestsPopup() {
                         />
                     </div>
                     <div className="overflow-hidden flex-1">
-                        <p className="truncate">{user_fullName}</p>
-                        <p className="text-sm">@{user_name}</p>
+                        <p className="truncate text-[15px]">{user_fullName}</p>
+                        <p className="text-xs">@{user_name}</p>
                     </div>
                 </NavLink>
                 <div className="flex gap-2">
@@ -88,9 +88,8 @@ export default function RequestsPopup() {
                                 'Accept'
                             )
                         }
-                        defaultStyles={true}
                         onClick={() => acceptRequest(request_id)}
-                        className="text-green-600 w-[60px] text-[15px] py-[3px] bg-[#00ff1517]"
+                        className="text-green-600 w-[60px] rounded-md hover:bg-[#00ff1538] text-[15px] py-[3px] bg-[#00ff1517]"
                     />
                     <Button
                         btnText={
@@ -106,8 +105,7 @@ export default function RequestsPopup() {
                             )
                         }
                         onClick={() => rejectRequest(request_id)}
-                        defaultStyles={true}
-                        className="text-red-600 w-[60px] text-[15px] py-[3px] bg-[#ff000012]"
+                        className="text-red-600 w-[60px] text-[15px] rounded-md py-[3px] bg-[#ff000012] hover:bg-[#ff00003a]"
                     />
                 </div>
             </div>
@@ -117,7 +115,7 @@ export default function RequestsPopup() {
     return (
         <div className="w-[400px] bg-white p-4 rounded-md drop-shadow-md">
             {requests.length > 0 ? (
-                <div className="w-full flex flex-col gap-4">
+                <div className="w-full flex flex-col gap-1">
                     {requestElements}
                 </div>
             ) : (

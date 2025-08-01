@@ -38,9 +38,9 @@ export default function ResumePage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="p-2 bg-transparent">
+        <div className="bg-transparent">
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-[#f9f9f9] rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
+            <section className="relative overflow-hidden bg-[#f9f9f9] rounded- p-8 shadow-sm mb-8">
                 <div className="flex flex-col gap-6 max-w-md relative z-10">
                     <h2 className="text-2xl font-bold text-gray-800">
                         Build Your Professional Resume
@@ -79,48 +79,19 @@ export default function ResumePage() {
             </section>
 
             {/* Resume Cards Section */}
-            <section className="flex flex-col gap-6">
-                <h2 className="text-xl font-semibold">Your Resumes</h2>
-
-                {resumes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {/* Add Resume Card */}
-                        <div
-                            className="h-full min-h-[200px] flex flex-col items-center justify-center gap-3 p-6 
-                            border-2 border-dashed border-gray-300 rounded-xl bg-white hover:border-[#4977ec]
-                            transition-all duration-300 cursor-pointer hover:shadow-md"
-                            onClick={handleCreateResume}
-                        >
-                            <PlusSquare className="size-8 text-[#4977ec]" />
-                            <h3 className="text-lg font-medium text-gray-700">
-                                Add New Resume
-                            </h3>
-                            <p className="text-center text-gray-500 mb-4 text-sm">
-                                Get started by creating your first professional
-                                resume
-                            </p>
-                        </div>
-
-                        {/* Existing Resumes */}
+            <section className="flex flex-col gap-6 px-4 pb-4">
+                <div className="flex items-center gap-2">
+                    <hr className="w-full text-gray-300" />
+                    <h2 className="text-xl font-semibold text-gray-800 text-nowrap">
+                        Your Resumes
+                    </h2>
+                    <hr className="w-full text-gray-300" />
+                </div>
+                {resumes.length > 0 && (
+                    <div className="grid grid-flow-dense gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
                         {resumes.map((r) => (
                             <ResumeCardItem resume={r} key={r.resumeId} />
                         ))}
-                    </div>
-                ) : (
-                    <div
-                        className="h-full min-h-[200px] flex flex-col items-center justify-center gap-3 p-6 
-                            border-2 border-dashed border-gray-300 rounded-xl bg-white hover:border-[#4977ec]
-                            transition-all duration-300 cursor-pointer hover:shadow-md"
-                        onClick={handleCreateResume}
-                    >
-                        <PlusSquare className="size-8 text-[#4977ec]" />
-                        <h3 className="text-lg font-medium text-gray-700">
-                            Add New Resume
-                        </h3>
-                        <p className="text-center text-gray-500 mb-4 text-sm">
-                            Get started by creating your first professional
-                            resume
-                        </p>
                     </div>
                 )}
             </section>
