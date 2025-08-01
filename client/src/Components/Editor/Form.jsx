@@ -24,8 +24,8 @@ export default function Form() {
     }
 
     return (
-        <div className="flex items-center justify-center h-[calc(100vh-87px)] bg-[#f6f6f6] px-4">
-            <div className="w-full max-w-md bg-white drop-shadow-sm text-gray-800 rounded-2xl shadow-lg p-6">
+        <div className="flex items-center justify-center h-[calc(100vh-55px)] bg-[#f6f6f6] px-4">
+            <div className="w-full max-w-md bg-white drop-shadow-sm text-gray-800 rounded-xl p-6">
                 <div className="flex flex-col gap-3 items-center justify-center">
                     <div className="fill-[#2b2b2b] size-9">{icons.code}</div>
                     <h4 className="text-xl font-semibold mb-2">Join Room</h4>
@@ -62,7 +62,7 @@ export default function Form() {
                     Don't have a room ID?{' '}
                     <span
                         onClick={() => setRoomId(uuid())}
-                        className="text-[#355ab6] hover:underline"
+                        className="cursor-pointer text-[#355ab6] hover:underline"
                     >
                         Create New Room
                     </span>

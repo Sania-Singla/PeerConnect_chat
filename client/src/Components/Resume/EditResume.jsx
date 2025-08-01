@@ -208,7 +208,7 @@ export default function EditResume() {
                     </Resizable>
 
                     {/* RIGHT: preview section */}
-                    <div className="print:bg-white min-w-[40%] w-full print:p-0 bg-white p-4 flex-1 h-full">
+                    <div className="print:bg-white min-w-[30%] w-full print:p-0 bg-white p-4 flex-1 h-full">
                         <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center sm:text-left">
                             Live Preview
                         </h2>

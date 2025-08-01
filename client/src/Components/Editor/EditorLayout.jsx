@@ -6,6 +6,8 @@ import { LANGUAGES } from '@/Constants/constants';
 import { useSocketContext } from '@/Context';
 import { downloadCodeFile } from '@/Utils';
 import { editorService } from '@/Services';
+import { icons } from '@/Assets/icons';
+import { Resizable } from 're-resizable';
 
 export default function EditorLayout() {
     const { roomId } = useParams();
@@ -13,7 +15,6 @@ export default function EditorLayout() {
     const { socket } = useSocketContext();
     const [members, setMembers] = useState([]);
     const [output, setOutput] = useState('');
-    const [isCompilerOpen, setIsCompilerOpen] = useState(false);
     const [isCompiling, setIsCompiling] = useState(false);
     const [language, setLanguage] = useState('javascript');
     const [isJoining, setIsJoining] = useState(true);
@@ -63,125 +64,123 @@ export default function EditorLayout() {
     }
 
     return isJoining ? (
-        <div className="flex justify-center items-center h-[calc(100vh-92px)] bg-gray-900 text-white text-lg">
+        <div className="flex justify-center items-center h-[calc(100vh-55px)] bg-gray-900 text-white text-lg">
             Joining room...
         </div>
     ) : (
-        <div className="flex flex-col h-[calc(100vh-92px)] w-full overflow-hidden">
-            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-                {/* Sidebar */}
-                <aside className="bg-gray-900 text-white max-h-[230px] md:max-h-full w-full md:w-[240px] border-r border-gray-700 p-4 flex flex-col">
-                    <span className="font-semibold block mb-3">Members</span>
-                    <div className="flex-1 overflow-y-auto gap-4 flex flex-wrap md:flex-nowrap md:flex-col">
-                        {members.map((m) => (
-                            <div
-                                key={m.user_id}
-                                className="relative cursor-pointer flex items-center gap-3"
-                            >
-                                <img
-                                    src={m.user_avatar}
-                                    alt={m.user_name}
-                                    className="rounded-full size-9 border border-gray-700"
-                                />
-                                <span className="text-sm truncate">
-                                    {m.user_name}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <hr className="my-4 border-gray-700" />
-
-                    <div className="flex md:flex-col gap-2">
-                        <Button
-                            onClick={copyRoomId}
-                            defaultStyles={true}
-                            className="w-full bg-green-600 hover:bg-green-700 py-2 px-4 text-white"
-                            btnText="Copy Room ID"
-                        />
+        <div className="flex flex-col h-[calc(100vh-55px)] w-full overflow-hidden bg-gray-900">
+            <div className="flex flex-col flex-1 overflow-hidden">
+                <header className="px-2 flex items-center h-[60px] justify-between w-full drop-shadow-sm border-b-[0.01rem] border-b-gray-600">
+                    <div className="flex gap-2">
                         <Button
                             onClick={() => {
                                 socket.emit('leaveCode', roomId);
                                 navigate('/');
                             }}
+                            title="Leave Room"
                             defaultStyles={true}
-                            className="w-full bg-red-600 hover:bg-red-700 py-2 px-4 text-white"
-                            btnText="Leave Room"
+                            className="bg-red-600 hover:bg-red-700 size-fit p-2 text-white"
+                            btnText={
+                                <div className="fill-white size-4 rotate-180">
+                                    {icons.leave}
+                                </div>
+                            }
+                        />
+                        <Button
+                            onClick={copyRoomId}
+                            defaultStyles={true}
+                            title="Copy Room ID"
+                            className="bg-green-600 hover:bg-green-700 size-fit p-2 text-white"
+                            btnText={
+                                <div className="fill-white size-4">
+                                    {icons.clipboard}
+                                </div>
+                            }
                         />
                     </div>
-                </aside>
 
-                {/* Right Section */}
-                <section className="flex flex-col flex-1 overflow-hidden">
-                    <header className="flex flex-wrap gap-2 items-center justify-end bg-gray-900 border-b border-gray-700 p-3">
+                    <div className="flex gap-4 items-center">
                         <select
-                            className="bg-gray-700 text-white px-2 py-1 rounded text-sm w-[100px]"
+                            className="bg-gray-700 text-white px-2 py-[6px] rounded text-sm w-[100px]"
                             value={language}
                             onChange={(e) => setLanguage(e.target.value)}
                         >
-                            {Object.values(LANGUAGES).map(({ label }) => (
-                                <option key={label} value={label}>
-                                    {label}
+                            {Object.entries(LANGUAGES).map(([key, value]) => (
+                                <option key={key} value={key}>
+                                    {value.label}
                                 </option>
                             ))}
                         </select>
 
-                        <Button
-                            defaultStyles={true}
-                            className="px-4 py-1 text-white"
-                            onClick={() => setIsCompilerOpen((prev) => !prev)}
-                            btnText={isCompilerOpen ? 'Close' : 'Compile'}
-                        />
-
-                        <Button
-                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-1"
-                            onClick={() => downloadCodeFile(codeRef, language)}
-                            btnText="Save File"
-                            defaultStyles={true}
-                        />
-                    </header>
-
-                    {/* Editor */}
-                    <main className="flex-1 overflow-hidden">
-                        <div className="h-full overflow-auto">
-                            <Editor
-                                language={language}
-                                initialCode={initialCode}
-                                onChange={(code) => (codeRef.current = code)}
-                            />
+                        <div className="flex items-center -space-x-3">
+                            {members.map((m) => (
+                                <div
+                                    key={m.user_id}
+                                    title={m.user_name}
+                                    className="cursor-pointer hover:scale-110 hover:z-[100] transition-all duration-200 drop-shadow-sm"
+                                >
+                                    <img
+                                        src={m.user_avatar}
+                                        alt={m.user_name}
+                                        className="rounded-full size-9"
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    </main>
-                </section>
+
+                        <Button
+                            className="bg-[#4977ec] hover:bg-[#4977ecc1] text-white p-[6px]"
+                            onClick={() => downloadCodeFile(codeRef, language)}
+                            btnText={
+                                <div className="fill-white size-5">
+                                    {icons.download}
+                                </div>
+                            }
+                            title="Download File"
+                            defaultStyles={true}
+                        />
+                    </div>
+                </header>
+
+                <main className="h-full overflow-auto">
+                    <Editor
+                        language={language}
+                        initialCode={initialCode}
+                        onChange={(code) => (codeRef.current = code)}
+                    />
+                </main>
             </div>
 
-            {/* Compiler */}
-            {isCompilerOpen && (
-                <div className="bg-gray-900 border-t border-gray-600 text-white h-[200px] overflow-hidden">
-                    <div className="flex justify-between items-center px-4 py-2">
-                        <h5 className="font-semibold">
-                            Compiler Output ({language})
-                        </h5>
-                        <div className="flex space-x-2">
+            <Resizable
+                enable={{ top: true }}
+                minHeight="50px"
+                defaultSize={{ height: '50px' }}
+                maxHeight="400px"
+            >
+                <div className="border-t-[0.01rem] h-full p-2 pt-0 border-t-gray-600 text-white">
+                    <div className="flex justify-between items-center h-[50px]">
+                        <h5 className="font-semibold pl-2">Output</h5>
+                        <div className="flex gap-2">
                             <Button
-                                className="bg-green-600 hover:bg-green-700 px-4 h-[32px] text-white"
+                                className="bg-green-600 hover:bg-green-700 w-[60px] text-[15px] h-[30px] text-white"
                                 onClick={runCode}
                                 disabled={isCompiling}
                                 defaultStyles={true}
-                                btnText={isCompiling ? 'Compiling...' : 'Run'}
+                                btnText={isCompiling ? '. . .' : 'Run'}
                             />
                             <Button
-                                className="bg-gray-600 hover:bg-gray-700 px-4 h-[32px] text-white"
-                                onClick={() => setIsCompilerOpen(false)}
-                                btnText="Close"
+                                className="bg-gray-600 hover:bg-gray-700 w-[60px] text-[15px] h-[30px] text-white"
+                                onClick={() => setOutput('')}
+                                btnText="Clear"
                                 defaultStyles={true}
                             />
                         </div>
                     </div>
-                    <pre className="bg-gray-800 px-4 py-3 rounded whitespace-pre-wrap break-words h-[calc(100%-56px)] overflow-y-auto">
+                    <pre className="bg-gray-800 rounded-md py-2 px-3 whitespace-pre-wrap break-words h-[calc(100%-50px)] overflow-y-auto">
                         {output || 'Output will appear here...'}
                     </pre>
                 </div>
-            )}
+            </Resizable>
         </div>
     );
 }

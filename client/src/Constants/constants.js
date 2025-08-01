@@ -129,7 +129,7 @@ int main() {
 }
         `.trim(),
     },
-    javascript: {
+    nodejs: {
         label: 'JavaScript',
         mode: 'javascript',
         boilerplate: `
