@@ -1,4 +1,4 @@
-import { Resume } from '../schemas/index.js';
+import { Resume } from '../../db/mongo/index.js';
 
 export class ResumeModel {
     async getResume(resumeId) {

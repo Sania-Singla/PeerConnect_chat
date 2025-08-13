@@ -6,7 +6,7 @@ import fs from 'fs';
  * @returns {Boolean} Boolean.
  */
 
-export default function verifyRegex(name, value) {
+export function verifyExpression(name, value) {
     if (value) {
         switch (name) {
             case 'email': {

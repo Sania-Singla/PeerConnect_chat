@@ -1,4 +1,4 @@
-import { FORBIDDEN } from '../constants/errorCodes.js';
+import { FORBIDDEN } from '../constants/index.js';
 import { ErrorHandler } from '../utils/index.js';
 import jwt from 'jsonwebtoken';
 import { userObject } from '../controllers/user.Controller.js';

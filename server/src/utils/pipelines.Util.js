@@ -1,4 +1,4 @@
-function getPipeline1(orderBy, sortBy) {
+export function getPipeline1(orderBy, sortBy) {
     return [
         {
             $lookup: {
@@ -45,7 +45,7 @@ function getPipeline1(orderBy, sortBy) {
 }
 
 // for chats
-function getPipeline2() {
+export function getPipeline2() {
     return [
         {
             $lookup: {
@@ -119,5 +119,3 @@ function getPipeline2() {
         { $unset: 'populatedMembers' },
     ];
 }
-
-export { getPipeline1, getPipeline2 };

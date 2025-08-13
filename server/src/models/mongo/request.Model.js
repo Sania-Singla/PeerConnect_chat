@@ -1,4 +1,4 @@
-import { Chat, Request } from '../schemas/index.js';
+import { Chat, Request } from '../../db/mongo/index.js';
 
 export class RequestModel {
     async requestExistance(requestId) {

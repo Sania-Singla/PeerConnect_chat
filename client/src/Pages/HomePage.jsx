@@ -66,7 +66,7 @@ export default function HomePage() {
     return (
         <div className="p-4">
             {postElements.length > 0 && (
-                <div className="grid grid-flow-dense gap-x-4 gap-y-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
+                <div className="grid grid-flow-dense gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
                     {postElements}
                 </div>
             )}

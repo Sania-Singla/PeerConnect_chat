@@ -1,7 +1,7 @@
 import { redisClient } from '../socket.js';
 import { onlineUserObject } from '../controllers/onlineUser.Controller.js';
 
-async function getSocketId(userId) {
+export async function getSocketId(userId) {
     let socketId = await redisClient.get(`user:${userId}`);
     if (!socketId) {
         const user = await onlineUserObject.getOnlineUser(userId);
@@ -13,12 +13,10 @@ async function getSocketId(userId) {
     return socketId;
 }
 
-const getOtherMembers = (members = [], userId) => {
+export const getOtherMembers = (members = [], userId) => {
     return members.filter(({ user_id }) => user_id !== userId);
 };
 
-const getSocketIds = async (userIds = []) => {
+export const getSocketIds = async (userIds = []) => {
     return await Promise.all(userIds.map((id) => getSocketId(id))); // preserving null/falsy values for indexing
 };
-
-export { getSocketIds, getSocketId, getOtherMembers };

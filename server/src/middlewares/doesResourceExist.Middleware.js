@@ -1,9 +1,5 @@
-import {
-    BAD_REQUEST,
-    SERVER_ERROR,
-    NOT_FOUND,
-} from '../constants/errorCodes.js';
-import { getServiceObject } from '../db/serviceObjects.js';
+import { BAD_REQUEST, SERVER_ERROR, NOT_FOUND } from '../constants/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
 import validator from 'validator';
 
 /**

@@ -2,8 +2,8 @@ import {
     deleteFromCloudinary,
     getPipeline2,
     getSocketIds,
-} from '../helpers/index.js';
-import { Attachment, Chat, Message } from '../schemas/index.js';
+} from '../../utils/index.js';
+import { Attachment, Chat, Message } from '../../db/mongo/index.js';
 
 export class ChatModel {
     async chatExistance(chatId) {

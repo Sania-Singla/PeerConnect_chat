@@ -1,4 +1,4 @@
-import { OnlineUser } from '../schemas/index.js';
+import { OnlineUser } from '../../db/mongo/index.js';
 
 export class OnlineUserModel {
     async getOnlineUser(userId) {

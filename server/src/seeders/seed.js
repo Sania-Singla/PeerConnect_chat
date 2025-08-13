@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Category } from '../schemas/index.js';
+import { Category } from '../db/mongo/index.js';
 
 export async function seedDatabase() {
     try {

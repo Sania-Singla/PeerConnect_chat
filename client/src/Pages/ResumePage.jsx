@@ -88,7 +88,7 @@ export default function ResumePage() {
                     <hr className="w-full text-gray-300" />
                 </div>
                 {resumes.length > 0 && (
-                    <div className="grid grid-flow-dense gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
+                <div className="grid grid-flow-dense gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(auto-fit,minmax(300px,max-content))] justify-center">
                         {resumes.map((r) => (
                             <ResumeCardItem resume={r} key={r.resumeId} />
                         ))}

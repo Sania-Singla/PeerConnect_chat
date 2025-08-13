@@ -1,4 +1,4 @@
-import { Comment } from '../schemas/index.js';
+import { Comment } from '../../db/mongo/index.js';
 
 export class CommentModel {
     async getComments(postId, userId, orderBy) {

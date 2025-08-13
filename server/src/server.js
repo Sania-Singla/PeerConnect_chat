@@ -1,6 +1,6 @@
-import './config/envLoader.js';
+import 'dotenv/config';
 import { http } from './socket.js';
-import { dbInstance } from './db/connectDB.js';
+import { dbInstance } from './config/db.config.js';
 
 const port = process.env.PORT || 4000;
 

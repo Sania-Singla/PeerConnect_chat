@@ -1,11 +1,11 @@
+import cookieParser from 'cookie-parser';
 import { app } from './app.js';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import cookieParser from 'cookie-parser';
-import { connectRedis } from './db/connectRedis.js';
+import { connectRedis } from './config/redis.config.js';
 import { chatObject } from './controllers/chat.Controller.js';
 import { onlineUserObject } from './controllers/onlineUser.Controller.js';
-import { CORS_OPTIONS } from './constants/options.js';
+import { CORS_OPTIONS } from './constants/index.js';
 import { socketAuthenticator } from './middlewares/index.js';
 
 const redisClient = await connectRedis();

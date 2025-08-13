@@ -60,12 +60,9 @@ export default function ViewResume() {
                         <RWebShare
                             data={{
                                 text: 'Check out my resume',
-                                url: shareUrl, // Use the pre-constructed URL
+                                url: shareUrl, 
                                 title: `${resumeInfo?.firstName} ${resumeInfo?.lastName}'s Resume`,
                             }}
-                            onClick={() =>
-                                toast.success('Opening share options...')
-                            }
                         >
                             <Button
                                 defaultStyles={true}

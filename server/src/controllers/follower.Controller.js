@@ -1,5 +1,5 @@
-import { BAD_REQUEST, OK } from '../constants/errorCodes.js';
-import { getServiceObject } from '../db/serviceObjects.js';
+import { BAD_REQUEST, OK } from '../constants/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
 
 export const followerObject = getServiceObject('Follower');

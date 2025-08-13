@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import { CORS_OPTIONS } from './constants/options.js';
+import { CORS_OPTIONS } from './constants/index.js';
 
 export const app = express();
 
@@ -39,7 +39,5 @@ app.use('/api/editors', editorRouter);
 app.use('/api/resumes', resumeRouter);
 app.use('/api/interviews', interviewRouter);
 app.use('/api/bot', botRouter);
-
 app.get('/', (req, res) => res.send('Welcome to PeerConnect Server'));
-
 app.use(errorMiddleware);

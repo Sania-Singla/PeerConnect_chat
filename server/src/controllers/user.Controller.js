@@ -1,56 +1,61 @@
-import { getServiceObject } from '../db/serviceObjects.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
 import {
     OK,
     BAD_REQUEST,
     NOT_FOUND,
     SERVER_ERROR,
-} from '../constants/errorCodes.js';
-import { COOKIE_OPTIONS } from '../constants/options.js';
-import { USER_AVATAR } from '../constants/files.js';
-import bcrypt from 'bcrypt';
-import { OAuth2Client } from 'google-auth-library';
-import { verifyExpression, tryCatch, ErrorHandler } from '../utils/index.js';
+    COOKIE_OPTIONS,
+    USER_AVATAR,
+} from '../constants/index.js';
 import {
+    verifyExpression,
+    tryCatch,
+    ErrorHandler,
     uploadOnCloudinary,
     deleteFromCloudinary,
     generateTokens,
-} from '../helpers/index.js';
+} from '../utils/index.js';
+import bcrypt from 'bcrypt';
+import { OAuth2Client } from 'google-auth-library';
 
 export const userObject = getServiceObject('User');
 
-const registerUser = tryCatch('register user', async (req, res, next) => {
-    const { userName, email, fullName, password } = req.body;
-    const data = {
-        userName,
-        fullName,
-        email,
-        password,
-        avatar: USER_AVATAR,
-    };
+export const registerUser = tryCatch(
+    'register user',
+    async (req, res, next) => {
+        const { userName, email, fullName, password } = req.body;
+        const data = {
+            userName,
+            fullName,
+            email,
+            password,
+            avatar: USER_AVATAR,
+        };
 
-    for (const [key, value] of Object.entries(data)) {
-        if (value && key !== 'avatar' && !verifyExpression(key, value)) {
-            return next(new ErrorHandler(`${key} is invalid`, BAD_REQUEST));
+        for (const [key, value] of Object.entries(data)) {
+            if (value && key !== 'avatar' && !verifyExpression(key, value)) {
+                return next(new ErrorHandler(`${key} is invalid`, BAD_REQUEST));
+            }
         }
+
+        let existingUser = await userObject.getUser(data.email);
+        if (!existingUser) {
+            existingUser = await userObject.getUser(data.userName);
+        }
+
+        if (existingUser) {
+            return next(new ErrorHandler('user already exists', BAD_REQUEST));
+        }
+
+        data.password = await bcrypt.hash(data.password, 10); // hash the password
+
+        const user = await userObject.createUser(data);
+
+        return res.status(OK).json(user);
     }
+);
 
-    let existingUser = await userObject.getUser(data.email);
-    if (!existingUser) {
-        existingUser = await userObject.getUser(data.userName);
-    }
-
-    if (existingUser) {
-        return next(new ErrorHandler('user already exists', BAD_REQUEST));
-    }
-
-    data.password = await bcrypt.hash(data.password, 10); // hash the password
-
-    const user = await userObject.createUser(data);
-
-    return res.status(OK).json(user);
-});
-
-const loginWithGoogle = tryCatch(
+export const loginWithGoogle = tryCatch(
     'login user with google token',
     async (req, res, next) => {
         const { code } = req.body;
@@ -122,7 +127,7 @@ const loginWithGoogle = tryCatch(
     }
 );
 
-const loginUser = tryCatch('login user', async (req, res, next) => {
+export const loginUser = tryCatch('login user', async (req, res, next) => {
     const { loginInput, password } = req.body;
 
     if (!loginInput || !password) {
@@ -158,7 +163,7 @@ const loginUser = tryCatch('login user', async (req, res, next) => {
         .json(loggedInUser);
 });
 
-const deleteAccount = tryCatch(
+export const deleteAccount = tryCatch(
     'delete user account',
     async (req, res, next) => {
         const { user_id, user_password, user_coverImage, user_avatar } =
@@ -184,7 +189,7 @@ const deleteAccount = tryCatch(
     }
 );
 
-const logoutUser = tryCatch('logout user', async (req, res) => {
+export const logoutUser = tryCatch('logout user', async (req, res) => {
     await userObject.logoutUser(req.user?.user_id);
     return res
         .status(OK)
@@ -193,12 +198,12 @@ const logoutUser = tryCatch('logout user', async (req, res) => {
         .json({ message: 'user loggedout successfully' });
 });
 
-const getCurrentUser = tryCatch('get Current user', (req, res) => {
+export const getCurrentUser = tryCatch('get Current user', (req, res) => {
     const { user_password, refresh_token, ...user } = req.user;
     return res.status(OK).json(user);
 });
 
-const getChannelProfile = tryCatch(
+export const getChannelProfile = tryCatch(
     'get channel profile',
     async (req, res, next) => {
         const { channelId } = req.params;
@@ -211,7 +216,7 @@ const getChannelProfile = tryCatch(
     }
 );
 
-const updateAccountDetails = tryCatch(
+export const updateAccountDetails = tryCatch(
     'update account details',
     async (req, res, next) => {
         const { user_id, user_password, auth_provider } = req.user;
@@ -237,7 +242,7 @@ const updateAccountDetails = tryCatch(
     }
 );
 
-const updateChannelDetails = tryCatch(
+export const updateChannelDetails = tryCatch(
     'update channel details',
     async (req, res, next) => {
         const { user_id, user_password, auth_provider } = req.user;
@@ -263,56 +268,67 @@ const updateChannelDetails = tryCatch(
     }
 );
 
-const updatePassword = tryCatch('update password', async (req, res, next) => {
-    const { user_id, user_password, auth_provider } = req.user;
-    const { oldPassword, newPassword } = req.body;
+export const updatePassword = tryCatch(
+    'update password',
+    async (req, res, next) => {
+        const { user_id, user_password, auth_provider } = req.user;
+        const { oldPassword, newPassword } = req.body;
 
-    if (auth_provider !== 'local') {
-        return next(
-            new ErrorHandler('OAuth users cannot change password', BAD_REQUEST)
-        );
-    }
-
-    const isPassValid = bcrypt.compareSync(oldPassword, user_password);
-    if (!isPassValid) {
-        return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
-    }
-
-    const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
-
-    await userObject.updatePassword(user_id, hashedNewPassword);
-
-    return res.status(OK).json({ message: 'password updated successfully' });
-});
-
-const updateAvatar = tryCatch('update avatar', async (req, res, next) => {
-    let avatar;
-    try {
-        const { user_id, user_avatar } = req.user;
-
-        if (!req.file) {
-            return next(new ErrorHandler('missing avatar', BAD_REQUEST));
+        if (auth_provider !== 'local') {
+            return next(
+                new ErrorHandler(
+                    'OAuth users cannot change password',
+                    BAD_REQUEST
+                )
+            );
         }
 
-        const result = await uploadOnCloudinary(req.file.path);
-        avatar = result.secure_url;
-
-        const updatedUser = await userObject.updateAvatar(user_id, avatar);
-
-        if (updatedUser) {
-            await deleteFromCloudinary(user_avatar);
+        const isPassValid = bcrypt.compareSync(oldPassword, user_password);
+        if (!isPassValid) {
+            return next(new ErrorHandler('invalid credentials', BAD_REQUEST));
         }
 
-        return res.status(OK).json(updatedUser);
-    } catch (err) {
-        if (avatar) {
-            await deleteFromCloudinary(avatar);
-        }
-        throw err;
+        const hashedNewPassword = bcrypt.hashSync(newPassword, 10);
+
+        await userObject.updatePassword(user_id, hashedNewPassword);
+
+        return res
+            .status(OK)
+            .json({ message: 'password updated successfully' });
     }
-});
+);
 
-const updateCoverImage = tryCatch(
+export const updateAvatar = tryCatch(
+    'update avatar',
+    async (req, res, next) => {
+        let avatar;
+        try {
+            const { user_id, user_avatar } = req.user;
+
+            if (!req.file) {
+                return next(new ErrorHandler('missing avatar', BAD_REQUEST));
+            }
+
+            const result = await uploadOnCloudinary(req.file.path);
+            avatar = result.secure_url;
+
+            const updatedUser = await userObject.updateAvatar(user_id, avatar);
+
+            if (updatedUser) {
+                await deleteFromCloudinary(user_avatar);
+            }
+
+            return res.status(OK).json(updatedUser);
+        } catch (err) {
+            if (avatar) {
+                await deleteFromCloudinary(avatar);
+            }
+            throw err;
+        }
+    }
+);
+
+export const updateCoverImage = tryCatch(
     'update coverImage',
     async (req, res, next) => {
         let coverImage;
@@ -347,23 +363,7 @@ const updateCoverImage = tryCatch(
     }
 );
 
-const getAdminStats = tryCatch('get admin stats', async (req, res) => {
+export const getAdminStats = tryCatch('get admin stats', async (req, res) => {
     const result = await userObject.getAdminStats(req.user.user_id);
     return res.status(OK).json(result);
 });
-
-export {
-    registerUser,
-    loginUser,
-    loginWithGoogle,
-    logoutUser,
-    deleteAccount,
-    updateAccountDetails,
-    updateAvatar,
-    updateChannelDetails,
-    updatePassword,
-    updateCoverImage,
-    getChannelProfile,
-    getCurrentUser,
-    getAdminStats,
-};

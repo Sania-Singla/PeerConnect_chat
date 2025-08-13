@@ -1,7 +1,12 @@
-import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/errorCodes.js';
-import { verifyOrderBy, tryCatch, ErrorHandler } from '../utils/index.js';
-import { uploadOnCloudinary, deleteFromCloudinary } from '../helpers/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
+import { OK, BAD_REQUEST, NOT_FOUND } from '../constants/index.js';
+import {
+    verifyOrderBy,
+    tryCatch,
+    ErrorHandler,
+    uploadOnCloudinary,
+    deleteFromCloudinary,
+} from '../utils/index.js';
 
 export const postObject = getServiceObject('Post');
 

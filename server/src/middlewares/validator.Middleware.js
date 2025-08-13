@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { BAD_REQUEST } from '../constants/errorCodes.js';
+import { BAD_REQUEST } from '../constants/index.js';
 
 export const validateUUID = (idParam) => {
     return (req, res, next) => {

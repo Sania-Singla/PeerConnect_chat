@@ -14,7 +14,7 @@ cloudinary.config({
  * @returns {String} The url recieved from cloudinary
  */
 
-const uploadOnCloudinary = async (localFilePath) => {
+export const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
             throw new Error('local file path missing');
@@ -42,7 +42,7 @@ const uploadOnCloudinary = async (localFilePath) => {
  * @returns {Object} The delete response recieved from cloudinary
  */
 
-const deleteFromCloudinary = async (URL) => {
+export const deleteFromCloudinary = async (URL) => {
     try {
         if (!URL) {
             throw new Error('url missing');
@@ -63,5 +63,3 @@ const deleteFromCloudinary = async (URL) => {
         );
     }
 };
-
-export { uploadOnCloudinary, deleteFromCloudinary };

@@ -1,7 +1,6 @@
 import express from 'express';
 export const followerRouter = express.Router();
 import { doesResourceExist, verifyJwt } from '../middlewares/index.js';
-
 import {
     getFollowers,
     getFollowings,

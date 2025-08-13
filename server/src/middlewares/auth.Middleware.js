@@ -1,11 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { BAD_REQUEST, FORBIDDEN } from '../constants/errorCodes.js';
-import { COOKIE_OPTIONS } from '../constants/options.js';
+import { BAD_REQUEST, FORBIDDEN, COOKIE_OPTIONS } from '../constants/index.js';
 import {
     extractAccessToken,
     extractRefreshToken,
     generateAccessToken,
-} from '../helpers/index.js';
+} from '../utils/index.js';
 import { userObject } from '../controllers/user.Controller.js';
 
 /**

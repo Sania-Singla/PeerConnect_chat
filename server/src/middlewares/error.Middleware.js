@@ -1,4 +1,4 @@
-import { SERVER_ERROR } from '../constants/errorCodes.js';
+import { SERVER_ERROR } from '../constants/index.js';
 
 export const errorMiddleware = (err, req, res, next) => {
     err.message ||= 'Undefined Error Occured';

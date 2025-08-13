@@ -1,4 +1,4 @@
-import { BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
+import { BAD_REQUEST, SERVER_ERROR } from '../constants/index.js';
 
 /**
  * Generic middleware to check if the authenticated user is the owner of the resource.

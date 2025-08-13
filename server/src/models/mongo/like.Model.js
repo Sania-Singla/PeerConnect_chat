@@ -1,5 +1,5 @@
-import { CommentLike, PostLike } from '../schemas/index.js';
-import { getPipeline1 } from '../helpers/index.js';
+import { CommentLike, PostLike } from '../../db/mongo/index.js';
+import { getPipeline1 } from '../../utils/index.js';
 
 export class LikeModel {
     async getLikedPosts(userId, orderBy, limit, page) {

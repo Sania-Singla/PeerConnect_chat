@@ -6,10 +6,12 @@ import jwt from 'jsonwebtoken';
  * @returns Tokens as {accessToken, refreshToken}
  */
 
-const generateTokens = async (user) => {
+export const generateTokens = async (user) => {
     try {
-        const accessToken = await generateAccessToken(user);
-        const refreshToken = await generateRefreshToken(user);
+        const [accessToken, refreshToken] = await Promise.all([
+            generateAccessToken(user),
+            generateRefreshToken(user),
+        ]);
 
         return { accessToken, refreshToken };
     } catch (err) {
@@ -23,7 +25,7 @@ const generateTokens = async (user) => {
  * @returns JWT Token
  */
 
-const generateAccessToken = async (user) => {
+export const generateAccessToken = async (user) => {
     return jwt.sign(
         {
             userId: user.user_id,
@@ -39,7 +41,7 @@ const generateAccessToken = async (user) => {
  * @returns JWT Token
  */
 
-const generateRefreshToken = async (user) => {
+export const generateRefreshToken = async (user) => {
     return jwt.sign(
         {
             userId: user.user_id,
@@ -54,7 +56,7 @@ const generateRefreshToken = async (user) => {
  * @returns Access Token
  */
 
-const extractAccessToken = (req) => {
+export const extractAccessToken = (req) => {
     return (
         req.cookies?.peerConnect_accessToken ||
         req.headers['authorization']?.split(' ')[1] // BEAREER TOKEN
@@ -66,17 +68,9 @@ const extractAccessToken = (req) => {
  * @returns Refresh Token
  */
 
-const extractRefreshToken = (req) => {
+export const extractRefreshToken = (req) => {
     return (
         req.cookies?.peerConnect_refreshToken ||
         req.headers['authorization']?.split(' ')[1] // BEAREER TOKEN
     );
-};
-
-export {
-    extractAccessToken,
-    extractRefreshToken,
-    generateTokens,
-    generateAccessToken,
-    generateRefreshToken,
 };

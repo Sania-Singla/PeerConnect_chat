@@ -1,7 +1,6 @@
-import { ErrorHandler, tryCatch } from '../utils/index.js';
-import { getServiceObject } from '../db/serviceObjects.js';
-import { BAD_REQUEST, OK } from '../constants/errorCodes.js';
-import { uploadOnCloudinary } from '../helpers/index.js';
+import { ErrorHandler, tryCatch, uploadOnCloudinary } from '../utils/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
+import { BAD_REQUEST, OK } from '../constants/index.js';
 import { io } from '../socket.js';
 
 export const messageObject = getServiceObject('Message');

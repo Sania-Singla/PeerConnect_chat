@@ -1,4 +1,4 @@
-import { User } from '../schemas/index.js';
+import { User } from '../../db/mongo/index.js';
 
 export class UserModel {
     async getUser(searchInput) {

@@ -1,28 +1,17 @@
-import {
-    UserModel,
-    PostModel,
-    FollowerModel,
-    LikeModel,
-    CommentModel,
-    ChatModel,
-    MessageModel,
-    OnlineUserModel,
-    RequestModel,
-    ResumeModel,
-} from '../models/index.js';
+import * as mongoModels from '../models/mongo/index.js';
 
 const serviceMap = {
     MongoDB: {
-        User: UserModel,
-        Post: PostModel,
-        Follower: FollowerModel,
-        Like: LikeModel,
-        Comment: CommentModel,
-        Chat: ChatModel,
-        Message: MessageModel,
-        OnlineUser: OnlineUserModel,
-        Request: RequestModel,
-        Resume: ResumeModel,
+        User: mongoModels.UserModel,
+        Post: mongoModels.PostModel,
+        Follower: mongoModels.FollowerModel,
+        Like: mongoModels.LikeModel,
+        Comment: mongoModels.CommentModel,
+        Chat: mongoModels.ChatModel,
+        Message: mongoModels.MessageModel,
+        OnlineUser: mongoModels.OnlineUserModel,
+        Request: mongoModels.RequestModel,
+        Resume: mongoModels.ResumeModel,
     },
 };
 

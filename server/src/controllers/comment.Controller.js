@@ -1,5 +1,5 @@
-import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
-import { getServiceObject } from '../db/serviceObjects.js';
+import { OK, BAD_REQUEST } from '../constants/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
 import { ErrorHandler, tryCatch, verifyOrderBy } from '../utils/index.js';
 
 export const commentObject = getServiceObject('Comment');

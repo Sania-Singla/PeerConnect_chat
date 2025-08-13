@@ -4,7 +4,7 @@
  * @returns true or throws an error as 'INVALID_ORDERBY_VALUE'
  */
 
-export default function verifyOrderBy(orderBy) {
+export function verifyOrderBy(orderBy) {
     const validOrderBy = ['ASC', 'DESC'];
     return validOrderBy.includes(orderBy.toUpperCase());
 }

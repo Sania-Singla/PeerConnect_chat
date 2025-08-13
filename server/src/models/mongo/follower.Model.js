@@ -1,4 +1,4 @@
-import { Follower } from '../schemas/index.js';
+import { Follower } from '../../db/mongo/index.js';
 
 export class FollowerModel {
     async getFollowers(channelId) {

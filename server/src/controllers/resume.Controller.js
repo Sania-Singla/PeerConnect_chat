@@ -1,6 +1,6 @@
-import { getServiceObject } from '../db/serviceObjects.js';
-import { tryCatch } from '../utils/tryCatch.js';
-import { OK } from '../constants/errorCodes.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
+import { tryCatch } from '../utils/index.js';
+import { OK } from '../constants/index.js';
 
 export const resumeObject = getServiceObject('Resume');
 

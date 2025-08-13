@@ -1,5 +1,4 @@
-import { LANGUAGE_CONFIG } from '../constants/editor.js';
-import { SERVER_ERROR, OK } from '../constants/errorCodes.js';
+import { SERVER_ERROR, OK, LANGUAGE_CONFIG } from '../constants/index.js';
 import { tryCatch } from '../utils/index.js';
 
 const compileGeneralCode = tryCatch('compile code', async (req, res) => {

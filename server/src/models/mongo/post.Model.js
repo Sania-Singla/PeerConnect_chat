@@ -1,5 +1,5 @@
-import { Post, PostView, SavedPost } from '../schemas/index.js';
-import { getPipeline1 } from '../helpers/index.js';
+import { Post, PostView, SavedPost } from '../../db/mongo/index.js';
+import { getPipeline1 } from '../../utils/index.js';
 
 export class PostModel {
     // pending search query

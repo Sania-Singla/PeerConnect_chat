@@ -1,5 +1,5 @@
-import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
+import { OK, BAD_REQUEST } from '../constants/index.js';
 import { ErrorHandler, tryCatch } from '../utils/index.js';
 import { io, redisClient } from '../socket.js';
 import { userObject } from './user.Controller.js';

@@ -1,4 +1,4 @@
-import { Chat, Message, Attachment } from '../schemas/index.js';
+import { Chat, Message, Attachment } from '../../db/mongo/index.js';
 
 export class MessageModel {
     async messageExistance(messageId) {

@@ -26,10 +26,6 @@ const postViewSchema = new Schema({
 
 postSchema.plugin(aggregatePaginate);
 
-
-
-
-
 const Post = new model('Post', postSchema);
 const PostView = new model('PostView', postViewSchema);
 

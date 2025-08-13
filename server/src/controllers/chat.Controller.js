@@ -1,11 +1,12 @@
-import { getServiceObject } from '../db/serviceObjects.js';
-import { OK, BAD_REQUEST } from '../constants/errorCodes.js';
-import { ErrorHandler, tryCatch } from '../utils/index.js';
+import { getServiceObject } from '../config/serviceObj.config.js';
+import { OK, BAD_REQUEST } from '../constants/index.js';
 import {
+    ErrorHandler,
+    tryCatch,
     getOtherMembers,
     getSocketId,
     getSocketIds,
-} from '../helpers/index.js';
+} from '../utils/index.js';
 import validator from 'validator';
 import { io } from '../socket.js';
 
