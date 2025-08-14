@@ -30,6 +30,7 @@ import {
     ResumePage,
     RecommendationsPage,
     BotPage,
+    PaymentPage,
 } from '@/Pages';
 
 import {
@@ -103,7 +104,10 @@ export const router = createBrowserRouter(
 
             {/* projects */}
             <Route path="projects" element={<ProjectsPage />} />
-            <Route path='recommend-projects' element={<RecommendationsPage/>}/>
+            <Route
+                path="recommend-projects"
+                element={<RecommendationsPage />}
+            />
             <Route path="project/:projectId" element={<ProjectLayout />}>
                 <Route path="" element={<ProjectDetail />} />
                 <Route path="tasks" element={<ProjectTasks />} />
@@ -159,6 +163,9 @@ export const router = createBrowserRouter(
                         </Route>
                     </Route>
                 </Route>
+
+                {/* payment */}
+                <Route path="pay" element={<PaymentPage />} />
             </Route>
 
             {/* static pages */}

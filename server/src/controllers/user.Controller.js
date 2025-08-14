@@ -80,10 +80,11 @@ export const loginWithGoogle = tryCatch(
             const payload = await ticket.getPayload();
             const { email, name, picture } = payload;
 
-            if (!email || !name)
+            if (!email || !name || !picture) {
                 return next(
                     new ErrorHandler('Invalid Google payload', BAD_REQUEST)
                 );
+            }
 
             let user = await userObject.getUser(email);
 
@@ -93,7 +94,7 @@ export const loginWithGoogle = tryCatch(
                     userName,
                     fullName: name,
                     email,
-                    avatar: picture || USER_AVATAR,
+                    avatar: picture,
                     password: null,
                     authProvider: 'google',
                 };

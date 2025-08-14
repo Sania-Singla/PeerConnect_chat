@@ -22,6 +22,7 @@ import ResumePage from './ResumePage';
 import EditorPage from './EditorPage';
 import RecommendationsPage from './RecommendationsPage';
 import BotPage from './BotPage';
+import PaymentPage from './PaymentPage';
 
 export {
     AboutUsPage,
@@ -48,4 +49,5 @@ export {
     EditorPage,
     RecommendationsPage,
     BotPage,
+    PaymentPage,
 };

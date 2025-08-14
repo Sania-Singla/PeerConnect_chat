@@ -10,3 +10,4 @@ export * from './editor.Router.js';
 export * from './resume.Router.js';
 export * from './interview.Router.js';
 export * from './bot.Router.js';
+export * from './razorpay.Router.js';
