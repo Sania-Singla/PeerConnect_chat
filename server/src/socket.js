@@ -137,6 +137,7 @@ io.on('connection', async (socket) => {
             redisClient.setEx(userId, 3600, socketId),
             onlineUserObject.markUserOnline(userId, socketId),
         ]);
+        
         console.log('[ONLINE]', { username: user.user_name });
 
         const chats = await chatObject.getMyChats(userId);
